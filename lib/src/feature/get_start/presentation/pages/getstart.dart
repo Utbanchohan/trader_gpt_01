@@ -39,23 +39,22 @@ class GetStartedScreen extends StatelessWidget {
                   child: MdSnsText(
                     "Unlock your trading\npotential with AI insights",
                     textAlign: TextAlign.center,
-                  
-                      letterSpacing: 0,
-                      color: Colors.white,
-                      size: 32,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  
+
+                    letterSpacing: 0,
+                    color: Colors.white,
+                    size: 32,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 SizedBox(height: 20),
                 MdSnsText(
                   "Experience real-time market insights, advanced analytics, "
                   "and intelligent trade signals",
-                  textAlign: TextAlign.center,                    color: Colors.white,
-                    letterSpacing: 0,
-                    size: 16,
-                    fontWeight: FontWeight.w400,
-                  
+                  textAlign: TextAlign.center,
+                  color: Colors.white,
+                  letterSpacing: 0,
+                  size: 16,
+                  fontWeight: FontWeight.w400,
                 ),
               ],
             ),
@@ -76,13 +75,12 @@ class GetStartedScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      child:  MdSnsText(
+                      child: MdSnsText(
                         "Create account",
-               
-                          size: 18,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.white,
-                        
+
+                        size: 18,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.white,
                       ),
                     ),
                   ),
@@ -115,11 +113,12 @@ class GetStartedScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
 
-                   MdSnsText(
+                  MdSnsText(
                     "By Signing Up you agree to our Terms & Privacy Policy.",
                     textAlign: TextAlign.center,
-                 color: Colors.white54, size: 12),
-                  
+                    color: Colors.white54,
+                    size: 12,
+                  ),
                 ],
               ),
             ),
