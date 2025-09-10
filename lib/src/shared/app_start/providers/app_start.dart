@@ -7,6 +7,7 @@ part 'app_start.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<void> appStartup(Ref ref) async {
+  // await dotenv.load(fileName: ".env");
   ref.onDispose(() {
     ref.invalidate(sharedPreferencesProvider);
   });
