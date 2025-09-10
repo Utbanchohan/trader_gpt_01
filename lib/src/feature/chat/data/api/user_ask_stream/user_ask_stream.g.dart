@@ -10,7 +10,7 @@ part of 'user_ask_stream.dart';
 
 class _UserAskStreamApi implements UserAskStreamApi {
   _UserAskStreamApi(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'http://dev.tradersgpt.io/tgpt-python/api';
+    baseUrl ??= 'http://dev.tradersgpt.io/tgpt-python/api/';
   }
 
   final Dio _dio;

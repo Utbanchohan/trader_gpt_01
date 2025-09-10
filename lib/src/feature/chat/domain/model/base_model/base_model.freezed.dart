@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BaseModel<T> {
 
- String get message; bool get isSuccess; T? get data;
+ String get message;@JsonKey(name: 'success') bool get isSuccess; T? get data;
 /// Create a copy of BaseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $BaseModelCopyWith<T,$Res>  {
   factory $BaseModelCopyWith(BaseModel<T> value, $Res Function(BaseModel<T>) _then) = _$BaseModelCopyWithImpl;
 @useResult
 $Res call({
- String message, bool isSuccess, T? data
+ String message,@JsonKey(name: 'success') bool isSuccess, T? data
 });
 
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String message,  bool isSuccess,  T? data)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String message, @JsonKey(name: 'success')  bool isSuccess,  T? data)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BaseModel() when $default != null:
 return $default(_that.message,_that.isSuccess,_that.data);case _:
@@ -176,7 +176,7 @@ return $default(_that.message,_that.isSuccess,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String message,  bool isSuccess,  T? data)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String message, @JsonKey(name: 'success')  bool isSuccess,  T? data)  $default,) {final _that = this;
 switch (_that) {
 case _BaseModel():
 return $default(_that.message,_that.isSuccess,_that.data);case _:
@@ -196,7 +196,7 @@ return $default(_that.message,_that.isSuccess,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String message,  bool isSuccess,  T? data)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String message, @JsonKey(name: 'success')  bool isSuccess,  T? data)?  $default,) {final _that = this;
 switch (_that) {
 case _BaseModel() when $default != null:
 return $default(_that.message,_that.isSuccess,_that.data);case _:
@@ -211,11 +211,11 @@ return $default(_that.message,_that.isSuccess,_that.data);case _:
 @JsonSerializable(genericArgumentFactories: true)
 
 class _BaseModel<T> implements BaseModel<T> {
-  const _BaseModel({required this.message, required this.isSuccess, this.data});
+  const _BaseModel({required this.message, @JsonKey(name: 'success') required this.isSuccess, this.data});
   factory _BaseModel.fromJson(Map<String, dynamic> json,T Function(Object?) fromJsonT) => _$BaseModelFromJson(json,fromJsonT);
 
 @override final  String message;
-@override final  bool isSuccess;
+@override@JsonKey(name: 'success') final  bool isSuccess;
 @override final  T? data;
 
 /// Create a copy of BaseModel
@@ -251,7 +251,7 @@ abstract mixin class _$BaseModelCopyWith<T,$Res> implements $BaseModelCopyWith<T
   factory _$BaseModelCopyWith(_BaseModel<T> value, $Res Function(_BaseModel<T>) _then) = __$BaseModelCopyWithImpl;
 @override @useResult
 $Res call({
- String message, bool isSuccess, T? data
+ String message,@JsonKey(name: 'success') bool isSuccess, T? data
 });
 
 

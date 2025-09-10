@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+
 
 class ChatPage extends ConsumerStatefulWidget {
   ChatPage({super.key});
@@ -24,10 +27,13 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     super.dispose();
   }
 
-  void _sendMessage(WidgetRef ref) {
+  void _sendMessage(WidgetRef ref) async {
     final text = message.text.trim();
     if (text.isNotEmpty) {
-      ref
+      String token =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OGMxNmI5NjZkMTYyNDE3YmNhNmZjMmYiLCJlbWFpbCI6InJhemEuanI5OEB5b3BtYWlsLmNvbSIsIm5hbWUiOiJNdWhhbW1hZCBSYXphIiwiaWF0IjoxNzU3NTI2MjgwLCJleHAiOjE3NTc2MTI2ODB9.lIAIJp_hRc8MIQQWtoILJOfi2DLEHDq7eeB6xATLZEc";
+      ref.read(localDataProvider).setAccessToken(token);
+      var res = await ref
           .read(chatProviderProvider.notifier)
           .sendMessage(
             ChatMessageDto(
@@ -36,30 +42,32 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               type: "user",
             ),
           );
-      ref
-          .read(chatProviderProvider.notifier)
-          .startStream(
-            TaskRequestDto(
-              analysisRequired: false,
-              chatId: "68c16b966d162417bca6fc30",
-              task: text,
-              deepSearch: false,
+      if (res != null) {
+      
+       
+      }
 
-              isWebResearch: false,
-              isWorkflow: false,
-              workflowObject: null,
-              replyId: "68c16c896d162417bca6fc32",
-              report: false,
-              symbol: "MSFT",
-              symbolName: "Microsoft Corporation - Common Stock",
-            ),
-          );
       message.clear();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+     const body = {
+      "task": "Analyze MSFT's financial health and future growth prospects",
+      "symbol": "MSFT",
+      "symbol_name": "Microsoft Corporation",
+      "report": false,
+      "is_web_research": false,
+      "deep_search": false,
+      "chat_id": "68c16b966d162417bca6fc30",
+      "reply_id": "68c1d2c86d162417bca6fc8e",
+      "workflow_object": null,
+      "analysis_required": false,
+      "is_workflow": false
+    };
+
+    final asyncStream = ref.watch(sseProvider(body));
     return Scaffold(
       bottomNavigationBar: SafeArea(
         bottom: true,
@@ -85,6 +93,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               children: [
                 Expanded(
                   child: TextField(
+                    controller: message,
                     style: TextStyle(color: AppColors.white),
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -171,142 +180,170 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         actions: [
           Container(
             margin: EdgeInsets.only(right: 20),
-            child: Image.asset(Assets.images.searchNormal.path, width: 20, height: 20)),
+            child: Image.asset(
+              Assets.images.searchNormal.path,
+              width: 20,
+              height: 20,
+            ),
+          ),
         ],
       ),
-      body: Column(
-        children: [
-          // Tabs
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: MdSnsText(
-              "Today",
-           color: Colors.white70, size: 14),
-            
-          ),
-            SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                  // onTap: onCopy,
-                  child: Container(
-                    padding: EdgeInsets.all(10),
+      body:asyncStream.when(
+        data: (line) => 
 
-                    decoration: BoxDecoration(
-                      color: AppColors.bubbleColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Image.asset(
-                      Assets.images.copy.path,
-                      width: 14,
-                      height: 14,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppColors.bubbleColor,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  // child: Flexible(
-                  child: MdSnsText(
-                    "Top Performing Stocks For Today",
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w400,
-                    size: 16,
-                  ),
-                ),
-              ],
+SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: MarkdownBody(
+            data: line,
+            selectable: true, // let user copy code
+            styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+              code: const TextStyle(
+                fontFamily: "monospace",
+                backgroundColor: AppColors.primaryColor,
+              ),
+              blockquote: const TextStyle(color: Colors.red),
             ),
-            SizedBox(height: 20),
-
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.bubbleColor,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      MdSnsText(
-                        "📈 Top Performing Stocks (Today)",
-                        color: AppColors.white,
-                        size: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      SizedBox(height: 10),
-                      MdSnsText(
-                        "1. NVDA (NVIDIA)\n+5.2% → \$950.50\nAI Signal: \"Breakout on AI chip demand\"\n\n"
-                        "2. SMCI (Super Micro)\n+4.8% → \$880.20\nCatalyst: Server sales beat estimates\n\n"
-                        "3. TSLA (Tesla)\n+3.6% → \$265.00\nWatch: Robotaxi event hype",
-                        color: AppColors.white,
-                        size: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: AppColors.fieldColor,
-                        ),
-                        child: Image.asset(
-                          Assets.images.like.path,
-                          width: 14,
-                          height: 14,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-
-                      Container(
-                        padding: EdgeInsets.all(10),
-
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: AppColors.fieldColor,
-                        ),
-                        child: Image.asset(
-                          "assets/images/dislike.png",
-                          width: 14,
-                          height: 14,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: AppColors.fieldColor,
-                        ),
-                        child: Image.asset(
-                          "assets/images/Regenerate.png",
-                          width: 14,
-                          height: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+            onTapLink: (text, href, title) {
+              if (href != null) {
+                // launchUrl(Uri.parse(href)); // needs url_launcher
+              }
+            },
+          ),),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, _) => Center(child: Text("Error: $err")),
+      ),
       
+      // Column(
+      //   children: [
+      //     // Tabs
+      //     Container(
+      //       padding: EdgeInsets.symmetric(vertical: 8),
+      //       child: MdSnsText("Today", color: Colors.white70, size: 14),
+      //     ),
+      //     SizedBox(height: 15),
+      //     Row(
+      //       mainAxisAlignment: MainAxisAlignment.end,
+      //       children: [
+      //         GestureDetector(
+      //           // onTap: onCopy,
+      //           child: Container(
+      //             padding: EdgeInsets.all(10),
+
+      //             decoration: BoxDecoration(
+      //               color: AppColors.bubbleColor,
+      //               borderRadius: BorderRadius.circular(10),
+      //             ),
+      //             child: Image.asset(
+      //               Assets.images.copy.path,
+      //               width: 14,
+      //               height: 14,
+      //             ),
+      //           ),
+      //         ),
+      //         SizedBox(width: 10),
+      //         Container(
+      //           padding: EdgeInsets.all(10),
+      //           decoration: BoxDecoration(
+      //             color: AppColors.bubbleColor,
+      //             borderRadius: BorderRadius.circular(50),
+      //           ),
+      //           // child: Flexible(
+      //           child: MdSnsText(
+      //             "Top Performing Stocks For Today",
+      //             color: AppColors.white,
+      //             fontWeight: FontWeight.w400,
+      //             size: 16,
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //     SizedBox(height: 20),
+
+      //     Row(
+      //       crossAxisAlignment: CrossAxisAlignment.end,
+      //       children: [
+      //         Container(
+      //           padding: EdgeInsets.all(16),
+      //           decoration: BoxDecoration(
+      //             color: AppColors.bubbleColor,
+      //             borderRadius: BorderRadius.circular(16),
+      //           ),
+      //           child: Column(
+      //             crossAxisAlignment: CrossAxisAlignment.start,
+      //             children: [
+      //               MdSnsText(
+      //                 "📈 Top Performing Stocks (Today)",
+      //                 color: AppColors.white,
+      //                 size: 16,
+      //                 fontWeight: FontWeight.w400,
+      //               ),
+      //               SizedBox(height: 10),
+      //               MdSnsText(
+      //                 "1. NVDA (NVIDIA)\n+5.2% → \$950.50\nAI Signal: \"Breakout on AI chip demand\"\n\n"
+      //                 "2. SMCI (Super Micro)\n+4.8% → \$880.20\nCatalyst: Server sales beat estimates\n\n"
+      //                 "3. TSLA (Tesla)\n+3.6% → \$265.00\nWatch: Robotaxi event hype",
+      //                 color: AppColors.white,
+      //                 size: 16,
+      //                 fontWeight: FontWeight.w400,
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //         SizedBox(width: 10),
+      //         Expanded(
+      //           child: Column(
+      //             mainAxisAlignment: MainAxisAlignment.end,
+      //             crossAxisAlignment: CrossAxisAlignment.start,
+      //             children: [
+      //               Container(
+      //                 decoration: BoxDecoration(
+      //                   borderRadius: BorderRadius.circular(8),
+      //                   color: AppColors.fieldColor,
+      //                 ),
+      //                 child: Image.asset(
+      //                   Assets.images.like.path,
+      //                   width: 14,
+      //                   height: 14,
+      //                 ),
+      //               ),
+      //               SizedBox(height: 10),
+
+      //               Container(
+      //                 padding: EdgeInsets.all(10),
+
+      //                 decoration: BoxDecoration(
+      //                   borderRadius: BorderRadius.circular(8),
+      //                   color: AppColors.fieldColor,
+      //                 ),
+      //                 child: Image.asset(
+      //                   "assets/images/dislike.png",
+      //                   width: 14,
+      //                   height: 14,
+      //                 ),
+      //               ),
+      //               SizedBox(height: 10),
+
+      //               Container(
+      //                 padding: EdgeInsets.all(10),
+      //                 decoration: BoxDecoration(
+      //                   borderRadius: BorderRadius.circular(8),
+      //                   color: AppColors.fieldColor,
+      //                 ),
+      //                 child: Image.asset(
+      //                   "assets/images/Regenerate.png",
+      //                   width: 14,
+      //                   height: 14,
+      //                 ),
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   ],
+      // ),
+   
+   
     );
   }
 }
@@ -331,7 +368,12 @@ class _ActionChip extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Image.asset(icon, width: 14, height: 14, color: AppColors.color3C4E8A),
+            Image.asset(
+              icon,
+              width: 14,
+              height: 14,
+              color: AppColors.color3C4E8A,
+            ),
             SizedBox(width: 4),
             MdSnsText(
               label,
