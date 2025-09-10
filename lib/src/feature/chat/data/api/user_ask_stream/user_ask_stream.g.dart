@@ -9,7 +9,9 @@ part of 'user_ask_stream.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
 
 class _UserAskStreamApi implements UserAskStreamApi {
-  _UserAskStreamApi(this._dio, {this.baseUrl, this.errorLogger});
+  _UserAskStreamApi(this._dio, {this.baseUrl, this.errorLogger}) {
+    baseUrl ??= 'http://dev.tradersgpt.io/tgpt-python/api';
+  }
 
   final Dio _dio;
 
@@ -18,13 +20,18 @@ class _UserAskStreamApi implements UserAskStreamApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<dynamic> streamApi(TaskRequestDto taskRequestDto) async {
+  Future<HttpResponse<dynamic>> askStream(TaskRequestDto taskRequestDto) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<dynamic>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+    final _data = taskRequestDto;
+    final _options = _setStreamType<HttpResponse<dynamic>>(
+      Options(
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            responseType: ResponseType.stream,
+          )
           .compose(
             _dio.options,
             'user_ask_stream',
@@ -35,7 +42,8 @@ class _UserAskStreamApi implements UserAskStreamApi {
     );
     final _result = await _dio.fetch(_options);
     final _value = _result.data;
-    return _value;
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

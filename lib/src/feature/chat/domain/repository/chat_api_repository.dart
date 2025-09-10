@@ -20,7 +20,7 @@ import '../model/base_model/base_model.dart';
   
   @override
   Future<dynamic> streamApi(TaskRequestDto taskRequestDto) async {
-    return await UserAskStreamApi(client).streamApi(taskRequestDto);
+    return await UserAskStreamApi(client).askStream(taskRequestDto);
   }
  
 }

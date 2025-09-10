@@ -19,7 +19,7 @@ final client = Provider<Dio>((ref) {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        baseUrl: "7667",
+        baseUrl: BaseUrl.baseUrl,
         connectTimeout: timeOut,
         receiveTimeout: timeOut,
       ),
