@@ -35,166 +35,202 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(8),
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xFF00FF9D), // greenish
-              Color(0xFF007BFF), // bluish
-              Color(0xFF8A2BE2), // purple
-            ],
-          ),
-        ),
+      bottomNavigationBar: SafeArea(
+        bottom: true,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          height: MediaQuery.of(context).size.height * 0.13,
+          margin: EdgeInsets.all(10),
+          padding: EdgeInsets.all(2),
           decoration: BoxDecoration(
-            color: const Color(0xFF0E1420),
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(20),
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: AppColors.gradient,
+            ),
           ),
-          child: Row(
-            children: [
-              // Plus Button
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: const Color(0xFF1A2235),
-                child: const Icon(Icons.add, color: Colors.white70),
-              ),
-              const SizedBox(width: 8),
-
-              // Expanded TextField (Hint Only)
-              Expanded(
-                child: TextField(
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Ask anything about the market",
-                    hintStyle: TextStyle(color: Colors.white38),
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.color0E1738,
+              borderRadius: BorderRadius.circular(18),
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: TextField(
+                    style: TextStyle(color: AppColors.white),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Ask anything about the market",
+                      hintStyle: TextStyle(
+                        color: AppColors.bluishgrey404F81,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.color091224,
+                            border: Border.all(
+                              color: AppColors.bluishgrey404F81,
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.add,
+                            color: AppColors.color3C4E8A,
+                            size: 40,
+                          ),
+                        ),
+                        SizedBox(width: 8),
 
-              // Deep Search Button
-              _ActionChip(icon: Icons.sync, label: "Deep Search", onTap: () {}),
-              const SizedBox(width: 6),
+                        _ActionChip(
+                          icon: Assets.images.radar2.path,
+                          label: "Deep Search",
+                          onTap: () {},
+                        ),
+                        SizedBox(width: 6),
 
-              // Think Button
-              _ActionChip(
-                icon: Icons.lightbulb_outline,
-                label: "Think",
-                onTap: () {},
-              ),
-              const SizedBox(width: 8),
+                        // Think Button
+                        _ActionChip(
+                          icon: Assets.images.lampCharge.path,
+                          label: "Think",
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
 
-              // Send Button
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.blue.shade700,
-                child: const Icon(Icons.arrow_upward, color: Colors.white),
-              ),
-            ],
+                    // Send Button
+                    Container(
+                      height: 36,
+                      width: 36,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.color046297,
+                      ),
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        icon: Icon(
+                          Icons.arrow_upward_rounded,
+                          color: AppColors.white,
+                          size: 18,
+                        ),
+                        onPressed: () => _sendMessage(ref),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
       backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
+        centerTitle: false,
         backgroundColor: AppColors.primaryColor,
         elevation: 0,
-        leading: Image.asset(Assets.images.menu.path, width: 32, height: 32),
-        title: Image.asset(Assets.images.logo.path, width: 100, height: 32),
+        leading: Image.asset(Assets.images.menu.path, width: 40, height: 40),
+        title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
         actions: [
-          Image.asset(Assets.images.searchNormal.path, width: 32, height: 32),
+          Container(
+            margin: EdgeInsets.only(right: 20),
+            child: Image.asset(Assets.images.searchNormal.path, width: 20, height: 20)),
         ],
       ),
-      body: Column(
-        children: [
-          // Tabs
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: MdSnsText(
+      body: Container(
+        padding: EdgeInsets.only(left: 15, right: 15),
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+
+            MdSnsText(
               "Today",
               color: AppColors.colorB2B2B7,
               fontWeight: FontWeight.w400,
               size: 12,
             ),
-          ),
+            SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  // onTap: onCopy,
+                  child: Container(
+                    padding: EdgeInsets.all(10),
 
-          // Top Button
-          Row(
-            mainAxisSize: MainAxisSize.min,
-          
-            children: [
-              GestureDetector(
-                // onTap: onCopy,
-                child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.bubbleColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Image.asset(
+                      Assets.images.copy.path,
+                      width: 14,
+                      height: 14,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Container(
                   padding: EdgeInsets.all(10),
-          
                   decoration: BoxDecoration(
-                    color: Color(0xFF1A2235),
-                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.bubbleColor,
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                  child: Image.asset(
-                    Assets.images.copy.path,
-                    width: 20,
-                    height: 20,
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Color(0xFF1A2235),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                // child: Flexible(
-                  child: 
-                  Text(
+                  // child: Flexible(
+                  child: MdSnsText(
                     "Top Performing Stocks For Today",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  // ),
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w400,
+                    size: 16,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
+              ],
+            ),
+            SizedBox(height: 20),
 
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Color(0xFF1A2235),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "📈 Top Performing Stocks (Today)",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.bubbleColor,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      MdSnsText(
+                        "📈 Top Performing Stocks (Today)",
+                        color: AppColors.white,
+                        size: 16,
+                        fontWeight: FontWeight.w400,
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      "1. NVDA (NVIDIA)\n+5.2% → \$950.50\nAI Signal: \"Breakout on AI chip demand\"\n\n"
-                      "2. SMCI (Super Micro)\n+4.8% → \$880.20\nCatalyst: Server sales beat estimates\n\n"
-                      "3. TSLA (Tesla)\n+3.6% → \$265.00\nWatch: Robotaxi event hype",
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
-                    ),
-                  ],
+                      SizedBox(height: 10),
+                      MdSnsText(
+                        "1. NVDA (NVIDIA)\n+5.2% → \$950.50\nAI Signal: \"Breakout on AI chip demand\"\n\n"
+                        "2. SMCI (Super Micro)\n+4.8% → \$880.20\nCatalyst: Server sales beat estimates\n\n"
+                        "3. TSLA (Tesla)\n+3.6% → \$265.00\nWatch: Robotaxi event hype",
+                        color: AppColors.white,
+                        size: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                color: Colors.red,
-
-                child: Expanded(
+                SizedBox(width: 10),
+                Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,11 +243,13 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           color: AppColors.fieldColor,
                         ),
                         child: Image.asset(
-                         Assets.images.like.path,
+                          Assets.images.like.path,
                           width: 14,
                           height: 14,
                         ),
                       ),
+                      SizedBox(height: 10),
+
                       Container(
                         padding: EdgeInsets.all(10),
 
@@ -225,6 +263,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           height: 14,
                         ),
                       ),
+                      SizedBox(height: 10),
+
                       Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
@@ -240,44 +280,42 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class _ActionChip extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String label;
   final VoidCallback onTap;
 
-  const _ActionChip({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
+  _ActionChip({required this.icon, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: const Color(0xFF1A2235),
+          color: AppColors.color091224,
+          border: Border.all(color: AppColors.bluishgrey404F81),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white24),
         ),
         child: Row(
           children: [
-            Icon(icon, color: Colors.white54, size: 16),
-            const SizedBox(width: 4),
-            Text(
+            Image.asset(icon, width: 14, height: 14, color: AppColors.color3C4E8A),
+            SizedBox(width: 4),
+            MdSnsText(
               label,
-              style: const TextStyle(color: Colors.white70, fontSize: 13),
+              size: 16,
+              color: AppColors.color3C4E8A,
+              fontWeight: FontWeight.w400,
             ),
           ],
         ),
