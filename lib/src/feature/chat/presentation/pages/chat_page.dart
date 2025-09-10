@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 final chatMessagesProvider = StateProvider<List<String>>((ref) => []);
 
@@ -34,6 +35,69 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFF00FF9D), // greenish
+              Color(0xFF007BFF), // bluish
+              Color(0xFF8A2BE2), // purple
+            ],
+          ),
+        ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFF0E1420),
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Row(
+            children: [
+              // Plus Button
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: const Color(0xFF1A2235),
+                child: const Icon(Icons.add, color: Colors.white70),
+              ),
+              const SizedBox(width: 8),
+
+              // Expanded TextField (Hint Only)
+              Expanded(
+                child: TextField(
+                  style: const TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Ask anything about the market",
+                    hintStyle: TextStyle(color: Colors.white38),
+                  ),
+                ),
+              ),
+
+              // Deep Search Button
+              _ActionChip(icon: Icons.sync, label: "Deep Search", onTap: () {}),
+              const SizedBox(width: 6),
+
+              // Think Button
+              _ActionChip(
+                icon: Icons.lightbulb_outline,
+                label: "Think",
+                onTap: () {},
+              ),
+              const SizedBox(width: 8),
+
+              // Send Button
+              CircleAvatar(
+                radius: 20,
+                backgroundColor: Colors.blue.shade700,
+                child: const Icon(Icons.arrow_upward, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+      ),
       backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
@@ -49,9 +113,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           // Tabs
           Container(
             padding: EdgeInsets.symmetric(vertical: 8),
-            child: Text(
+            child: MdSnsText(
               "Today",
-              style: TextStyle(color: Colors.white70, fontSize: 14),
+              color: AppColors.colorB2B2B7,
+              fontWeight: FontWeight.w400,
+              size: 12,
             ),
           ),
 
@@ -85,11 +151,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     color: Color(0xFF1A2235),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Flexible(
-                    child: Text(
-                      "Top Performing Stocks For Today",
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
+                  child: Text(
+                    "Top Performing Stocks For Today",
+                    style: TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ),
               ],
@@ -179,56 +243,44 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               ),
             ],
           ),
-
-          // Floating icons
-          Spacer(),
-
-          // Bottom Input
-          Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: Colors.white12, width: 1)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF1A2235),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: TextField(
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Ask anything about the market",
-                        hintStyle: TextStyle(color: Colors.white54),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 8),
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline, color: Colors.white70),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: Icon(Icons.search, color: Colors.white70),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: Icon(Icons.bolt, color: Colors.white70),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: Icon(Icons.send, color: Colors.cyanAccent),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-          ),
         ],
+      ),
+    );
+  }
+}
+
+class _ActionChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _ActionChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A2235),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white24),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.white54, size: 16),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: const TextStyle(color: Colors.white70, fontSize: 13),
+            ),
+          ],
+        ),
       ),
     );
   }
