@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 final shellKey = GlobalKey<NavigatorState>();
@@ -28,7 +29,7 @@ final routerConfigProvider = Provider((ref) {
       } else if (!isLogin && isPublic) {
         return state.fullPath;
       } else if (!isLogin && !isPublic) {
-        return AppRoutes.becomeSeller.path;
+        return AppRoutes.home.path;
       }
       return null;
     },
@@ -36,7 +37,13 @@ final routerConfigProvider = Provider((ref) {
     navigatorKey: navigatorKey,
     initialLocation: AppRoutes.home.path,
     routes: [
-     
+     GoRoute(
+        path: AppRoutes.home.path,
+        name: AppRoutes.home.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return ChatPage();
+        },
+      ),
     ],
   );
 });
