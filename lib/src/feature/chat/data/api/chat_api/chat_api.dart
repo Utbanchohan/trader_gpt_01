@@ -15,8 +15,8 @@ part 'chat_api.g.dart';
 @RestApi()
 abstract interface class ChatApi {
   factory ChatApi(Dio client) =>
-      _ChatApi(client, baseUrl: BaseUrl.baseUrl);
+      _ChatApi(client, baseUrl: 'tgpt-nestjs');
 
   @POST('/message')
-  Future<BaseModel<ChatMessageModel>> sendMessage(ChatMessageDto chatMessageDto);
+  Future<BaseModel<ChatMessageModel>> sendMessage(@Body() ChatMessageDto chatMessageDto);
 }

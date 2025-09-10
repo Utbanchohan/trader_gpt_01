@@ -13,6 +13,6 @@ abstract interface class ChatRepository {
 
 }
 
-final authRepository = Provider<ChatRepository>(
+final chatRepository = Provider<ChatRepository>(
   (ref) => ChatApiRepository(ref.read(client)),
 );

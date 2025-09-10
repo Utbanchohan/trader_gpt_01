@@ -51,6 +51,7 @@ dependencies:
   # firebase_core: ^4.1.0
   shared_preferences: ^2.5.3
   retrofit: ^4.7.2
+  markdown: ^7.3.0
 
 dev_dependencies:
   flutter_test:
@@ -104,3 +105,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_gen:
+  output: lib/gen/
+  line_length: 80
+  integrations:
+    flutter_svg: true

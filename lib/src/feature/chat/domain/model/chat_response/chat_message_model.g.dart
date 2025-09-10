@@ -18,6 +18,12 @@ _ChatMessageModel _$ChatMessageModelFromJson(Map<String, dynamic> json) =>
       followup: json['followup'] as String?,
       feedback: json['feedback'] as String?,
       runId: json['runId'] as String,
+      tempMessageId: json['tempMessageId'] as String?,
+      symbol: json['symbol'] as String?,
+      status: json['status'] as String? ?? "Pending",
+      displayableData: json['displayableData'] as List<dynamic>?,
+      tracing: json['tracing'],
+      updates: json['updates'] as List<dynamic>?,
     );
 
 Map<String, dynamic> _$ChatMessageModelToJson(_ChatMessageModel instance) =>
@@ -32,4 +38,10 @@ Map<String, dynamic> _$ChatMessageModelToJson(_ChatMessageModel instance) =>
       'followup': instance.followup,
       'feedback': instance.feedback,
       'runId': instance.runId,
+      'tempMessageId': instance.tempMessageId,
+      'symbol': instance.symbol,
+      'status': instance.status,
+      'displayableData': instance.displayableData,
+      'tracing': instance.tracing,
+      'updates': instance.updates,
     };

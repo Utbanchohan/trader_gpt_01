@@ -16,6 +16,13 @@ abstract class ChatMessageModel with _$ChatMessageModel {
     String? followup,
     String? feedback,
     required String runId,
+    String? tempMessageId, 
+    String? symbol,
+    @Default("Pending") String status,
+    List<dynamic>? displayableData,
+    dynamic tracing,
+    List<dynamic>? updates,
+
   }) = _ChatMessageModel;
 
   factory ChatMessageModel.fromJson(Map<String, dynamic> json) =>

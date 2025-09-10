@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
+import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
+import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-
-final chatMessagesProvider = StateProvider<List<String>>((ref) => []);
 
 class ChatPage extends ConsumerStatefulWidget {
   ChatPage({super.key});
@@ -14,21 +16,45 @@ class ChatPage extends ConsumerStatefulWidget {
 }
 
 class _ChatPageState extends ConsumerState<ChatPage> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController message = TextEditingController();
 
   @override
   void dispose() {
-    _controller.dispose();
+    message.dispose();
     super.dispose();
   }
 
   void _sendMessage(WidgetRef ref) {
-    final text = _controller.text.trim();
+    final text = message.text.trim();
     if (text.isNotEmpty) {
       ref
-          .read(chatMessagesProvider.notifier)
-          .update((state) => [...state, text]);
-      _controller.clear();
+          .read(chatProviderProvider.notifier)
+          .sendMessage(
+            ChatMessageDto(
+              chatId: "68c16b966d162417bca6fc30",
+              message: text,
+              type: "user",
+            ),
+          );
+      ref
+          .read(chatProviderProvider.notifier)
+          .startStream(
+            TaskRequestDto(
+              analysisRequired: false,
+              chatId: "68c16b966d162417bca6fc30",
+              task: text,
+              deepSearch: false,
+
+              isWebResearch: false,
+              isWorkflow: false,
+              workflowObject: null,
+              replyId: "68c16c896d162417bca6fc32",
+              report: false,
+              symbol: "MSFT",
+              symbolName: "Microsoft Corporation - Common Stock",
+            ),
+          );
+      message.clear();
     }
   }
 
@@ -148,18 +174,16 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             child: Image.asset(Assets.images.searchNormal.path, width: 20, height: 20)),
         ],
       ),
-      body: Container(
-        padding: EdgeInsets.only(left: 15, right: 15),
-        child: Column(
-          children: [
-            SizedBox(height: 10),
-
-            MdSnsText(
+      body: Column(
+        children: [
+          // Tabs
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: MdSnsText(
               "Today",
-              color: AppColors.colorB2B2B7,
-              fontWeight: FontWeight.w400,
-              size: 12,
-            ),
+           color: Colors.white70, size: 14),
+            
+          ),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -236,8 +260,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        padding: EdgeInsets.all(10),
-
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           color: AppColors.fieldColor,
@@ -284,7 +306,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ),
           ],
         ),
-      ),
+      
     );
   }
 }
