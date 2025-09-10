@@ -13,5 +13,4 @@ Future<void> appStartup(Ref ref) async {
   });
   await ref.watch(sharedPreferencesProvider.future);
   // await Firebase.initializeApp();
-  // ref.read(userProviderProvider.notifier);
 }

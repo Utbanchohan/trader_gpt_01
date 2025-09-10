@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/gen/assets.gen.dart';
 
 final chatMessagesProvider = StateProvider<List<String>>((ref) => []);
 
@@ -89,7 +89,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       color: Color(0xFF1A2235),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Icon(Icons.copy, color: Colors.white70, size: 18),
+                    child: Image.asset(Assets.images.copy.path.toString()),
                   ),
                 ),
                 Container(
