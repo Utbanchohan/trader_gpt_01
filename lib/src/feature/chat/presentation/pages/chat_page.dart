@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/theme/app_colors.dart';
 
 final chatMessagesProvider = StateProvider<List<String>>((ref) => []);
 
@@ -33,33 +34,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF0E1420),
+      backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
-        backgroundColor: Color(0xFF0E1420),
+        backgroundColor: AppColors.primaryColor,
         elevation: 0,
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.transparent,
-              child: Icon(Icons.waves, color: Colors.cyanAccent, size: 28),
-            ),
-            SizedBox(width: 8),
-            Text(
-              "TradersGPT",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
+        leading: Image.asset(Assets.images.menu.path, width: 32, height: 32),
+        title: Image.asset(Assets.images.logo.path, width: 100, height: 32),
         actions: [
-          IconButton(
-            icon: Icon(Icons.menu, color: Colors.white),
-            onPressed: () {},
-          ),
+          Image.asset(Assets.images.searchNormal.path, width: 32, height: 32),
         ],
       ),
       body: Column(
@@ -89,7 +71,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       color: Color(0xFF1A2235),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Image.asset(Assets.images.copy.path.toString()),
+                    child: Image.asset(
+                      Assets.images.copy.path,
+                      width: 20,
+                      height: 20,
+                    ),
                   ),
                 ),
                 Container(
@@ -112,6 +98,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           SizedBox(height: 20),
 
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Container(
                 padding: EdgeInsets.all(16),
@@ -148,11 +135,15 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.thumb_up_alt_outlined,
-                          color: Colors.white54,
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: AppColors.fieldColor,
+                        ),
+                        child: Image.asset(
+                          "assets/images/like.png",
+                          width: 14,
+                          height: 14,
                         ),
                       ),
                       IconButton(

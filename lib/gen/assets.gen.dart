@@ -14,14 +14,6 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/Frame 1171275448.png
-  AssetGenImage get frame1171275448 =>
-      const AssetGenImage('assets/images/Frame 1171275448.png');
-
-  /// File path: assets/images/Group 702.png
-  AssetGenImage get group702 =>
-      const AssetGenImage('assets/images/Group 702.png');
-
   /// File path: assets/images/Regenerate.png
   AssetGenImage get regenerate =>
       const AssetGenImage('assets/images/Regenerate.png');
@@ -39,6 +31,12 @@ class $AssetsImagesGen {
   /// File path: assets/images/like.png
   AssetGenImage get like => const AssetGenImage('assets/images/like.png');
 
+  /// File path: assets/images/logo.png
+  AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
+
+  /// File path: assets/images/menu.png
+  AssetGenImage get menu => const AssetGenImage('assets/images/menu.png');
+
   /// File path: assets/images/radar-2.png
   AssetGenImage get radar2 => const AssetGenImage('assets/images/radar-2.png');
 
@@ -48,13 +46,13 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
-    frame1171275448,
-    group702,
     regenerate,
     copy,
     dislike,
     lampCharge,
     like,
+    logo,
+    menu,
     radar2,
     searchNormal,
   ];
