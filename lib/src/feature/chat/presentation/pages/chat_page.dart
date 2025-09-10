@@ -122,42 +122,42 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           ),
 
           // Top Button
-          Align(
-            alignment: Alignment.centerRight, // Right side bubble
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-
-              children: [
-                GestureDetector(
-                  // onTap: onCopy,
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-
-                    decoration: BoxDecoration(
-                      color: Color(0xFF1A2235),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Image.asset(
-                      Assets.images.copy.path,
-                      width: 20,
-                      height: 20,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+          
+            children: [
+              GestureDetector(
+                // onTap: onCopy,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+          
                   decoration: BoxDecoration(
                     color: Color(0xFF1A2235),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text(
-                    "Top Performing Stocks For Today",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  child: Image.asset(
+                    Assets.images.copy.path,
+                    width: 20,
+                    height: 20,
                   ),
                 ),
-              ],
-            ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Color(0xFF1A2235),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                // child: Flexible(
+                  child: 
+                  Text(
+                    "Top Performing Stocks For Today",
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  // ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 20),
 
@@ -207,7 +207,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           color: AppColors.fieldColor,
                         ),
                         child: Image.asset(
-                          "assets/images/like.png",
+                         Assets.images.like.path,
                           width: 14,
                           height: 14,
                         ),
