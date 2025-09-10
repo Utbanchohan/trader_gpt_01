@@ -14,15 +14,34 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/Google.png
+  AssetGenImage get google => const AssetGenImage('assets/images/Google.png');
+
   /// File path: assets/images/Regenerate.png
   AssetGenImage get regenerate =>
       const AssetGenImage('assets/images/Regenerate.png');
+
+  /// File path: assets/images/apple.png
+  AssetGenImage get apple => const AssetGenImage('assets/images/apple.png');
+
+  /// File path: assets/images/arrow_back.png
+  AssetGenImage get arrowBack =>
+      const AssetGenImage('assets/images/arrow_back.png');
+
+  /// File path: assets/images/camera.png
+  AssetGenImage get camera => const AssetGenImage('assets/images/camera.png');
+
+  /// File path: assets/images/cerosil.png
+  AssetGenImage get cerosil => const AssetGenImage('assets/images/cerosil.png');
 
   /// File path: assets/images/copy.png
   AssetGenImage get copy => const AssetGenImage('assets/images/copy.png');
 
   /// File path: assets/images/dislike.png
   AssetGenImage get dislike => const AssetGenImage('assets/images/dislike.png');
+
+  /// File path: assets/images/eye.png
+  AssetGenImage get eye => const AssetGenImage('assets/images/eye.png');
 
   /// File path: assets/images/lamp-charge.png
   AssetGenImage get lampCharge =>
@@ -31,11 +50,20 @@ class $AssetsImagesGen {
   /// File path: assets/images/like.png
   AssetGenImage get like => const AssetGenImage('assets/images/like.png');
 
+  /// File path: assets/images/lock.png
+  AssetGenImage get lock => const AssetGenImage('assets/images/lock.png');
+
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
+  /// File path: assets/images/manicon.png
+  AssetGenImage get manicon => const AssetGenImage('assets/images/manicon.png');
+
   /// File path: assets/images/menu.png
   AssetGenImage get menu => const AssetGenImage('assets/images/menu.png');
+
+  /// File path: assets/images/profile.jpg
+  AssetGenImage get profile => const AssetGenImage('assets/images/profile.jpg');
 
   /// File path: assets/images/radar-2.png
   AssetGenImage get radar2 => const AssetGenImage('assets/images/radar-2.png');
@@ -44,17 +72,30 @@ class $AssetsImagesGen {
   AssetGenImage get searchNormal =>
       const AssetGenImage('assets/images/search-normal.png');
 
+  /// File path: assets/images/sms.png
+  AssetGenImage get sms => const AssetGenImage('assets/images/sms.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
+    google,
     regenerate,
+    apple,
+    arrowBack,
+    camera,
+    cerosil,
     copy,
     dislike,
+    eye,
     lampCharge,
     like,
+    lock,
     logo,
+    manicon,
     menu,
+    profile,
     radar2,
     searchNormal,
+    sms,
   ];
 }
 

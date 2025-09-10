@@ -52,6 +52,9 @@ dependencies:
   shared_preferences: ^2.5.3
   retrofit: ^4.7.2
   markdown: ^7.3.0
+  flutter_otp_text_field: ^1.5.1+1
+
+
 
 dev_dependencies:
   flutter_test:

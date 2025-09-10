@@ -1,36 +1,84 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-class GetStartedScreen extends StatelessWidget {
+class GetStartedScreen extends StatefulWidget {
+  const GetStartedScreen({super.key});
+
+  @override
+  State<GetStartedScreen> createState() => _GetStartedScreenState();
+}
+
+class _GetStartedScreenState extends State<GetStartedScreen> {
+  final ScrollController _scrollController = ScrollController();
+  final List<String> icons = [
+    'assets/images/apple.png',
+    'assets/images/google.png',
+    'assets/images/meta.png',
+    'assets/images/tesla.png',
+    'assets/images/hp.png',
+    'assets/images/microsoft.png',
+    'assets/images/jnj.png',
+    'assets/images/visa.png',
+  ];
+
+  Timer? _timer;
+  double _scrollPosition = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(milliseconds: 60), (timer) {
+      if (_scrollController.hasClients) {
+        _scrollPosition += 2;
+        if (_scrollPosition > _scrollController.position.maxScrollExtent) {
+          _scrollPosition = 0;
+        }
+        _scrollController.animateTo(
+          _scrollPosition,
+          duration: const Duration(milliseconds: 60),
+          curve: Curves.linear,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(
-        7,
-        16,
-        32,
-        1,
-      ), // Dark background color
+      backgroundColor: Color(0xFF071020),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               children: [
-                SizedBox(height: 27),
                 Image.asset(
-                  "assets/images/Frame 1171275449.png", // Replace with your logo
+                  Assets.images.manicon.path,
                   height: 42.63,
                   width: 230,
                 ),
-                SizedBox(height: 53.65),
 
+                SizedBox(height: 27),
                 Image.asset(
-                  "assets/images/Group 1171275438.png", // Replace with your logo
-                  height: 263.35,
-                  // fit: BoxFit.cover,
+                  Assets.images.cerosil.path,
+                  // height: 42.63,
+                  width: MediaQuery.sizeOf(context).width,
                 ),
+                SizedBox(height: 53.65),
 
                 SizedBox(height: 25),
                 Container(
@@ -41,6 +89,7 @@ class GetStartedScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
 
                     letterSpacing: 0,
+
                     color: Colors.white,
                     size: 32,
                     fontWeight: FontWeight.w700,
@@ -51,6 +100,7 @@ class GetStartedScreen extends StatelessWidget {
                   "Experience real-time market insights, advanced analytics, "
                   "and intelligent trade signals",
                   textAlign: TextAlign.center,
+
                   color: Colors.white,
                   letterSpacing: 0,
                   size: 16,
@@ -64,60 +114,41 @@ class GetStartedScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // Create Account Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
+                  Container(
+                    height: 55,
+                    child: ButtonWidget(
                       onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF009CFF),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      child: MdSnsText(
-                        "Create account",
-
-                        size: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.white,
-                      ),
+                      title: 'Create account',
+                      borderRadius: 50,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      textColor: AppColors.white,
+                      bgColor: AppColors.color147EE8,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
 
-                  // Sign In Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton(
+                  Container(
+                    height: 55,
+                    child: ButtonWidget(
                       onPressed: () {},
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(
-                          color: const Color.fromRGBO(39, 78, 135, 1),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      child: const Text(
-                        "Sign in",
-                        style: TextStyle(
-                          fontFamily: "Plus Jakarta Sans",
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: const Color.fromRGBO(39, 78, 135, 1),
-                        ),
-                      ),
+                      title: 'Sign in',
+                      borderRadius: 50,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      textColor: AppColors.color274E87,
+                      borderColor: AppColors.color203864,
+                      bgColor: AppColors.color091224,
                     ),
                   ),
-                  const SizedBox(height: 16),
 
-                  MdSnsText(
+                  SizedBox(height: 16),
+
+                  // Terms and Privacy Policy Text
+                  Text(
                     "By Signing Up you agree to our Terms & Privacy Policy.",
                     textAlign: TextAlign.center,
-                    color: Colors.white54,
-                    size: 12,
+                    style: TextStyle(color: Colors.white54, fontSize: 12),
                   ),
                 ],
               ),
@@ -127,4 +158,18 @@ class GetStartedScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget buildCompanyIcon(String imagePath) {
+  return Container(
+    width: 70,
+    height: 70,
+    decoration: BoxDecoration(
+      color: Color(0xFF141C2F),
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child: Center(
+      child: Image.asset(imagePath, height: 32, fit: BoxFit.contain),
+    ),
+  );
 }

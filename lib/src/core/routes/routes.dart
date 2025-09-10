@@ -2,7 +2,11 @@ import 'package:go_router/go_router.dart';
 
 enum AppRoutes {
   getStartedScreen('getStartedScreen', '/get-started'),
-  chatPage('chatPage', '/chat-page');
+  chatPage('chatPage', '/chat-page'),
+  signInPage('signInPage', '/sign-in'),
+  signUpPage('signUpPage', '/sign-up'),
+  verifaction('verifaction', '/verifaction'),
+  profilePage('profilePage', '/profilePage');
 
 
   final String name;
