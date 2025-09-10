@@ -15,12 +15,6 @@ final shellKeySettings = GlobalKey<NavigatorState>();
 final routerConfigProvider = Provider((ref) {
   return GoRouter(
     redirect: (BuildContext context, GoRouterState state) async {
-      // print("state.path ${state.path}  ${state.fullPath}");
-      //   if ( (ref.watch(localDataProvider).accessToken ?? "").isNotEmpty
-      // ) {
-      //   return AppRoutes.home.path;
-      // }
-      // return null;
       bool isPublic = AppRoutes.isPublicRoute(state);
       bool isLogin =
           (ref.watch(localDataProvider).accessToken ?? "").isNotEmpty;

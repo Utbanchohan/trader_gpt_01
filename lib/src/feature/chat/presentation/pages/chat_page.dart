@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -18,7 +19,11 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Column(
         children: [
-          
+          MdSnsText(
+            'Welcome to Trader GPT Chat!',
+            // style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+
         ],
       ),
     );

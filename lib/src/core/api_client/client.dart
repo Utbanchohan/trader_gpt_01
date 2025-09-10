@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint, Uint8List;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trader_gpt/src/shared/flavours.dart';
 import '../local/repository/local_storage_repository.dart';
 part 'interceptors.dart';
 part 'pretty_logger.dart';
@@ -43,7 +44,7 @@ final multipartClient = Provider<Dio>((ref) {
           "Content-Type": "multipart/form-data",
           "Accept": "application/json",
         },
-        baseUrl: "7667",
+        baseUrl:BaseUrl.baseUrl,
         // requestEncoder: (request, options) {
 
         // },
