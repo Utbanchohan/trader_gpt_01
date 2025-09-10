@@ -136,6 +136,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
+                        padding: EdgeInsets.all(10),
+
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           color: AppColors.fieldColor,
@@ -146,16 +148,30 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           height: 14,
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.chat_bubble_outline,
-                          color: Colors.white54,
+                      Container(
+                        padding: EdgeInsets.all(10),
+
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: AppColors.fieldColor,
+                        ),
+                        child: Image.asset(
+                          "assets/images/dislike.png",
+                          width: 14,
+                          height: 14,
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.share_outlined, color: Colors.white54),
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: AppColors.fieldColor,
+                        ),
+                        child: Image.asset(
+                          "assets/images/Regenerate.png",
+                          width: 14,
+                          height: 14,
+                        ),
                       ),
                     ],
                   ),
