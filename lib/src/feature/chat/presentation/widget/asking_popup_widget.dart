@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -56,21 +58,33 @@ class AskingPopupWidget extends StatelessWidget {
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      return buildQuestionChip(
-                        'Top Performing Stocks For Today?',
+                      return GestureDetector(
+                        onTap: () {
+                          context.goNamed(AppRoutes.stockScreen.name);
+                        },
+                        child: buildQuestionChip(
+                          'Top Performing Stocks For Today?',
+                        ),
                       );
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return SizedBox(height: 10);
                     },
                   ),
-                 
+
                   ListView.separated(
                     itemCount: 20,
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      return buildQuestionChip("What are today's best stocks?");
+                      return GestureDetector(
+                        onTap: () {
+                          context.goNamed(AppRoutes.stockScreen.name);
+                        },
+                        child: buildQuestionChip(
+                          "What are today's best stocks?",
+                        ),
+                      );
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return SizedBox(height: 10);

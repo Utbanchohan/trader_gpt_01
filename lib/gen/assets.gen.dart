@@ -75,6 +75,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/sms.png
   AssetGenImage get sms => const AssetGenImage('assets/images/sms.png');
 
+  /// File path: assets/images/stock.png
+  AssetGenImage get stock => const AssetGenImage('assets/images/stock.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
     google,
@@ -96,6 +99,7 @@ class $AssetsImagesGen {
     radar2,
     searchNormal,
     sms,
+    stock,
   ];
 }
 
