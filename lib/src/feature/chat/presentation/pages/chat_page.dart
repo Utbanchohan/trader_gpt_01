@@ -34,7 +34,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     final text = message.text.trim();
     if (text.isNotEmpty) {
       String token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OGMxNmI5NjZkMTYyNDE3YmNhNmZjMmYiLCJlbWFpbCI6InJhemEuanI5OEB5b3BtYWlsLmNvbSIsIm5hbWUiOiJNdWhhbW1hZCBSYXphIiwiaWF0IjoxNzU3NTI2MjgwLCJleHAiOjE3NTc2MTI2ODB9.lIAIJp_hRc8MIQQWtoILJOfi2DLEHDq7eeB6xATLZEc";
+          "";
       ref.read(localDataProvider).setAccessToken(token);
       var res = await ref
           .read(chatProviderProvider.notifier)

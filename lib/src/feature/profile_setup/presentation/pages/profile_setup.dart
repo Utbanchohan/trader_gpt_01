@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/profile_setup/presentation/provider/profile_setup.dart';
+import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+
+import '../../../../shared/mixin/form_state_mixin.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   ProfilePage({super.key});
@@ -14,9 +19,35 @@ class ProfilePage extends ConsumerStatefulWidget {
   ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends ConsumerState<ProfilePage> {
+class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
   bool passwordVisible1 = false;
   bool passwordVisible2 = false;
+
+  final TextEditingController fullname = TextEditingController();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
+
+  @override
+  FutureOr<void> onSubmit() async {
+    if (password.value.text == confirmPassword.value.text) {
+      final result = await ref
+          .read(profileProvider.notifier)
+          .onSubmit(
+            email: email.value.text,
+            password: password.value.text,
+            fullname: fullname.value.text,
+            imageUrl: '',
+          );
+      if (result != null) {
+        if (mounted) {
+          context.goNamed(AppRoutes.signInPage.name);
+        }
+      }
+    }else{
+      $showMessage("Confirm Password should be same as Password ");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +59,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           height: 55,
           child: ButtonWidget(
             onPressed: () {
-              context.goNamed(AppRoutes.chatPage.name);
+              submitter();
             },
             title: 'Done',
             borderRadius: 50,
@@ -100,145 +131,185 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 32),
-              Row(
-                children: [
-                  Image.asset(Assets.images.sms.path, height: 15, width: 15),
-                  SizedBox(width: 6),
-                  MdSnsText(
-                    "Full Name",
-                    size: 12,
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              TextFormField(
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColors.color141F35, // dark background
-                  hintText: 'Burak Deniz',
-                  hintStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 10,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Image.asset(Assets.images.sms.path, height: 15, width: 15),
-                  SizedBox(width: 6),
-                  MdSnsText(
-                    "Email Address",
-                    size: 12,
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              TextFormField(
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColors.color141F35, // dark background
-                  hintText: 'Burakdeniz@gmail.com',
-                  hintStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 10,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Image.asset(Assets.images.lock.path, height: 15, width: 15),
-                  SizedBox(width: 6),
-                  MdSnsText(
-                    "Create a password",
-                    size: 12,
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              _PasswordField(
-                visible: passwordVisible1,
-                onVisibilityChanged: (v) =>
-                    setState(() => passwordVisible1 = v),
-              ),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Image.asset(Assets.images.lock.path, height: 15, width: 15),
-                  SizedBox(width: 6),
-                  MdSnsText(
-                    "Create a password",
-                    size: 12,
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
+              Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    SizedBox(height: 32),
+                    Row(
+                      children: [
+                        Image.asset(
+                          Assets.images.sms.path,
+                          height: 15,
+                          width: 15,
+                        ),
+                        SizedBox(width: 6),
+                        MdSnsText(
+                          "Full Name",
+                          size: 12,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Please enter your Full name";
+                        }
+                      },
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.color141F35, // dark background
+                        hintText: 'Burak Deniz',
+                        hintStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 10,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Image.asset(
+                          Assets.images.sms.path,
+                          height: 15,
+                          width: 15,
+                        ),
+                        SizedBox(width: 6),
+                        MdSnsText(
+                          "Email Address",
+                          size: 12,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Please enter email";
+                        }
+                        final _emailRegex = RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                        );
+                        if (_emailRegex.hasMatch(value.trim())) {
+                          return null;
+                        } else {
+                          return "Please enter a valid email/phone";
+                        }
+                      },
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.color141F35, // dark background
+                        hintText: 'Burakdeniz@gmail.com',
+                        hintStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 10,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Image.asset(
+                          Assets.images.lock.path,
+                          height: 15,
+                          width: 15,
+                        ),
+                        SizedBox(width: 6),
+                        MdSnsText(
+                          "Create a password",
+                          size: 12,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    _PasswordField(
+                      controller: password,
+                      visible: passwordVisible1,
+                      onVisibilityChanged: (v) =>
+                          setState(() => passwordVisible1 = v),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Image.asset(
+                          Assets.images.lock.path,
+                          height: 15,
+                          width: 15,
+                        ),
+                        SizedBox(width: 6),
+                        MdSnsText(
+                          "Create a password",
+                          size: 12,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
 
-              _PasswordField(
-                visible: passwordVisible2,
-                onVisibilityChanged: (v) =>
-                    setState(() => passwordVisible2 = v),
-              ),
-              SizedBox(height: 8),
-              MdSnsText(
-                'Minimum 8 characters, with at least 1 uppercase, 1 lowercase,\nand 1 number (0–9) required.',
-                size: 12,
-                fontWeight: FontWeight.w400,
-                color: AppColors.white,
+                    _PasswordField(
+                      controller: confirmPassword,
+                      visible: passwordVisible2,
+                      onVisibilityChanged: (v) =>
+                          setState(() => passwordVisible2 = v),
+                    ),
+                    SizedBox(height: 8),
+                  ],
+                ),
               ),
             ],
           ),
@@ -251,11 +322,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 class _PasswordField extends StatelessWidget {
   final bool visible;
   final ValueChanged<bool> onVisibilityChanged;
-  _PasswordField({required this.visible, required this.onVisibilityChanged});
+  final TextEditingController controller;
+  _PasswordField({
+    required this.visible,
+    required this.controller,
+    required this.onVisibilityChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       obscureText: !visible,
       initialValue: '**********',
       style: TextStyle(
@@ -263,6 +340,22 @@ class _PasswordField extends StatelessWidget {
         fontSize: 20,
         fontWeight: FontWeight.w400,
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Password is required";
+        }
+        final pattern =
+            r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$';
+        final regex = RegExp(pattern);
+        return regex.hasMatch(value)
+            ? null
+            : "✖ At least 8 characters long " +
+                  "✖ At least one number (0–9) " +
+                  "✖ At least one uppercase letter (A–Z) " +
+                  "✖ At least one special character";
+      },
+      textInputAction: TextInputAction.done,
+
       decoration: InputDecoration(
         filled: true,
         fillColor: Color(0xFF161E31),

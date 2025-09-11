@@ -22,7 +22,7 @@ class SiginIn extends ConsumerStatefulWidget {
   ConsumerState<SiginIn> createState() => _SiginInState();
 }
 
-class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
+class _SiginInState extends ConsumerState<SiginIn>  with FormStateMixin{
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
 
@@ -309,8 +309,7 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                   height: 55,
                   child: ButtonWidget(
                     onPressed: () {
-                        context.goNamed(AppRoutes.chatPage.name);
-
+                      submitter();
                     },
                     title: 'Sign in',
                     borderRadius: 50,
@@ -327,7 +326,9 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                 // Sign up text
                 Center(
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.goNamed(AppRoutes.signUpPage.name);
+                    },
                     child: Text(
                       "Don't have an account? Sign up",
                       style: TextStyle(
