@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:retrofit/retrofit.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
-import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/stock_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+
+import '../../../../core/routes/routes.dart';
 
 class StockScreen extends StatefulWidget {
   const StockScreen({super.key});
@@ -22,7 +23,8 @@ class _StockScreenState extends State<StockScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            
+                      context.goNamed(AppRoutes.chatPage.name);
+
           },
         ),
         backgroundColor: AppColors.primaryColor,

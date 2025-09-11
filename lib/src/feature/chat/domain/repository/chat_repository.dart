@@ -10,7 +10,7 @@ import '../../../../core/api_client/client.dart';
 
 abstract interface class ChatRepository {
   Future<BaseModel<ChatMessageModel>> sendMessage(ChatMessageDto chat);
-    Future<BaseModel<RandomQuestionModel>> randomQuestions(String symbol);
+    Future<RandomQuestionModel> randomQuestions(String symbol);
 
   Future<dynamic> streamApi(TaskRequestDto taskRequestDto);
 

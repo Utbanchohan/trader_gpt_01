@@ -15,30 +15,18 @@ class _GptChatScreenState extends ConsumerState<GptChatScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
 
-  List<String> questions = [];
+  
 
   @override
   void initState() {
     super.initState();
-    getRandomQuestions();
     // Equivalent of onMounted in Vue
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // ref.read(gptProvider.notifier).loadConversation(widget.chatId);
     });
   }
 
-  getRandomQuestions() async {
-    var res = await ref.read(chatRepository).randomQuestions("[symbol]");
-    if (res.isSuccess) {
-      for (var ij in res.data!.questions) {
-        questions.add(ij);
-      }
-      setState(() {});
-    } else {
-      return false;
-    }
-  }
-
+  
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {

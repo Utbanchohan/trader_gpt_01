@@ -7,6 +7,8 @@ part 'random_question_model.g.dart';
 @freezed
 abstract class RandomQuestionModel with _$RandomQuestionModel {
   const factory RandomQuestionModel({
+     required String message,
+    @JsonKey(name:'success')required bool isSuccess,
     required List<String> questions,
   }) = _RandomQuestionModel;
 
