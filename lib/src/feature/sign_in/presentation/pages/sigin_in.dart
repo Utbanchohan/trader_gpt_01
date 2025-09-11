@@ -23,7 +23,9 @@ class SiginIn extends ConsumerStatefulWidget {
   ConsumerState<SiginIn> createState() => _SiginInState();
 }
 
-class _SiginInState extends ConsumerState<SiginIn>  with FormStateMixin{
+class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
+  bool visible = false;
+
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
 
@@ -34,12 +36,10 @@ class _SiginInState extends ConsumerState<SiginIn>  with FormStateMixin{
         .onSubmit(email: email.value.text, password: password.value.text);
     if (result != null) {
       if (mounted) {
-       
-          context.goNamed(AppRoutes.chatPage.name);
-        }
+        context.goNamed(AppRoutes.chatPage.name);
       }
     }
-  
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,6 @@ class _SiginInState extends ConsumerState<SiginIn>  with FormStateMixin{
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
-                  
                     onPressed: () {},
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: AppColors.color274E87),
@@ -245,6 +244,8 @@ class _SiginInState extends ConsumerState<SiginIn>  with FormStateMixin{
                       ),
                       SizedBox(height: 8),
                       TextFormField(
+                        obscureText: !visible,
+                        onChanged: (_) => setState(() {}),
                         controller: password,
                         style: const TextStyle(
                           color: Colors.white,
@@ -259,11 +260,14 @@ class _SiginInState extends ConsumerState<SiginIn>  with FormStateMixin{
                           }
                         },
                         decoration: InputDecoration(
-                          suffixIcon: Image.asset(
-                            scale: 2.9,
-                            Assets.images.eye.path,
-                            height: 15,
-                            width: 15,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              visible ? Icons.visibility : Icons.visibility_off,
+                              color: Colors.white70,
+                            ),
+                            onPressed: () => setState(() {
+                              visible = !visible;
+                            }),
                           ),
                           filled: true,
 
@@ -284,6 +288,7 @@ class _SiginInState extends ConsumerState<SiginIn>  with FormStateMixin{
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
+
                           border: OutlineInputBorder(
                             //
                           ),
