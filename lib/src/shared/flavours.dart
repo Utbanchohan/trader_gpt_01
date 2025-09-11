@@ -1,20 +1,9 @@
-
-class BaseUrl{
-static String get baseUrl {
-    // return 'http://dev.tradersgpt.io/tgpt-python';
-    return 'http://stage.tradersgpt.io/tgpt-python';
-
+class BaseUrl {
+  static String get baseUrl {
+    return 'http://stage.tradersgpt.io/';
   }
-
 
   static String get socketurl {
-    return 'http://dev.tradersgpt.io/tgpt-python';
+    return 'wss://stage.tradersgpt.io/socket.io';
   }
-
-
-
-
- 
 }
-
-  

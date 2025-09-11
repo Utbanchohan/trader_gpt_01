@@ -13,6 +13,7 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/shared/custom_message.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../../core/routes/routes.dart';
@@ -25,12 +26,15 @@ class ChatPage extends ConsumerStatefulWidget {
 }
 
 class _ChatPageState extends ConsumerState<ChatPage> {
-  final TextEditingController message = TextEditingController();
+  TextEditingController message = TextEditingController();
+  ScrollController sc=ScrollController();
+  Stock? selectedStock;
   List<ChatMessageModel> chats = [];
   List<String> questions = [];
   dynamic asyncStream;
   bool startStream = false;
   var body;
+  String chadId = "68c2f0f5b77590fbe176f8e1";
 
   @override
   void initState() {
@@ -39,6 +43,19 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     // TODO: implement initState
     super.initState();
   }
+
+  void scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (sc.hasClients) {
+        sc.animateTo(
+          sc.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 750),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
 
   @override
   void dispose() {
@@ -49,7 +66,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   logout() {
     String token = "";
     ref.read(localDataProvider).setAccessToken(token);
-    context.goNamed(AppRoutes.splash.name);
+    context.goNamed(AppRoutes.signInPage.name);
   }
 
   getRandomQuestions() async {
@@ -65,13 +82,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   getchats() async {
-    var res = await ref
-        .read(chatRepository)
-        .getMessages("68c2f0f5b77590fbe176f8e1", 1);
+    var res = await ref.read(chatRepository).getMessages(chadId, 1);
     if (res.isSuccess) {
       for (int i = 0; i < res.data!.messages!.length; i++) {
         chats.add(res.data!.messages![i]);
       }
+    scrollToBottom();
       setState(() {});
     } else {
       return false;
@@ -85,21 +101,19 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       var res = await ref
           .read(chatProviderProvider.notifier)
           .sendMessage(
-            ChatMessageDto(
-              chatId: "68c2f0f5b77590fbe176f8e1",
-              message: text,
-              type: "user",
-            ),
+            ChatMessageDto(chatId: chadId, message: text, type: "user"),
           );
       if (res != null) {
         body = {
           "task": message.text,
-          "symbol": "MSFT",
-          "symbol_name": "Microsoft Corporation",
+          "symbol": selectedStock != null ? selectedStock!.symbol : "TDGPT",
+          "symbol_name": selectedStock != null
+              ? selectedStock!.name
+              : "TraderGPT",
           "report": false,
           "is_web_research": false,
           "deep_search": false,
-          "chat_id": "68c16b966d162417bca6fc30",
+          "chat_id": chadId,
           "reply_id": "68c1d2c86d162417bca6fc8e",
           "workflow_object": null,
           "analysis_required": false,
@@ -119,6 +133,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           );
           startStream = true;
         });
+            scrollToBottom();
+
       }
 
       message.clear();
@@ -141,10 +157,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           child: Column(
             children: [
               GestureDetector(
-                onTap: () {
-                  showDialog<void>(
+                onTap: () async {
+                    selectedStock = await showDialog<Stock>(
                     context: context,
-
                     barrierDismissible: true, // user must tap button!
                     builder: (BuildContext context) {
                       return AlertDialog(
@@ -152,7 +167,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         backgroundColor: AppColors.primaryColor,
                         insetPadding: EdgeInsets.all(0),
                         contentPadding: EdgeInsets.all(0),
-                        content: AskingPopupWidget(questions: questions),
+                        content: AskingPopupWidget(
+                          questions: questions,
+                          controller: message,
+                        ),
                       );
                     },
                   );
@@ -327,158 +345,155 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         ],
       ),
       body: SingleChildScrollView(
+        controller: sc,
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-         
-         
-            Visibility(
-              visible: chats.length>0,
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: chats.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      // Row(
-                      //   children: [
-                      //     Container(
-                      //                   padding: EdgeInsets.symmetric(vertical: 8),
-                      //                   child: MdSnsText("Today", color: Colors.white70, size: 14),
-                      //                 ),
-                      //   ],
-                      // ),
-                      // SizedBox(height: 15),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: chats[index].type == "user"
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
-              
-                        children: [
-                          Visibility(
-                            visible: chats[index].type == "user",
-                            child: GestureDetector(
-                              onTap: () {
-                                Clipboard.setData(
-                                  ClipboardData(text: chats[index].message),
-                                );
-                                $showMessage("Copied to Clipboard");
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-              
-                                decoration: BoxDecoration(
-                                  color: AppColors.bubbleColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Image.asset(
-                                  Assets.images.copy.path,
-                                  width: 14,
-                                  height: 14,
-                                ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: chats.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Column(
+                  children: [
+                    // Row(
+                    //   children: [
+                    //     Container(
+                    //                   padding: EdgeInsets.symmetric(vertical: 8),
+                    //                   child: MdSnsText("Today", color: Colors.white70, size: 14),
+                    //                 ),
+                    //   ],
+                    // ),
+                    // SizedBox(height: 15),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: chats[index].type == "user"
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
+
+                      children: [
+                        Visibility(
+                          visible: chats[index].type == "user",
+                          child: GestureDetector(
+                            onTap: () {
+                              Clipboard.setData(
+                                ClipboardData(text: chats[index].message),
+                              );
+                              $showMessage("Copied to Clipboard");
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+
+                              decoration: BoxDecoration(
+                                color: AppColors.bubbleColor,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Image.asset(
+                                Assets.images.copy.path,
+                                width: 14,
+                                height: 14,
                               ),
                             ),
                           ),
-                          SizedBox(width: chats[index].type == "user" ? 10 : 0),
-                          Container(
-                            width: MediaQuery.sizeOf(context).width / 1.5,
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: AppColors.bubbleColor,
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            // child: Flexible(
-                            child: MarkdownBody(
-                              data: chats[index].message,
-                              selectable: true, // let user copy code
-                              styleSheet:
-                                  MarkdownStyleSheet.fromTheme(
-                                    Theme.of(context),
-                                  ).copyWith(
-                                    code: GoogleFonts.plusJakartaSans(
-                                      color: AppColors.white,
-                                      fontSize: 16,
-              
-                                      fontWeight: FontWeight.w400,
-                                    ),
-              
-                                    blockquote: const TextStyle(
-                                      color: Colors.red,
-                                    ),
+                        ),
+                        SizedBox(width: chats[index].type == "user" ? 10 : 0),
+                        Container(
+                          width: MediaQuery.sizeOf(context).width / 1.5,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.bubbleColor,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          // child: Flexible(
+                          child: MarkdownBody(
+                            data: chats[index].message,
+                            selectable: true, // let user copy code
+                            styleSheet:
+                                MarkdownStyleSheet.fromTheme(
+                                  Theme.of(context),
+                                ).copyWith(
+                                  code: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 16,
+
+                                    fontWeight: FontWeight.w400,
                                   ),
-                              onTapLink: (text, href, title) {
-                                if (href != null) {
-                                  // launchUrl(Uri.parse(href)); // needs url_launcher
-                                }
-                              },
+
+                                  blockquote: const TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                            onTapLink: (text, href, title) {
+                              if (href != null) {
+                                // launchUrl(Uri.parse(href)); // needs url_launcher
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(width: chats[index].type != "user" ? 10 : 0),
+                        Visibility(
+                          visible: chats[index].type != "user",
+                          child: Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(10),
+
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: AppColors.fieldColor,
+                                  ),
+                                  child: Image.asset(
+                                    Assets.images.like.path,
+                                    width: 14,
+                                    height: 14,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+
+                                Container(
+                                  padding: EdgeInsets.all(10),
+
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: AppColors.fieldColor,
+                                  ),
+                                  child: Image.asset(
+                                    "assets/images/dislike.png",
+                                    width: 14,
+                                    height: 14,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: AppColors.fieldColor,
+                                  ),
+                                  child: Image.asset(
+                                    "assets/images/Regenerate.png",
+                                    width: 14,
+                                    height: 14,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(width: chats[index].type != "user" ? 10 : 0),
-                          Visibility(
-                            visible: chats[index].type != "user",
-                            child: Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-              
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: AppColors.fieldColor,
-                                    ),
-                                    child: Image.asset(
-                                      Assets.images.like.path,
-                                      width: 14,
-                                      height: 14,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-              
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-              
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: AppColors.fieldColor,
-                                    ),
-                                    child: Image.asset(
-                                      "assets/images/dislike.png",
-                                      width: 14,
-                                      height: 14,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-              
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: AppColors.fieldColor,
-                                    ),
-                                    child: Image.asset(
-                                      "assets/images/Regenerate.png",
-                                      width: 14,
-                                      height: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                    ],
-                  );
-                },
-              ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                  ],
+                );
+              },
             ),
             asyncStream.when(
               data: (line) {
+                scrollToBottom();
                 return Column(
                   children: [
                     Row(
@@ -577,7 +592,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 );
               },
 
-              loading: () => Column(
+              loading: () => Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     width: MediaQuery.sizeOf(context).width / 1.4,
@@ -586,27 +602,19 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       color: AppColors.bubbleColor,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Row(
-                      children: [
-                        MdSnsText(
-                          "Thinking....",
-                          color: AppColors.white,
-                          size: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        Image.asset(
-                          Assets.images.microinteractionsPreloader03.path,
-                          height: 40,
-                          width: 40,
-                          color: Colors.white,
-                        ),
-                      ],
+                    child: MdSnsText(
+                      "Thinking....",
+                      color: AppColors.white,
+                      size: 14,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
 
               error: (err, _) => Center(child: Text("Error: $err")),
+
+              
             ),
           ],
         ),

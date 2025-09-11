@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:trader_gpt/src/shared/flavours.dart';
 
 class SseService {
   final Dio _dio = Dio();
   final buffer = StringBuffer();
 
   Stream<String> connect(Map<String, dynamic> body, String token) async* {
-    final url = "https://stage.tradersgpt.io/tgpt-python/api/user_ask_stream";
+    final url = "${BaseUrl.baseUrl}tgpt-python/api/user_ask_stream";
 
     final headers = {
       "accept": "text/event-stream",
