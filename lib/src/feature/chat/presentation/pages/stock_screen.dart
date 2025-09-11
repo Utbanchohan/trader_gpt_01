@@ -18,6 +18,9 @@ class _StockScreenState extends State<StockScreen> {
 
   Timer? _pollingTimer;
 
+  // Keep track of selected stocks by their symbol
+  final Set<String> _selectedStocks = {};
+
   @override
   void initState() {
     super.initState();
@@ -27,15 +30,12 @@ class _StockScreenState extends State<StockScreen> {
 
   void _connectSocket() {
     _socketService.connect();
-
-    // Listen for live updates from server push
     _socketService.onStockUpdate((data) {
       _updateStocks(data);
     });
   }
 
   void _startPolling() {
-    // Fetch every 100 milliseconds
     _pollingTimer = Timer.periodic(const Duration(milliseconds: 100), (_) {
       _socketService.fetchStocks((data) {
         _updateStocks(data);
@@ -66,6 +66,16 @@ class _StockScreenState extends State<StockScreen> {
     return change < 0 ? Colors.red : Colors.green;
   }
 
+  void _toggleSelection(String symbol) {
+    setState(() {
+      if (_selectedStocks.contains(symbol)) {
+        _selectedStocks.remove(symbol);
+      } else {
+        _selectedStocks.add(symbol);
+      }
+    });
+  }
+
   @override
   void dispose() {
     _socketService.socket.dispose();
@@ -77,53 +87,88 @@ class _StockScreenState extends State<StockScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('NASDAQ Stocks'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => _socketService.fetchStocks((data) {
-              _updateStocks(data);
-            }),
-          ),
-        ],
+        title: Text(
+          'NASDAQ Stocks '
+          '(${_selectedStocks.length})',
+        ),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _stocks.isEmpty
           ? const Center(child: Text('No stocks available'))
           : ListView.builder(
+              padding: EdgeInsets.zero,
               itemCount: _stocks.length,
               itemBuilder: (context, index) {
                 final stock = _stocks[index];
-                final change = stock.change ?? 0.0;
-                return ListTile(
-                  leading: stock.logoUrl != null
-                      ? Image.network(stock.logoUrl!, width: 40, height: 40)
-                      : const Icon(Icons.safety_check),
-                  title: Text(stock.name ?? ''),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                final change = stock.changesPercentage ?? 0.0;
+                final isSelected = _selectedStocks.contains(stock.symbol);
+
+                return GestureDetector(
+                  onTap: () => _toggleSelection(stock.symbol),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 6),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected ? Colors.blue : Colors.transparent,
+                        width: 2,
+                      ),
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 5,
+                      ),
+                      leading: stock.logoUrl != null
+                          ? Image.network(
+                              stock.logoUrl!,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.broken_image, size: 40),
+                            )
+                          : const Icon(Icons.safety_check, size: 40),
+                      title: Text(
+                        stock.name ?? 'Unknown',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: Text(
+                        stock.symbol,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
                             '\$${stock.price?.toStringAsFixed(2) ?? '0.00'}',
                             style: TextStyle(
-                              color: _getChangeColor(change),
+                              color: Colors.white60,
                               fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
                           ),
-                          const SizedBox(width: 10),
+                          const SizedBox(height: 4),
                           Text(
-                            '${change >= 0 ? '+' : ''}${change.toStringAsFixed(2)}',
+                            '${change >= 0 ? '+' : ''}${change.toStringAsFixed(2)}%',
                             style: TextStyle(
                               color: _getChangeColor(change),
                               fontWeight: FontWeight.bold,
+                              fontSize: 14,
                             ),
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 );
               },
