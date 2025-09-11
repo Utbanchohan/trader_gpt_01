@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/services/sockets/socket_service.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model/stock_model.dart';
 import 'package:intl/intl.dart';
@@ -17,9 +18,6 @@ class _StockScreenState extends State<StockScreen> {
   bool _loading = true;
 
   Timer? _pollingTimer;
-
-  // Keep track of selected stocks by their symbol
-  final Set<String> _selectedStocks = {};
 
   @override
   void initState() {
@@ -66,16 +64,6 @@ class _StockScreenState extends State<StockScreen> {
     return change < 0 ? Colors.red : Colors.green;
   }
 
-  void _toggleSelection(String symbol) {
-    setState(() {
-      if (_selectedStocks.contains(symbol)) {
-        _selectedStocks.remove(symbol);
-      } else {
-        _selectedStocks.add(symbol);
-      }
-    });
-  }
-
   @override
   void dispose() {
     _socketService.socket.dispose();
@@ -83,15 +71,15 @@ class _StockScreenState extends State<StockScreen> {
     super.dispose();
   }
 
+  void _selectStock(String symbol) {
+    // Immediately return the selected symbol to previous screen
+    context.pop(symbol);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'NASDAQ Stocks '
-          '(${_selectedStocks.length})',
-        ),
-      ),
+      appBar: AppBar(title: const Text('NASDAQ Stocks')),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _stocks.isEmpty
@@ -102,19 +90,17 @@ class _StockScreenState extends State<StockScreen> {
               itemBuilder: (context, index) {
                 final stock = _stocks[index];
                 final change = stock.changesPercentage ?? 0.0;
-                final isSelected = _selectedStocks.contains(stock.symbol);
 
                 return GestureDetector(
-                  onTap: () => _toggleSelection(stock.symbol),
+                  onTap: () => _selectStock(stock.symbol),
                   child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    padding: const EdgeInsets.all(8),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isSelected ? Colors.blue : Colors.transparent,
-                        width: 2,
-                      ),
+                      border: Border.all(color: Colors.blue, width: 2),
                     ),
                     child: ListTile(
                       contentPadding: const EdgeInsets.symmetric(

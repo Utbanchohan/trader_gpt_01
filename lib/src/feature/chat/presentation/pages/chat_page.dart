@@ -23,17 +23,16 @@ class ChatPage extends ConsumerStatefulWidget {
 }
 
 class _ChatPageState extends ConsumerState<ChatPage> {
-  final TextEditingController message = TextEditingController();
-  List<dynamic> chats = [];List<String> questions = [];
+  TextEditingController message = TextEditingController();
+  List<dynamic> chats = [];
+  List<String> questions = [];
 
-
-@override
+  @override
   void initState() {
     getRandomQuestions();
     // TODO: implement initState
     super.initState();
   }
-
 
   @override
   void dispose() {
@@ -47,7 +46,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     context.goNamed(AppRoutes.signInPage.name);
   }
 
-getRandomQuestions() async {
+  getRandomQuestions() async {
     var res = await ref.read(chatRepository).randomQuestions("[symbol]");
     if (res.isSuccess) {
       for (var ij in res.questions) {
@@ -58,8 +57,6 @@ getRandomQuestions() async {
       return false;
     }
   }
-
-
 
   void _sendMessage(WidgetRef ref) async {
     final text = message.text.trim();
@@ -293,7 +290,6 @@ getRandomQuestions() async {
                 onTap: () {
                   showDialog<void>(
                     context: context,
-
                     barrierDismissible: true, // user must tap button!
                     builder: (BuildContext context) {
                       return AlertDialog(
@@ -301,7 +297,10 @@ getRandomQuestions() async {
                         backgroundColor: AppColors.primaryColor,
                         insetPadding: EdgeInsets.all(0),
                         contentPadding: EdgeInsets.all(0),
-                        content: AskingPopupWidget(questions: questions,),
+                        content: AskingPopupWidget(
+                          questions: questions,
+                          controller: message,
+                        ),
                       );
                     },
                   );
