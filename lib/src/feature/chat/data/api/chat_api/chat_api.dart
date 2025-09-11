@@ -21,5 +21,5 @@ abstract interface class ChatApi {
   Future<BaseModel<ChatMessageModel>> sendMessage(@Body() ChatMessageDto chatMessageDto);
 
   @GET('/popular-questions/random?symbol={symbol}')
-  Future<BaseModel<RandomQuestionModel>> randomQuestion(@Path('symbol') String symbol,);                                             
+  Future<RandomQuestionModel> randomQuestion(@Path('symbol') String symbol,);                                             
 }

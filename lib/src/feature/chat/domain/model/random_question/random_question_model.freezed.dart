@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RandomQuestionModel {
 
- List<String> get questions;
+ String get message;@JsonKey(name: 'success') bool get isSuccess; List<String> get questions;
 /// Create a copy of RandomQuestionModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RandomQuestionModelCopyWith<RandomQuestionModel> get copyWith => _$RandomQuesti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RandomQuestionModel&&const DeepCollectionEquality().equals(other.questions, questions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RandomQuestionModel&&(identical(other.message, message) || other.message == message)&&(identical(other.isSuccess, isSuccess) || other.isSuccess == isSuccess)&&const DeepCollectionEquality().equals(other.questions, questions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(questions));
+int get hashCode => Object.hash(runtimeType,message,isSuccess,const DeepCollectionEquality().hash(questions));
 
 @override
 String toString() {
-  return 'RandomQuestionModel(questions: $questions)';
+  return 'RandomQuestionModel(message: $message, isSuccess: $isSuccess, questions: $questions)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RandomQuestionModelCopyWith<$Res>  {
   factory $RandomQuestionModelCopyWith(RandomQuestionModel value, $Res Function(RandomQuestionModel) _then) = _$RandomQuestionModelCopyWithImpl;
 @useResult
 $Res call({
- List<String> questions
+ String message,@JsonKey(name: 'success') bool isSuccess, List<String> questions
 });
 
 
@@ -65,9 +65,11 @@ class _$RandomQuestionModelCopyWithImpl<$Res>
 
 /// Create a copy of RandomQuestionModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? questions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? message = null,Object? isSuccess = null,Object? questions = null,}) {
   return _then(_self.copyWith(
-questions: null == questions ? _self.questions : questions // ignore: cast_nullable_to_non_nullable
+message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,isSuccess: null == isSuccess ? _self.isSuccess : isSuccess // ignore: cast_nullable_to_non_nullable
+as bool,questions: null == questions ? _self.questions : questions // ignore: cast_nullable_to_non_nullable
 as List<String>,
   ));
 }
@@ -153,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<String> questions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String message, @JsonKey(name: 'success')  bool isSuccess,  List<String> questions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RandomQuestionModel() when $default != null:
-return $default(_that.questions);case _:
+return $default(_that.message,_that.isSuccess,_that.questions);case _:
   return orElse();
 
 }
@@ -174,10 +176,10 @@ return $default(_that.questions);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<String> questions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String message, @JsonKey(name: 'success')  bool isSuccess,  List<String> questions)  $default,) {final _that = this;
 switch (_that) {
 case _RandomQuestionModel():
-return $default(_that.questions);case _:
+return $default(_that.message,_that.isSuccess,_that.questions);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +196,10 @@ return $default(_that.questions);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<String> questions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String message, @JsonKey(name: 'success')  bool isSuccess,  List<String> questions)?  $default,) {final _that = this;
 switch (_that) {
 case _RandomQuestionModel() when $default != null:
-return $default(_that.questions);case _:
+return $default(_that.message,_that.isSuccess,_that.questions);case _:
   return null;
 
 }
@@ -209,9 +211,11 @@ return $default(_that.questions);case _:
 @JsonSerializable()
 
 class _RandomQuestionModel implements RandomQuestionModel {
-  const _RandomQuestionModel({required final  List<String> questions}): _questions = questions;
+  const _RandomQuestionModel({required this.message, @JsonKey(name: 'success') required this.isSuccess, required final  List<String> questions}): _questions = questions;
   factory _RandomQuestionModel.fromJson(Map<String, dynamic> json) => _$RandomQuestionModelFromJson(json);
 
+@override final  String message;
+@override@JsonKey(name: 'success') final  bool isSuccess;
  final  List<String> _questions;
 @override List<String> get questions {
   if (_questions is EqualUnmodifiableListView) return _questions;
@@ -233,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RandomQuestionModel&&const DeepCollectionEquality().equals(other._questions, _questions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RandomQuestionModel&&(identical(other.message, message) || other.message == message)&&(identical(other.isSuccess, isSuccess) || other.isSuccess == isSuccess)&&const DeepCollectionEquality().equals(other._questions, _questions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_questions));
+int get hashCode => Object.hash(runtimeType,message,isSuccess,const DeepCollectionEquality().hash(_questions));
 
 @override
 String toString() {
-  return 'RandomQuestionModel(questions: $questions)';
+  return 'RandomQuestionModel(message: $message, isSuccess: $isSuccess, questions: $questions)';
 }
 
 
@@ -253,7 +257,7 @@ abstract mixin class _$RandomQuestionModelCopyWith<$Res> implements $RandomQuest
   factory _$RandomQuestionModelCopyWith(_RandomQuestionModel value, $Res Function(_RandomQuestionModel) _then) = __$RandomQuestionModelCopyWithImpl;
 @override @useResult
 $Res call({
- List<String> questions
+ String message,@JsonKey(name: 'success') bool isSuccess, List<String> questions
 });
 
 
@@ -270,9 +274,11 @@ class __$RandomQuestionModelCopyWithImpl<$Res>
 
 /// Create a copy of RandomQuestionModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? questions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? message = null,Object? isSuccess = null,Object? questions = null,}) {
   return _then(_RandomQuestionModel(
-questions: null == questions ? _self._questions : questions // ignore: cast_nullable_to_non_nullable
+message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,isSuccess: null == isSuccess ? _self.isSuccess : isSuccess // ignore: cast_nullable_to_non_nullable
+as bool,questions: null == questions ? _self._questions : questions // ignore: cast_nullable_to_non_nullable
 as List<String>,
   ));
 }

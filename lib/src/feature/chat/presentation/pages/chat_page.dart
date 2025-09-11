@@ -24,7 +24,16 @@ class ChatPage extends ConsumerStatefulWidget {
 
 class _ChatPageState extends ConsumerState<ChatPage> {
   final TextEditingController message = TextEditingController();
-  List<dynamic> chats = [];
+  List<dynamic> chats = [];List<String> questions = [];
+
+
+@override
+  void initState() {
+    getRandomQuestions();
+    // TODO: implement initState
+    super.initState();
+  }
+
 
   @override
   void dispose() {
@@ -37,6 +46,20 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     ref.read(localDataProvider).setAccessToken(token);
     context.goNamed(AppRoutes.signInPage.name);
   }
+
+getRandomQuestions() async {
+    var res = await ref.read(chatRepository).randomQuestions("[symbol]");
+    if (res.isSuccess) {
+      for (var ij in res.questions) {
+        questions.add(ij);
+      }
+      setState(() {});
+    } else {
+      return false;
+    }
+  }
+
+
 
   void _sendMessage(WidgetRef ref) async {
     final text = message.text.trim();
@@ -278,7 +301,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         backgroundColor: AppColors.primaryColor,
                         insetPadding: EdgeInsets.all(0),
                         contentPadding: EdgeInsets.all(0),
-                        content: AskingPopupWidget(),
+                        content: AskingPopupWidget(questions: questions,),
                       );
                     },
                   );
