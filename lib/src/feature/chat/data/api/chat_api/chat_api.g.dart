@@ -50,12 +50,12 @@ class _ChatApi implements ChatApi {
   }
 
   @override
-  Future<RandomQuestionModel> getchats() async {
+  Future<BaseModel<ChatHistoryResponse>> getchats() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<RandomQuestionModel>(
+    final _options = _setStreamType<BaseModel<ChatHistoryResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -66,9 +66,42 @@ class _ChatApi implements ChatApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late RandomQuestionModel _value;
+    late BaseModel<ChatHistoryResponse> _value;
     try {
-      _value = RandomQuestionModel.fromJson(_result.data!);
+      _value = BaseModel<ChatHistoryResponse>.fromJson(
+        _result.data!,
+        (json) => ChatHistoryResponse.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<BaseModel<Conversation>> getMessages(String chatId, int page) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<BaseModel<Conversation>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/message/${chatId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseModel<Conversation> _value;
+    try {
+      _value = BaseModel<Conversation>.fromJson(
+        _result.data!,
+        (json) => Conversation.fromJson(json as Map<String, dynamic>),
+      );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

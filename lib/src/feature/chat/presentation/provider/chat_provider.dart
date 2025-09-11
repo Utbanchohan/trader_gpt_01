@@ -1,20 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
-import 'dart:ui';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
-import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/stream_service.dart';
 import 'package:trader_gpt/src/shared/states/app_loading_state.dart';
 
-import '../../../../core/api_client/client.dart';
-import '../../../../shared/flavours.dart';
-import 'package:http/http.dart' as http;
+
 
 part 'chat_provider.g.dart';
 
@@ -22,7 +16,8 @@ part 'chat_provider.g.dart';
 final sseProvider =
     StreamProvider.family<String, Map<String, dynamic>>((ref, body) {
   final service = SseService();
-  return service.connect(body);
+  String token=ref.watch(localDataProvider).accessToken??"";
+  return service.connect(body,token);
 });
 
 @riverpod

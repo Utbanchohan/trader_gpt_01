@@ -3,7 +3,9 @@ import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/base_model/base_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/conversation/conversation_model.dart';
 import '../../../domain/model/chat_response/chat_message_model.dart';
+import '../../../domain/model/chats/chats_model.dart';
 import '../../../domain/model/random_question/random_question_model.dart';
 part 'chat_api.g.dart';
 
@@ -21,7 +23,11 @@ abstract interface class ChatApi {
   Future<BaseModel<ChatMessageModel>> sendMessage(@Body() ChatMessageDto chatMessageDto);
 
  @GET("/chat")
-  Future<RandomQuestionModel> getchats();                                             
+  Future<BaseModel<ChatHistoryResponse>> getchats();
+
+    @GET("/message/{chatId}")
+  Future<BaseModel<Conversation>> getMessages(  @Path("chatId") String chatId,
+    @Query("page") int page,);                                            
 
 
   @GET('/popular-questions/random?symbol={symbol}')
