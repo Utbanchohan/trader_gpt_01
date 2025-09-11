@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trader_gpt/src/core/local/providers/shared_pref.dart';
 import 'package:trader_gpt/src/core/local/repository/shared_pref_repository.dart';
 
+import '../../../feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
+
 abstract interface class SharedPrefService {
   Future<bool> setLogout();
   Future<bool> setIsLogin();
@@ -12,6 +14,7 @@ abstract interface class SharedPrefService {
   bool get isLogin;
 
   Future<bool> setAccessToken(String token);
+
 
   String? get accessToken;
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,9 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/sign_in/presentation/provider/sign_in.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/primary_button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+
+import '../../../../core/routes/routes.dart';
+import '../../../../shared/mixin/form_state_mixin.dart';
 
 class SiginIn extends ConsumerStatefulWidget {
   SiginIn({super.key});
@@ -16,7 +22,26 @@ class SiginIn extends ConsumerStatefulWidget {
   ConsumerState<SiginIn> createState() => _SiginInState();
 }
 
-class _SiginInState extends ConsumerState<SiginIn> {
+class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
+
+  @override
+  FutureOr<void> onSubmit() async {
+    final result = await ref
+        .read(loginProvider.notifier)
+        .onSubmit(email: email.value.text, password: password.value.text);
+    if (result != null) {
+      if (mounted) {
+        if (result.user?.isVerified ?? false) {
+          context.goNamed(AppRoutes.verifaction.name);
+        } else {
+          context.goNamed(AppRoutes.chatPage.name);
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,107 +158,137 @@ class _SiginInState extends ConsumerState<SiginIn> {
                 ),
 
                 SizedBox(height: 30),
+                Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      // Email TextField
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            Assets.images.sms.path,
+                            height: 15,
+                            width: 15,
+                          ),
+                          SizedBox(width: 5),
+                          MdSnsText(
+                            "Email Address",
 
-                // Email TextField
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(Assets.images.sms.path, height: 15, width: 15),
-                    SizedBox(width: 5),
-                    MdSnsText(
-                      "Email Address",
+                            size: 12,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.white,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
 
-                      size: 12,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.white,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
+                      TextFormField(
+                        controller: email,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        validator: (val) {
+                          if (val != null) {
+                            return null;
+                          } else {
+                            return "password should not be empty";
+                          }
+                        },
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: AppColors.color141F35, // dark background
+                          hintText: 'Burakdeniz@gmail.com',
+                          hintStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 10,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                      ),
 
-                TextFormField(
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: AppColors.color141F35, // dark background
-                    hintText: 'Burakdeniz@gmail.com',
-                    hintStyle: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 10,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                ),
+                      SizedBox(height: 10),
 
-                SizedBox(height: 10),
+                      // Password TextField
+                      Row(
+                        children: [
+                          Image.asset(
+                            Assets.images.lock.path,
+                            height: 15,
+                            width: 15,
+                          ),
+                          SizedBox(width: 5),
+                          MdSnsText(
+                            "Password",
 
-                // Password TextField
-                Row(
-                  children: [
-                    Image.asset(Assets.images.lock.path, height: 15, width: 15),
-                    SizedBox(width: 5),
-                    MdSnsText(
-                      "Password",
+                            size: 12,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.white,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      TextFormField(
+                        controller: password,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        validator: (val) {
+                          if (val != null) {
+                            return null;
+                          } else {
+                            return "password should not be empty";
+                          }
+                        },
+                        decoration: InputDecoration(
+                          suffixIcon: Image.asset(
+                            scale: 2.9,
+                            Assets.images.eye.path,
+                            height: 15,
+                            width: 15,
+                          ),
+                          filled: true,
 
-                      size: 12,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.white,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                TextFormField(
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  decoration: InputDecoration(
-                    suffixIcon: Image.asset(
-                      scale: 2.9,
-                      Assets.images.eye.path,
-                      height: 15,
-                      width: 15,
-                    ),
-                    filled: true,
-
-                    fillColor: AppColors.color141F35,
-                    hintText: '*********',
-                    hintStyle: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 10,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    border: OutlineInputBorder(
-                      //
-                    ),
+                          fillColor: AppColors.color141F35,
+                          hintText: '*********',
+                          hintStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 10,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          border: OutlineInputBorder(
+                            //
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 10),

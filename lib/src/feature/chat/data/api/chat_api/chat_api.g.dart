@@ -49,6 +49,36 @@ class _ChatApi implements ChatApi {
     return _value;
   }
 
+  @override
+  Future<BaseModel<RandomQuestionModel>> randomQuestion(String symbol) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<BaseModel<RandomQuestionModel>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/popular-questions/random?symbol=${symbol}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseModel<RandomQuestionModel> _value;
+    try {
+      _value = BaseModel<RandomQuestionModel>.fromJson(
+        _result.data!,
+        (json) => RandomQuestionModel.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

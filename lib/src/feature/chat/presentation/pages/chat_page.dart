@@ -11,6 +11,8 @@ import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_wid
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
+import '../../domain/model/chats/chats_model.dart';
+
 class ChatPage extends ConsumerStatefulWidget {
   ChatPage({super.key});
 
@@ -20,6 +22,7 @@ class ChatPage extends ConsumerStatefulWidget {
 
 class _ChatPageState extends ConsumerState<ChatPage> {
   final TextEditingController message = TextEditingController();
+  List<dynamic> chats = [];
 
   @override
   void dispose() {
@@ -42,7 +45,21 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               type: "user",
             ),
           );
-      if (res != null) {}
+      if (res != null) {
+        chats.add(
+          Chats(
+            isLoading: false,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
+            data: [
+              {
+                "chatId": "68c16b966d162417bca6fc30",
+                message: text,
+                "type": "user",
+              },
+            ],
+          ),
+        );
+      }
 
       message.clear();
     }
