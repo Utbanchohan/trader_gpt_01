@@ -39,12 +39,10 @@ class Login extends _$Login {
               .read(localDataProvider)
               .saveUserId(response.data?.user?.id ?? '');
 
-        await ref
+          await ref
               .read(localDataProvider)
               .saveUser(response.data!.user.toJson());
-        
 
-         
           state = AppLoadingState();
           return response.data!;
         } else {
@@ -55,7 +53,7 @@ class Login extends _$Login {
       }
       state = AppLoadingState();
     } catch (e) {
-              $showMessage("Invalid Credentials", isError: true);
+      $showMessage("Invalid Credentials", isError: true);
 
       state = AppLoadingState();
       debugPrint("errror $e");

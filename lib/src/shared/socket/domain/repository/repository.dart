@@ -1,7 +1,4 @@
-
-
 import 'dart:convert';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/src/shared/flavours.dart';
 import 'package:trader_gpt/src/shared/socket/data/api/socket_api.dart';
@@ -11,11 +8,12 @@ import 'package:trader_gpt/src/shared/socket/model/stock_model/stock_model.dart'
 class SocketRepository {
   final String baseUrl;
   final SocketApi service;
-  final Ref ref;
-  SocketRepository(this.service, this.baseUrl, this.ref);
 
-  void initConnection({Map<String, dynamic>? query}) {
-    service.connect(baseUrl, ref, query: query);
+  SocketRepository(this.service, this.baseUrl);
+
+  // ✅ Connect socket AFTER login
+  void initConnection(String accessToken) {
+    service.connect(baseUrl, accessToken);
   }
 
   Stream<Stock> listenToStocksPrices() {
@@ -35,7 +33,6 @@ class SocketRepository {
             .map((e) => {'stockId': e, 'showTrendChart': true})
             .toList(),
       },
-
       (event) {
         List<Stock> stocks = (event as List)
             .map((e) => Stock.fromJson(e))
@@ -51,15 +48,5 @@ class SocketRepository {
 }
 
 final socketRepository = Provider<SocketRepository>((ref) {
-  final repo = null;
-  SocketRepository(
-    SocketApi.instance,
-    BaseUrl.socketurl,
-    ref,
-  );
-
-  // Dispose socket when provider is destroyed
-  ref.onDispose(() => repo.dispose());
-
-  return repo;
+  return SocketRepository(SocketApi.instance, BaseUrl.socketurl);
 });

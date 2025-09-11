@@ -36,7 +36,7 @@ final routerConfigProvider = Provider((ref) {
     },
     debugLogDiagnostics: kDebugMode,
     navigatorKey: navigatorKey,
-    initialLocation: AppRoutes.uploadImage.path,
+    initialLocation: AppRoutes.chatPage.path,
     routes: [
       GoRoute(
         path: AppRoutes.getStartedScreen.path,

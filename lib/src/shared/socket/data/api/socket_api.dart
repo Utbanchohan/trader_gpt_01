@@ -1,11 +1,5 @@
-
-
 import 'dart:convert';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../../core/local/repository/local_storage_repository.dart';
 
 class SocketApi {
   static final SocketApi _instance = SocketApi._internal();
@@ -13,10 +7,11 @@ class SocketApi {
   SocketApi._internal();
   static SocketApi get instance => _instance;
 
-  late IO.Socket socket;
+  IO.Socket? socket;
 
-  void connect(String url, Ref ref, {Map<String, dynamic>? query}) async {
-    final accessToken = await ref.read(localDataProvider).accessToken;
+  void connect(String url, String accessToken, {Map<String, dynamic>? query}) {
+    if (socket != null && socket!.connected) return; // Already connected
+
     socket = IO.io(
       url,
       IO.OptionBuilder()
@@ -28,32 +23,37 @@ class SocketApi {
           .build(),
     );
 
-    socket.onConnect((_) async {
-      // log("✅ Connected to socket");
+    socket!.onConnect((_) {
+      print("✅ Socket connected: ${socket!.id}");
     });
 
-    socket.onDisconnect((_) => print("❌ Socket disconnected"));
+    socket!.onDisconnect((_) {
+      print("❌ Socket disconnected");
+    });
+
+    socket!.connect();
   }
 
   void emit(String event, dynamic data) {
-    socket.emit(event, data);
+    socket?.emit(event, data);
   }
 
   void emitWithAck(
     String event,
     Map<String, dynamic> body,
-    Function(dynamic event) callBack,
+    Function(dynamic) callBack,
   ) {
-    socket.emitWithAck(event, jsonEncode(body), ack: callBack);
+    socket?.emitWithAck(event, jsonEncode(body), ack: callBack);
   }
 
   Stream<dynamic> listen(String event) {
     return Stream<dynamic>.multi((controller) {
-      socket.on(event, (data) => controller.add(data));
+      socket?.on(event, (data) => controller.add(data));
     });
   }
 
   void disconnect() {
-    // socket.dispose();
+    socket?.dispose();
+    socket = null;
   }
 }

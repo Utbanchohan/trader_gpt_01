@@ -1,11 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:trader_gpt/gen/assets.gen.dart';
-import 'package:trader_gpt/src/core/theme/app_colors.dart';
-import 'package:trader_gpt/src/feature/chat/presentation/widget/stock_widget.dart';
-import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-
-import '../../../../core/routes/routes.dart';
+import 'package:trader_gpt/src/services/sockets/socket_service.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model/stock_model.dart';
+import 'package:intl/intl.dart';
 
 class StockScreen extends StatefulWidget {
   const StockScreen({super.key});
@@ -15,49 +12,122 @@ class StockScreen extends StatefulWidget {
 }
 
 class _StockScreenState extends State<StockScreen> {
+  final SocketService _socketService = SocketService();
+  List<Stock> _stocks = [];
+  bool _loading = true;
+
+  Timer? _pollingTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _connectSocket();
+    _startPolling();
+  }
+
+  void _connectSocket() {
+    _socketService.connect();
+
+    // Listen for live updates from server push
+    _socketService.onStockUpdate((data) {
+      _updateStocks(data);
+    });
+  }
+
+  void _startPolling() {
+    // Fetch every 100 milliseconds
+    _pollingTimer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+      _socketService.fetchStocks((data) {
+        _updateStocks(data);
+      });
+    });
+  }
+
+  void _updateStocks(List<dynamic> data) {
+    final updatedStocks = data
+        .map((item) => Stock.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+
+    setState(() {
+      for (var updated in updatedStocks) {
+        final index = _stocks.indexWhere((s) => s.symbol == updated.symbol);
+        if (index >= 0) {
+          _stocks[index] = updated;
+        } else {
+          _stocks.add(updated);
+        }
+      }
+      _loading = false;
+    });
+  }
+
+  Color _getChangeColor(double? change) {
+    if (change == null) return Colors.black;
+    return change < 0 ? Colors.red : Colors.green;
+  }
+
+  @override
+  void dispose() {
+    _socketService.socket.dispose();
+    _pollingTimer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-                      context.goNamed(AppRoutes.chatPage.name);
-
-          },
-        ),
-        backgroundColor: AppColors.primaryColor,
-
-        scrolledUnderElevation: 0,
-        animateColor: false,
-
-        title: MdSnsText(
-          "Stock",
-          size: 16,
-          fontWeight: FontWeight.w600,
-          color: AppColors.white,
-        ),
+        title: const Text('NASDAQ Stocks'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => _socketService.fetchStocks((data) {
+              _updateStocks(data);
+            }),
+          ),
+        ],
       ),
-      body: ListView.separated(
-        shrinkWrap: true,
-
-        itemCount: 20,
-        itemBuilder: (BuildContext context, int index) {
-          return StockWidget(
-            logoPath: Assets.images.apple.path,
-            symbol: "TSLA",
-            company: 'Tesla, Inc.',
-            description: 'Provide a company overview for...',
-            price: '450.00',
-            change: '+50',
-            percent: '(+3.23%)',
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return Divider(height: 0, color: AppColors.color1B254B);
-        },
-      ),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : _stocks.isEmpty
+          ? const Center(child: Text('No stocks available'))
+          : ListView.builder(
+              itemCount: _stocks.length,
+              itemBuilder: (context, index) {
+                final stock = _stocks[index];
+                final change = stock.change ?? 0.0;
+                return ListTile(
+                  leading: stock.logoUrl != null
+                      ? Image.network(stock.logoUrl!, width: 40, height: 40)
+                      : const Icon(Icons.safety_check),
+                  title: Text(stock.name ?? ''),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '\$${stock.price?.toStringAsFixed(2) ?? '0.00'}',
+                            style: TextStyle(
+                              color: _getChangeColor(change),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            '${change >= 0 ? '+' : ''}${change.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              color: _getChangeColor(change),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
     );
   }
 }
