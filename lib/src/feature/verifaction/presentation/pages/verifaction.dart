@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:go_router/go_router.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -23,18 +25,17 @@ class _VerifactionState extends ConsumerState<Verifaction> {
         bottom: true,
         child: Container(
           height: 55,
-          margin: EdgeInsets.only(
-            left: 20,
-            right: 20
-          ),
-          child:  ButtonWidget(
-            onPressed: () {},
+          margin: EdgeInsets.only(left: 20, right: 20),
+          child: ButtonWidget(
+            onPressed: () {
+              context.goNamed(AppRoutes.profilePage.name);
+            },
             title: 'Submit',
             borderRadius: 50,
             fontSize: 18,
             fontWeight: FontWeight.w500,
             textColor: AppColors.white,
-          
+
             bgColor: AppColors.color147EE8,
           ),
         ),

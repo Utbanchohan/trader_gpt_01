@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -25,7 +27,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           margin: EdgeInsets.only(left: 20, right: 20),
           height: 55,
           child: ButtonWidget(
-            onPressed: () {},
+            onPressed: () {
+              context.goNamed(AppRoutes.chatPage.name);
+            },
             title: 'Done',
             borderRadius: 50,
             fontSize: 18,
@@ -90,7 +94,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           Assets.images.camera.path,
                           width: 12.8,
                           height: 13.33,
-                        )
+                        ),
                       ),
                     ],
                   ),

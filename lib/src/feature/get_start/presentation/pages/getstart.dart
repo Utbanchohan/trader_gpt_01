@@ -117,7 +117,9 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                   Container(
                     height: 55,
                     child: ButtonWidget(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.goNamed(AppRoutes.signUpPage.name);
+                      },
                       title: 'Create account',
                       borderRadius: 50,
                       fontSize: 18,
@@ -131,7 +133,10 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                   Container(
                     height: 55,
                     child: ButtonWidget(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.goNamed(AppRoutes.signInPage.name);
+
+                      },
                       title: 'Sign in',
                       borderRadius: 50,
                       fontSize: 18,

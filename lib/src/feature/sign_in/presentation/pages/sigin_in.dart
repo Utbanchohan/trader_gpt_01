@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sign_in/presentation/provider/sign_in.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
@@ -307,7 +308,10 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                 Container(
                   height: 55,
                   child: ButtonWidget(
-                    onPressed: () {},
+                    onPressed: () {
+                        context.goNamed(AppRoutes.chatPage.name);
+
+                    },
                     title: 'Sign in',
                     borderRadius: 50,
                     fontSize: 18,

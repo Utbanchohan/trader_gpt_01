@@ -7,6 +7,7 @@ import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_messa
 import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
@@ -82,109 +83,179 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
     final asyncStream = ref.watch(sseProvider(body));
     return Scaffold(
-      bottomNavigationBar: SafeArea(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: SafeArea(
         bottom: true,
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.13,
-          margin: EdgeInsets.all(10),
-          padding: EdgeInsets.all(2),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: AppColors.gradient,
-            ),
-          ),
-          child: Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.color0E1738,
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Column(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: message,
-                    style: TextStyle(color: AppColors.white),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Ask anything about the market",
-                      hintStyle: TextStyle(
-                        color: AppColors.bluishgrey404F81,
-                        fontSize: 16,
+          color: Colors.transparent,
+          height: MediaQuery.of(context).size.height * 0.2,
+
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  showDialog<void>(
+                    context: context,
+
+                    barrierDismissible: true, // user must tap button!
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        alignment: Alignment.center,
+                        backgroundColor: AppColors.primaryColor,
+                        insetPadding: EdgeInsets.all(0),
+                        contentPadding: EdgeInsets.all(0),
+                        content: AskingPopupWidget(),
+                      );
+                    },
+                  );
+
+                  // showModalBottomSheet(
+                  //   context: context,
+                  //   // isScrollControlled:
+                  //   //     true, // optional: allows full-screen height
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.vertical(
+                  //       top: Radius.circular(20),
+                  //     ),
+                  //   ),
+                  //   builder: (BuildContext context) {
+                  //     return
+                  //   },
+                  // );
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.fieldTextColor),
+                    color: AppColors.bubbleColor,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MdSnsText(
+                        "Top Asking Questions",
+                        size: 16,
                         fontWeight: FontWeight.w400,
+                        color: AppColors.white,
                       ),
-                    ),
+                      SizedBox(width: 5),
+                      Icon(
+                        Icons.keyboard_arrow_up,
+                        size: 25,
+                        color: AppColors.white,
+                      ),
+                    ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.color091224,
-                            border: Border.all(
+              ),
+
+              Container(
+                height: MediaQuery.of(context).size.height * 0.13,
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: AppColors.gradient,
+                  ),
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppColors.color0E1738,
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: message,
+                          style: TextStyle(color: AppColors.white),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Ask anything about the market",
+                            hintStyle: TextStyle(
                               color: AppColors.bluishgrey404F81,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
-                          child: Icon(
-                            Icons.add,
-                            color: AppColors.color3C4E8A,
-                            size: 40,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.color091224,
+                                  border: Border.all(
+                                    color: AppColors.bluishgrey404F81,
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.add,
+                                  color: AppColors.color3C4E8A,
+                                  size: 40,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+
+                              _ActionChip(
+                                icon: Assets.images.radar2.path,
+                                label: "Deep Search",
+                                onTap: () {},
+                              ),
+                              SizedBox(width: 6),
+
+                              // Think Button
+                              _ActionChip(
+                                icon: Assets.images.lampCharge.path,
+                                label: "Think",
+                                onTap: () {},
+                              ),
+                            ],
                           ),
-                        ),
-                        SizedBox(width: 8),
 
-                        _ActionChip(
-                          icon: Assets.images.radar2.path,
-                          label: "Deep Search",
-                          onTap: () {},
-                        ),
-                        SizedBox(width: 6),
-
-                        // Think Button
-                        _ActionChip(
-                          icon: Assets.images.lampCharge.path,
-                          label: "Think",
-                          onTap: () {},
-                        ),
-                      ],
-                    ),
-
-                    // Send Button
-                    Container(
-                      height: 36,
-                      width: 36,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.color046297,
+                          // Send Button
+                          Container(
+                            height: 36,
+                            width: 36,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.color046297,
+                            ),
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              icon: Icon(
+                                Icons.arrow_upward_rounded,
+                                color: AppColors.white,
+                                size: 18,
+                              ),
+                              onPressed: () => _sendMessage(ref),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        icon: Icon(
-                          Icons.arrow_upward_rounded,
-                          color: AppColors.white,
-                          size: 18,
-                        ),
-                        onPressed: () => _sendMessage(ref),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
       backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         centerTitle: false,
         backgroundColor: AppColors.primaryColor,
         elevation: 0,
@@ -204,26 +275,22 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       body: asyncStream.when(
         data: (line) => SingleChildScrollView(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              MarkdownBody(
-                data: line,
-                selectable: true, // let user copy code
-                styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                    .copyWith(
-                      code: const TextStyle(
-                        fontFamily: "monospace",
-                        backgroundColor: AppColors.primaryColor,
-                      ),
-                      blockquote: const TextStyle(color: Colors.red),
-                    ),
-                onTapLink: (text, href, title) {
-                  if (href != null) {
-                    // launchUrl(Uri.parse(href)); // needs url_launcher
-                  }
-                },
-              ),
-            ],
+          child: MarkdownBody(
+            data: line,
+            selectable: true, // let user copy code
+            styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                .copyWith(
+                  code: const TextStyle(
+                    fontFamily: "monospace",
+                    backgroundColor: AppColors.primaryColor,
+                  ),
+                  blockquote: const TextStyle(color: Colors.red),
+                ),
+            onTapLink: (text, href, title) {
+              if (href != null) {
+                // launchUrl(Uri.parse(href)); // needs url_launcher
+              }
+            },
           ),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),

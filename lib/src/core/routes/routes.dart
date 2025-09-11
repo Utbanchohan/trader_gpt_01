@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:trader_gpt/src/feature/sign_in/presentation/pages/sigin_in.dart';
 
 enum AppRoutes {
   getStartedScreen('getStartedScreen', '/get-started'),
@@ -8,24 +9,23 @@ enum AppRoutes {
   verifaction('verifaction', '/verifaction'),
   profilePage('profilePage', '/profilePage');
 
-
   final String name;
   final String path;
 
   const AppRoutes(this.name, this.path);
   static String get dashboardLocation => AppRoutes.getStartedScreen.path;
 
-
-  // static final List<AppRoutes> bottomNavPages = [
-  //   home,
-  //   dashboard,
-  //   dealz,
-  //   home,
-  //   home,
-  // ];
+  static final List<AppRoutes> bottomNavPages = [AppRoutes.chatPage];
   static final List<AppRoutes> webNavBarPages = [getStartedScreen];
   static final List<AppRoutes> settingsNavPages = [];
-  static List<AppRoutes> get publicRoutes => [getStartedScreen];
+  static List<AppRoutes> get publicRoutes => [
+    AppRoutes.getStartedScreen,
+    AppRoutes.signInPage,
+    AppRoutes.signUpPage,
+    AppRoutes.verifaction,
+    AppRoutes.profilePage,
+    AppRoutes.chatPage,
+  ];
   static bool isPublicRoute(GoRouterState state) {
     final fullPath = state.fullPath;
 

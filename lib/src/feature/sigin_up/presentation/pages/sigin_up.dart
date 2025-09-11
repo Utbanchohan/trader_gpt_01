@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -101,7 +103,9 @@ class _SignUpState extends ConsumerState<SignUp> {
               Container(
                 height: 55,
                 child: ButtonWidget(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.goNamed(AppRoutes.verifaction.name);
+                  },
                   title: 'Create Account',
                   borderRadius: 50,
                   fontSize: 18,
