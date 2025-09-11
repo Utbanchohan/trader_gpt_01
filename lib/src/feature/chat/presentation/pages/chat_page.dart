@@ -602,7 +602,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     child: Row(
                       children: [
                         MdSnsText(
-                          "Thinking....",
+                          "Thinking",
                           color: AppColors.white,
                           size: 14,
                           fontWeight: FontWeight.bold,
