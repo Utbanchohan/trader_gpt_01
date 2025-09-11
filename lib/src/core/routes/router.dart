@@ -26,8 +26,7 @@ final routerConfigProvider = Provider((ref) {
       if (isLogin && !isPublic) {
         return null;
       } else if (!isLogin && isPublic) {
-        return AppRoutes.getStartedScreen.path;
-        // state.fullPath;
+        state.fullPath;
       } else if (!isLogin && !isPublic) {
         return AppRoutes.getStartedScreen.path;
       }
