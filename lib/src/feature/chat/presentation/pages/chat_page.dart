@@ -27,7 +27,7 @@ class ChatPage extends ConsumerStatefulWidget {
 
 class _ChatPageState extends ConsumerState<ChatPage> {
   TextEditingController message = TextEditingController();
-  ScrollController sc=ScrollController();
+  ScrollController sc = ScrollController();
   Stock? selectedStock;
   List<ChatMessageModel> chats = [];
   List<String> questions = [];
@@ -55,7 +55,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       }
     });
   }
-
 
   @override
   void dispose() {
@@ -87,7 +86,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       for (int i = 0; i < res.data!.messages!.length; i++) {
         chats.add(res.data!.messages![i]);
       }
-    scrollToBottom();
+      scrollToBottom();
       setState(() {});
     } else {
       return false;
@@ -133,8 +132,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           );
           startStream = true;
         });
-            scrollToBottom();
-
+        scrollToBottom();
       }
 
       message.clear();
@@ -158,7 +156,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             children: [
               GestureDetector(
                 onTap: () async {
-                    selectedStock = await showDialog<Stock>(
+                  selectedStock = await showDialog<Stock>(
                     context: context,
                     barrierDismissible: true, // user must tap button!
                     builder: (BuildContext context) {
@@ -592,8 +590,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 );
               },
 
-              loading: () => Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+              loading: () => Column(
                 children: [
                   Container(
                     width: MediaQuery.sizeOf(context).width / 1.4,
@@ -602,19 +599,26 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       color: AppColors.bubbleColor,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: MdSnsText(
-                      "Thinking....",
-                      color: AppColors.white,
-                      size: 14,
-                      fontWeight: FontWeight.bold,
+                    child: Row(
+                      children: [
+                        MdSnsText(
+                          "Thinking....",
+                          color: AppColors.white,
+                          size: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        Image.asset(
+                          Assets.images.microinteractionsPreloader03.path,
+                          height: 40,
+                          width: 40,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-
               error: (err, _) => Center(child: Text("Error: $err")),
-
-              
             ),
           ],
         ),
