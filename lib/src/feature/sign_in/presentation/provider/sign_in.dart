@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:trader_gpt/src/feature/chat/domain/model/base_model/base_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';
@@ -56,6 +55,8 @@ class Login extends _$Login {
       }
       state = AppLoadingState();
     } catch (e) {
+              $showMessage("Invalid Credentials", isError: true);
+
       state = AppLoadingState();
       debugPrint("errror $e");
     }

@@ -33,14 +33,12 @@ class _SiginInState extends ConsumerState<SiginIn>  with FormStateMixin{
         .onSubmit(email: email.value.text, password: password.value.text);
     if (result != null) {
       if (mounted) {
-        if (result.user?.isVerified ?? false) {
-          context.goNamed(AppRoutes.verifaction.name);
-        } else {
+       
           context.goNamed(AppRoutes.chatPage.name);
         }
       }
     }
-  }
+  
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
@@ -11,6 +12,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_wid
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
+import '../../../../core/routes/routes.dart';
 import '../../domain/model/chats/chats_model.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
@@ -30,12 +32,15 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     super.dispose();
   }
 
+  logout() {
+    String token = "";
+    ref.read(localDataProvider).setAccessToken(token);
+    context.goNamed(AppRoutes.signInPage.name);
+  }
+
   void _sendMessage(WidgetRef ref) async {
     final text = message.text.trim();
     if (text.isNotEmpty) {
-      String token =
-          "";
-      ref.read(localDataProvider).setAccessToken(token);
       var res = await ref
           .read(chatProviderProvider.notifier)
           .sendMessage(
@@ -429,7 +434,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         centerTitle: false,
         backgroundColor: AppColors.primaryColor,
         elevation: 0,
-        leading: Image.asset(Assets.images.menu.path, width: 40, height: 40),
+        leading: InkWell(
+          onTap: () {
+            logout();
+          },
+          child: Image.asset(Assets.images.menu.path, width: 40, height: 40)),
         title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
         actions: [
           Container(

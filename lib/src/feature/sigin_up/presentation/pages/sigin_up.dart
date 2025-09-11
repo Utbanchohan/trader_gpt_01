@@ -18,23 +18,20 @@ class SignUp extends ConsumerStatefulWidget {
   ConsumerState<SignUp> createState() => _SignUpState();
 }
 
-class _SignUpState extends ConsumerState<SignUp>  with FormStateMixin{ 
-  final TextEditingController email=TextEditingController();
+class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
+  final TextEditingController email = TextEditingController();
 
- @override
+  @override
   FutureOr<void> onSubmit() async {
     final result = await ref
         .read(signUpProvider.notifier)
-        .onSubmit(email: email.value.text,);
+        .onSubmit(email: email.value.text);
     if (result != null) {
       if (mounted) {
-     
-          context.goNamed(AppRoutes.verifaction.name);
-        
+        context.goNamed(AppRoutes.verifaction.name);
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +43,22 @@ class _SignUpState extends ConsumerState<SignUp>  with FormStateMixin{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(Assets.images.arrowBack.path, height: 19, width: 23),
+              SizedBox(
+                height: 19,
+                width: 23,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+
+                  onPressed: () {
+                    context.goNamed(AppRoutes.getStartedScreen.name);
+                  },
+                  icon: Image.asset(
+                    Assets.images.arrowBack.path,
+                    height: 19,
+                    width: 23,
+                  ),
+                ),
+              ),
 
               SizedBox(height: 45),
 
@@ -144,7 +156,7 @@ class _SignUpState extends ConsumerState<SignUp>  with FormStateMixin{
                 height: 55,
                 child: ButtonWidget(
                   onPressed: () {
-submitter();
+                    submitter();
                   },
                   title: 'Create Account',
                   borderRadius: 50,
@@ -156,17 +168,22 @@ submitter();
               ),
               SizedBox(height: 15),
 
-              Center(
-                child: GestureDetector(
-                  onTap: () {},
-                  child: MdSnsText(
-                    "Already have an account? Sign in",
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      context.goNamed(AppRoutes.signInPage.name);
+                    },
+                    child: MdSnsText(
+                      "Already have an account? Sign in",
 
-                    size: 16,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.white,
+                      size: 16,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.white,
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
