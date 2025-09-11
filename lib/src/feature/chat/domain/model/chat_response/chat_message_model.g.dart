@@ -17,7 +17,7 @@ _ChatMessageModel _$ChatMessageModelFromJson(Map<String, dynamic> json) =>
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       followup: json['followup'] as String?,
       feedback: json['feedback'] as String?,
-      runId: json['runId'] as String,
+      runId: json['runId'] as String? ?? '',
       tempMessageId: json['tempMessageId'] as String?,
       symbol: json['symbol'] as String?,
       status: json['status'] as String? ?? "Pending",

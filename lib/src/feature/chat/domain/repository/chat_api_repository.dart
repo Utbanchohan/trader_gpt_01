@@ -3,6 +3,8 @@ import 'package:trader_gpt/src/feature/chat/data/api/chat_api/chat_api.dart';
 import 'package:trader_gpt/src/feature/chat/data/api/user_ask_stream/user_ask_stream.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/conversation/conversation_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/random_question/random_question_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 
@@ -22,6 +24,18 @@ import '../model/base_model/base_model.dart';
   Future<RandomQuestionModel> randomQuestions(String symbol) async {
     return await ChatApi(client).randomQuestion(symbol);
   }
+
+      @override
+  Future<BaseModel<ChatHistoryResponse>> chats() async {
+    return await ChatApi(client).getchats();
+  }
+
+     @override
+  Future<BaseModel<Conversation>> getMessages(String chatId,int page) async {
+    return await ChatApi(client).getMessages(chatId,1);
+  }
+  
+  
   
   
   @override

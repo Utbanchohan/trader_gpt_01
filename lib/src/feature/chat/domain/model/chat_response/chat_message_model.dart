@@ -15,7 +15,7 @@ abstract class ChatMessageModel with _$ChatMessageModel {
     required DateTime updatedAt,
     String? followup,
     String? feedback,
-    required String runId,
+    @Default('') String runId,
     String? tempMessageId, 
     String? symbol,
     @Default("Pending") String status,

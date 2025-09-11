@@ -2,18 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:trader_gpt/src/shared/flavours.dart';
 
 class SseService {
   final Dio _dio = Dio();
   final buffer = StringBuffer();
 
-  Stream<String> connect(Map<String, dynamic> body) async* {
-    final url = "https://dev.tradersgpt.io/tgpt-python/api/user_ask_stream";
+  Stream<String> connect(Map<String, dynamic> body, String token) async* {
+    final url = "${BaseUrl.baseUrl}tgpt-python/api/user_ask_stream";
 
     final headers = {
       "accept": "text/event-stream",
       "authorization":
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OGMxNmI5NjZkMTYyNDE3YmNhNmZjMmYiLCJlbWFpbCI6InJhemEuanI5OEB5b3BtYWlsLmNvbSIsIm5hbWUiOiJNdWhhbW1hZCBSYXphIiwiaWF0IjoxNzU3NTMwNTkwLCJleHAiOjE3NTc2MTY5OTB9.Z8sEM20XN_VCGWn1VYG_d1uT5r1Q-7DJdnsAU09wyxM",
+          "Bearer $token",
       "content-type": "application/json",
     };
 

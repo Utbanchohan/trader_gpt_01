@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/src/shared/flavours.dart';
 import 'package:trader_gpt/src/shared/socket/data/api/socket_api.dart';
 import 'package:trader_gpt/src/shared/socket/enums.dart';
-import 'package:trader_gpt/src/shared/socket/model/stock_model/stock_model.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
 class SocketRepository {
   final String baseUrl;

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/src/services/sockets/socket_service.dart';
-import 'package:trader_gpt/src/shared/socket/model/stock_model/stock_model.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
 class StockNotifier extends StateNotifier<List<Stock>> {
   final SocketService socketService;

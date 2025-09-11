@@ -3,16 +3,19 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class AskingPopupWidget extends StatelessWidget {
   final List<String> questions;
   final TextEditingController controller;
+   Stock? selectedStock;
 
-  const AskingPopupWidget({
+   AskingPopupWidget({
     super.key,
     required this.questions,
     required this.controller,
+     this.selectedStock
   });
 
   @override
@@ -80,10 +83,9 @@ class AskingPopupWidget extends StatelessWidget {
         return GestureDetector(
           onTap: () async {
             // 1️⃣ Close bottom sheet immediately
-            Navigator.pop(context);
 
             // 2️⃣ Open StockScreen to select symbol
-            final selectedSymbol = await context.pushNamed<String>(
+            Stock? selectedSymbol = await context.pushNamed<Stock>(
               AppRoutes.stockScreen.name,
             );
 
@@ -91,10 +93,12 @@ class AskingPopupWidget extends StatelessWidget {
             if (selectedSymbol != null) {
               final updatedQuestion = question.replaceAll(
                 '[SYMBOL]',
-                selectedSymbol,
+                selectedSymbol.symbol,
               );
               controller.text = updatedQuestion;
+              selectedStock = selectedSymbol;
             }
+            Navigator.pop(context, selectedSymbol);
           },
           child: buildQuestionChip(question),
         );

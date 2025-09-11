@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/services/sockets/socket_service.dart';
-import 'package:trader_gpt/src/shared/socket/model/stock_model/stock_model.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:intl/intl.dart';
 
 class StockScreen extends StatefulWidget {
@@ -71,7 +71,7 @@ class _StockScreenState extends State<StockScreen> {
     super.dispose();
   }
 
-  void _selectStock(String symbol) {
+  void _selectStock(Stock symbol) {
     // Immediately return the selected symbol to previous screen
     context.pop(symbol);
   }
@@ -92,7 +92,7 @@ class _StockScreenState extends State<StockScreen> {
                 final change = stock.changesPercentage ?? 0.0;
 
                 return GestureDetector(
-                  onTap: () => _selectStock(stock.symbol),
+                  onTap: () => _selectStock(stock),
                   child: Container(
                     margin: const EdgeInsets.symmetric(
                       horizontal: 12,
