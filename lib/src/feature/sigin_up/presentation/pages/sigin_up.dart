@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/sigin_up/presentation/provider/sign_up.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+
+import '../../../../shared/mixin/form_state_mixin.dart';
 
 class SignUp extends ConsumerStatefulWidget {
   const SignUp({super.key});
@@ -14,7 +18,24 @@ class SignUp extends ConsumerStatefulWidget {
   ConsumerState<SignUp> createState() => _SignUpState();
 }
 
-class _SignUpState extends ConsumerState<SignUp> {
+class _SignUpState extends ConsumerState<SignUp>  with FormStateMixin{ 
+  final TextEditingController email=TextEditingController();
+
+ @override
+  FutureOr<void> onSubmit() async {
+    final result = await ref
+        .read(signUpProvider.notifier)
+        .onSubmit(email: email.value.text,);
+    if (result != null) {
+      if (mounted) {
+     
+          context.goNamed(AppRoutes.verifaction.name);
+        
+      }
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,33 +88,52 @@ class _SignUpState extends ConsumerState<SignUp> {
               ),
 
               SizedBox(height: 8),
-              TextFormField(
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColors.color141F35, // dark background
-                  hintText: 'Burakdeniz@gmail.com',
-                  hintStyle: const TextStyle(
+              Form(
+                key: formKey,
+                child: TextFormField(
+                  controller: email,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 10,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                  textInputAction: TextInputAction.done,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Please enter email";
+                    }
+                    final _emailRegex = RegExp(
+                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                    );
+                    if (_emailRegex.hasMatch(value.trim())) {
+                      return null;
+                    } else {
+                      return "Please enter a valid email/phone";
+                    }
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: AppColors.color141F35, // dark background
+                    hintText: 'Burakdeniz@gmail.com',
+                    hintStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 10,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
                 ),
               ),
@@ -104,7 +144,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                 height: 55,
                 child: ButtonWidget(
                   onPressed: () {
-                    context.goNamed(AppRoutes.verifaction.name);
+submitter();
                   },
                   title: 'Create Account',
                   borderRadius: 50,
