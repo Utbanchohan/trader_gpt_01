@@ -24,7 +24,7 @@ enum AppRoutes {
     AppRoutes.signUpPage,
     AppRoutes.verifaction,
     AppRoutes.profilePage,
-    AppRoutes.chatPage
+    AppRoutes.chatPage,
   ];
   static bool isPublicRoute(GoRouterState state) {
     final fullPath = state.fullPath;
