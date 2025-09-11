@@ -438,7 +438,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           onTap: () {
             logout();
           },
-          child: Image.asset(Assets.images.menu.path, width: 40, height: 40)),
+          child: Image.asset(Assets.images.menu.path, width: 40, height: 40),
+        ),
         title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
         actions: [
           Container(
