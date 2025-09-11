@@ -49,7 +49,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   logout() {
     String token = "";
     ref.read(localDataProvider).setAccessToken(token);
-    context.goNamed(AppRoutes.signInPage.name);
+    context.goNamed(AppRoutes.splash.name);
   }
 
   getRandomQuestions() async {
@@ -330,147 +330,152 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: chats.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: [
-                    // Row(
-                    //   children: [
-                    //     Container(
-                    //                   padding: EdgeInsets.symmetric(vertical: 8),
-                    //                   child: MdSnsText("Today", color: Colors.white70, size: 14),
-                    //                 ),
-                    //   ],
-                    // ),
-                    // SizedBox(height: 15),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: chats[index].type == "user"
-                          ? MainAxisAlignment.end
-                          : MainAxisAlignment.start,
-
-                      children: [
-                        Visibility(
-                          visible: chats[index].type == "user",
-                          child: GestureDetector(
-                            onTap: () {
-                              Clipboard.setData(
-                                ClipboardData(text: chats[index].message),
-                              );
-                              $showMessage("Copied to Clipboard");
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-
-                              decoration: BoxDecoration(
-                                color: AppColors.bubbleColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Image.asset(
-                                Assets.images.copy.path,
-                                width: 14,
-                                height: 14,
+         
+         
+            Visibility(
+              visible: chats.length>0,
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: chats.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      // Row(
+                      //   children: [
+                      //     Container(
+                      //                   padding: EdgeInsets.symmetric(vertical: 8),
+                      //                   child: MdSnsText("Today", color: Colors.white70, size: 14),
+                      //                 ),
+                      //   ],
+                      // ),
+                      // SizedBox(height: 15),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: chats[index].type == "user"
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.start,
+              
+                        children: [
+                          Visibility(
+                            visible: chats[index].type == "user",
+                            child: GestureDetector(
+                              onTap: () {
+                                Clipboard.setData(
+                                  ClipboardData(text: chats[index].message),
+                                );
+                                $showMessage("Copied to Clipboard");
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+              
+                                decoration: BoxDecoration(
+                                  color: AppColors.bubbleColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Image.asset(
+                                  Assets.images.copy.path,
+                                  width: 14,
+                                  height: 14,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: chats[index].type == "user" ? 10 : 0),
-                        Container(
-                          width: MediaQuery.sizeOf(context).width / 1.5,
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: AppColors.bubbleColor,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          // child: Flexible(
-                          child: MarkdownBody(
-                            data: chats[index].message,
-                            selectable: true, // let user copy code
-                            styleSheet:
-                                MarkdownStyleSheet.fromTheme(
-                                  Theme.of(context),
-                                ).copyWith(
-                                  code: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-
-                                    fontWeight: FontWeight.w400,
+                          SizedBox(width: chats[index].type == "user" ? 10 : 0),
+                          Container(
+                            width: MediaQuery.sizeOf(context).width / 1.5,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppColors.bubbleColor,
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            // child: Flexible(
+                            child: MarkdownBody(
+                              data: chats[index].message,
+                              selectable: true, // let user copy code
+                              styleSheet:
+                                  MarkdownStyleSheet.fromTheme(
+                                    Theme.of(context),
+                                  ).copyWith(
+                                    code: GoogleFonts.plusJakartaSans(
+                                      color: AppColors.white,
+                                      fontSize: 16,
+              
+                                      fontWeight: FontWeight.w400,
+                                    ),
+              
+                                    blockquote: const TextStyle(
+                                      color: Colors.red,
+                                    ),
                                   ),
-
-                                  blockquote: const TextStyle(
-                                    color: Colors.red,
-                                  ),
-                                ),
-                            onTapLink: (text, href, title) {
-                              if (href != null) {
-                                // launchUrl(Uri.parse(href)); // needs url_launcher
-                              }
-                            },
-                          ),
-                        ),
-                        SizedBox(width: chats[index].type != "user" ? 10 : 0),
-                        Visibility(
-                          visible: chats[index].type != "user",
-                          child: Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(10),
-
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    Assets.images.like.path,
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-
-                                Container(
-                                  padding: EdgeInsets.all(10),
-
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/dislike.png",
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/Regenerate.png",
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                              ],
+                              onTapLink: (text, href, title) {
+                                if (href != null) {
+                                  // launchUrl(Uri.parse(href)); // needs url_launcher
+                                }
+                              },
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                );
-              },
+                          SizedBox(width: chats[index].type != "user" ? 10 : 0),
+                          Visibility(
+                            visible: chats[index].type != "user",
+                            child: Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+              
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: AppColors.fieldColor,
+                                    ),
+                                    child: Image.asset(
+                                      Assets.images.like.path,
+                                      width: 14,
+                                      height: 14,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+              
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+              
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: AppColors.fieldColor,
+                                    ),
+                                    child: Image.asset(
+                                      "assets/images/dislike.png",
+                                      width: 14,
+                                      height: 14,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+              
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: AppColors.fieldColor,
+                                    ),
+                                    child: Image.asset(
+                                      "assets/images/Regenerate.png",
+                                      width: 14,
+                                      height: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  );
+                },
+              ),
             ),
             asyncStream.when(
               data: (line) {
@@ -581,11 +586,21 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       color: AppColors.bubbleColor,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: MdSnsText(
-                      "Thinking....",
-                      color: AppColors.white,
-                      size: 14,
-                      fontWeight: FontWeight.bold,
+                    child: Row(
+                      children: [
+                        MdSnsText(
+                          "Thinking....",
+                          color: AppColors.white,
+                          size: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        Image.asset(
+                          Assets.images.microinteractionsPreloader03.path,
+                          height: 40,
+                          width: 40,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
                 ],

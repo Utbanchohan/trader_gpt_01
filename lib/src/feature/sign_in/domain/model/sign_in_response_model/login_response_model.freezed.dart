@@ -499,13 +499,13 @@ return $default(_that.id,_that.isVerified,_that.email,_that.name,_that.imgUrl,_t
 @JsonSerializable()
 
 class _User implements User {
-  const _User({@JsonKey(name: '_id') required this.id, required this.isVerified, required this.email, required this.name, @JsonKey(name: 'img_url') required this.imgUrl, required this.createdAt, required this.updatedAt});
+  const _User({@JsonKey(name: '_id') required this.id, required this.isVerified, required this.email, this.name = '', @JsonKey(name: 'img_url') this.imgUrl = '', required this.createdAt, required this.updatedAt});
   factory _User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
 @override@JsonKey(name: '_id') final  String id;
 @override final  bool isVerified;
 @override final  String email;
-@override final  String name;
+@override@JsonKey() final  String name;
 @override@JsonKey(name: 'img_url') final  String imgUrl;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;

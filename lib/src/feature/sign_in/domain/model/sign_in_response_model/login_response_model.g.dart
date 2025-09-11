@@ -21,8 +21,8 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   id: json['_id'] as String,
   isVerified: json['isVerified'] as bool,
   email: json['email'] as String,
-  name: json['name'] as String,
-  imgUrl: json['img_url'] as String,
+  name: json['name'] as String? ?? '',
+  imgUrl: json['img_url'] as String? ?? '',
   createdAt: DateTime.parse(json['createdAt'] as String),
   updatedAt: DateTime.parse(json['updatedAt'] as String),
 );

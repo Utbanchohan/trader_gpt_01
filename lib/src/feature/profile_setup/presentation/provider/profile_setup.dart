@@ -28,12 +28,18 @@ class Profile extends _$Profile {
     state = AppLoadingState.loading();
     try {
       final response = await ref
-          .read(authRepository).
-          completeRegistration(CompleteProfileDto(email: email, password: password,name: fullname,imgUrl: "https://tgpt-media.s3.us-east-2.amazonaws.com/uploads/tgpt/1757590370388-Component 31.png"));
+          .read(authRepository)
+          .completeRegistration(
+            CompleteProfileDto(
+              email: email,
+              password: password,
+              name: fullname,
+              imgUrl: imageUrl,
+            ),
+          );
       if (response.isSuccess) {
-          state = AppLoadingState();
-          return response.data!;
-        
+        state = AppLoadingState();
+        return response.data!;
       } else {
         $showMessage(response.message, isError: true);
       }
@@ -44,6 +50,4 @@ class Profile extends _$Profile {
     }
     return null;
   }
-
-  
 }

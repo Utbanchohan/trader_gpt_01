@@ -14,6 +14,7 @@ import 'package:trader_gpt/src/feature/profile_setup/presentation/pages/profile_
 import 'package:trader_gpt/src/feature/s3_uploader/presentation/image_pickert.dart';
 import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
 import 'package:trader_gpt/src/feature/sign_in/presentation/pages/sigin_in.dart';
+import 'package:trader_gpt/src/feature/splash/presentation/pages/splash.dart';
 import 'package:trader_gpt/src/feature/verifaction/presentation/pages/verifaction.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -30,14 +31,23 @@ final routerConfigProvider = Provider((ref) {
       } else if (!isLogin && isPublic) {
         state.fullPath;
       } else if (!isLogin && !isPublic) {
-        return AppRoutes.getStartedScreen.path;
+        return AppRoutes.splash.path;
       }
       return null;
     },
     debugLogDiagnostics: kDebugMode,
     navigatorKey: navigatorKey,
-    initialLocation: AppRoutes.chatPage.path,
+    initialLocation: AppRoutes.splash.path,
+    // initialLocation: AppRoutes.chatPage.path,
     routes: [
+      GoRoute(
+        path: AppRoutes.splash.path,
+        name: AppRoutes.splash.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return Splash();
+        },
+        routes: [],
+      ),
       GoRoute(
         path: AppRoutes.getStartedScreen.path,
         name: AppRoutes.getStartedScreen.name,
@@ -74,7 +84,9 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.verifaction.path,
         name: AppRoutes.verifaction.name,
         builder: (BuildContext context, GoRouterState state) {
-          return Verifaction();
+          final email = state.pathParameters['email']!;
+          return Verifaction(email: email);
+          // return Verifaction();
         },
         routes: [],
       ),
