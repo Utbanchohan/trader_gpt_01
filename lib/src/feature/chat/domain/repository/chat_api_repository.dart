@@ -19,7 +19,7 @@ import '../model/base_model/base_model.dart';
     return await ChatApi(client).sendMessage(chatMessageDto);
   }
     @override
-  Future<BaseModel<RandomQuestionModel>> randomQuestions(String symbol) async {
+  Future<RandomQuestionModel> randomQuestions(String symbol) async {
     return await ChatApi(client).randomQuestion(symbol);
   }
   

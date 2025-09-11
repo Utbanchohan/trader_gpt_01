@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GptState {
 
- int get timestamp; int get setIntervalTime; Conversation get conversation; Chats get chats; dynamic get selectedChat; Map<String, dynamic> get stockSymbolsData; List<double>? get draggableWidth; String get isFetchingAnswer; dynamic get followUpQuestion; bool get showReportedAnswer; bool get showWebAnswer; bool get showDeepSearch; bool get userChatMessagePlacement; bool get isMainMenuOpened; List<String> get trendingQuestions; bool get isFeaturedQuestionShownOnChat; List<dynamic> get workflows; bool get showRelatedQuestionAfterMessage; bool get showDeepAnalysis;
+ int get timestamp; int get setIntervalTime; Conversation get conversation; ChatHistory get chats; dynamic get selectedChat; Map<String, dynamic> get stockSymbolsData; List<double>? get draggableWidth; String get isFetchingAnswer; dynamic get followUpQuestion; bool get showReportedAnswer; bool get showWebAnswer; bool get showDeepSearch; bool get userChatMessagePlacement; bool get isMainMenuOpened; List<String> get trendingQuestions; bool get isFeaturedQuestionShownOnChat; List<dynamic> get workflows; bool get showRelatedQuestionAfterMessage; bool get showDeepAnalysis;
 /// Create a copy of GptState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $GptStateCopyWith<$Res>  {
   factory $GptStateCopyWith(GptState value, $Res Function(GptState) _then) = _$GptStateCopyWithImpl;
 @useResult
 $Res call({
- int timestamp, int setIntervalTime, Conversation conversation, Chats chats, dynamic selectedChat, Map<String, dynamic> stockSymbolsData, List<double>? draggableWidth, String isFetchingAnswer, dynamic followUpQuestion, bool showReportedAnswer, bool showWebAnswer, bool showDeepSearch, bool userChatMessagePlacement, bool isMainMenuOpened, List<String> trendingQuestions, bool isFeaturedQuestionShownOnChat, List<dynamic> workflows, bool showRelatedQuestionAfterMessage, bool showDeepAnalysis
+ int timestamp, int setIntervalTime, Conversation conversation, ChatHistory chats, dynamic selectedChat, Map<String, dynamic> stockSymbolsData, List<double>? draggableWidth, String isFetchingAnswer, dynamic followUpQuestion, bool showReportedAnswer, bool showWebAnswer, bool showDeepSearch, bool userChatMessagePlacement, bool isMainMenuOpened, List<String> trendingQuestions, bool isFeaturedQuestionShownOnChat, List<dynamic> workflows, bool showRelatedQuestionAfterMessage, bool showDeepAnalysis
 });
 
 
-$ConversationCopyWith<$Res> get conversation;$ChatsCopyWith<$Res> get chats;
+$ConversationCopyWith<$Res> get conversation;$ChatHistoryCopyWith<$Res> get chats;
 
 }
 /// @nodoc
@@ -71,7 +71,7 @@ timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nulla
 as int,setIntervalTime: null == setIntervalTime ? _self.setIntervalTime : setIntervalTime // ignore: cast_nullable_to_non_nullable
 as int,conversation: null == conversation ? _self.conversation : conversation // ignore: cast_nullable_to_non_nullable
 as Conversation,chats: null == chats ? _self.chats : chats // ignore: cast_nullable_to_non_nullable
-as Chats,selectedChat: freezed == selectedChat ? _self.selectedChat : selectedChat // ignore: cast_nullable_to_non_nullable
+as ChatHistory,selectedChat: freezed == selectedChat ? _self.selectedChat : selectedChat // ignore: cast_nullable_to_non_nullable
 as dynamic,stockSymbolsData: null == stockSymbolsData ? _self.stockSymbolsData : stockSymbolsData // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,draggableWidth: freezed == draggableWidth ? _self.draggableWidth : draggableWidth // ignore: cast_nullable_to_non_nullable
 as List<double>?,isFetchingAnswer: null == isFetchingAnswer ? _self.isFetchingAnswer : isFetchingAnswer // ignore: cast_nullable_to_non_nullable
@@ -102,9 +102,9 @@ $ConversationCopyWith<$Res> get conversation {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ChatsCopyWith<$Res> get chats {
+$ChatHistoryCopyWith<$Res> get chats {
   
-  return $ChatsCopyWith<$Res>(_self.chats, (value) {
+  return $ChatHistoryCopyWith<$Res>(_self.chats, (value) {
     return _then(_self.copyWith(chats: value));
   });
 }
@@ -189,7 +189,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int timestamp,  int setIntervalTime,  Conversation conversation,  Chats chats,  dynamic selectedChat,  Map<String, dynamic> stockSymbolsData,  List<double>? draggableWidth,  String isFetchingAnswer,  dynamic followUpQuestion,  bool showReportedAnswer,  bool showWebAnswer,  bool showDeepSearch,  bool userChatMessagePlacement,  bool isMainMenuOpened,  List<String> trendingQuestions,  bool isFeaturedQuestionShownOnChat,  List<dynamic> workflows,  bool showRelatedQuestionAfterMessage,  bool showDeepAnalysis)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int timestamp,  int setIntervalTime,  Conversation conversation,  ChatHistory chats,  dynamic selectedChat,  Map<String, dynamic> stockSymbolsData,  List<double>? draggableWidth,  String isFetchingAnswer,  dynamic followUpQuestion,  bool showReportedAnswer,  bool showWebAnswer,  bool showDeepSearch,  bool userChatMessagePlacement,  bool isMainMenuOpened,  List<String> trendingQuestions,  bool isFeaturedQuestionShownOnChat,  List<dynamic> workflows,  bool showRelatedQuestionAfterMessage,  bool showDeepAnalysis)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GptState() when $default != null:
 return $default(_that.timestamp,_that.setIntervalTime,_that.conversation,_that.chats,_that.selectedChat,_that.stockSymbolsData,_that.draggableWidth,_that.isFetchingAnswer,_that.followUpQuestion,_that.showReportedAnswer,_that.showWebAnswer,_that.showDeepSearch,_that.userChatMessagePlacement,_that.isMainMenuOpened,_that.trendingQuestions,_that.isFeaturedQuestionShownOnChat,_that.workflows,_that.showRelatedQuestionAfterMessage,_that.showDeepAnalysis);case _:
@@ -210,7 +210,7 @@ return $default(_that.timestamp,_that.setIntervalTime,_that.conversation,_that.c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int timestamp,  int setIntervalTime,  Conversation conversation,  Chats chats,  dynamic selectedChat,  Map<String, dynamic> stockSymbolsData,  List<double>? draggableWidth,  String isFetchingAnswer,  dynamic followUpQuestion,  bool showReportedAnswer,  bool showWebAnswer,  bool showDeepSearch,  bool userChatMessagePlacement,  bool isMainMenuOpened,  List<String> trendingQuestions,  bool isFeaturedQuestionShownOnChat,  List<dynamic> workflows,  bool showRelatedQuestionAfterMessage,  bool showDeepAnalysis)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int timestamp,  int setIntervalTime,  Conversation conversation,  ChatHistory chats,  dynamic selectedChat,  Map<String, dynamic> stockSymbolsData,  List<double>? draggableWidth,  String isFetchingAnswer,  dynamic followUpQuestion,  bool showReportedAnswer,  bool showWebAnswer,  bool showDeepSearch,  bool userChatMessagePlacement,  bool isMainMenuOpened,  List<String> trendingQuestions,  bool isFeaturedQuestionShownOnChat,  List<dynamic> workflows,  bool showRelatedQuestionAfterMessage,  bool showDeepAnalysis)  $default,) {final _that = this;
 switch (_that) {
 case _GptState():
 return $default(_that.timestamp,_that.setIntervalTime,_that.conversation,_that.chats,_that.selectedChat,_that.stockSymbolsData,_that.draggableWidth,_that.isFetchingAnswer,_that.followUpQuestion,_that.showReportedAnswer,_that.showWebAnswer,_that.showDeepSearch,_that.userChatMessagePlacement,_that.isMainMenuOpened,_that.trendingQuestions,_that.isFeaturedQuestionShownOnChat,_that.workflows,_that.showRelatedQuestionAfterMessage,_that.showDeepAnalysis);case _:
@@ -230,7 +230,7 @@ return $default(_that.timestamp,_that.setIntervalTime,_that.conversation,_that.c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int timestamp,  int setIntervalTime,  Conversation conversation,  Chats chats,  dynamic selectedChat,  Map<String, dynamic> stockSymbolsData,  List<double>? draggableWidth,  String isFetchingAnswer,  dynamic followUpQuestion,  bool showReportedAnswer,  bool showWebAnswer,  bool showDeepSearch,  bool userChatMessagePlacement,  bool isMainMenuOpened,  List<String> trendingQuestions,  bool isFeaturedQuestionShownOnChat,  List<dynamic> workflows,  bool showRelatedQuestionAfterMessage,  bool showDeepAnalysis)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int timestamp,  int setIntervalTime,  Conversation conversation,  ChatHistory chats,  dynamic selectedChat,  Map<String, dynamic> stockSymbolsData,  List<double>? draggableWidth,  String isFetchingAnswer,  dynamic followUpQuestion,  bool showReportedAnswer,  bool showWebAnswer,  bool showDeepSearch,  bool userChatMessagePlacement,  bool isMainMenuOpened,  List<String> trendingQuestions,  bool isFeaturedQuestionShownOnChat,  List<dynamic> workflows,  bool showRelatedQuestionAfterMessage,  bool showDeepAnalysis)?  $default,) {final _that = this;
 switch (_that) {
 case _GptState() when $default != null:
 return $default(_that.timestamp,_that.setIntervalTime,_that.conversation,_that.chats,_that.selectedChat,_that.stockSymbolsData,_that.draggableWidth,_that.isFetchingAnswer,_that.followUpQuestion,_that.showReportedAnswer,_that.showWebAnswer,_that.showDeepSearch,_that.userChatMessagePlacement,_that.isMainMenuOpened,_that.trendingQuestions,_that.isFeaturedQuestionShownOnChat,_that.workflows,_that.showRelatedQuestionAfterMessage,_that.showDeepAnalysis);case _:
@@ -251,7 +251,7 @@ class _GptState implements GptState {
 @override final  int timestamp;
 @override final  int setIntervalTime;
 @override final  Conversation conversation;
-@override final  Chats chats;
+@override final  ChatHistory chats;
 @override final  dynamic selectedChat;
  final  Map<String, dynamic> _stockSymbolsData;
 @override Map<String, dynamic> get stockSymbolsData {
@@ -327,11 +327,11 @@ abstract mixin class _$GptStateCopyWith<$Res> implements $GptStateCopyWith<$Res>
   factory _$GptStateCopyWith(_GptState value, $Res Function(_GptState) _then) = __$GptStateCopyWithImpl;
 @override @useResult
 $Res call({
- int timestamp, int setIntervalTime, Conversation conversation, Chats chats, dynamic selectedChat, Map<String, dynamic> stockSymbolsData, List<double>? draggableWidth, String isFetchingAnswer, dynamic followUpQuestion, bool showReportedAnswer, bool showWebAnswer, bool showDeepSearch, bool userChatMessagePlacement, bool isMainMenuOpened, List<String> trendingQuestions, bool isFeaturedQuestionShownOnChat, List<dynamic> workflows, bool showRelatedQuestionAfterMessage, bool showDeepAnalysis
+ int timestamp, int setIntervalTime, Conversation conversation, ChatHistory chats, dynamic selectedChat, Map<String, dynamic> stockSymbolsData, List<double>? draggableWidth, String isFetchingAnswer, dynamic followUpQuestion, bool showReportedAnswer, bool showWebAnswer, bool showDeepSearch, bool userChatMessagePlacement, bool isMainMenuOpened, List<String> trendingQuestions, bool isFeaturedQuestionShownOnChat, List<dynamic> workflows, bool showRelatedQuestionAfterMessage, bool showDeepAnalysis
 });
 
 
-@override $ConversationCopyWith<$Res> get conversation;@override $ChatsCopyWith<$Res> get chats;
+@override $ConversationCopyWith<$Res> get conversation;@override $ChatHistoryCopyWith<$Res> get chats;
 
 }
 /// @nodoc
@@ -350,7 +350,7 @@ timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nulla
 as int,setIntervalTime: null == setIntervalTime ? _self.setIntervalTime : setIntervalTime // ignore: cast_nullable_to_non_nullable
 as int,conversation: null == conversation ? _self.conversation : conversation // ignore: cast_nullable_to_non_nullable
 as Conversation,chats: null == chats ? _self.chats : chats // ignore: cast_nullable_to_non_nullable
-as Chats,selectedChat: freezed == selectedChat ? _self.selectedChat : selectedChat // ignore: cast_nullable_to_non_nullable
+as ChatHistory,selectedChat: freezed == selectedChat ? _self.selectedChat : selectedChat // ignore: cast_nullable_to_non_nullable
 as dynamic,stockSymbolsData: null == stockSymbolsData ? _self._stockSymbolsData : stockSymbolsData // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,draggableWidth: freezed == draggableWidth ? _self._draggableWidth : draggableWidth // ignore: cast_nullable_to_non_nullable
 as List<double>?,isFetchingAnswer: null == isFetchingAnswer ? _self.isFetchingAnswer : isFetchingAnswer // ignore: cast_nullable_to_non_nullable
@@ -382,9 +382,9 @@ $ConversationCopyWith<$Res> get conversation {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ChatsCopyWith<$Res> get chats {
+$ChatHistoryCopyWith<$Res> get chats {
   
-  return $ChatsCopyWith<$Res>(_self.chats, (value) {
+  return $ChatHistoryCopyWith<$Res>(_self.chats, (value) {
     return _then(_self.copyWith(chats: value));
   });
 }

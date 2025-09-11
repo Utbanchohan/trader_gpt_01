@@ -12,7 +12,7 @@ abstract class GptState with _$GptState {
     required int timestamp,
     required int setIntervalTime,
     required Conversation conversation,
-    required Chats chats,
+    required ChatHistory chats,
     dynamic selectedChat,
     required Map<String, dynamic> stockSymbolsData,
     List<double>? draggableWidth,
@@ -39,7 +39,7 @@ abstract class GptState with _$GptState {
       timestamp: now,
       setIntervalTime: now + 12 * 60 * 60,
       conversation: Conversation.initial(),
-      chats: Chats.initial(),
+      chats: ChatHistory.initial(),
       stockSymbolsData: {},
     );
   }

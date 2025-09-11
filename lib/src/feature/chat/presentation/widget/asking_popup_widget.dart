@@ -6,7 +6,8 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class AskingPopupWidget extends StatelessWidget {
-  AskingPopupWidget({super.key});
+  List<String> questions;
+  AskingPopupWidget({super.key,required this.questions});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class AskingPopupWidget extends StatelessWidget {
               child: TabBarView(
                 children: [
                   ListView.separated(
-                    itemCount: 20,
+                    itemCount: questions.length,
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
@@ -63,7 +64,7 @@ class AskingPopupWidget extends StatelessWidget {
                           context.goNamed(AppRoutes.stockScreen.name);
                         },
                         child: buildQuestionChip(
-                          'Top Performing Stocks For Today?',
+                          questions[index]
                         ),
                       );
                     },
@@ -135,12 +136,14 @@ Widget buildQuestionChip(String text) {
   return Align(
     alignment: Alignment.centerLeft,
     child: Chip(
+      
       label: MdSnsText(
         text,
         color: AppColors.white,
         size: 16,
         fontWeight: FontWeight.w400,
       ),
+      
       backgroundColor: AppColors.bubbleColor,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(

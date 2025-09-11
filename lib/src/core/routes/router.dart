@@ -11,6 +11,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/get_start/presentation/pages/getstart.dart';
 import 'package:trader_gpt/src/feature/profile_setup/presentation/pages/profile_setup.dart';
+import 'package:trader_gpt/src/feature/s3_uploader/presentation/image_pickert.dart';
 import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
 import 'package:trader_gpt/src/feature/sign_in/presentation/pages/sigin_in.dart';
 import 'package:trader_gpt/src/feature/splash/presentation/pages/splash.dart';
@@ -36,7 +37,7 @@ final routerConfigProvider = Provider((ref) {
     },
     debugLogDiagnostics: kDebugMode,
     navigatorKey: navigatorKey,
-    initialLocation: AppRoutes.chatPage.path,
+    initialLocation: AppRoutes.uploadImage.path,
     routes: [
       GoRoute(
         path: AppRoutes.splash.path,
@@ -101,6 +102,14 @@ final routerConfigProvider = Provider((ref) {
         name: AppRoutes.stockScreen.name,
         builder: (BuildContext context, GoRouterState state) {
           return StockScreen();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.uploadImage.path,
+        name: AppRoutes.uploadImage.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return UploadImageScreen();
         },
         routes: [],
       ),

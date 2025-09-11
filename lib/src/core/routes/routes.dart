@@ -8,7 +8,8 @@ enum AppRoutes {
   signUpPage('signUpPage', '/sign-up'),
   verifaction('verifaction', '/verifaction/:email'),
   profilePage('profilePage', '/profilePage'),
-  stockScreen('stockScreen', '/stockScreen');
+  stockScreen('stockScreen', '/stockScreen'),
+  uploadImage('uploadImage', '/uploadImage');
 
   final String name;
   final String path;
@@ -28,6 +29,7 @@ enum AppRoutes {
     AppRoutes.profilePage,
     AppRoutes.chatPage,
     AppRoutes.stockScreen,
+    AppRoutes.uploadImage,
   ];
   static bool isPublicRoute(GoRouterState state) {
     final fullPath = state.fullPath;
