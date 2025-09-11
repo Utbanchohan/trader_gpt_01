@@ -14,6 +14,7 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 
 import '../../../../core/routes/routes.dart';
 import '../../../../shared/mixin/form_state_mixin.dart';
+import '../../../../shared/states/app_loading_state.dart';
 
 class SiginIn extends ConsumerStatefulWidget {
   SiginIn({super.key});
@@ -42,6 +43,7 @@ class _SiginInState extends ConsumerState<SiginIn>  with FormStateMixin{
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(loginProvider) == AppLoadingState.loading();
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       body: SafeArea(
@@ -74,6 +76,7 @@ class _SiginInState extends ConsumerState<SiginIn>  with FormStateMixin{
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
+                  
                     onPressed: () {},
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: AppColors.color274E87),
@@ -309,6 +312,7 @@ class _SiginInState extends ConsumerState<SiginIn>  with FormStateMixin{
                     onPressed: () {
                       submitter();
                     },
+                    isLoading: isLoading,
                     title: 'Sign in',
                     borderRadius: 50,
                     fontSize: 18,

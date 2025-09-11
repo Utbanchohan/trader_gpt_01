@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/gpt_provider.dart';
-
 
 class GptChatScreen extends ConsumerStatefulWidget {
   final String chatId;
@@ -15,13 +15,28 @@ class _GptChatScreenState extends ConsumerState<GptChatScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
 
+  List<String> questions = [];
+
   @override
   void initState() {
     super.initState();
+    getRandomQuestions();
     // Equivalent of onMounted in Vue
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // ref.read(gptProvider.notifier).loadConversation(widget.chatId);
     });
+  }
+
+  getRandomQuestions() async {
+    var res = await ref.read(chatRepository).randomQuestions("[symbol]");
+    if (res.isSuccess) {
+      for (var ij in res.data!.questions) {
+        questions.add(ij);
+      }
+      setState(() {});
+    } else {
+      return false;
+    }
   }
 
   void _scrollToBottom() {
@@ -58,7 +73,8 @@ class _GptChatScreenState extends ConsumerState<GptChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: state.conversation.isLoading && state.conversation.data!.isEmpty
+            child:
+                state.conversation.isLoading && state.conversation.data!.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     controller: _scrollController,
@@ -86,19 +102,22 @@ class _GptChatScreenState extends ConsumerState<GptChatScreen> {
           ),
 
           // 🔥 Trending Questions
-          if (state.trendingQuestions.isNotEmpty && state.isFetchingAnswer != "start")
+          if (state.trendingQuestions.isNotEmpty &&
+              state.isFetchingAnswer != "start")
             SizedBox(
               height: 100,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: state.trendingQuestions
-                    .map((q) => GestureDetector(
-                          onTap: (){},
-                          //  => ref
-                          //     .read(gptProvider.notifier)
-                          //     .submitMessage(chatId: widget.chatId, query: q),
-                          child: Chip(label: Text(q)),
-                        ))
+                    .map(
+                      (q) => GestureDetector(
+                        onTap: () {},
+                        //  => ref
+                        //     .read(gptProvider.notifier)
+                        //     .submitMessage(chatId: widget.chatId, query: q),
+                        child: Chip(label: Text(q)),
+                      ),
+                    )
                     .toList(),
               ),
             ),
