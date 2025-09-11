@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/get_start/presentation/pages/getstart.dart';
 import 'package:trader_gpt/src/feature/profile_setup/presentation/pages/profile_setup.dart';
 import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
@@ -26,7 +27,6 @@ final routerConfigProvider = Provider((ref) {
       if (isLogin && !isPublic) {
         return null;
       } else if (!isLogin && isPublic) {
-        
         state.fullPath;
       } else if (!isLogin && !isPublic) {
         return AppRoutes.getStartedScreen.path;
@@ -82,6 +82,14 @@ final routerConfigProvider = Provider((ref) {
         name: AppRoutes.profilePage.name,
         builder: (BuildContext context, GoRouterState state) {
           return ProfilePage();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.stockScreen.path,
+        name: AppRoutes.stockScreen.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return StockScreen();
         },
         routes: [],
       ),

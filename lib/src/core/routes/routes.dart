@@ -7,7 +7,8 @@ enum AppRoutes {
   signInPage('signInPage', '/sign-in'),
   signUpPage('signUpPage', '/sign-up'),
   verifaction('verifaction', '/verifaction'),
-  profilePage('profilePage', '/profilePage');
+  profilePage('profilePage', '/profilePage'),
+  stockScreen('stockScreen', '/stockScreen');
 
   final String name;
   final String path;
@@ -25,6 +26,7 @@ enum AppRoutes {
     AppRoutes.verifaction,
     AppRoutes.profilePage,
     AppRoutes.chatPage,
+    AppRoutes.stockScreen,
   ];
   static bool isPublicRoute(GoRouterState state) {
     final fullPath = state.fullPath;
