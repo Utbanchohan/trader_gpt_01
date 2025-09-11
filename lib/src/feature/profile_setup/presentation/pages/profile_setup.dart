@@ -7,11 +7,16 @@ import 'package:trader_gpt/src/core/local/repository/local_storage_repository.da
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/profile_setup/presentation/provider/profile_setup.dart';
+import 'package:trader_gpt/src/feature/s3_uploader/domain/models/media_model.dart';
+import 'package:trader_gpt/src/feature/s3_uploader/presentation/image_pickert.dart';
+import 'package:trader_gpt/src/feature/s3_uploader/providers/upload_provider.dart';
 import 'package:trader_gpt/src/shared/custom_message.dart';
+import 'package:trader_gpt/src/shared/states/app_loading_state.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../shared/mixin/form_state_mixin.dart';
+import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   ProfilePage({super.key});
@@ -28,6 +33,26 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
   TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController confirmPassword = TextEditingController();
+  String? imageUrl;
+  User? user;
+  MediaModel? mediaModel;
+
+  getUser() async {
+    dynamic userData = await ref.read(localDataProvider).getUser();
+    user = User.fromJson(userData);
+    if (user != null && user!.email.isNotEmpty) {
+      setState(() {
+        email = TextEditingController(text: user!.email);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    getUser();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   FutureOr<void> onSubmit() async {
@@ -38,11 +63,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
             email: email.value.text,
             password: password.value.text,
             fullname: fullname.value.text,
-            imageUrl: '',
+            imageUrl: mediaModel!.url,
           );
       if (result != null) {
         if (mounted) {
-          context.goNamed(AppRoutes.signInPage.name);
+          context.goNamed(AppRoutes.chatPage.name);
         }
       }
     } else {
@@ -52,7 +77,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var user = ref.watch(localDataProvider).getUser();
+    final isLoading = ref.watch(profileProvider) == AppLoadingState.loading();
+    final state = ref.watch(uploadNotifierProvider);
 
     return Scaffold(
       bottomNavigationBar: SafeArea(
@@ -61,6 +87,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
           margin: EdgeInsets.only(left: 20, right: 20),
           height: 55,
           child: ButtonWidget(
+            isLoading: isLoading,
+
             onPressed: () {
               submitter();
             },
@@ -81,6 +109,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
             shrinkWrap: true,
             children: [
               SizedBox(height: 24),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -105,29 +134,64 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                   Stack(
                     alignment: Alignment.bottomRight,
                     children: [
-                      Container(
-                        height: 63,
-                        width: 63,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: AssetImage(Assets.images.profile.path),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                      state.when(
+                        data: (media) {
+                          mediaModel = media;
+
+                          return Container(
+                            height: 63,
+                            width: 63,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: mediaModel != null
+                                    ? NetworkImage(
+                                        mediaModel!.url,
+                                      ) // ✅ uploaded image
+                                    : AssetImage(Assets.images.profile.path)
+                                          as ImageProvider, // ✅ default image
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
+                        loading: () => const CircularProgressIndicator(),
+                        error: (e, st) => Text("Error: $e"),
                       ),
-                      Container(
-                        height: 25,
-                        width: 24,
-                        decoration: BoxDecoration(
-                          color: AppColors.color1B254B,
-                          shape: BoxShape.circle,
-                        ),
-                        padding: EdgeInsets.all(4),
-                        child: Image.asset(
-                          Assets.images.camera.path,
-                          width: 12.8,
-                          height: 13.33,
+
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            backgroundColor: AppColors.bubbleColor,
+                            context: context,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20),
+                              ),
+                            ),
+                            builder: (BuildContext context) {
+                              return SizedBox(
+                                height:
+                                    MediaQuery.sizeOf(context).height * 0.25,
+                                child:
+                                    UploadImageScreen(), // yahi se Navigator.pop hoga
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          height: 25,
+                          width: 24,
+                          decoration: BoxDecoration(
+                            color: AppColors.color1B254B,
+                            shape: BoxShape.circle,
+                          ),
+                          padding: EdgeInsets.all(4),
+                          child: Image.asset(
+                            Assets.images.camera.path,
+                            width: 12.8,
+                            height: 13.33,
+                          ),
                         ),
                       ),
                     ],
@@ -157,6 +221,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     ),
                     SizedBox(height: 8),
                     TextFormField(
+                      controller: fullname,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -214,6 +279,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     ),
                     SizedBox(height: 8),
                     TextFormField(
+                      controller: email,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -299,6 +365,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                                   "✖ At least one special character";
                       },
                       decoration: InputDecoration(
+                        hintStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
                         hintText: "Create Password",
                         filled: true,
                         fillColor: const Color(0xFF161E31),
@@ -377,6 +448,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                                   "✖ At least one special character";
                       },
                       decoration: InputDecoration(
+                        hintStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
                         hintText: 'Confirm Password',
                         filled: true,
                         fillColor: const Color(0xFF161E31),

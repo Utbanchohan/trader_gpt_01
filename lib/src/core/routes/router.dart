@@ -37,7 +37,7 @@ final routerConfigProvider = Provider((ref) {
     },
     debugLogDiagnostics: kDebugMode,
     navigatorKey: navigatorKey,
-    initialLocation: AppRoutes.uploadImage.path,
+    initialLocation: AppRoutes.splash.path,
     routes: [
       GoRoute(
         path: AppRoutes.splash.path,
