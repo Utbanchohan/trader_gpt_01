@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chat_provider.dart';
+part of 'sign_in.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatProviderHash() => r'a13a95b6bf4d68dacef9f0d1f0aac34be4e9c8d7';
+String _$loginHash() => r'8852a6c5e4179bac18614cab8cebc5447022fe1b';
 
-/// See also [ChatProvider].
-@ProviderFor(ChatProvider)
-final chatProviderProvider =
-    AutoDisposeNotifierProvider<ChatProvider, AppLoadingState>.internal(
-      ChatProvider.new,
-      name: r'chatProviderProvider',
+/// See also [Login].
+@ProviderFor(Login)
+final loginProvider =
+    AutoDisposeNotifierProvider<Login, AppLoadingState>.internal(
+      Login.new,
+      name: r'loginProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$chatProviderHash,
+          : _$loginHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$ChatProvider = AutoDisposeNotifier<AppLoadingState>;
+typedef _$Login = AutoDisposeNotifier<AppLoadingState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

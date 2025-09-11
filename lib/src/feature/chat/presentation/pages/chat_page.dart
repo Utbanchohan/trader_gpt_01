@@ -10,6 +10,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
+import '../../domain/model/chats/chats_model.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   ChatPage({super.key});
@@ -20,6 +21,7 @@ class ChatPage extends ConsumerStatefulWidget {
 
 class _ChatPageState extends ConsumerState<ChatPage> {
   final TextEditingController message = TextEditingController();
+  List<dynamic> chats = [];
 
   @override
   void dispose() {
@@ -43,8 +45,19 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ),
           );
       if (res != null) {
-      
-       
+        chats.add(
+          Chats(
+            isLoading: false,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
+            data: [
+              {
+                "chatId": "68c16b966d162417bca6fc30",
+                message: text,
+                "type": "user",
+              },
+            ],
+          ),
+        );
       }
 
       message.clear();
@@ -53,7 +66,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-     const body = {
+    const body = {
       "task": "Analyze MSFT's financial health and future growth prospects",
       "symbol": "MSFT",
       "symbol_name": "Microsoft Corporation",
@@ -64,7 +77,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       "reply_id": "68c1d2c86d162417bca6fc8e",
       "workflow_object": null,
       "analysis_required": false,
-      "is_workflow": false
+      "is_workflow": false,
     };
 
     final asyncStream = ref.watch(sseProvider(body));
@@ -188,31 +201,35 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           ),
         ],
       ),
-      body:asyncStream.when(
-        data: (line) => 
-
-SingleChildScrollView(
+      body: asyncStream.when(
+        data: (line) => SingleChildScrollView(
           padding: const EdgeInsets.all(16),
-          child: MarkdownBody(
-            data: line,
-            selectable: true, // let user copy code
-            styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-              code: const TextStyle(
-                fontFamily: "monospace",
-                backgroundColor: AppColors.primaryColor,
+          child: Column(
+            children: [
+              MarkdownBody(
+                data: line,
+                selectable: true, // let user copy code
+                styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                    .copyWith(
+                      code: const TextStyle(
+                        fontFamily: "monospace",
+                        backgroundColor: AppColors.primaryColor,
+                      ),
+                      blockquote: const TextStyle(color: Colors.red),
+                    ),
+                onTapLink: (text, href, title) {
+                  if (href != null) {
+                    // launchUrl(Uri.parse(href)); // needs url_launcher
+                  }
+                },
               ),
-              blockquote: const TextStyle(color: Colors.red),
-            ),
-            onTapLink: (text, href, title) {
-              if (href != null) {
-                // launchUrl(Uri.parse(href)); // needs url_launcher
-              }
-            },
-          ),),
+            ],
+          ),
+        ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(child: Text("Error: $err")),
       ),
-      
+
       // Column(
       //   children: [
       //     // Tabs
@@ -342,8 +359,6 @@ SingleChildScrollView(
       //     ),
       //   ],
       // ),
-   
-   
     );
   }
 }
