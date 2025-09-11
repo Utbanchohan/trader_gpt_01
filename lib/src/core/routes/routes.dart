@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:trader_gpt/src/feature/sign_in/presentation/pages/sigin_in.dart';
 
 enum AppRoutes {
   getStartedScreen('getStartedScreen', '/get-started'),
