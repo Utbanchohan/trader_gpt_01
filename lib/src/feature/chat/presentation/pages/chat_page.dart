@@ -74,19 +74,7 @@ getRandomQuestions() async {
             ),
           );
       if (res != null) {
-        chats.add(
-          Chats(
-            isLoading: false,
-            timestamp: DateTime.now().millisecondsSinceEpoch,
-            data: [
-              {
-                "chatId": "68c16b966d162417bca6fc30",
-                message: text,
-                "type": "user",
-              },
-            ],
-          ),
-        );
+      
       }
 
       message.clear();

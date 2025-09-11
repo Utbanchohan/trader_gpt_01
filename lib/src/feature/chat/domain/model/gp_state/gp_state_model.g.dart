@@ -12,7 +12,7 @@ _GptState _$GptStateFromJson(Map<String, dynamic> json) => _GptState(
   conversation: Conversation.fromJson(
     json['conversation'] as Map<String, dynamic>,
   ),
-  chats: Chats.fromJson(json['chats'] as Map<String, dynamic>),
+  chats: ChatHistory.fromJson(json['chats'] as Map<String, dynamic>),
   selectedChat: json['selectedChat'],
   stockSymbolsData: json['stockSymbolsData'] as Map<String, dynamic>,
   draggableWidth: (json['draggableWidth'] as List<dynamic>?)

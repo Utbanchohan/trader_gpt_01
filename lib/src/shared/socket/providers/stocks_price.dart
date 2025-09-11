@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
-import '../model/stock_model/stock_model.dart';
+import '../model/stock_model.dart/stock_model.dart';
 
 part 'stocks_price.g.dart';
 
