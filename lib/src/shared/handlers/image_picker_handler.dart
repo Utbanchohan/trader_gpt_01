@@ -46,20 +46,20 @@ class ImagePickerHandler {
                         children: [
                           GestureDetector(
                             onTap: () async {
-                              // bool result = await requestStoragePermission(
-                              //     isCamera: true);
-                              //
-                              // if (result) {
+                              bool result = await requestStoragePermission(
+                                  isCamera: true);
+                              
+                              if (result) {
                               Navigator.of(context).pop();
                               imgFromCamera(context).then((value) {
                                 if (value != null) onGetImage(File(value.path));
                               });
-                              // } else {
-                              //   _showPermissionDialog(
-                              //     context,
-                              //     isCamera: true,
-                              //   );
-                              // }
+                              } else {
+                                _showPermissionDialog(
+                                  context,
+                                  isCamera: true,
+                                );
+                              }
                             },
                             child: Container(
                               height: 48,

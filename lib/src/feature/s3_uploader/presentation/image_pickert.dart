@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:trader_gpt/main.dart';
 import 'package:trader_gpt/src/feature/s3_uploader/providers/upload_provider.dart';
 
@@ -36,8 +37,14 @@ class UploadImageScreen extends ConsumerWidget {
       children: [
         // 📂 Gallery Button
         GestureDetector(
-          onTap: () {
-            pickAndUpload(context, ref, ImageSource.gallery);
+          onTap: () async {
+            bool result = await requestStoragePermission(isCamera: true);
+
+            if (result) {
+              pickAndUpload(context, ref, ImageSource.gallery);
+            } else {
+              _showPermissionDialog(context, isCamera: true);
+            }
           },
 
           child: Container(
@@ -79,8 +86,14 @@ class UploadImageScreen extends ConsumerWidget {
 
         // 📷 Camera Button
         GestureDetector(
-          onTap: () {
-            pickAndUpload(context, ref, ImageSource.camera);
+          onTap: () async {
+            bool result = await requestStoragePermission(isCamera: true);
+
+            if (result) {
+              pickAndUpload(context, ref, ImageSource.camera);
+            } else {
+              _showPermissionDialog(context, isCamera: true);
+            }
           },
 
           child: Container(
@@ -122,4 +135,42 @@ class UploadImageScreen extends ConsumerWidget {
       ],
     );
   }
+}
+
+Future<bool> requestStoragePermission({bool isCamera = false}) async {
+  PermissionStatus status = isCamera
+      ? await Permission.camera.request()
+      : await Permission.photos.request();
+  if (status.isDenied || status.isPermanentlyDenied) {
+    return false;
+  }
+
+  return true;
+}
+
+void _showPermissionDialog(BuildContext context, {required bool isCamera}) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Permission required'),
+      content: Text(
+        'Please enable ${isCamera ? 'camera' : 'photo'} access in the app settings to use this feature.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            openAppSettings();
+          },
+          child: Text('Open Settings'),
+        ),
+      ],
+    ),
+  );
 }

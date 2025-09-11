@@ -27,7 +27,6 @@ enum AppRoutes {
     AppRoutes.signUpPage,
     AppRoutes.verifaction,
     AppRoutes.profilePage,
-    AppRoutes.chatPage,
     AppRoutes.stockScreen,
     AppRoutes.uploadImage,
   ];
