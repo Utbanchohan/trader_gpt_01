@@ -47,5 +47,17 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
     <string>Allow access to your camera to upload and share photos, like selecting a profile picture or sharing images in chat.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to the camera to take photos and record videos.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs access to the microphone to record audio.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to your location to provide location-based features.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photos to read and save files.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs permission to save photos to your library.</string>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>This app needs permission to send you notifications.</string>
 </dict>
 </plist>
