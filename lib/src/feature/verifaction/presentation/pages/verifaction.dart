@@ -70,7 +70,7 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.goNamed(AppRoutes.signUpPage.name),
         ),
       ),
       body: Padding(
