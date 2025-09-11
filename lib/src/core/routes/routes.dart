@@ -1,11 +1,12 @@
 import 'package:go_router/go_router.dart';
 
 enum AppRoutes {
+  splash('splash', '/splash'),
   getStartedScreen('getStartedScreen', '/get-started'),
   chatPage('chatPage', '/chat-page'),
   signInPage('signInPage', '/sign-in'),
   signUpPage('signUpPage', '/sign-up'),
-  verifaction('verifaction', '/verifaction'),
+  verifaction('verifaction', '/verifaction/:email'),
   profilePage('profilePage', '/profilePage'),
   stockScreen('stockScreen', '/stockScreen');
 
@@ -19,6 +20,7 @@ enum AppRoutes {
   static final List<AppRoutes> webNavBarPages = [getStartedScreen];
   static final List<AppRoutes> settingsNavPages = [];
   static List<AppRoutes> get publicRoutes => [
+    AppRoutes.splash,
     AppRoutes.getStartedScreen,
     AppRoutes.signInPage,
     AppRoutes.signUpPage,

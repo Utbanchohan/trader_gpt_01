@@ -75,11 +75,14 @@ class $AssetsImagesGen {
   /// File path: assets/images/sms.png
   AssetGenImage get sms => const AssetGenImage('assets/images/sms.png');
 
+  /// File path: assets/images/splash.json
+  String get splash => 'assets/images/splash.json';
+
   /// File path: assets/images/stock.png
   AssetGenImage get stock => const AssetGenImage('assets/images/stock.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [
+  List<dynamic> get values => [
     google,
     regenerate,
     apple,
@@ -99,6 +102,7 @@ class $AssetsImagesGen {
     radar2,
     searchNormal,
     sms,
+    splash,
     stock,
   ];
 }

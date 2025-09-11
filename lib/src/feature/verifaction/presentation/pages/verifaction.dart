@@ -1,25 +1,45 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/verifaction/presentation/provider/verifaction_provider.dart';
+import 'package:trader_gpt/src/shared/mixin/form_state_mixin.dart';
+import 'package:trader_gpt/src/shared/states/app_loading_state.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class Verifaction extends ConsumerStatefulWidget {
-  Verifaction({super.key});
-
+  final String email;
+  Verifaction({super.key, required this.email});
   @override
   ConsumerState<Verifaction> createState() => _VerifactionState();
 }
 
-class _VerifactionState extends ConsumerState<Verifaction> {
-  String otpCode = '';
+class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
+  TextEditingController otp = TextEditingController();
   int seconds = 28;
 
   @override
+  FutureOr<void> onSubmit() async {
+    final result = await ref
+        .read(verifactionProviderProvider.notifier)
+        .onSubmit(email: widget.email, otp: otp.value.text);
+    if (result != null) {
+      if (mounted) {
+        context.goNamed(AppRoutes.profilePage.name);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isLoading =
+        ref.watch(verifactionProviderProvider) == AppLoadingState.loading();
+
     return Scaffold(
       bottomNavigationBar: SafeArea(
         bottom: true,
@@ -27,8 +47,12 @@ class _VerifactionState extends ConsumerState<Verifaction> {
           height: 55,
           margin: EdgeInsets.only(left: 20, right: 20),
           child: ButtonWidget(
+            isLoading: isLoading,
+
             onPressed: () {
-              context.goNamed(AppRoutes.profilePage.name);
+              submitter();
+
+              // context.goNamed(AppRoutes.profilePage.name);
             },
             title: 'Submit',
             borderRadius: 50,
@@ -64,41 +88,51 @@ class _VerifactionState extends ConsumerState<Verifaction> {
             ),
             SizedBox(height: 25),
             MdSnsText(
-              'Enter the code sent to\nFaheembradman@gmail.com',
+              'Enter the code sent to\n${widget.email}',
               color: AppColors.white,
               fontWeight: FontWeight.w400,
               size: 16,
             ),
             SizedBox(height: 30),
-            OtpTextField(
-              numberOfFields: 6,
-              borderRadius: BorderRadius.circular(12),
-              fieldWidth: 57,
-              fieldHeight: 57,
-              fillColor: AppColors.color141F35,
-              filled: true,
+            Form(
+              key: formKey,
+              child: OtpTextField(
+                numberOfFields: 6,
+                borderRadius: BorderRadius.circular(12),
+                fieldWidth: 57,
+                fieldHeight: 57,
+                fillColor: AppColors.color141F35,
+                filled: true,
 
-              borderColor: Colors.transparent,
-              focusedBorderColor: Colors.transparent,
-              enabledBorderColor: Colors.transparent,
+                borderColor: Colors.transparent,
+                focusedBorderColor: Colors.transparent,
+                enabledBorderColor: Colors.transparent,
 
-              showFieldAsBox: true,
+                showFieldAsBox: true,
+                margin: const EdgeInsets.only(left: 10),
 
-              margin: const EdgeInsets.only(left: 10),
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w500,
+                  height: 1.0,
+                ),
 
-              textStyle: const TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.w500,
-                height: 1.0,
+                // Ye sirf typing ke waqt call hoga (har digit par)
+                onCodeChanged: (String code) {
+                  otp.text = code;
+                },
+
+                // Ye tabhi call hoga jab user ne 6 digits puri kar di
+                onSubmit: (String code) {
+                  otp.text = code;
+
+                  // optional: keyboard band karne ke liye
+                  FocusScope.of(context).unfocus();
+
+                  submitter();
+                },
               ),
-
-              onCodeChanged: (String code) {},
-              onSubmit: (String code) {
-                setState(() {
-                  otpCode = code;
-                });
-              },
             ),
 
             Row(

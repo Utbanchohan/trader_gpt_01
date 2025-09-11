@@ -35,7 +35,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   logout() {
     String token = "";
     ref.read(localDataProvider).setAccessToken(token);
-    context.goNamed(AppRoutes.signInPage.name);
+    context.goNamed(AppRoutes.splash.name);
   }
 
   void _sendMessage(WidgetRef ref) async {

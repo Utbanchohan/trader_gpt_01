@@ -18,8 +18,8 @@ abstract class User with _$User {
     @JsonKey(name: '_id') required String id,
     required bool isVerified,
     required String email,
-    required String name,
-    @JsonKey(name: 'img_url') required String imgUrl,
+    @Default('') String name,
+    @JsonKey(name: 'img_url') @Default('')  String imgUrl,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _User;

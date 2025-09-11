@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/profile_setup/presentation/provider/profile_setup.dart';
@@ -20,11 +21,11 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
-  bool passwordVisible1 = false;
-  bool passwordVisible2 = false;
-
+  bool visible1 = false;
+  bool visible2 = false;
+  final formKey = GlobalKey<FormState>();
   final TextEditingController fullname = TextEditingController();
-  final TextEditingController email = TextEditingController();
+  TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController confirmPassword = TextEditingController();
 
@@ -44,13 +45,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
           context.goNamed(AppRoutes.signInPage.name);
         }
       }
-    }else{
+    } else {
       $showMessage("Confirm Password should be same as Password ");
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    var user = ref.watch(localDataProvider).getUser();
+
     return Scaffold(
       bottomNavigationBar: SafeArea(
         bottom: true,
@@ -276,12 +279,65 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       ],
                     ),
                     SizedBox(height: 8),
-                    _PasswordField(
+                    TextFormField(
                       controller: password,
-                      visible: passwordVisible1,
-                      onVisibilityChanged: (v) =>
-                          setState(() => passwordVisible1 = v),
+                      obscureText: !visible1,
+                      onChanged: (_) => setState(() {}),
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Password is required";
+                        }
+                        final pattern =
+                            r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$';
+                        final regex = RegExp(pattern);
+                        return regex.hasMatch(value)
+                            ? null
+                            : "✖ At least 8 characters long " +
+                                  "✖ At least one number (0–9) " +
+                                  "✖ At least one uppercase letter (A–Z) " +
+                                  "✖ At least one special character";
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Create Password",
+                        filled: true,
+                        fillColor: const Color(0xFF161E31),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 10,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.check_circle, color: Colors.white70),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon: Icon(
+                                visible1
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.white70,
+                              ),
+                              onPressed: () => setState(() {
+                                visible1 = !visible1;
+                              }),
+                            ),
+                          ],
+                        ),
+                        suffixIconConstraints: const BoxConstraints(
+                          minWidth: 80,
+                        ),
+                      ),
                     ),
+
                     SizedBox(height: 20),
                     Row(
                       children: [
@@ -301,86 +357,71 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     ),
                     SizedBox(height: 8),
 
-                    _PasswordField(
+                    TextFormField(
                       controller: confirmPassword,
-                      visible: passwordVisible2,
-                      onVisibilityChanged: (v) =>
-                          setState(() => passwordVisible2 = v),
+                      obscureText: !visible2,
+                      onChanged: (_) => setState(() {}),
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Password is required";
+                        }
+                        final pattern =
+                            r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$';
+                        final regex = RegExp(pattern);
+                        return regex.hasMatch(value)
+                            ? null
+                            : "✖ At least 8 characters long " +
+                                  "✖ At least one number (0–9) " +
+                                  "✖ At least one uppercase letter (A–Z) " +
+                                  "✖ At least one special character";
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Confirm Password',
+                        filled: true,
+                        fillColor: const Color(0xFF161E31),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 10,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.check_circle, color: Colors.white70),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon: Icon(
+                                visible2
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.white70,
+                              ),
+                              onPressed: () => setState(() {
+                                visible2 = !visible2;
+                              }),
+                            ),
+                          ],
+                        ),
+                        suffixIconConstraints: const BoxConstraints(
+                          minWidth: 80,
+                        ),
+                      ),
                     ),
+
                     SizedBox(height: 8),
                   ],
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PasswordField extends StatelessWidget {
-  final bool visible;
-  final ValueChanged<bool> onVisibilityChanged;
-  final TextEditingController controller;
-  _PasswordField({
-    required this.visible,
-    required this.controller,
-    required this.onVisibilityChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: !visible,
-      initialValue: '**********',
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 20,
-        fontWeight: FontWeight.w400,
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Password is required";
-        }
-        final pattern =
-            r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$';
-        final regex = RegExp(pattern);
-        return regex.hasMatch(value)
-            ? null
-            : "✖ At least 8 characters long " +
-                  "✖ At least one number (0–9) " +
-                  "✖ At least one uppercase letter (A–Z) " +
-                  "✖ At least one special character";
-      },
-      textInputAction: TextInputAction.done,
-
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Color(0xFF161E31),
-        contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide.none,
-        ),
-        suffixIcon: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.check_circle, color: Colors.white70),
-            SizedBox(width: 8),
-            IconButton(
-              icon: Icon(
-                visible ? Icons.visibility : Icons.visibility_off,
-                color: Colors.white70,
-              ),
-              onPressed: () => onVisibilityChanged(!visible),
-            ),
-          ],
         ),
       ),
     );
