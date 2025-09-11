@@ -97,11 +97,12 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
             Form(
               key: formKey,
               child: OtpTextField(
+                contentPadding: EdgeInsets.zero,
                 numberOfFields: 6,
                 borderRadius: BorderRadius.circular(12),
-                fieldWidth: 57,
-                fieldHeight: 57,
-                fillColor: AppColors.color141F35,
+                fieldWidth: 55,
+                fieldHeight: 55,
+                fillColor: AppColors.bubbleColor,
                 filled: true,
 
                 borderColor: Colors.transparent,
