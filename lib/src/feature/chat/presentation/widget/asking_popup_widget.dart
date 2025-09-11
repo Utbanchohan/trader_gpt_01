@@ -9,13 +9,13 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 class AskingPopupWidget extends StatelessWidget {
   final List<String> questions;
   final TextEditingController controller;
-   Stock? selectedStock;
+  Stock? selectedStock;
 
-   AskingPopupWidget({
+  AskingPopupWidget({
     super.key,
     required this.questions,
     required this.controller,
-     this.selectedStock
+    this.selectedStock,
   });
 
   @override
@@ -24,11 +24,14 @@ class AskingPopupWidget extends StatelessWidget {
       length: 2,
       child: Container(
         width: MediaQuery.sizeOf(context).width,
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TabBar(
+              indicatorSize: TabBarIndicatorSize.tab,
+              
+              indicatorPadding: EdgeInsetsGeometry.zero,
               indicator: BoxDecoration(
                 color: AppColors.color1B254B,
                 borderRadius: BorderRadius.circular(25),
@@ -45,6 +48,7 @@ class AskingPopupWidget extends StatelessWidget {
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
+              dividerHeight: 0,
               tabs: const [
                 Tab(text: 'Trending Q/A'),
                 Tab(text: 'Related Q/A'),
