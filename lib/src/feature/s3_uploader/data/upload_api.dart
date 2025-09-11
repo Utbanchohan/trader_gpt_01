@@ -9,7 +9,7 @@ class UploadApi {
   /// Get presigned S3 URL
   Future<Map<String, dynamic>> getPresignedUrl(String fileName) async {
     final response = await dio.get(
-      'https://dev.tradersgpt.io/tgpt-nestjs/s3',
+      'https://stage.tradersgpt.io/tgpt-nestjs/s3',
       queryParameters: {'fileName': fileName},
     );
     return response.data;

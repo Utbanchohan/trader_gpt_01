@@ -24,6 +24,7 @@ class UploadNotifier extends StateNotifier<AsyncValue<MediaModel?>> {
       state = AsyncValue.data(media);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+      print("Upload error: $e");
     }
   }
 }

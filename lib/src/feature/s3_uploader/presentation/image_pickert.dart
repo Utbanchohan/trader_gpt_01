@@ -9,9 +9,10 @@ class UploadImageScreen extends ConsumerWidget {
 
   final ImagePicker _picker = ImagePicker();
 
-  Future<void> pickAndUpload(WidgetRef ref) async {
+  /// Pick image from gallery or camera
+  Future<void> pickAndUpload(WidgetRef ref, ImageSource source) async {
     final XFile? picked = await _picker.pickImage(
-      source: ImageSource.gallery,
+      source: source,
       imageQuality: 80,
     );
     if (picked != null) {
@@ -39,8 +40,12 @@ class UploadImageScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => pickAndUpload(ref),
-              child: const Text("Pick & Upload Image"),
+              onPressed: () => pickAndUpload(ref, ImageSource.gallery),
+              child: const Text("Pick & Upload from Gallery"),
+            ),
+            ElevatedButton(
+              onPressed: () => pickAndUpload(ref, ImageSource.camera),
+              child: const Text("Pick & Upload from Camera"),
             ),
           ],
         ),
