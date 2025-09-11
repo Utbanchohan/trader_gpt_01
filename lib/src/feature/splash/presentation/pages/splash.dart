@@ -12,15 +12,27 @@ class Splash extends ConsumerStatefulWidget {
   ConsumerState<Splash> createState() => _SplashState();
 }
 
-class _SplashState extends ConsumerState<Splash> {
+class _SplashState extends ConsumerState<Splash> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
   @override
   void initState() {
     super.initState();
 
-    // 3 sec ke baad next screen pe route
-    Future.delayed(const Duration(seconds: 6), () {
-      context.goNamed(AppRoutes.getStartedScreen.name);
+    _controller = AnimationController(vsync: this);
+
+    // Jaise hi animation complete ho, next screen par jao
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        context.goNamed(AppRoutes.getStartedScreen.name);
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -29,10 +41,17 @@ class _SplashState extends ConsumerState<Splash> {
       backgroundColor: Colors.white, // splash bg color
       body: Center(
         child: Lottie.asset(
-          Assets.images.splash,
+          Assets.images.splashScreen,
           width: MediaQuery.sizeOf(context).width,
           height: MediaQuery.sizeOf(context).height,
           fit: BoxFit.cover,
+          controller: _controller,
+          onLoaded: (composition) {
+            // Animation duration set karo aur start karo
+            _controller
+              ..duration = composition.duration
+              ..forward();
+          },
         ),
       ),
     );

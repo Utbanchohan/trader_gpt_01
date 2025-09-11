@@ -17,6 +17,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/Google.png
   AssetGenImage get google => const AssetGenImage('assets/images/Google.png');
 
+  /// File path: assets/images/Microinteractions  Preloader  03.gif
+  AssetGenImage get microinteractionsPreloader03 =>
+      const AssetGenImage('assets/images/Microinteractions  Preloader  03.gif');
+
   /// File path: assets/images/Regenerate.png
   AssetGenImage get regenerate =>
       const AssetGenImage('assets/images/Regenerate.png');
@@ -75,8 +79,8 @@ class $AssetsImagesGen {
   /// File path: assets/images/sms.png
   AssetGenImage get sms => const AssetGenImage('assets/images/sms.png');
 
-  /// File path: assets/images/splash.json
-  String get splash => 'assets/images/splash.json';
+  /// File path: assets/images/splashScreen.json
+  String get splashScreen => 'assets/images/splashScreen.json';
 
   /// File path: assets/images/stock.png
   AssetGenImage get stock => const AssetGenImage('assets/images/stock.png');
@@ -84,6 +88,7 @@ class $AssetsImagesGen {
   /// List of all assets
   List<dynamic> get values => [
     google,
+    microinteractionsPreloader03,
     regenerate,
     apple,
     arrowBack,
@@ -102,7 +107,7 @@ class $AssetsImagesGen {
     radar2,
     searchNormal,
     sms,
-    splash,
+    splashScreen,
     stock,
   ];
 }
