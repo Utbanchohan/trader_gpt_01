@@ -38,6 +38,7 @@ final routerConfigProvider = Provider((ref) {
     debugLogDiagnostics: kDebugMode,
     navigatorKey: navigatorKey,
     initialLocation: AppRoutes.splash.path,
+    // initialLocation: AppRoutes.chatPage.path,
     routes: [
       GoRoute(
         path: AppRoutes.splash.path,

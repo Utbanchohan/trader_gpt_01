@@ -224,7 +224,7 @@ return $default(_that.id,_that.chatId,_that.message,_that.type,_that.userId,_tha
 @JsonSerializable()
 
 class _ChatMessageModel implements ChatMessageModel {
-  const _ChatMessageModel({@JsonKey(name: '_id') required this.id, required this.chatId, required this.message, required this.type, required this.userId, required this.createdAt, required this.updatedAt, this.followup, this.feedback, required this.runId, this.tempMessageId, this.symbol, this.status = "Pending", final  List<dynamic>? displayableData, this.tracing, final  List<dynamic>? updates}): _displayableData = displayableData,_updates = updates;
+  const _ChatMessageModel({@JsonKey(name: '_id') required this.id, required this.chatId, required this.message, required this.type, required this.userId, required this.createdAt, required this.updatedAt, this.followup, this.feedback, this.runId = '', this.tempMessageId, this.symbol, this.status = "Pending", final  List<dynamic>? displayableData, this.tracing, final  List<dynamic>? updates}): _displayableData = displayableData,_updates = updates;
   factory _ChatMessageModel.fromJson(Map<String, dynamic> json) => _$ChatMessageModelFromJson(json);
 
 @override@JsonKey(name: '_id') final  String id;
@@ -236,7 +236,7 @@ class _ChatMessageModel implements ChatMessageModel {
 @override final  DateTime updatedAt;
 @override final  String? followup;
 @override final  String? feedback;
-@override final  String runId;
+@override@JsonKey() final  String runId;
 @override final  String? tempMessageId;
 @override final  String? symbol;
 @override@JsonKey() final  String status;

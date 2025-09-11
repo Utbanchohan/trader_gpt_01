@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Conversation {
 
- bool get isLoading; List<ChatMessageModel>? get data; int? get timestamp; int? get totalCount; int get page;
+ bool get isLoading; List<ChatMessageModel>? get messages; int? get timestamp; int? get totalCount; int get page;
 /// Create a copy of Conversation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ConversationCopyWith<Conversation> get copyWith => _$ConversationCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Conversation&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.page, page) || other.page == page));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Conversation&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.page, page) || other.page == page));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(data),timestamp,totalCount,page);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(messages),timestamp,totalCount,page);
 
 @override
 String toString() {
-  return 'Conversation(isLoading: $isLoading, data: $data, timestamp: $timestamp, totalCount: $totalCount, page: $page)';
+  return 'Conversation(isLoading: $isLoading, messages: $messages, timestamp: $timestamp, totalCount: $totalCount, page: $page)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ConversationCopyWith<$Res>  {
   factory $ConversationCopyWith(Conversation value, $Res Function(Conversation) _then) = _$ConversationCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, List<ChatMessageModel>? data, int? timestamp, int? totalCount, int page
+ bool isLoading, List<ChatMessageModel>? messages, int? timestamp, int? totalCount, int page
 });
 
 
@@ -65,10 +65,10 @@ class _$ConversationCopyWithImpl<$Res>
 
 /// Create a copy of Conversation
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? data = freezed,Object? timestamp = freezed,Object? totalCount = freezed,Object? page = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? messages = freezed,Object? timestamp = freezed,Object? totalCount = freezed,Object? page = null,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as bool,messages: freezed == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
 as List<ChatMessageModel>?,timestamp: freezed == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
 as int?,totalCount: freezed == totalCount ? _self.totalCount : totalCount // ignore: cast_nullable_to_non_nullable
 as int?,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
@@ -157,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  List<ChatMessageModel>? data,  int? timestamp,  int? totalCount,  int page)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  List<ChatMessageModel>? messages,  int? timestamp,  int? totalCount,  int page)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Conversation() when $default != null:
-return $default(_that.isLoading,_that.data,_that.timestamp,_that.totalCount,_that.page);case _:
+return $default(_that.isLoading,_that.messages,_that.timestamp,_that.totalCount,_that.page);case _:
   return orElse();
 
 }
@@ -178,10 +178,10 @@ return $default(_that.isLoading,_that.data,_that.timestamp,_that.totalCount,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  List<ChatMessageModel>? data,  int? timestamp,  int? totalCount,  int page)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  List<ChatMessageModel>? messages,  int? timestamp,  int? totalCount,  int page)  $default,) {final _that = this;
 switch (_that) {
 case _Conversation():
-return $default(_that.isLoading,_that.data,_that.timestamp,_that.totalCount,_that.page);case _:
+return $default(_that.isLoading,_that.messages,_that.timestamp,_that.totalCount,_that.page);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +198,10 @@ return $default(_that.isLoading,_that.data,_that.timestamp,_that.totalCount,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  List<ChatMessageModel>? data,  int? timestamp,  int? totalCount,  int page)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  List<ChatMessageModel>? messages,  int? timestamp,  int? totalCount,  int page)?  $default,) {final _that = this;
 switch (_that) {
 case _Conversation() when $default != null:
-return $default(_that.isLoading,_that.data,_that.timestamp,_that.totalCount,_that.page);case _:
+return $default(_that.isLoading,_that.messages,_that.timestamp,_that.totalCount,_that.page);case _:
   return null;
 
 }
@@ -213,15 +213,15 @@ return $default(_that.isLoading,_that.data,_that.timestamp,_that.totalCount,_tha
 @JsonSerializable()
 
 class _Conversation implements Conversation {
-  const _Conversation({this.isLoading = false, final  List<ChatMessageModel>? data, this.timestamp, this.totalCount, this.page = 1}): _data = data;
+  const _Conversation({this.isLoading = false, final  List<ChatMessageModel>? messages, this.timestamp, this.totalCount, this.page = 1}): _messages = messages;
   factory _Conversation.fromJson(Map<String, dynamic> json) => _$ConversationFromJson(json);
 
 @override@JsonKey() final  bool isLoading;
- final  List<ChatMessageModel>? _data;
-@override List<ChatMessageModel>? get data {
-  final value = _data;
+ final  List<ChatMessageModel>? _messages;
+@override List<ChatMessageModel>? get messages {
+  final value = _messages;
   if (value == null) return null;
-  if (_data is EqualUnmodifiableListView) return _data;
+  if (_messages is EqualUnmodifiableListView) return _messages;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(value);
 }
@@ -243,16 +243,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Conversation&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.page, page) || other.page == page));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Conversation&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._messages, _messages)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.page, page) || other.page == page));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_data),timestamp,totalCount,page);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_messages),timestamp,totalCount,page);
 
 @override
 String toString() {
-  return 'Conversation(isLoading: $isLoading, data: $data, timestamp: $timestamp, totalCount: $totalCount, page: $page)';
+  return 'Conversation(isLoading: $isLoading, messages: $messages, timestamp: $timestamp, totalCount: $totalCount, page: $page)';
 }
 
 
@@ -263,7 +263,7 @@ abstract mixin class _$ConversationCopyWith<$Res> implements $ConversationCopyWi
   factory _$ConversationCopyWith(_Conversation value, $Res Function(_Conversation) _then) = __$ConversationCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, List<ChatMessageModel>? data, int? timestamp, int? totalCount, int page
+ bool isLoading, List<ChatMessageModel>? messages, int? timestamp, int? totalCount, int page
 });
 
 
@@ -280,10 +280,10 @@ class __$ConversationCopyWithImpl<$Res>
 
 /// Create a copy of Conversation
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? data = freezed,Object? timestamp = freezed,Object? totalCount = freezed,Object? page = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? messages = freezed,Object? timestamp = freezed,Object? totalCount = freezed,Object? page = null,}) {
   return _then(_Conversation(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,data: freezed == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as bool,messages: freezed == messages ? _self._messages : messages // ignore: cast_nullable_to_non_nullable
 as List<ChatMessageModel>?,timestamp: freezed == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
 as int?,totalCount: freezed == totalCount ? _self.totalCount : totalCount // ignore: cast_nullable_to_non_nullable
 as int?,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable

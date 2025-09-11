@@ -9,7 +9,7 @@ part 'conversation_model.g.dart';
 abstract class Conversation with _$Conversation {
   const factory Conversation({
     @Default(false) bool isLoading,
-    List<ChatMessageModel>? data,
+    List<ChatMessageModel>? messages,
     int? timestamp,
     int? totalCount,
     @Default(1) int page,
@@ -18,5 +18,5 @@ abstract class Conversation with _$Conversation {
   factory Conversation.fromJson(Map<String, dynamic> json) =>
       _$ConversationFromJson(json);
 
-  factory Conversation.initial() => const Conversation(isLoading: true, data: []);
+  factory Conversation.initial() => const Conversation(isLoading: true, messages: []);
 }
