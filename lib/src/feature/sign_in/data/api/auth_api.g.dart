@@ -48,12 +48,12 @@ class _AuthApi implements AuthApi {
   }
 
   @override
-  Future<BaseModel<LoginData>> signUp(String email) async {
+  Future<BaseModel<User>> signUp(SignUpDto signUp) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = email;
-    final _options = _setStreamType<BaseModel<LoginData>>(
+    final _data = signUp;
+    final _options = _setStreamType<BaseModel<User>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -64,11 +64,11 @@ class _AuthApi implements AuthApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseModel<LoginData> _value;
+    late BaseModel<User> _value;
     try {
-      _value = BaseModel<LoginData>.fromJson(
+      _value = BaseModel<User>.fromJson(
         _result.data!,
-        (json) => LoginData.fromJson(json as Map<String, dynamic>),
+        (json) => User.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

@@ -10,6 +10,7 @@ import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../shared/mixin/form_state_mixin.dart';
+import '../../../../shared/states/app_loading_state.dart';
 
 class SignUp extends ConsumerStatefulWidget {
   const SignUp({super.key});
@@ -28,13 +29,17 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
         .onSubmit(email: email.value.text);
     if (result != null) {
       if (mounted) {
-        context.goNamed(AppRoutes.verifaction.name);
+        context.goNamed(
+          AppRoutes.verifaction.name,
+          pathParameters: {'email': email.value.text},
+        );
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(signUpProvider) == AppLoadingState.loading();
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       body: SafeArea(
@@ -155,7 +160,9 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
               Container(
                 height: 55,
                 child: ButtonWidget(
+                  isLoading: isLoading,
                   onPressed: () {
+                    
                     submitter();
                   },
                   title: 'Create Account',

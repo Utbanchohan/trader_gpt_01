@@ -9,6 +9,7 @@ import 'package:trader_gpt/src/feature/sign_in/data/api/auth_api.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/complete_profile/complete_profile_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/otp_request/otp_request_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
+import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_up_dto/sign_up.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';
 
@@ -25,7 +26,7 @@ class AuthApiRepository implements AuthRepository {
   }
 
   @override
-  Future<BaseModel<LoginData>> signUp(String email) async {
+  Future<BaseModel<User>> signUp(SignUpDto email) async {
     return await AuthApi(client).signUp(email);
   }
 
