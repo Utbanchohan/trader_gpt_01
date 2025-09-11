@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+    <string>Allow access to your camera to upload and share photos, like selecting a profile picture or sharing images in chat.</string>
 </dict>
 </plist>
