@@ -17,20 +17,10 @@ class UploadNotifier extends StateNotifier<AsyncValue<MediaModel?>> {
   UploadNotifier({required this.repository})
     : super(const AsyncValue.data(null));
 
-  Future<void> uploadFile(
-    File file,
-    String uploadUrl,
-    String fileUrl,
-    String type,
-  ) async {
+  Future<void> uploadImage(File file) async {
     state = const AsyncValue.loading();
     try {
-      final media = await repository.uploadFile(
-        file: file,
-        uploadUrl: uploadUrl,
-        fileUrl: fileUrl,
-        type: type,
-      );
+      final media = await repository.uploadFileWithS3Endpoint(file);
       state = AsyncValue.data(media);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -39,6 +29,9 @@ class UploadNotifier extends StateNotifier<AsyncValue<MediaModel?>> {
 }
 
 final uploadNotifierProvider =
-    StateNotifierProvider<UploadNotifier, AsyncValue<MediaModel?>>(
-      (ref) => UploadNotifier(repository: ref.read(uploadRepositoryProvider)),
-    );
+    StateNotifierProvider.autoDispose<UploadNotifier, AsyncValue<MediaModel?>>((
+      ref,
+    ) {
+      ref.keepAlive();
+      return UploadNotifier(repository: ref.read(uploadRepositoryProvider));
+    });

@@ -1,48 +1,50 @@
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:trader_gpt/src/feature/s3_uploader/providers/upload_provider.dart';
 
-class ImageUploader {
+class UploadImageScreen extends ConsumerWidget {
+  UploadImageScreen({super.key});
+
   final ImagePicker _picker = ImagePicker();
 
-  /// Pick from gallery
-  Future<void> pickFromGallery(
-    WidgetRef ref,
-    String uploadUrl,
-    String fileUrl,
-  ) async {
+  Future<void> pickAndUpload(WidgetRef ref) async {
     final XFile? picked = await _picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 80,
     );
-
     if (picked != null) {
       File file = File(picked.path);
-      final type = 'image/${picked.path.split('.').last}'; // png, jpg, jpeg
-      await ref
-          .read(uploadNotifierProvider.notifier)
-          .uploadFile(file, uploadUrl, fileUrl, type);
+      await ref.read(uploadNotifierProvider.notifier).uploadImage(file);
     }
   }
 
-  /// Pick from camera
-  Future<void> pickFromCamera(
-    WidgetRef ref,
-    String uploadUrl,
-    String fileUrl,
-  ) async {
-    final XFile? picked = await _picker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 80,
-    );
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(uploadNotifierProvider);
 
-    if (picked != null) {
-      File file = File(picked.path);
-      final type = 'image/${picked.path.split('.').last}';
-      await ref
-          .read(uploadNotifierProvider.notifier)
-          .uploadFile(file, uploadUrl, fileUrl, type);
-    }
+    return Scaffold(
+      appBar: AppBar(title: const Text("Upload Image")),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            state.when(
+              data: (media) => media != null
+                  ? Image.network(media.url, height: 200)
+                  : const Text("No image uploaded"),
+              loading: () => const CircularProgressIndicator(),
+              error: (e, st) => Text("Error: $e"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => pickAndUpload(ref),
+              child: const Text("Pick & Upload Image"),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
