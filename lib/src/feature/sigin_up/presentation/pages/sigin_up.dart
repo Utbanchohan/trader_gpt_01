@@ -43,14 +43,10 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(signUpProvider) == AppLoadingState.loading();
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
+      appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: SizedBox(
                 height: 19.h,
                 width: 23.w,
                 child: IconButton(
@@ -65,8 +61,15 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                   ),
                 ),
               ),
-
-              SizedBox(height: 45.h),
+      ),
+      backgroundColor: AppColors.primaryColor,
+      body: SafeArea(
+      
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w,),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
 
               MdSnsText(
                 "Let’s get started",
@@ -144,7 +147,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                     ),
 
                     contentPadding: EdgeInsets.symmetric(
-                      horizontal: 24.w,
+                      horizontal: 14.w,
                       vertical: 10.h,
                     ),
                     enabledBorder: OutlineInputBorder(
