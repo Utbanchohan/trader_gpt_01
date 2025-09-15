@@ -47,29 +47,36 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
         scrolledUnderElevation: 0,
         backgroundColor: Colors.transparent,
         leading: SizedBox(
-                height: 19.h,
-                width: 23.w,
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    context.goNamed(AppRoutes.getStartedScreen.name);
-                  },
-                  icon: Image.asset(
-                    Assets.images.arrowBack.path,
-                    height: 19.h,
-                    width: 23.w,
-                  ),
-                ),
-              ),
+          height: 19.h,
+          width: 23.w,
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              context.goNamed(AppRoutes.getStartedScreen.name);
+            },
+            icon: Image.asset(
+              Assets.images.arrowBack.path,
+              height: 19.h,
+              width: 23.w,
+            ),
+          ),
+        ),
       ),
       backgroundColor: AppColors.primaryColor,
       body: SafeArea(
-      
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w,),
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 24.h),
+
+              Image.asset(
+                Assets.images.appLogo.path,
+                height: 41.h,
+                width: 166.w,
+              ),
+              SizedBox(height: 24.h),
 
               MdSnsText(
                 "Let’s get started",
@@ -117,7 +124,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                   controller: email,
                   style: GoogleFonts.plusJakartaSans(
                     color: Colors.white,
-                    fontSize: 16.sp,
+                    fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),
 
@@ -142,7 +149,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                     hintText: 'Email',
                     hintStyle: GoogleFonts.plusJakartaSans(
                       color: AppColors.color677FA4,
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       fontWeight: FontWeight.w400,
                     ),
 
@@ -163,7 +170,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                 ),
               ),
 
-               Spacer(),
+              Spacer(),
 
               SizedBox(
                 height: 50.h,

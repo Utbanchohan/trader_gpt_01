@@ -53,4 +53,24 @@ class VerifactionProvider extends _$VerifactionProvider {
     }
     return null;
   }
+
+
+    Future<User?> resend({required String email}) async {
+    state = AppLoadingState.loading();
+    try {
+      final response = await ref.read(authRepository).signUp(SignUpDto(email: email));
+      if (response.isSuccess) {
+        state = AppLoadingState();
+        return response.data;
+      } else {
+        $showMessage(response.message, isError: true);
+      }
+      state = AppLoadingState();
+    } catch (e) {
+      $showMessage(e.toString(),isError: true);
+      state = AppLoadingState();
+      debugPrint("errror $e");
+    }
+    return null;
+  }
 }

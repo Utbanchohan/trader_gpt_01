@@ -1,17 +1,10 @@
-
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 
 @immutable
 abstract final class AppColors {
-
-  static const List<Color> gradient = [
-    Color(0xFF00E47A),
-    Color(0xFF401FFF),
-  ];
-
-
+  static const List<Color> gradient = [Color(0xFF00E47A), Color(0xFF401FFF)];
 
   static const primaryColor = Color(0xFF071020);
   static const secondaryColor = Color(0xFF0098E4);
@@ -43,8 +36,4 @@ abstract final class AppColors {
   static const color203864 = Color(0xFF203864);
   static const color677FA4 = Color(0xFF677FA4);
   static const color00FF55 = Color(0xFF00FF55);
-        
-    
-  
-
 }

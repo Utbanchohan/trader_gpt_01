@@ -19,7 +19,7 @@ class MdSnsText extends Text {
   }) : super(
          style: GoogleFonts.plusJakartaSans(
            color: color,
-           fontSize: size.sp,
+           fontSize: size,
            height: height,
            fontStyle: fontStyle,
            fontWeight: fontWeight,

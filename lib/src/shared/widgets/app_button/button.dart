@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
+
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/loading_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';

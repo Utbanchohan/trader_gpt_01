@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sizer/sizer.dart';
 import 'package:trader_gpt/src/core/routes/router.dart';
 import 'package:trader_gpt/src/shared/app_start/presentation/app_start_view.dart';
 import 'package:trader_gpt/src/shared/custom_scroll_behavour.dart';
@@ -30,7 +29,7 @@ class MyApp extends ConsumerWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: ScreenUtilInit(
-        designSize: Size(375, 812),
+        designSize: const Size(375, 812), // Figma design base size
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
@@ -56,9 +55,9 @@ class MyApp extends ConsumerWidget {
             builder: (_, child) {
               return AppStartupWidget(
                 onLoaded: (_) => MediaQuery(
-                  data: MediaQuery.of(
-                    context,
-                  ).copyWith(textScaler: const TextScaler.linear(1.0)),
+                  data: MediaQuery.of(context).copyWith(
+                    textScaler: TextScaler.linear(1.0),
+                  ),
                   child: child!,
                 ),
               );

@@ -6,7 +6,7 @@ part of 'socket.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$socketConnectionHash() => r'8f365fd89edd0181915e201ad22e0af713275cc7';
+String _$socketConnectionHash() => r'5846f4277a32604b8d50806f43dc5c1fc68e1fa4';
 
 /// Copied from Dart SDK
 class _SystemHash {
