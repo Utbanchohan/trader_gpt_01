@@ -12,6 +12,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart
 import 'package:trader_gpt/src/feature/get_start/presentation/pages/getstart.dart';
 import 'package:trader_gpt/src/feature/profile_setup/presentation/pages/profile_setup.dart';
 import 'package:trader_gpt/src/feature/s3_uploader/presentation/image_pickert.dart';
+import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
 import 'package:trader_gpt/src/feature/sign_in/presentation/pages/sigin_in.dart';
 import 'package:trader_gpt/src/feature/splash/presentation/pages/splash.dart';
@@ -111,6 +112,14 @@ final routerConfigProvider = Provider((ref) {
         name: AppRoutes.uploadImage.name,
         builder: (BuildContext context, GoRouterState state) {
           return UploadImageScreen();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.sideMenu.path,
+        name: AppRoutes.sideMenu.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return SideMenu();
         },
         routes: [],
       ),

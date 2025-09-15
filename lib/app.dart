@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/src/core/routes/router.dart';
 import 'package:trader_gpt/src/shared/app_start/presentation/app_start_view.dart';
 import 'package:trader_gpt/src/shared/custom_scroll_behavour.dart';
@@ -26,30 +28,40 @@ class MyApp extends ConsumerWidget {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: MaterialApp.router(
-        scrollBehavior: MyCustomScrollBehavior(),
-        theme: ThemeData(
-          brightness: Brightness.dark,
-          visualDensity: VisualDensity.standard,
-          useMaterial3: true,
-          inputDecorationTheme: InputDecorationTheme(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
-          textButtonTheme: TextButtonThemeData(style: buttonStyle),
-          outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle),
-        ),
-        title: 'Trader GPT',
-        debugShowCheckedModeBanner: false,
-        routerConfig: goRouter,
-        builder: (_, child) {
-          return AppStartupWidget(
-            onLoaded: (_) => MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: const TextScaler.linear(1.0)),
-              child: child!,
+      child: ScreenUtilInit(
+        designSize: const Size(375, 812), // Figma design base size
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return MaterialApp.router(
+            scrollBehavior: MyCustomScrollBehavior(),
+            theme: ThemeData(
+              brightness: Brightness.dark,
+              visualDensity: VisualDensity.standard,
+              useMaterial3: true,
+              textTheme: GoogleFonts.plusJakartaSansTextTheme(),
+              inputDecorationTheme: InputDecorationTheme(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
+              textButtonTheme: TextButtonThemeData(style: buttonStyle),
+              outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle),
             ),
+            title: 'Trader GPT',
+            debugShowCheckedModeBanner: false,
+            routerConfig: goRouter,
+            builder: (_, child) {
+              return AppStartupWidget(
+                onLoaded: (_) => MediaQuery(
+                  data: MediaQuery.of(context).copyWith(
+                    textScaler: TextScaler.linear(1.0),
+                  ),
+                  child: child!,
+                ),
+              );
+            },
           );
         },
       ),

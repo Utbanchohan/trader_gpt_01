@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
@@ -59,100 +59,106 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF071020),
+      backgroundColor: const Color(0xFF071020),
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            /// Logo Section
             Column(
               children: [
                 Image.asset(
                   Assets.images.manicon.path,
-                  height: 42.63,
-                  width: 230,
+                  height: 60.h,
+                  width: 0.65.sw,
                 ),
-
-                SizedBox(height: 27),
+                SizedBox(height: 20.h),
                 Image.asset(
                   Assets.images.cerosil.path,
-                  // height: 42.63,
-                  width: MediaQuery.sizeOf(context).width,
+                  height: 280.h,
+                  width: 1.sw,
+                  fit: BoxFit.contain,
                 ),
-                SizedBox(height: 53.65),
-
-                SizedBox(height: 25),
+                SizedBox(height: 10.h),
                 Container(
-                  width: 414,
-                  // margin: EdgeInsets.only(left: 13, right: 13),
+                  margin: EdgeInsets.symmetric(horizontal: 20.w),
                   child: MdSnsText(
                     "Unlock your trading\npotential with AI insights",
                     textAlign: TextAlign.center,
-
-                    letterSpacing: 0,
-
-                    color: Colors.white,
-                    size: 32,
+                    height: 1.3,
+                    size: 32, // 👈 responsive text
                     fontWeight: FontWeight.w700,
+                    color: AppColors.white,
                   ),
                 ),
-                SizedBox(height: 20),
-                MdSnsText(
-                  "Experience real-time market insights, advanced analytics, "
-                  "and intelligent trade signals",
-                  textAlign: TextAlign.center,
-
-                  color: Colors.white,
-                  letterSpacing: 0,
-                  size: 16,
-                  fontWeight: FontWeight.w400,
+                SizedBox(height: 10.h),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 25.w),
+                  child: MdSnsText(
+                    maxLines: 2,
+                    "Experience real-time market insights, advanced analytics, and intelligent trade signals",
+                    textAlign: TextAlign.center,
+                    color: AppColors.white,
+                    letterSpacing: 0.2, // 👈 responsive letter spacing
+                    height: 1.4,
+                    size: 16, // 👈 responsive text
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ],
             ),
 
+            SizedBox(height: 20.h),
+
+            /// Buttons Section
             Container(
-              margin: EdgeInsets.only(left: 20, right: 20),
+              margin: EdgeInsets.symmetric(horizontal: 15.w),
               child: Column(
                 children: [
                   // Create Account Button
-                  Container(
-                    height: 55,
+                  SizedBox(
+                    height: 50.h,
+                    width: 1.sw,
                     child: ButtonWidget(
                       onPressed: () {
                         context.goNamed(AppRoutes.signUpPage.name);
                       },
                       title: 'Create account',
-                      borderRadius: 50,
-                      fontSize: 18,
+                      borderRadius: 50.r,
+                      fontSize: 14, // 👈 responsive text
                       fontWeight: FontWeight.w500,
                       textColor: AppColors.white,
-                      bgColor: AppColors.color147EE8,
+                      bgColor: AppColors.color0098E4,
                     ),
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(height: 20.h),
 
-                  Container(
-                    height: 55,
+                  // Sign In Button
+                  SizedBox(
+                    height: 50.h,
+                    width: 1.sw,
                     child: ButtonWidget(
                       onPressed: () {
                         context.goNamed(AppRoutes.signInPage.name);
                       },
                       title: 'Sign in',
-                      borderRadius: 50,
-                      fontSize: 18,
+                      borderRadius: 50.r,
+                      fontSize: 14, // 👈 responsive text
                       fontWeight: FontWeight.w500,
                       textColor: AppColors.color274E87,
                       borderColor: AppColors.color203864,
                       bgColor: AppColors.color091224,
                     ),
                   ),
+                  SizedBox(height: 20.h),
 
-                  SizedBox(height: 16),
-
-                  // Terms and Privacy Policy Text
-                  Text(
+                  // Terms
+                  MdSnsText(
                     "By Signing Up you agree to our Terms & Privacy Policy.",
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                    fontWeight: FontWeight.w400,
+                    height: 1.2,
+                    color: AppColors.white.withOpacity(0.8),
+                    size: 11, // 👈 responsive text
                   ),
                 ],
               ),
@@ -164,16 +170,17 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
   }
 }
 
+/// Company Icon Widget
 Widget buildCompanyIcon(String imagePath) {
   return Container(
-    width: 70,
-    height: 70,
+    width: 0.18.sw,
+    height: 90.h,
     decoration: BoxDecoration(
-      color: Color(0xFF141C2F),
-      borderRadius: BorderRadius.circular(16),
+      color: const Color(0xFF141C2F),
+      borderRadius: BorderRadius.circular(16.r),
     ),
     child: Center(
-      child: Image.asset(imagePath, height: 32, fit: BoxFit.contain),
+      child: Image.asset(imagePath, height: 50.h, fit: BoxFit.contain),
     ),
   );
 }

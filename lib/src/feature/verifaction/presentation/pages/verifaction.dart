@@ -1,36 +1,76 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/sigin_up/presentation/provider/sign_up.dart';
 import 'package:trader_gpt/src/feature/verifaction/presentation/provider/verifaction_provider.dart';
 import 'package:trader_gpt/src/shared/mixin/form_state_mixin.dart';
 import 'package:trader_gpt/src/shared/states/app_loading_state.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
+
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class Verifaction extends ConsumerStatefulWidget {
   final String email;
-  Verifaction({super.key, required this.email});
+  const Verifaction({super.key, required this.email});
+
   @override
   ConsumerState<Verifaction> createState() => _VerifactionState();
 }
 
 class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
   TextEditingController otp = TextEditingController();
-  int seconds = 28;
+  int seconds = 30; // ⏳ timer start from 30
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    seconds = 30;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (seconds > 0) {
+        setState(() {
+          seconds--;
+        });
+      } else {
+        t.cancel();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   FutureOr<void> onSubmit() async {
     final result = await ref
         .read(verifactionProviderProvider.notifier)
         .onSubmit(email: widget.email, otp: otp.value.text);
+    if (result != null && mounted) {
+      context.goNamed(AppRoutes.profilePage.name);
+    }
+  }
+
+  FutureOr<void> resendCode() async {
+    final result = await ref
+        .read(signUpProvider.notifier)
+        .onSubmit(email: widget.email);
     if (result != null) {
       if (mounted) {
-        context.goNamed(AppRoutes.profilePage.name);
+        startTimer();
       }
     }
   }
@@ -44,113 +84,114 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
       bottomNavigationBar: SafeArea(
         bottom: true,
         child: Container(
-          height: 55,
-          margin: EdgeInsets.only(left: 20, right: 20),
+          height: 55.h,
+          margin: EdgeInsets.symmetric(horizontal: 20.w),
           child: ButtonWidget(
             isLoading: isLoading,
-
-            onPressed: () {
-              submitter();
-
-              // context.goNamed(AppRoutes.profilePage.name);
-            },
+            onPressed: () => submitter(),
             title: 'Submit',
-            borderRadius: 50,
+            borderRadius: 50.r,
             fontSize: 18,
             fontWeight: FontWeight.w500,
             textColor: AppColors.white,
-
             bgColor: AppColors.color147EE8,
           ),
         ),
       ),
-      backgroundColor: Color(0xFF0E1738),
+      backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
-        backgroundColor: Color(0xFF0E1738),
+        backgroundColor: AppColors.primaryColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.goNamed(AppRoutes.signUpPage.name),
         ),
       ),
       body: Padding(
-        padding: EdgeInsetsGeometry.only(left: 15, right: 20),
+        padding: EdgeInsets.only(left: 15.w, right: 20.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 24),
+            SizedBox(height: 24.h),
+            Image.asset(Assets.images.appLogo.path, height: 41.h, width: 166.w),
+
+            SizedBox(height: 24.h),
+
             MdSnsText(
               '6-digit code',
-
               color: AppColors.white,
               size: 32,
               fontWeight: FontWeight.w700,
             ),
-            SizedBox(height: 25),
+            SizedBox(height: 25.h),
+
             MdSnsText(
               'Enter the code sent to\n${widget.email}',
               color: AppColors.white,
               fontWeight: FontWeight.w400,
               size: 16,
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 30.h),
+
             Form(
               key: formKey,
-              child: OtpTextField(
-                contentPadding: EdgeInsets.zero,
-                numberOfFields: 6,
-                borderRadius: BorderRadius.circular(12),
-                fieldWidth: 55,
-                fieldHeight: 55,
-                fillColor: AppColors.bubbleColor,
-                filled: true,
-
-                borderColor: Colors.transparent,
-                focusedBorderColor: Colors.transparent,
-                enabledBorderColor: Colors.transparent,
-
-                showFieldAsBox: true,
-                margin: const EdgeInsets.only(left: 10),
-
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w500,
-                  height: 1.0,
+              child: PinCodeTextField(
+                keyboardType: TextInputType.number,
+                appContext: context,
+                length: 6,
+                obscureText: false,
+                animationType: AnimationType.fade,
+                textStyle: TextStyle(fontSize: 20, color: AppColors.white),
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(14.r),
+                  fieldHeight: 50.h,
+                  fieldWidth: 45.w,
+                  borderWidth: 0,
+                  activeColor: Colors.transparent,
+                  inactiveColor: Colors.transparent,
+                  selectedColor: Colors.transparent,
+                  activeFillColor: AppColors.bubbleColor,
+                  inactiveFillColor: AppColors.bubbleColor,
+                  selectedFillColor: AppColors.bubbleColor,
                 ),
-
-                // Ye sirf typing ke waqt call hoga (har digit par)
-                onCodeChanged: (String code) {
-                  otp.text = code;
+                cursorColor: Colors.white,
+                animationDuration: const Duration(milliseconds: 300),
+                enableActiveFill: true,
+                onChanged: (value) {
+                  otp.text = value;
                 },
-
-                // Ye tabhi call hoga jab user ne 6 digits puri kar di
-                onSubmit: (String code) {
-                  otp.text = code;
-
-                  // optional: keyboard band karne ke liye
+                onCompleted: (value) {
+                  otp.text = value;
                   FocusScope.of(context).unfocus();
-
                   submitter();
                 },
               ),
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextButton(
-                  onPressed: () {},
+                GestureDetector(
+                  onTap: seconds == 0
+                      ? () {
+                          resendCode();
+                        }
+                      : null,
+
                   child: MdSnsText(
                     'Resend code',
-                    color: AppColors.bluishgrey404F81,
+                    color: seconds == 0
+                        ? AppColors.white
+                        : AppColors.bluishgrey404F81,
                     fontWeight: FontWeight.w500,
                     size: 12,
                   ),
                 ),
                 MdSnsText(
                   '00:${seconds.toString().padLeft(2, '0')}',
-                  color: AppColors.white,
+                  color: seconds == 0
+                      ? AppColors.bluishgrey404F81
+                      : AppColors.white,
                   size: 12,
                   fontWeight: FontWeight.w400,
                 ),

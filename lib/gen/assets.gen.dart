@@ -14,6 +14,9 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/AppLogo.png
+  AssetGenImage get appLogo => const AssetGenImage('assets/images/AppLogo.png');
+
   /// File path: assets/images/Google.png
   AssetGenImage get google => const AssetGenImage('assets/images/Google.png');
 
@@ -87,6 +90,7 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
+    appLogo,
     google,
     microinteractionsPreloader03,
     regenerate,

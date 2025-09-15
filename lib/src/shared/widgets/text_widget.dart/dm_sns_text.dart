@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MdSnsText extends Text {
@@ -16,8 +17,6 @@ class MdSnsText extends Text {
     TextDecoration? decoration,
     TextOverflow? textOverflow,
   }) : super(
-         textDirection: TextDirection.ltr,
-         overflow: textOverflow,
          style: GoogleFonts.plusJakartaSans(
            color: color,
            fontSize: size,
@@ -27,6 +26,10 @@ class MdSnsText extends Text {
            decoration: decoration,
            decorationColor: color,
            letterSpacing: letterSpacing,
+         ),
+         overflow: textOverflow,
+         textScaler: const TextScaler.linear(
+           1.0,
          ),
        );
 }

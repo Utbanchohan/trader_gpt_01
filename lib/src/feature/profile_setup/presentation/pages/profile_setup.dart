@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
@@ -50,7 +51,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
   @override
   void initState() {
     getUser();
-    // TODO: implement initState
     super.initState();
   }
 
@@ -84,16 +84,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
       bottomNavigationBar: SafeArea(
         bottom: true,
         child: Container(
-          margin: EdgeInsets.only(left: 20, right: 20),
-          height: 55,
+          margin: EdgeInsets.symmetric(horizontal: 20.w),
+          height: 50.h,
           child: ButtonWidget(
             isLoading: isLoading,
-
             onPressed: () {
               submitter();
             },
             title: 'Done',
-            borderRadius: 50,
+            borderRadius: 50.r,
             fontSize: 18,
             fontWeight: FontWeight.w500,
             textColor: AppColors.white,
@@ -101,15 +100,24 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
           ),
         ),
       ),
-      backgroundColor: Color(0xFF0E1738),
+      backgroundColor:  Color(0xFF0E1738),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: ListView(
             shrinkWrap: true,
             children: [
-              SizedBox(height: 24),
+              SizedBox(height: 24.h),
+              Container(
+                alignment: Alignment.centerLeft,
+                child: Image.asset(
+                  Assets.images.appLogo.path,
+                  height: 41.h,
+                  width: 166.w,
+                ),
+              ),
 
+              SizedBox(height: 24.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -122,7 +130,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         size: 32,
                         fontWeight: FontWeight.w700,
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       MdSnsText(
                         'Setup your tradersgpt profile',
                         color: AppColors.white,
@@ -137,34 +145,30 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       state.when(
                         data: (media) {
                           mediaModel = media;
-
                           return Container(
-                            height: 63,
-                            width: 63,
+                            height: 63.h,
+                            width: 63.w,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
                                 image: mediaModel != null
-                                    ? NetworkImage(
-                                        mediaModel!.url,
-                                      ) // ✅ uploaded image
+                                    ? NetworkImage(mediaModel!.url)
                                     : AssetImage(Assets.images.profile.path)
-                                          as ImageProvider, // ✅ default image
+                                          as ImageProvider,
                                 fit: BoxFit.cover,
                               ),
                             ),
                           );
                         },
-                        loading: () => const CircularProgressIndicator(),
+                        loading: () =>  CircularProgressIndicator(),
                         error: (e, st) => Text("Error: $e"),
                       ),
-
                       GestureDetector(
                         onTap: () {
                           showModalBottomSheet(
                             backgroundColor: AppColors.bubbleColor,
                             context: context,
-                            shape: const RoundedRectangleBorder(
+                            shape:  RoundedRectangleBorder(
                               borderRadius: BorderRadius.vertical(
                                 top: Radius.circular(20),
                               ),
@@ -173,24 +177,23 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                               return SizedBox(
                                 height:
                                     MediaQuery.sizeOf(context).height * 0.25,
-                                child:
-                                    UploadImageScreen(), // yahi se Navigator.pop hoga
+                                child: UploadImageScreen(),
                               );
                             },
                           );
                         },
                         child: Container(
-                          height: 25,
-                          width: 24,
+                          height: 25.h,
+                          width: 24.w,
                           decoration: BoxDecoration(
                             color: AppColors.color1B254B,
                             shape: BoxShape.circle,
                           ),
-                          padding: EdgeInsets.all(4),
+                          padding: EdgeInsets.all(4.w),
                           child: Image.asset(
                             Assets.images.camera.path,
-                            width: 12.8,
-                            height: 13.33,
+                            width: 12.8.w,
+                            height: 13.33.h,
                           ),
                         ),
                       ),
@@ -202,15 +205,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                 key: formKey,
                 child: Column(
                   children: [
-                    SizedBox(height: 32),
+                    SizedBox(height: 32.h),
                     Row(
                       children: [
                         Image.asset(
                           Assets.images.sms.path,
-                          height: 15,
-                          width: 15,
+                          height: 15.h,
+                          width: 15.w,
                         ),
-                        SizedBox(width: 6),
+                        SizedBox(width: 6.w),
                         MdSnsText(
                           "Full Name",
                           size: 12,
@@ -219,10 +222,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 8.h),
                     TextFormField(
                       controller: fullname,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -235,40 +238,36 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: AppColors.color141F35, // dark background
+                        fillColor: AppColors.color141F35,
                         hintText: 'Burak Deniz',
-                        hintStyle: const TextStyle(
+                        hintStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 10,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 24.w,
+                          vertical: 10.h,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(30.r),
                           borderSide: BorderSide.none,
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: BorderSide.none,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(30.r),
                           borderSide: BorderSide.none,
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     Row(
                       children: [
                         Image.asset(
                           Assets.images.sms.path,
-                          height: 15,
-                          width: 15,
+                          height: 15.h,
+                          width: 15.w,
                         ),
-                        SizedBox(width: 6),
+                        SizedBox(width: 6.w),
                         MdSnsText(
                           "Email Address",
                           size: 12,
@@ -277,7 +276,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 8.h),
                     TextFormField(
                       controller: email,
                       style: TextStyle(
@@ -302,40 +301,36 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: AppColors.color141F35, // dark background
+                        fillColor: AppColors.color141F35,
                         hintText: 'Burakdeniz@gmail.com',
-                        hintStyle: const TextStyle(
+                        hintStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 10,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 24.w,
+                          vertical: 10.h,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(30.r),
                           borderSide: BorderSide.none,
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: BorderSide.none,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(30.r),
                           borderSide: BorderSide.none,
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     Row(
                       children: [
                         Image.asset(
                           Assets.images.lock.path,
-                          height: 15,
-                          width: 15,
+                          height: 15.h,
+                          width: 15.w,
                         ),
-                        SizedBox(width: 6),
+                        SizedBox(width: 6.w),
                         MdSnsText(
                           "Create a password",
                           size: 12,
@@ -344,12 +339,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 8.h),
                     TextFormField(
                       controller: password,
                       obscureText: !visible1,
                       onChanged: (_) => setState(() {}),
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Password is required";
@@ -359,37 +354,37 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         final regex = RegExp(pattern);
                         return regex.hasMatch(value)
                             ? null
-                            : "✖ At least 8 characters long " +
-                                  "✖ At least one number (0–9) " +
-                                  "✖ At least one uppercase letter (A–Z) " +
+                            : "✖ At least 8 characters long "
+                                  "✖ At least one number (0–9) "
+                                  "✖ At least one uppercase letter (A–Z) "
                                   "✖ At least one special character";
                       },
                       decoration: InputDecoration(
-                        hintStyle: const TextStyle(
+                        hintStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
                         hintText: "Create Password",
                         filled: true,
-                        fillColor: const Color(0xFF161E31),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 10,
+                        fillColor:  Color(0xFF161E31),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 24.w,
+                          vertical: 10.h,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(30.r),
                           borderSide: BorderSide.none,
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(30.r),
                           borderSide: BorderSide.none,
                         ),
                         suffixIcon: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.check_circle, color: Colors.white70),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             IconButton(
                               icon: Icon(
                                 visible1
@@ -403,36 +398,32 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                             ),
                           ],
                         ),
-                        suffixIconConstraints: const BoxConstraints(
-                          minWidth: 80,
-                        ),
+                        suffixIconConstraints: BoxConstraints(minWidth: 80.w),
                       ),
                     ),
-
-                    SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     Row(
                       children: [
                         Image.asset(
                           Assets.images.lock.path,
-                          height: 15,
-                          width: 15,
+                          height: 15.h,
+                          width: 15.w,
                         ),
-                        SizedBox(width: 6),
+                        SizedBox(width: 6.w),
                         MdSnsText(
-                          "Create a password",
+                          "Confirm Password",
                           size: 12,
                           color: AppColors.white,
                           fontWeight: FontWeight.w400,
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
-
+                    SizedBox(height: 8.h),
                     TextFormField(
                       controller: confirmPassword,
                       obscureText: !visible2,
                       onChanged: (_) => setState(() {}),
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Password is required";
@@ -442,37 +433,37 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         final regex = RegExp(pattern);
                         return regex.hasMatch(value)
                             ? null
-                            : "✖ At least 8 characters long " +
-                                  "✖ At least one number (0–9) " +
-                                  "✖ At least one uppercase letter (A–Z) " +
+                            : "✖ At least 8 characters long "
+                                  "✖ At least one number (0–9) "
+                                  "✖ At least one uppercase letter (A–Z) "
                                   "✖ At least one special character";
                       },
                       decoration: InputDecoration(
-                        hintStyle: const TextStyle(
+                        hintStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
                         hintText: 'Confirm Password',
                         filled: true,
-                        fillColor: const Color(0xFF161E31),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 10,
+                        fillColor:  Color(0xFF161E31),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 24.w,
+                          vertical: 10.h,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(30.r),
                           borderSide: BorderSide.none,
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(30.r),
                           borderSide: BorderSide.none,
                         ),
                         suffixIcon: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.check_circle, color: Colors.white70),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             IconButton(
                               icon: Icon(
                                 visible2
@@ -486,13 +477,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                             ),
                           ],
                         ),
-                        suffixIconConstraints: const BoxConstraints(
-                          minWidth: 80,
-                        ),
+                        suffixIconConstraints: BoxConstraints(minWidth: 80.w),
                       ),
                     ),
-
-                    SizedBox(height: 8),
+                    SizedBox(height: 8.h),
                   ],
                 ),
               ),
