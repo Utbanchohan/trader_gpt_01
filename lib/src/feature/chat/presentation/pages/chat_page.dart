@@ -12,6 +12,7 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_mess
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
+import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -146,6 +147,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         : const AsyncValue.data("");
 
     return Scaffold(
+      drawer: SideMenu(),
       bottomNavigationBar: SafeArea(
         bottom: true,
         child: Container(
@@ -324,12 +326,20 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         centerTitle: false,
         backgroundColor: AppColors.primaryColor,
         elevation: 0,
-        leading: InkWell(
+        leading: Builder( // 👈 yahan Builder lagaya
+      builder: (context) {
+        return InkWell(
           onTap: () {
-            logout();
+            Scaffold.of(context).openDrawer(); // abhi error nahi aayega
           },
-          child: Image.asset(Assets.images.menu.path, width: 40, height: 40),
-        ),
+          child: Image.asset(
+            Assets.images.menu.path,
+            width: 40,
+            height: 40,
+          ),
+        );
+      },
+    ),
         title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
         actions: [
           Container(
