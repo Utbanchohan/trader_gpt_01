@@ -17,6 +17,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/AppLogo.png
   AssetGenImage get appLogo => const AssetGenImage('assets/images/AppLogo.png');
 
+  /// File path: assets/images/Conversation.png
+  AssetGenImage get conversation =>
+      const AssetGenImage('assets/images/Conversation.png');
+
   /// File path: assets/images/Google.png
   AssetGenImage get google => const AssetGenImage('assets/images/Google.png');
 
@@ -43,6 +47,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/arrow_back.png
   AssetGenImage get arrowBack =>
       const AssetGenImage('assets/images/arrow_back.png');
+
+  /// File path: assets/images/book.png
+  AssetGenImage get book => const AssetGenImage('assets/images/book.png');
 
   /// File path: assets/images/camera.png
   AssetGenImage get camera => const AssetGenImage('assets/images/camera.png');
@@ -84,6 +91,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/menu.png
   AssetGenImage get menu => const AssetGenImage('assets/images/menu.png');
 
+  /// File path: assets/images/message.png
+  AssetGenImage get message => const AssetGenImage('assets/images/message.png');
+
   /// File path: assets/images/netFilex.png
   AssetGenImage get netFilex =>
       const AssetGenImage('assets/images/netFilex.png');
@@ -98,11 +108,19 @@ class $AssetsImagesGen {
   AssetGenImage get searchNormal =>
       const AssetGenImage('assets/images/search-normal.png');
 
+  /// File path: assets/images/setting-2.png
+  AssetGenImage get setting2 =>
+      const AssetGenImage('assets/images/setting-2.png');
+
   /// File path: assets/images/sms.png
   AssetGenImage get sms => const AssetGenImage('assets/images/sms.png');
 
   /// File path: assets/images/splashScreen.json
   String get splashScreen => 'assets/images/splashScreen.json';
+
+  /// File path: assets/images/status-up.png
+  AssetGenImage get statusUp =>
+      const AssetGenImage('assets/images/status-up.png');
 
   /// File path: assets/images/stock.png
   AssetGenImage get stock => const AssetGenImage('assets/images/stock.png');
@@ -116,6 +134,7 @@ class $AssetsImagesGen {
   /// List of all assets
   List<dynamic> get values => [
     appLogo,
+    conversation,
     google,
     meta,
     microinteractionsPreloader03,
@@ -124,6 +143,7 @@ class $AssetsImagesGen {
     visa,
     apple,
     arrowBack,
+    book,
     camera,
     cerosil,
     copy,
@@ -137,12 +157,15 @@ class $AssetsImagesGen {
     logo,
     manicon,
     menu,
+    message,
     netFilex,
     profile,
     radar2,
     searchNormal,
+    setting2,
     sms,
     splashScreen,
+    statusUp,
     stock,
     tesla,
     window,

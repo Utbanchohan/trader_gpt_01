@@ -114,31 +114,35 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                 children: [
                   _buildMenuItem(
                     context,
-                    Icons.chat_bubble_outline,
+                    Assets.images.message.path,
                     "General",
                     AppRoutes.chatPage.name,
                   ),
                   _buildMenuItem(
                     context,
-                    Icons.forum_outlined,
+                    Assets.images.conversation.path,
+
                     "Conversation",
                     AppRoutes.profilePage.name,
                   ),
                   _buildMenuItem(
                     context,
-                    Icons.menu_book_outlined,
+                    Assets.images.book.path,
+
                     "Books",
                     AppRoutes.profilePage.name,
                   ),
                   _buildMenuItem(
                     context,
-                    Icons.analytics_outlined,
+                    Assets.images.statusUp.path,
+
                     "Analytics",
                     AppRoutes.profilePage.name,
                   ),
                   _buildMenuItem(
                     context,
-                    Icons.settings_outlined,
+                    Assets.images.setting2.path,
+
                     "Settings",
                     AppRoutes.profilePage.name,
                   ),
@@ -205,21 +209,23 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   /// Ab ye menu item state ke hisaab se highlight hoga
   Widget _buildMenuItem(
     BuildContext context,
-    IconData icon,
+    String icon,
     String title,
     String routeName,
   ) {
     final bool isSelected = selectedMenu == routeName;
 
     return ListTile(
-      leading: Icon(
+      leading: Image.asset(
         icon,
-        color: isSelected ? Colors.white : Colors.white70,
-        size: 20.sp,
+        color: isSelected ? AppColors.white : AppColors.color5E646E,
+
+        height: 24.h,
+        width: 24.w,
       ),
       title: MdSnsText(
         title,
-        color: isSelected ? Colors.white : Colors.white70,
+        color: isSelected ? AppColors.white : AppColors.color5E646E,
         size: 16,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
