@@ -7,7 +7,6 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
-import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
@@ -326,20 +325,21 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         centerTitle: false,
         backgroundColor: AppColors.primaryColor,
         elevation: 0,
-        leading: Builder( // 👈 yahan Builder lagaya
-      builder: (context) {
-        return InkWell(
-          onTap: () {
-            Scaffold.of(context).openDrawer(); // abhi error nahi aayega
+        leading: Builder(
+          // 👈 yahan Builder lagaya
+          builder: (context) {
+            return InkWell(
+              onTap: () {
+                Scaffold.of(context).openDrawer(); // abhi error nahi aayega
+              },
+              child: Image.asset(
+                Assets.images.menu.path,
+                width: 40,
+                height: 40,
+              ),
+            );
           },
-          child: Image.asset(
-            Assets.images.menu.path,
-            width: 40,
-            height: 40,
-          ),
-        );
-      },
-    ),
+        ),
         title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
         actions: [
           Container(
