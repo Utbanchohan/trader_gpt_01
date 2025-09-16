@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:trader_gpt/src/feature/my_profile/my_profile.dart';
 
 enum AppRoutes {
   splash('splash', '/splash'),
@@ -10,7 +11,8 @@ enum AppRoutes {
   profilePage('profilePage', '/profilePage'),
   stockScreen('stockScreen', '/stockScreen'),
   uploadImage('uploadImage', '/uploadImage'),
-  sideMenu('sideMenu', '/sideMenu');
+  sideMenu('sideMenu', '/sideMenu'),
+  myProfileScreen('myProfileScreen', '/myProfileScreen');
 
   final String name;
   final String path;

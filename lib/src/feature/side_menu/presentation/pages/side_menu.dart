@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
+import 'package:trader_gpt/src/feature/my_profile/my_profile.dart';
 
 class SideMenu extends ConsumerStatefulWidget {
   const SideMenu({super.key});
@@ -110,48 +111,53 @@ class _SideMenuState extends ConsumerState<SideMenu> {
             // Bottom User Profile
             Padding(
               padding: EdgeInsets.all(16.w),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20.r,
-                    backgroundImage: const AssetImage(
-                      "assets/user.jpg",
-                    ), // user image
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Burak Deniz",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                        Text(
-                          "Free Plan",
-                          style: TextStyle(
-                            color: Colors.lightBlueAccent,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
+              child: GestureDetector(
+                onTap: () {
+                  context.pushNamed(AppRoutes.myProfileScreen.name);
+                },
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20.r,
+                      backgroundImage: const AssetImage(
+                        "assets/user.jpg",
+                      ), // user image
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      logout();
-                    },
-                    child: Icon(
-                      Icons.logout,
-                      color: Colors.lightBlueAccent,
-                      size: 20.sp,
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Burak Deniz",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                          Text(
+                            "Free Plan",
+                            style: TextStyle(
+                              color: Colors.lightBlueAccent,
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    GestureDetector(
+                      onTap: () {
+                        logout();
+                      },
+                      child: Icon(
+                        Icons.logout,
+                        color: Colors.lightBlueAccent,
+                        size: 20.sp,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

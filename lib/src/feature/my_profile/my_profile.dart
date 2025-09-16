@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class MyProfileScreen extends StatefulWidget {
+  const MyProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<MyProfileScreen> createState() => _MyProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _MyProfileScreenState extends State<MyProfileScreen> {
   bool updatesEnabled = true;
   bool alertsEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(
-        255,
-        150,
-        154,
-        161,
-      ), // Dark theme background
+      backgroundColor: const Color(0xFF0D1B2A),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -29,10 +28,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Back Button
               GestureDetector(
                 onTap: () => Navigator.pop(context),
-                child: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                  size: 28,
+                child: Image.asset(
+                  Assets.images.arrowBack.path,
+                  height: 19.71.h,
+                  width: 23.w,
                 ),
               ),
               const SizedBox(height: 20),
@@ -45,98 +44,94 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         const CircleAvatar(
                           radius: 50,
-                          backgroundImage: NetworkImage(
-                            "https://via.placeholder.com/150", // Replace with real image
+                          backgroundImage: AssetImage(
+                            "assets/images/profile.jpg",
                           ),
                         ),
+
                         Positioned(
                           bottom: 0,
                           right: 0,
                           child: Container(
                             padding: const EdgeInsets.all(6),
                             decoration: const BoxDecoration(
-                              color: Colors.blue,
+                              color: AppColors.bubbleColor,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                              size: 20,
+                            child: Image.asset(
+                              Assets.images.camera.path,
+                              height: 19.11.h,
+                              width: 18.34.w,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    const Text(
+                    SizedBox(height: 12),
+                    MdSnsText(
                       "Burak Deniz",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      color: AppColors.white,
+                      size: 32,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 4),
-                    const Text(
+                    MdSnsText(
                       "Burakdeniz@gmail.com",
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
+                      color: AppColors.colorB2B2B7,
+                      size: 16,
+                      fontWeight: FontWeight.w400,
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 45),
 
-              // My Profile Section
-              const Text(
+              MdSnsText(
                 "My Profile",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+                color: AppColors.colorB2B2B7,
+                size: 16,
+                fontWeight: FontWeight.w400,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 15),
 
               _buildProfileItem(
-                icon: Icons.person_outline,
+                asset: Assets.images.edit2.path,
                 title: "Personal Information",
                 onTap: () {},
               ),
               _buildProfileItem(
-                icon: Icons.card_membership_outlined,
+                asset: Assets.images.receipt.path,
                 title: "Membership",
                 onTap: () {},
               ),
               _buildProfileItem(
-                icon: Icons.payment,
+                asset: Assets.images.a4.path,
                 title: "Payment Method",
                 onTap: () {},
               ),
               _buildProfileItem(
-                icon: Icons.support_agent,
+                asset: Assets.images.messageSearch5.path,
                 title: "Contact Support",
                 onTap: () {},
                 isLast: true,
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
 
               // Settings Section
-              const Text(
+              MdSnsText(
                 "Settings",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+                color: AppColors.colorB2B2B7,
+                size: 16,
+                fontWeight: FontWeight.w400,
               ),
-              const SizedBox(height: 12),
+
+              SizedBox(height: 15),
 
               // Updates Toggle
               _buildSwitchItem(
                 title: "Updates",
-                icon: Icons.update,
+                assect: Assets.images.rotateLeft6.path,
                 value: updatesEnabled,
                 onChanged: (val) {
                   setState(() {
@@ -148,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Alerts Toggle
               _buildSwitchItem(
                 title: "Alerts",
-                icon: Icons.notifications_none,
+                assect: Assets.images.notification7.path,
                 value: alertsEnabled,
                 onChanged: (val) {
                   setState(() {
@@ -158,12 +153,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
 
               _buildProfileItem(
-                icon: Icons.memory,
+                asset: Assets.images.cpu8.path,
                 title: "Memory",
                 onTap: () {},
               ),
               _buildProfileItem(
-                icon: Icons.chat,
+                asset: Assets.images.driver9.path,
                 title: "Chat Model",
                 onTap: () {},
                 isLast: true,
@@ -175,42 +170,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  /// Reusable Widget: Profile List Item
+  /// Profile List Item
   Widget _buildProfileItem({
-    required IconData icon,
+    required String asset,
     required String title,
     required VoidCallback onTap,
     bool isLast = false,
   }) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: isLast ? Colors.transparent : Colors.grey.withOpacity(0.2),
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: AppColors.colorB3B3B3)),
       ),
       child: ListTile(
         onTap: onTap,
-        leading: Icon(icon, color: Colors.white),
-        title: Text(
+        leading: Image.asset(asset, height: 18.h, width: 18.w),
+        title: MdSnsText(
           title,
-          style: const TextStyle(color: Colors.white, fontSize: 16),
-        ),
-        trailing: const Icon(
-          Icons.arrow_forward_ios,
-          color: Colors.grey,
+          color: AppColors.white,
           size: 16,
+          fontWeight: FontWeight.w400,
+        ),
+        trailing: Image.asset(
+          Assets.images.vector1.path,
+          height: 14.h,
+          width: 7.w,
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
       ),
     );
   }
 
-  /// Reusable Widget: Switch List Item
+  /// Switch Item with Custom Toggle
   Widget _buildSwitchItem({
     required String title,
-    required IconData icon,
+    required String assect,
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
@@ -219,15 +212,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
         border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.2))),
       ),
       child: ListTile(
-        leading: Icon(icon, color: Colors.white),
+        dense: true,
+        contentPadding: EdgeInsets.all(0),
+        leading: Image(
+          image: AssetImage(assect),
+          color: AppColors.white,
+          height: 18,
+          width: 18,
+        ),
         title: Text(
           title,
-          style: const TextStyle(color: Colors.white, fontSize: 16),
+          style: const TextStyle(color: AppColors.white, fontSize: 16),
         ),
-        trailing: Switch(
-          value: value,
-          onChanged: onChanged,
-          activeColor: Colors.blue,
+        trailing: CustomToggleSwitch(value: value, onChanged: onChanged),
+      ),
+    );
+  }
+}
+
+/// Custom Toggle Widget
+class CustomToggleSwitch extends StatefulWidget {
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const CustomToggleSwitch({
+    super.key,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  State<CustomToggleSwitch> createState() => _CustomToggleSwitchState();
+}
+
+class _CustomToggleSwitchState extends State<CustomToggleSwitch> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        widget.onChanged(!widget.value);
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        width: 44,
+        height: 22,
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          color: widget.value ? Colors.blue : AppColors.primaryColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: AnimatedAlign(
+          duration: const Duration(milliseconds: 300),
+          alignment: widget.value
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
+          child: Container(
+            width: 18,
+            height: 18,
+            decoration: BoxDecoration(
+              color: widget.value ? AppColors.white : AppColors.color0098E4,
+              shape: BoxShape.circle,
+            ),
+          ),
         ),
       ),
     );
