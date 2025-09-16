@@ -260,7 +260,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                 child: Icon(
                                   Icons.add,
                                   color: AppColors.color3C4E8A,
-                                  size: 40,
+                                  size: 30.sp,
                                 ),
                               ),
                               SizedBox(width: 8),
@@ -344,7 +344,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         ],
       ),
       body: SingleChildScrollView(
-        controller: sc,
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
