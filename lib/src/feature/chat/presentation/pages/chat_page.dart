@@ -416,18 +416,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
                                     fontWeight: FontWeight.w600,
                                   ),
-                                  tableBody:GoogleFonts.plusJakartaSans(
+                                  tableBody: GoogleFonts.plusJakartaSans(
                                     color: AppColors.white,
                                     fontSize: 14,
 
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  p:GoogleFonts.plusJakartaSans(
+                                  p: GoogleFonts.plusJakartaSans(
                                     color: AppColors.white,
                                     fontSize: 14,
 
                                     fontWeight: FontWeight.w400,
-                                  ) ,
+                                  ),
                                   h1: GoogleFonts.plusJakartaSans(
                                     color: AppColors.white,
                                     fontSize: 16,
@@ -439,7 +439,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     fontSize: 14,
 
                                     fontWeight: FontWeight.w600,
-                                  ) ,
+                                  ),
 
                                   blockquote: const TextStyle(
                                     color: AppColors.white,
@@ -541,18 +541,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
                                     fontWeight: FontWeight.w600,
                                   ),
-                                  tableBody:GoogleFonts.plusJakartaSans(
+                                  tableBody: GoogleFonts.plusJakartaSans(
                                     color: AppColors.white,
                                     fontSize: 14,
 
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  p:GoogleFonts.plusJakartaSans(
+                                  p: GoogleFonts.plusJakartaSans(
                                     color: AppColors.white,
                                     fontSize: 14,
 
                                     fontWeight: FontWeight.w400,
-                                  ) ,
+                                  ),
                                   h1: GoogleFonts.plusJakartaSans(
                                     color: AppColors.white,
                                     fontSize: 16,
@@ -564,7 +564,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     fontSize: 14,
 
                                     fontWeight: FontWeight.w600,
-                                  ) ,
+                                  ),
 
                                   blockquote: const TextStyle(
                                     color: AppColors.white,

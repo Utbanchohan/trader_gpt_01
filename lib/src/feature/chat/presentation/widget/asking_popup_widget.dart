@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -30,7 +30,7 @@ class AskingPopupWidget extends StatelessWidget {
           children: [
             TabBar(
               indicatorSize: TabBarIndicatorSize.tab,
-              
+
               indicatorPadding: EdgeInsetsGeometry.zero,
               indicator: BoxDecoration(
                 color: AppColors.color1B254B,
@@ -86,23 +86,55 @@ class AskingPopupWidget extends StatelessWidget {
         final question = questionList[index];
         return GestureDetector(
           onTap: () async {
-            // 1️⃣ Close bottom sheet immediately
-
-            // 2️⃣ Open StockScreen to select symbol
-            Stock? selectedSymbol = await context.pushNamed<Stock>(
-              AppRoutes.stockScreen.name,
+            // Pehle se open dialog band karo agar khula hai
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
+            selectedStock = await showDialog<Stock>(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  alignment: Alignment.center,
+                  backgroundColor:
+                      Colors.transparent, // transparent so gradient visible
+                  insetPadding: EdgeInsets.all(0),
+                  contentPadding: EdgeInsets.all(0),
+                  content: Container(
+                    width: 0.9.sw,
+                    height: 0.6.sh,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: AppColors.gradient,
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.all(2), // gradient border thickness
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: StockScreen(),
+                      ),
+                    ),
+                  ),
+                );
+              },
             );
 
-            // 3️⃣ Update the controller with full question
-            if (selectedSymbol != null) {
+            if (selectedStock != null) {
               final updatedQuestion = question.replaceAll(
                 '[SYMBOL]',
-                selectedSymbol.symbol,
+                selectedStock!.symbol,
               );
               controller.text = updatedQuestion;
-              selectedStock = selectedSymbol;
             }
-            Navigator.pop(context, selectedSymbol);
           },
           child: buildQuestionChip(question),
         );
