@@ -8,6 +8,7 @@ abstract final class AppColors {
 
   static const primaryColor = Color(0xFF071020);
   static const secondaryColor = Color(0xFF0098E4);
+  static const black=Color.fromARGB(255, 0, 0, 0);
   static const bubbleColor = Color(0xFF111A3A);
   static const bluishgrey404F81 = Color(0xff404F81);
   static const white = Color(0xffffffff);

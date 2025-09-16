@@ -424,11 +424,35 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     color: AppColors.white,
                                     fontSize: 16,
 
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  tableBody:GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
                                     fontWeight: FontWeight.w400,
                                   ),
+                                  p:GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
+                                    fontWeight: FontWeight.w400,
+                                  ) ,
+                                  h1: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 16,
+
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  h2: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
+                                    fontWeight: FontWeight.w600,
+                                  ) ,
 
                                   blockquote: const TextStyle(
-                                    color: Colors.red,
+                                    color: AppColors.white,
                                   ),
                                 ),
                             onTapLink: (text, href, title) {
@@ -525,11 +549,35 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     color: AppColors.white,
                                     fontSize: 16,
 
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  tableBody:GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
                                     fontWeight: FontWeight.w400,
                                   ),
+                                  p:GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
+                                    fontWeight: FontWeight.w400,
+                                  ) ,
+                                  h1: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 16,
+
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  h2: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
+                                    fontWeight: FontWeight.w600,
+                                  ) ,
 
                                   blockquote: const TextStyle(
-                                    color: Colors.red,
+                                    color: AppColors.white,
                                   ),
                                 ),
                             onTapLink: (text, href, title) {

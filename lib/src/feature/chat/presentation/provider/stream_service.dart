@@ -31,7 +31,11 @@ class SseService {
         try {
           final json = jsonDecode(line);
           if (json is Map && json["chunk"] != null) {
+            if(json['type']=="writer")
+            {
             buffer.write(json["chunk"]);
+
+            }
             yield buffer.toString(); // <-- send full accumulated text
           }
         } catch (e) {
