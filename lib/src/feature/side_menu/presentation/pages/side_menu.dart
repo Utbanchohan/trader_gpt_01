@@ -190,7 +190,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   GestureDetector(
                     onTap: () {
                       logout();
-                    },
+                    }, 
                     child: Icon(
                       Icons.logout,
                       color: Colors.lightBlueAccent,
