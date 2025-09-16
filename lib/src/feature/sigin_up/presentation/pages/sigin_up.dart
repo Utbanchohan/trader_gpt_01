@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,6 +44,52 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(signUpProvider) == AppLoadingState.loading();
     return Scaffold(
+      bottomNavigationBar: SafeArea(
+        bottom: true,
+        child: Container(
+          margin: EdgeInsets.only(left: 10, right: 10),
+          height: 110.h,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 50.h,
+                width: 1.sw,
+                child: ButtonWidget(
+                  isLoading: isLoading,
+                  onPressed: () {
+                    submitter();
+                  },
+                  title: 'Create Account',
+                  borderRadius: 50.r,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  textColor: AppColors.white,
+                  bgColor: AppColors.secondaryColor,
+                ),
+              ),
+
+              SizedBox(height: 15.h),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      context.goNamed(AppRoutes.signInPage.name);
+                    },
+                    child: MdSnsText(
+                      "Already have an account? Sign in",
+                      size: 16,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
       appBar: AppBar(
         scrolledUnderElevation: 0,
         backgroundColor: Colors.transparent,
@@ -168,44 +215,6 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                     ),
                   ),
                 ),
-              ),
-
-              Spacer(),
-
-              SizedBox(
-                height: 50.h,
-                width: 1.sw,
-                child: ButtonWidget(
-                  isLoading: isLoading,
-                  onPressed: () {
-                    submitter();
-                  },
-                  title: 'Create Account',
-                  borderRadius: 50.r,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  textColor: AppColors.white,
-                  bgColor: AppColors.secondaryColor,
-                ),
-              ),
-
-              SizedBox(height: 15.h),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      context.goNamed(AppRoutes.signInPage.name);
-                    },
-                    child: MdSnsText(
-                      "Already have an account? Sign in",
-                      size: 16,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.white,
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
