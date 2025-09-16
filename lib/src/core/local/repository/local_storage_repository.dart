@@ -39,7 +39,7 @@ abstract interface class SharedPrefService {
     final prefs = await SharedPreferences.getInstance();
     String? userJson = prefs.getString('user');
     if (userJson != null) {
-      return jsonDecode(userJson);
+      return  jsonDecode(userJson);
     }
     return null;
   }
