@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +11,7 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
+import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
@@ -37,6 +40,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   bool startStream = false;
   var body;
   String chadId = "68c2f0f5b77590fbe176f8e1";
+
+
+
+
 
   @override
   void initState() {
@@ -316,21 +323,20 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         centerTitle: false,
         backgroundColor: AppColors.primaryColor,
         elevation: 0,
-        leading: Builder(
-          // 👈 yahan Builder lagaya
-          builder: (context) {
-            return InkWell(
-              onTap: () {
-                Scaffold.of(context).openDrawer(); // abhi error nahi aayega
-              },
-              child: Image.asset(
-                Assets.images.menu.path,
-                width: 40,
-                height: 40,
-              ),
-            );
+        leading: Builder( // 👈 yahan Builder lagaya
+      builder: (context) {
+        return InkWell(
+          onTap: () {
+            Scaffold.of(context).openDrawer(); // abhi error nahi aayega
           },
-        ),
+          child: Image.asset(
+            Assets.images.menu.path,
+            width: 40,
+            height: 40,
+          ),
+        );
+      },
+    ),
         title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
         actions: [
           Container(
@@ -515,7 +521,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ),
             asyncStream.when(
               data: (line) {
-                scrollToBottom();
+                    scrollToBottom();
                 return Column(
                   children: [
                     Row(
@@ -529,13 +535,13 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: MarkdownBody(
-                            data: line,
+                            data: line.toString(),
                             selectable: true, // let user copy code
                             styleSheet:
                                 MarkdownStyleSheet.fromTheme(
                                   Theme.of(context),
                                 ).copyWith(
-                                  code: GoogleFonts.plusJakartaSans(
+                                    code: GoogleFonts.plusJakartaSans(
                                     color: AppColors.white,
                                     fontSize: 16,
 
@@ -580,7 +586,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         SizedBox(width: 10),
 
                         Visibility(
-                          visible: line.isNotEmpty,
+                          visible: line.toString().isNotEmpty,
                           child: Expanded(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -638,7 +644,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 );
               },
 
-              loading: () => Column(
+              loading: () => Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     width: MediaQuery.sizeOf(context).width / 1.4,

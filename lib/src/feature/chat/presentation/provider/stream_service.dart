@@ -7,14 +7,14 @@ import 'package:trader_gpt/src/shared/flavours.dart';
 class SseService {
   final Dio _dio = Dio();
   final buffer = StringBuffer();
+  final followUp = StringBuffer();
 
   Stream<String> connect(Map<String, dynamic> body, String token) async* {
     final url = "${BaseUrl.baseUrl}tgpt-python/api/user_ask_stream";
 
     final headers = {
       "accept": "text/event-stream",
-      "authorization":
-          "Bearer $token",
+      "authorization": "Bearer $token",
       "content-type": "application/json",
     };
 
@@ -31,12 +31,13 @@ class SseService {
         try {
           final json = jsonDecode(line);
           if (json is Map && json["chunk"] != null) {
-            if(json['type']=="writer")
-            {
-            buffer.write(json["chunk"]);
-
+            if (json['type'] == "writer") {
+              buffer.write(json["chunk"]);
+            } else if (json['type'] == "followup") {
+              followUp.write(json['chunk']);
             }
-            yield buffer.toString(); // <-- send full accumulated text
+            yield buffer.toString();
+              
           }
         } catch (e) {
           debugPrint("❌ JSON decode error: $e");
