@@ -49,6 +49,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   void initState() {
     getRandomQuestions();
     getchats();
+   
     // TODO: implement initState
     super.initState();
   }

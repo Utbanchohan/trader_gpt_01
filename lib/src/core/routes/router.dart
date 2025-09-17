@@ -7,11 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/conversation/conversation_model.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/conversations_start/presentation/pages/conversation_start.dart';
 import 'package:trader_gpt/src/feature/get_start/presentation/pages/getstart.dart';
 import 'package:trader_gpt/src/feature/my_profile/my_profile.dart';
+import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/new_conversation.dart';
 import 'package:trader_gpt/src/feature/profile_setup/presentation/pages/profile_setup.dart';
 import 'package:trader_gpt/src/feature/s3_uploader/presentation/image_pickert.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
@@ -138,6 +140,14 @@ final routerConfigProvider = Provider((ref) {
         name: AppRoutes.conversationStart.name,
         builder: (BuildContext context, GoRouterState state) {
           return ConversationStart();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.newConversation.path,
+        name: AppRoutes.newConversation.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return NewConversation();
         },
         routes: [],
       ),

@@ -12,7 +12,8 @@ enum AppRoutes {
   uploadImage('uploadImage', '/uploadImage'),
   sideMenu('sideMenu', '/sideMenu'),
   myProfileScreen('myProfileScreen', '/myProfileScreen'),
-  conversationStart('conversationStart', '/conversationStart');
+  conversationStart('conversationStart', '/conversationStart'),
+  newConversation('newConversation', '/newConversation');
 
   final String name;
   final String path;
@@ -34,6 +35,7 @@ enum AppRoutes {
     AppRoutes.uploadImage,
     AppRoutes.sideMenu,
     AppRoutes.conversationStart,
+    AppRoutes.newConversation,
   ];
   static bool isPublicRoute(GoRouterState state) {
     final fullPath = state.fullPath;

@@ -4,8 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:chart_sparkline/chart_sparkline.dart';
 
@@ -17,6 +23,28 @@ class ConversationStart extends ConsumerStatefulWidget {
 }
 
 class _ConversationStartState extends ConsumerState<ConversationStart> {
+  List<ChatHistory> convo = [];
+
+  @override
+  void initState() {
+    getChats();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  getChats() async {
+    var res = await ref.read(chatRepository).chats();
+    if (res.isSuccess) {
+      for (int i = 0; i < res.data!.results.length; i++) {
+        convo.add(res.data!.results[i]);
+      }
+      // scrollToBottom();
+      setState(() {});
+    } else {
+      return false;
+    }
+  }
+
   List<double> generateStockLikeData({int count = 40, double start = 100}) {
     final random = Random();
     double value = start;
@@ -26,38 +54,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
     });
   }
 
-  final List<Map<String, dynamic>> stocks = [
-    {
-      "symbol": "#TSLA",
-      "name": "Tesla, Inc.",
-      "price": 450.00,
-      "change": "+3.23%",
-    },
-    {
-      "symbol": "#AAPL",
-      "name": "Apple Inc.",
-      "price": 450.00,
-      "change": "+3.23%",
-    },
-    {
-      "symbol": "Google",
-      "name": "Google Inc.",
-      "price": 450.00,
-      "change": "+3.23%",
-    },
-    {
-      "symbol": "#TNR",
-      "name": "Tnrel Inc.",
-      "price": 450.00,
-      "change": "+3.23%",
-    },
-    {
-      "symbol": "#Meta",
-      "name": "Meta.com",
-      "price": 450.00,
-      "change": "+3.23%",
-    },
-  ];
+  
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -84,162 +81,221 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
               ],
             ),
             SizedBox(height: 16.h),
-            Expanded(
-              child: ListView.separated(
-                itemCount: stocks.length,
-                itemBuilder: (context, index) {
-                  final stock = stocks[index];
-                  return Slidable(
-                    key: ValueKey(stock["symbol"]),
-                    endActionPane: ActionPane(
-                      motion: ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: (context) {
-                            // Delete action
-                            print("Delete ${stock["symbol"]}");
-                          },
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Delete',
-                        ),
-                        SlidableAction(
-                          onPressed: (context) {
-                            // Active action
-                            print("Active ${stock["symbol"]}");
-                          },
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                          icon: Icons.check_circle,
-                          label: 'Active',
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 14,
-                      ),
-                      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          Column(
+            convo != null && convo.length > 0
+                ? Expanded(
+                    child: ListView.separated(
+                      itemCount: convo.length,
+                      itemBuilder: (context, index) {
+                        final stock = convo[index];
+                        return Slidable(
+                          // key: ValueKey(stock["symbol"]),
+                          endActionPane: ActionPane(
+                            motion: ScrollMotion(),
                             children: [
-                              Image.asset(
-                                Assets.images.tesla.path,
-                                width: 42.w,
-                                height: 41.h,
-                                fit: BoxFit.cover,
+                              CustomSlidableAction(
+                                onPressed: (context) {
+                                  // Delete action
+                                  // print("Delete ${stock["symbol"]}");
+                                },
+                                backgroundColor: AppColors.color1B254B,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      Assets
+                                          .images
+                                          .direct
+                                          .path, // yahan apni image lagegi
+                                      width: 24.w,
+                                      height: 24.h,
+                                      color: AppColors
+                                          .color9EAAC0, // agar white tint chahiye
+                                    ),
+                                    SizedBox(height: 4),
+                                    MdSnsText(
+                                      'Archive',
+
+                                      color: AppColors.color9EAAC0,
+                                      fontWeight: FontWeight.w400,
+                                      size: 12,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(height: 5.h),
-                              MdSnsText(
-                                "3 days ago",
-                                size: 10,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.color677FA4,
+
+                              CustomSlidableAction(
+                                onPressed: (context) {
+                                  // Delete action
+                                  // print("Delete ${stock["symbol"]}");
+                                },
+                                backgroundColor: AppColors.color091224,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      Assets
+                                          .images
+                                          .trash
+                                          .path, // yahan apni image lagegi
+                                      width: 24.w,
+                                      height: 24.h,
+                                      color: AppColors
+                                          .color9EAAC0, // agar white tint chahiye
+                                    ),
+                                    SizedBox(height: 4),
+                                    MdSnsText(
+                                      'Delete',
+
+                                      color: AppColors.color9EAAC0,
+                                      fontWeight: FontWeight.w400,
+                                      size: 12,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                          SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 14,
+                            ),
+                            margin: EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
                               children: [
-                                MdSnsText(
-                                  stock["symbol"],
-                                  size: 16,
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.w700,
+                                Column(
+                                  children: [
+                                    Image.asset(
+                                      Assets.images.tesla.path,
+                                      width: 42.w,
+                                      height: 41.h,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    SizedBox(height: 5.h),
+                                    MdSnsText(
+                                      // "3 days ago",
+                                      stock.lastMessage.createdAt.millisecondsSinceEpoch.timeAgoFromMilliseconds() ,
+                                      size: 10,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.color677FA4,
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 2.h),
-                                MdSnsText(
-                                  stock["name"],
-                                  color: AppColors.color677FA4,
-                                  fontWeight: FontWeight.w400,
-                                  size: 14,
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      MdSnsText(
+                                        stock.symbol,
+                                        // stock["symbol"],
+                                        size: 16,
+                                        color: AppColors.white,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      SizedBox(height: 2.h),
+                                      MdSnsText(
+                                        // stock["name"],
+                                        stock.companyName != null
+                                            ? stock.companyName
+                                                  .split("-")
+                                                  .first
+                                                  .trim()
+                                            : "",
+
+                                        color: AppColors.color677FA4,
+                                        fontWeight: FontWeight.w400,
+                                        size: 14,
+                                      ),
+                                      SizedBox(height: 5.h),
+                                      MdSnsText(
+                                        stock.lastMessage.message,
+                                        maxLines: 1,
+                                        // "Provide a company overview for...",
+                                        color: AppColors.color677FA4,
+                                        fontWeight: FontWeight.w400,
+                                        size: 12,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                SizedBox(height: 5.h),
-                                MdSnsText(
-                                  "Provide a company overview for...",
-                                  color: AppColors.color677FA4,
-                                  fontWeight: FontWeight.w400,
-                                  size: 12,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    MdSnsText(
+                                      "\$200",
+                                      size: 16,
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_drop_up,
+                                          color: AppColors.color06D54E,
+                                        ),
+                                        MdSnsText(
+                                          "2000",
+                                          color: AppColors.color06D54E,
+                                          size: 12,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 86.w,
+                                      height: 15.h,
+                                      child: Sparkline(
+                                        data: generateStockLikeData(
+                                          count: 50,
+                                          start: 100,
+                                        ),
+                                        lineWidth: 2.0,
+                                        lineColor: AppColors.color06D54E,
+                                        pointsMode: PointsMode.none,
+                                        pointColor: Colors.white,
+                                        useCubicSmoothing: false,
+                                        sharpCorners: true,
+                                        fillMode: FillMode.below,
+                                        fillGradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            Colors.transparent,
+                                            Colors.transparent,
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              MdSnsText(
-                                "\$${stock["price"]}",
-                                size: 16,
-                                color: AppColors.white,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.arrow_drop_up,
-                                    color: AppColors.color06D54E,
-                                  ),
-                                  MdSnsText(
-                                    stock["change"],
-                                    color: AppColors.color06D54E,
-                                    size: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 86.w,
-                                height: 15.h,
-                                child: Sparkline(
-                                  data: generateStockLikeData(
-                                    count: 50,
-                                    start: 100,
-                                  ),
-                                  lineWidth: 2.0,
-                                  lineColor: AppColors.color06D54E,
-                                  pointsMode: PointsMode.none,
-                                  pointColor: Colors.white,
-                                  useCubicSmoothing: false,
-                                  sharpCorners: true,
-                                  fillMode: FillMode.below,
-                                  fillGradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.transparent,
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Divider(height: 1, color: AppColors.colorB3B3B3);
+                      },
                     ),
-                  );
-                }, separatorBuilder: (BuildContext context, int index) { 
-                  return Divider(
-                    height: 1,
-                    color: AppColors.colorB3B3B3,
-                  );
-                 },
-              ),
-            ),
+                  )
+                : MdSnsText("Conversation Not Fopunt"),
           ],
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blue,
-          onPressed: () {},
+          onPressed: () {
+            context.pushNamed(AppRoutes.newConversation.name);
+
+          },
           child: Icon(Icons.add),
         ),
       ),
@@ -260,7 +316,7 @@ Widget _buildTab(String text, int index) {
         });
 
         return AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: Duration(milliseconds: 200),
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.color203063 : Colors.transparent,
@@ -270,9 +326,11 @@ Widget _buildTab(String text, int index) {
               width: 1.5,
             ),
           ),
-          child: Text(
+          child: MdSnsText(
             text,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            color: Colors.white,
+            size: 16,
+            fontWeight: FontWeight.w700,
           ),
         );
       },

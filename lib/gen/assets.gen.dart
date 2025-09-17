@@ -69,6 +69,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/cpu8.png
   AssetGenImage get cpu8 => const AssetGenImage('assets/images/cpu8.png');
 
+  /// File path: assets/images/direct.png
+  AssetGenImage get direct => const AssetGenImage('assets/images/direct.png');
+
   /// File path: assets/images/directbox-notif.png
   AssetGenImage get directboxNotif =>
       const AssetGenImage('assets/images/directbox-notif.png');
@@ -173,6 +176,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/tesla.png
   AssetGenImage get tesla => const AssetGenImage('assets/images/tesla.png');
 
+  /// File path: assets/images/trash.png
+  AssetGenImage get trash => const AssetGenImage('assets/images/trash.png');
+
   /// File path: assets/images/window.png
   AssetGenImage get window => const AssetGenImage('assets/images/window.png');
 
@@ -195,6 +201,7 @@ class $AssetsImagesGen {
     cerosil,
     copy,
     cpu8,
+    direct,
     directboxNotif,
     dislike,
     driver9,
@@ -226,6 +233,7 @@ class $AssetsImagesGen {
     statusUp,
     stock,
     tesla,
+    trash,
     window,
   ];
 }
