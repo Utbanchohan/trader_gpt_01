@@ -163,6 +163,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 onTap: () {},
                 isLast: true,
               ),
+              _buildProfileItem(
+                asset: Assets.images.messageSearch5.path,
+                title: "Show User Message on right",
+                onTap: () {},
+                isLast: true,
+              ),
             ],
           ),
         ),
