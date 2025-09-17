@@ -125,7 +125,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
       backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
-
+        centerTitle: false,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.close, color: Colors.white),
@@ -134,16 +134,12 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           },
         ),
 
-        title: Text(
+        title: MdSnsText(
           "Start New Conversation",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          color: AppColors.color9EAAC0,
+          size: 18,
+          fontWeight: FontWeight.w600,
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Column(
         children: [
@@ -207,7 +203,8 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                             : stocks[index];
                         return GestureDetector(
                           onTap: () {
-                            context.pushNamed(AppRoutes.chatPage.name,
+                            context.pushNamed(
+                              AppRoutes.chatPage.name,
                               extra: stocks[index],
                             );
                           },

@@ -26,8 +26,9 @@ import '../../../../core/routes/routes.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   final Stock? stock;
+  final String? chatId;
 
-  ChatPage({super.key, this.stock});
+  ChatPage({super.key, this.stock, this.chatId});
 
   @override
   ConsumerState<ChatPage> createState() => _ChatPageState();
@@ -46,15 +47,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   List<String> followupQuestions = [];
 
   var body;
-  String chadId = "68c3274cb77590fbe176f905";
+  String? chadId;
 
   @override
   void initState() {
+    chadId = widget.chatId ?? "68c3274cb77590fbe176f905";
     selectedStock = widget.stock;
     getRandomQuestions();
-    getchats();
-
-    // TODO: implement initState
+    getchats(chadId!);
     super.initState();
   }
 
@@ -94,8 +94,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
-  getchats() async {
-    var res = await ref.read(chatRepository).getMessages(chadId, 1);
+  getchats(String id) async {
+    var res = await ref.read(chatRepository).getMessages(id, 1);
     if (res.isSuccess) {
       for (int i = 0; i < res.data!.messages!.length; i++) {
         chats.add(res.data!.messages![i]);
@@ -140,7 +140,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       var res = await ref
           .read(chatProviderProvider.notifier)
           .sendMessage(
-            ChatMessageDto(chatId: chadId, message: text, type: "user"),
+            ChatMessageDto(chatId: chadId!, message: text, type: "user"),
           );
       if (res != null) {
         body = {
@@ -162,7 +162,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           chats.add(
             ChatMessageModel(
               id: "temp",
-              chatId: chadId,
+              chatId: chadId!,
               message: text,
               type: "user",
               userId: userid,
@@ -484,13 +484,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 Container(
                   width: 40.w,
                   height: 71.h,
-                  
+
                   decoration: BoxDecoration(
-                    image: DecorationImage(image: 
-                    AssetImage(
-                      Assets.images.shapeAngle.path
-                    )
-                    )
+                    image: DecorationImage(
+                      image: AssetImage(Assets.images.shapeAngle.path),
+                    ),
                   ),
                   padding: EdgeInsets.all(10),
                   child: Image.asset(

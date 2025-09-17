@@ -17,8 +17,7 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 import 'package:chart_sparkline/chart_sparkline.dart';
 
 import '../../../../services/sockets/socket_service.dart';
-import '../../../../shared/socket/model/stock_model.dart/stock_model.dart'
-    show Stock;
+import '../../../../shared/socket/model/stock_model.dart/stock_model.dart';
 
 class ConversationStart extends ConsumerStatefulWidget {
   ConversationStart({super.key});
@@ -143,224 +142,236 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
               ],
             ),
             SizedBox(height: 16.h),
-            convo != null && convo.isNotEmpty && stocks.isNotEmpty 
+            convo != null && convo.isNotEmpty && stocks.isNotEmpty
                 ? Expanded(
                     child: ListView.separated(
                       itemCount: convo.length,
                       itemBuilder: (context, index) {
                         final stock = convo[index];
                         int stockIndex = findRelatedStock(stock.symbol);
-                        return Slidable(
-                          // key: ValueKey(stock["symbol"]),
-                          endActionPane: ActionPane(
-                            motion: ScrollMotion(),
-                            children: [
-                              CustomSlidableAction(
-                                onPressed: (context) {
-                                  // Delete action
-                                  // print("Delete ${stock["symbol"]}");
-                                },
-                                backgroundColor: AppColors.color1B254B,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      Assets
-                                          .images
-                                          .direct
-                                          .path, // yahan apni image lagegi
-                                      width: 24.w,
-                                      height: 24.h,
-                                      color: AppColors
-                                          .color9EAAC0, // agar white tint chahiye
-                                    ),
-                                    SizedBox(height: 4),
-                                    MdSnsText(
-                                      'Archive',
-
-                                      color: AppColors.color9EAAC0,
-                                      fontWeight: FontWeight.w400,
-                                      size: 12,
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              CustomSlidableAction(
-                                onPressed: (context) {
-                                  // Delete action
-                                  // print("Delete ${stock["symbol"]}");
-                                },
-                                backgroundColor: AppColors.color091224,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      Assets
-                                          .images
-                                          .trash
-                                          .path, // yahan apni image lagegi
-                                      width: 24.w,
-                                      height: 24.h,
-                                      color: AppColors
-                                          .color9EAAC0, // agar white tint chahiye
-                                    ),
-                                    SizedBox(height: 4),
-                                    MdSnsText(
-                                      'Delete',
-
-                                      color: AppColors.color9EAAC0,
-                                      fontWeight: FontWeight.w400,
-                                      size: 12,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 14,
-                            ),
-                            margin: EdgeInsets.symmetric(
-                              vertical: 4,
-                              horizontal: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
+                        return GestureDetector(
+                          onTap: () {
+                            context.pushNamed(
+                              AppRoutes.chatPage.name,
+                              extra: {
+                                "chatId": convo[index].id,
+                                "stock": stocks[index],
+                              },
+                            );
+                          },
+                          child: Slidable(
+                            // key: ValueKey(stock["symbol"]),
+                            endActionPane: ActionPane(
+                              motion: ScrollMotion(),
                               children: [
-                                Column(
-                                  children: [
-                                    Image.network(
-                                      stocks[stockIndex].logoUrl,
-                                      width: 42.w,
-                                      height: 41.h,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    SizedBox(height: 5.h),
-                                    MdSnsText(
-                                      // "3 days ago",
-                                      stock
-                                          .lastMessage
-                                          .createdAt
-                                          .millisecondsSinceEpoch
-                                          .timeAgoFromMilliseconds(),
-                                      size: 10,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.color677FA4,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(width: 12),
-                                Expanded(
+                                CustomSlidableAction(
+                                  onPressed: (context) {
+                                    // Delete action
+                                    // print("Delete ${stock["symbol"]}");
+                                  },
+                                  backgroundColor: AppColors.color1B254B,
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      MdSnsText(
-                                        stock.symbol,
-                                        // stock["symbol"],
-                                        size: 16,
-                                        color: AppColors.white,
-                                        fontWeight: FontWeight.w700,
+                                      Image.asset(
+                                        Assets
+                                            .images
+                                            .direct
+                                            .path, // yahan apni image lagegi
+                                        width: 24.w,
+                                        height: 24.h,
+                                        color: AppColors
+                                            .color9EAAC0, // agar white tint chahiye
                                       ),
-                                      SizedBox(height: 2.h),
+                                      SizedBox(height: 4),
                                       MdSnsText(
-                                        // stock["name"],
-                                        stock.companyName.isNotEmpty
-                                            ? stock.companyName
-                                                  .split("-")
-                                                  .first
-                                                  .trim()
-                                            : "",
+                                        'Archive',
 
-                                        color: AppColors.color677FA4,
+                                        color: AppColors.color9EAAC0,
                                         fontWeight: FontWeight.w400,
-                                        size: 14,
-                                      ),
-                                      SizedBox(height: 5.h),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                            0.5,
-                                        child: MdSnsText(
-                                          textOverflow: TextOverflow.ellipsis,
-                                          stock.lastMessage.message,
-                                          maxLines: 1,
-                                          // "Provide a company overview for...",
-                                          color: AppColors.color677FA4,
-                                          fontWeight: FontWeight.w400,
-                                          size: 12,
-                                        ),
+                                        size: 12,
                                       ),
                                     ],
                                   ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    MdSnsText(
-                                      "\$${stocks[stockIndex].price.toStringAsFixed(2)}",
-                                      size: 16,
-                                      color: AppColors.white,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    Row(
+
+                                CustomSlidableAction(
+                                  onPressed: (context) {
+                                    // Delete action
+                                    // print("Delete ${stock["symbol"]}");
+                                  },
+                                  backgroundColor: AppColors.color091224,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        Assets
+                                            .images
+                                            .trash
+                                            .path, // yahan apni image lagegi
+                                        width: 24.w,
+                                        height: 24.h,
+                                        color: AppColors
+                                            .color9EAAC0, // agar white tint chahiye
+                                      ),
+                                      SizedBox(height: 4),
+                                      MdSnsText(
+                                        'Delete',
+
+                                        color: AppColors.color9EAAC0,
+                                        fontWeight: FontWeight.w400,
+                                        size: 12,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 14,
+                              ),
+                              margin: EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Image.network(
+                                        stocks[stockIndex].logoUrl,
+                                        width: 42.w,
+                                        height: 41.h,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      SizedBox(height: 5.h),
+                                      MdSnsText(
+                                        // "3 days ago",
+                                        stock
+                                            .lastMessage
+                                            .createdAt
+                                            .millisecondsSinceEpoch
+                                            .timeAgoFromMilliseconds(),
+                                        size: 10,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.color677FA4,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        stocks[stockIndex].changesPercentage < 0
-                                            ? Icon(
-                                                Icons.arrow_drop_down,
-                                                color: AppColors.redFF3B3B,
-                                              )
-                                            : Icon(
-                                                Icons.arrow_drop_up,
-                                                color: AppColors.color06D54E,
-                                              ),
                                         MdSnsText(
-                                          stocks[stockIndex].changesPercentage
-                                              .toStringAsFixed(2),
-                                          color: AppColors.color06D54E,
-                                          size: 12,
+                                          stock.symbol,
+                                          // stock["symbol"],
+                                          size: 16,
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        SizedBox(height: 2.h),
+                                        MdSnsText(
+                                          // stock["name"],
+                                          stock.companyName.isNotEmpty
+                                              ? stock.companyName
+                                                    .split("-")
+                                                    .first
+                                                    .trim()
+                                              : "",
+
+                                          color: AppColors.color677FA4,
                                           fontWeight: FontWeight.w400,
+                                          size: 14,
+                                        ),
+                                        SizedBox(height: 5.h),
+                                        SizedBox(
+                                          width:
+                                              MediaQuery.sizeOf(context).width *
+                                              0.5,
+                                          child: MdSnsText(
+                                            textOverflow: TextOverflow.ellipsis,
+                                            stock.lastMessage.message,
+                                            maxLines: 1,
+                                            // "Provide a company overview for...",
+                                            color: AppColors.color677FA4,
+                                            fontWeight: FontWeight.w400,
+                                            size: 12,
+                                          ),
                                         ),
                                       ],
                                     ),
-                                    SizedBox(
-                                      width: 86.w,
-                                      height: 15.h,
-                                      child: Sparkline(
-                                        data: stocks[stockIndex]
-                                            .fiveDayTrend[0]
-                                            .data,
-                                        lineWidth: 2.0,
-                                        lineColor:
-                                            stocks[stockIndex]
-                                                    .changesPercentage <
-                                                0
-                                            ? AppColors.redFF3B3B
-                                            : AppColors.color06D54E,
-                                        pointsMode: PointsMode.none,
-                                        pointColor: Colors.white,
-                                        useCubicSmoothing: false,
-                                        sharpCorners: true,
-                                        fillMode: FillMode.below,
-                                        fillGradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            Colors.transparent,
-                                            Colors.transparent,
-                                          ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      MdSnsText(
+                                        "\$${stocks[stockIndex].price.toStringAsFixed(2)}",
+                                        size: 16,
+                                        color: AppColors.white,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      Row(
+                                        children: [
+                                          stocks[stockIndex].changesPercentage <
+                                                  0
+                                              ? Icon(
+                                                  Icons.arrow_drop_down,
+                                                  color: AppColors.redFF3B3B,
+                                                )
+                                              : Icon(
+                                                  Icons.arrow_drop_up,
+                                                  color: AppColors.color06D54E,
+                                                ),
+                                          MdSnsText(
+                                            stocks[stockIndex].changesPercentage
+                                                .toStringAsFixed(2),
+                                            color: AppColors.color06D54E,
+                                            size: 12,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 86.w,
+                                        height: 15.h,
+                                        child: Sparkline(
+                                          data: stocks[stockIndex]
+                                              .fiveDayTrend[0]
+                                              .data,
+                                          lineWidth: 2.0,
+                                          lineColor:
+                                              stocks[stockIndex]
+                                                      .changesPercentage <
+                                                  0
+                                              ? AppColors.redFF3B3B
+                                              : AppColors.color06D54E,
+                                          pointsMode: PointsMode.none,
+                                          pointColor: Colors.white,
+                                          useCubicSmoothing: false,
+                                          sharpCorners: true,
+                                          fillMode: FillMode.below,
+                                          fillGradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.transparent,
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -374,7 +385,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          
           backgroundColor: Colors.blue,
           onPressed: () {
             context.pushNamed(AppRoutes.newConversation.name);
