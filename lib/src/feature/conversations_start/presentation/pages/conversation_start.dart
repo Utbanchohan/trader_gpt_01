@@ -374,6 +374,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          
           backgroundColor: Colors.blue,
           onPressed: () {
             context.pushNamed(AppRoutes.newConversation.name);

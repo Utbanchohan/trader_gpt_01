@@ -20,6 +20,7 @@ import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart
 import 'package:trader_gpt/src/feature/sign_in/presentation/pages/sigin_in.dart';
 import 'package:trader_gpt/src/feature/splash/presentation/pages/splash.dart';
 import 'package:trader_gpt/src/feature/verifaction/presentation/pages/verifaction.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 final shellKey = GlobalKey<NavigatorState>();
@@ -64,7 +65,8 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.chatPage.path,
         name: AppRoutes.chatPage.name,
         builder: (BuildContext context, GoRouterState state) {
-          return ChatPage();
+          final stock = state.extra as Stock?;
+          return ChatPage(stock: stock);
         },
         routes: [],
       ),
@@ -90,7 +92,6 @@ final routerConfigProvider = Provider((ref) {
         builder: (BuildContext context, GoRouterState state) {
           final email = state.pathParameters['email']!;
           return Verifaction(email: email);
-          // return Verifaction();
         },
         routes: [],
       ),

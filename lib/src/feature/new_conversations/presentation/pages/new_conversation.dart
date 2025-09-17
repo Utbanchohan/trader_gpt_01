@@ -207,7 +207,9 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                             : stocks[index];
                         return GestureDetector(
                           onTap: () {
-                            context.pushNamed(AppRoutes.chatPage.name);
+                            context.pushNamed(AppRoutes.chatPage.name,
+                              extra: stocks[index],
+                            );
                           },
                           child: _buildStockCard(
                             symbol: stock.symbol,

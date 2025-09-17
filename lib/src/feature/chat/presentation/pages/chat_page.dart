@@ -25,7 +25,9 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../../core/routes/routes.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
-  ChatPage({super.key});
+  final Stock? stock;
+
+  ChatPage({super.key, this.stock});
 
   @override
   ConsumerState<ChatPage> createState() => _ChatPageState();
@@ -35,6 +37,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   TextEditingController message = TextEditingController();
   ScrollController sc = ScrollController();
   Stock? selectedStock;
+
   List<ChatMessageModel> chats = [];
   List<String> questions = [];
   dynamic asyncStream;
@@ -47,9 +50,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   @override
   void initState() {
+    selectedStock = widget.stock;
     getRandomQuestions();
     getchats();
-   
+
     // TODO: implement initState
     super.initState();
   }
@@ -107,7 +111,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     List<String> questions,
     List<String> relatedQuestion,
     TextEditingController message,
-    int index
+    int index,
   ) async {
     return await showDialog<Stock>(
       context: context,
@@ -192,7 +196,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             questions,
             followupQuestions,
             message,
-            1
+            1,
           );
         });
       }
@@ -210,7 +214,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             children: [
               GestureDetector(
                 onTap: () async {
-                  selectedStock = await showDialogue(questions, [], message,0);
+                  selectedStock = await showDialogue(questions, [], message, 0);
                 },
                 child: Center(
                   child: Container(
@@ -271,7 +275,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
                           maxLines: null,
                           decoration: InputDecoration(
-                          
                             border: InputBorder.none,
                             hintText: "Ask anything about the market",
                             hintStyle: TextStyle(
@@ -351,38 +354,186 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       ),
 
       backgroundColor: AppColors.primaryColor,
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        centerTitle: false,
-        backgroundColor: AppColors.primaryColor,
-        elevation: 0,
-        leading: Builder(
-          // 👈 yahan Builder lagaya
-          builder: (context) {
-            return InkWell(
-              onTap: () {
-                Scaffold.of(context).openDrawer(); // abhi error nahi aayega
-              },
-              child: Image.asset(
-                Assets.images.menu.path,
-                width: 40,
-                height: 40,
+      appBar: widget.stock == null
+          ? AppBar(
+              scrolledUnderElevation: 0,
+              centerTitle: false,
+              backgroundColor: AppColors.primaryColor,
+              elevation: 0,
+              leading: Builder(
+                builder: (context) {
+                  return InkWell(
+                    onTap: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: Image.asset(
+                      Assets.images.menu.path,
+                      width: 40,
+                      height: 40,
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-        title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child: Image.asset(
-              Assets.images.searchNormal.path,
-              width: 20,
-              height: 20,
+              title: Image.asset(
+                Assets.images.logo.path,
+                width: 187,
+                height: 35.27,
+              ),
+              actions: [
+                Container(
+                  margin: EdgeInsets.only(right: 20),
+                  child: Image.asset(
+                    Assets.images.searchNormal.path,
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+              ],
+            )
+          : AppBar(
+              scrolledUnderElevation: 0,
+              centerTitle: false,
+              backgroundColor: AppColors.primaryColor,
+              elevation: 0,
+              titleSpacing: 0,
+              leading: Builder(
+                builder: (context) {
+                  return InkWell(
+                    onTap: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: Image.asset(
+                      Assets.images.menu.path,
+                      width: 40,
+                      height: 40,
+                    ),
+                  );
+                },
+              ),
+              title: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      widget.stock!.logoUrl!,
+                      width: 35,
+                      height: 35,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          MdSnsText(
+                            "#${widget.stock!.symbol}",
+
+                            fontWeight: FontWeight.w700,
+                            size: 16,
+                            color: AppColors.white,
+                          ),
+                          SizedBox(width: 4),
+                          MdSnsText(
+                            widget.stock!.name!.split("-").first.trim(),
+
+                            color: AppColors.colorB2B2B7,
+                            size: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            color: AppColors.white,
+
+                            size: 20.sp,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            widget.stock!.price.toString(),
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                          SizedBox(width: 6),
+                          Icon(
+                            widget.stock!.change.toString().contains("-")
+                                ? Icons.arrow_drop_down
+                                : Icons.arrow_drop_up,
+                            color: widget.stock!.change.toString().contains("-")
+                                ? AppColors.redFF3B3B
+                                : AppColors.color06D54E,
+                            size: 20,
+                          ),
+                          MdSnsText(
+                            " ${widget.stock!.changesPercentage!.toStringAsFixed(2)}%",
+                            color: widget.stock!.change.toString().contains("-")
+                                ? AppColors.redFF3B3B
+                                : AppColors.color06D54E,
+                            size: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                Container(
+                  width: 40.w,
+                  height: 71.h,
+                  
+                  decoration: BoxDecoration(
+                    image: DecorationImage(image: 
+                    AssetImage(
+                      Assets.images.shapeAngle.path
+                    )
+                    )
+                  ),
+                  padding: EdgeInsets.all(10),
+                  child: Image.asset(
+                    Assets.images.analytics.path,
+                    width: 25.w,
+                    height: 21.h,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
+
+      //  AppBar(
+      //   scrolledUnderElevation: 0,
+      //   centerTitle: false,
+      //   backgroundColor: AppColors.primaryColor,
+      //   elevation: 0,
+      //   leading: Builder(
+      //     // 👈 yahan Builder lagaya
+      //     builder: (context) {
+      //       return InkWell(
+      //         onTap: () {
+      //           Scaffold.of(context).openDrawer(); // abhi error nahi aayega
+      //         },
+      //         child: Image.asset(
+      //           Assets.images.menu.path,
+      //           width: 40,
+      //           height: 40,
+      //         ),
+      //       );
+      //     },
+      //   ),
+      //   title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
+      //   actions: [
+      //     Container(
+      //       margin: EdgeInsets.only(right: 20),
+      //       child: Image.asset(
+      //         Assets.images.searchNormal.path,
+      //         width: 20,
+      //         height: 20,
+      //       ),
+      //     ),
+      //   ],
+      // ),
       body: SingleChildScrollView(
         controller: sc,
         padding: EdgeInsets.all(16),
