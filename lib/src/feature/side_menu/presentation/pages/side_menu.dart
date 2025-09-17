@@ -153,57 +153,66 @@ class _SideMenuState extends ConsumerState<SideMenu> {
             // Bottom User Profile
             Padding(
               padding: EdgeInsets.all(16.w),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20.r,
-                    backgroundImage:
-                        userModel != null && userModel!.imgUrl.isNotEmpty
-                        ? NetworkImage(userModel!.imgUrl)
-                        : AssetImage(Assets.images.profile.path),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          userModel != null && userModel!.name.isNotEmpty
-                              ? userModel!.name
-                              : "N/A",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                        Text(
-                          "Free Plan",
-                          style: TextStyle(
-                            color: Colors.lightBlueAccent,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
+              child: GestureDetector(
+                onTap: () {
+                  context.pushNamed(AppRoutes.myProfileScreen.name);
+                },
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20.r,
+                      backgroundImage:
+                          userModel != null && userModel!.imgUrl.isNotEmpty
+                          ? NetworkImage(userModel!.imgUrl)
+                          : AssetImage(Assets.images.profile.path),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      logout();
-                    }, 
-                    child: Icon(
-                      Icons.logout,
-                      color: Colors.lightBlueAccent,
-                      size: 20.sp,
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userModel != null && userModel!.name.isNotEmpty
+                                ? userModel!.name
+                                : "N/A",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                          Text(
+                            "Free Plan",
+                            style: TextStyle(
+                              color: Colors.lightBlueAccent,
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                   
+                      GestureDetector(
+                        onTap: () {
+                          logout();
+                        },
+                        child: Icon(
+                          Icons.logout,
+                          color: Colors.lightBlueAccent,
+                          size: 20.sp,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
               ),
-            ),
+              ),
+           
           ],
+            ),
+      
+      
         ),
-      ),
-    );
+      );
   }
 
   /// Ab ye menu item state ke hisaab se highlight hoga

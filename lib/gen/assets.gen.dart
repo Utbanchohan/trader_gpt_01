@@ -14,6 +14,9 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/4.png
+  AssetGenImage get a4 => const AssetGenImage('assets/images/4.png');
+
   /// File path: assets/images/AppLogo.png
   AssetGenImage get appLogo => const AssetGenImage('assets/images/AppLogo.png');
 
@@ -38,6 +41,8 @@ class $AssetsImagesGen {
   AssetGenImage get regenerate =>
       const AssetGenImage('assets/images/Regenerate.png');
 
+  /// File path: assets/images/Vector1.png
+  AssetGenImage get vector1 => const AssetGenImage('assets/images/Vector1.png');
   /// File path: assets/images/Visa.png
   AssetGenImage get visa => const AssetGenImage('assets/images/Visa.png');
 
@@ -60,8 +65,20 @@ class $AssetsImagesGen {
   /// File path: assets/images/copy.png
   AssetGenImage get copy => const AssetGenImage('assets/images/copy.png');
 
+  /// File path: assets/images/cpu8.png
+  AssetGenImage get cpu8 => const AssetGenImage('assets/images/cpu8.png');
+
   /// File path: assets/images/dislike.png
   AssetGenImage get dislike => const AssetGenImage('assets/images/dislike.png');
+
+  /// File path: assets/images/driver9.png
+  AssetGenImage get driver9 => const AssetGenImage('assets/images/driver9.png');
+
+  /// File path: assets/images/edit (1).png
+  AssetGenImage get edit1 => const AssetGenImage('assets/images/edit (1).png');
+
+  /// File path: assets/images/edit2.png
+  AssetGenImage get edit2 => const AssetGenImage('assets/images/edit2.png');
 
   /// File path: assets/images/eye.png
   AssetGenImage get eye => const AssetGenImage('assets/images/eye.png');
@@ -91,6 +108,13 @@ class $AssetsImagesGen {
   /// File path: assets/images/menu.png
   AssetGenImage get menu => const AssetGenImage('assets/images/menu.png');
 
+  /// File path: assets/images/message-search5.png
+  AssetGenImage get messageSearch5 =>
+      const AssetGenImage('assets/images/message-search5.png');
+
+  /// File path: assets/images/notification7.png
+  AssetGenImage get notification7 =>
+      const AssetGenImage('assets/images/notification7.png');
   /// File path: assets/images/message.png
   AssetGenImage get message => const AssetGenImage('assets/images/message.png');
 
@@ -103,6 +127,21 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/radar-2.png
   AssetGenImage get radar2 => const AssetGenImage('assets/images/radar-2.png');
+
+  /// File path: assets/images/receipt (1).png
+  AssetGenImage get receipt1 =>
+      const AssetGenImage('assets/images/receipt (1).png');
+
+  /// File path: assets/images/receipt.png
+  AssetGenImage get receipt => const AssetGenImage('assets/images/receipt.png');
+
+  /// File path: assets/images/rotate-left (1).png
+  AssetGenImage get rotateLeft1 =>
+      const AssetGenImage('assets/images/rotate-left (1).png');
+
+  /// File path: assets/images/rotate-left6.png
+  AssetGenImage get rotateLeft6 =>
+      const AssetGenImage('assets/images/rotate-left6.png');
 
   /// File path: assets/images/search-normal.png
   AssetGenImage get searchNormal =>
@@ -133,6 +172,7 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
+    a4,
     appLogo,
     conversation,
     google,
@@ -140,6 +180,7 @@ class $AssetsImagesGen {
     microinteractionsPreloader03,
     nvidia,
     regenerate,
+    vector1,
     visa,
     apple,
     arrowBack,
@@ -147,7 +188,11 @@ class $AssetsImagesGen {
     camera,
     cerosil,
     copy,
+    cpu8,
     dislike,
+    driver9,
+    edit1,
+    edit2,
     eye,
     hp,
     jJ,
@@ -157,10 +202,15 @@ class $AssetsImagesGen {
     logo,
     manicon,
     menu,
+    messageSearch5,
+    notification7,
     message,
     netFilex,
     profile,
     radar2,
+    receipt,
+    rotateLeft1,
+    rotateLeft6,
     searchNormal,
     setting2,
     sms,
