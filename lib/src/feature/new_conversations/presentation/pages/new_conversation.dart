@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/services/sockets/socket_service.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
@@ -30,10 +31,12 @@ List<double> generateStockLikeData({int count = 40, double start = 100}) {
 
 class _NewConversationState extends ConsumerState<NewConversation> {
   final SocketService socketService = SocketService();
+  final TextEditingController search = TextEditingController();
   List<Stock> stocks = [];
+  List<Stock> searchStock = [];
   bool loading = true;
-
   Timer? pollingTimer;
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -75,6 +78,28 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     });
   }
 
+  searchStockItem(val) {
+    if (val.isNotEmpty) {
+      searchStock = [];
+      searchStock = stocks
+          .where(
+            (ele) =>
+                ele.name.toLowerCase().contains(val) ||
+                ele.symbol.toLowerCase().contains(val),
+          )
+          .toList();
+
+      setState(() {});
+    }
+  }
+
+  debounceSearch(String val) {
+    if (_debounce != null) {
+      _debounce!.cancel();
+    }
+    _debounce = Timer(Duration(milliseconds: 300), searchStockItem(val));
+  }
+
   Color _getChangeColor(double? change) {
     if (change == null) return Colors.black;
     return change < 0 ? Colors.red : Colors.green;
@@ -82,8 +107,10 @@ class _NewConversationState extends ConsumerState<NewConversation> {
 
   @override
   void dispose() {
+    search.dispose();
     socketService.socket.dispose();
     pollingTimer?.cancel();
+    _debounce!.cancel();
     super.dispose();
   }
 
@@ -124,13 +151,27 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: TextField(
+              controller: search,
+              textInputAction: TextInputAction.search,
               style: TextStyle(color: Colors.white),
+              onChanged: (value) {
+                debounceSearch(value);
+              },
+              onSubmitted: (value) {
+                debounceSearch(value);
+              },
               decoration: InputDecoration(
                 hintText: "Search here",
+
                 hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
                 filled: true,
                 fillColor: AppColors.color091224,
-                suffixIcon: Icon(Icons.search, color: Colors.white54),
+                suffixIcon: InkWell(
+                  onTap: () {
+                    debounceSearch(search.text);
+                  },
+                  child: Icon(Icons.search, color: Colors.white54),
+                ),
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 0,
@@ -142,38 +183,46 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               ),
             ),
           ),
-stocks.length > 0
-? 
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(12.0),
-              child: GridView.builder(
-                itemCount: stocks.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, // 3 cards per row
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 0.8.h,
-                ),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      
-                    },
-                    child: _buildStockCard(
-                      symbol: stocks[index].symbol,
-                      company: stocks[index].name!,
-                      price: "\$${stocks[index].price.toString()}",
-                      change: stocks[index].changesPercentage!,
-                      image: stocks[index].logoUrl!,
+          search.text.isNotEmpty && searchStock.isEmpty
+              ? SizedBox()
+              : stocks.isNotEmpty
+              ? Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: GridView.builder(
+                      itemCount:
+                          search.text.isNotEmpty && searchStock.isNotEmpty
+                          ? searchStock.length
+                          : stocks.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, // 3 cards per row
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 0.8.h,
+                      ),
+                      itemBuilder: (context, index) {
+                        Stock stock =
+                            search.text.isNotEmpty && searchStock.isNotEmpty
+                            ? searchStock[index]
+                            : stocks[index];
+                        return GestureDetector(
+                          onTap: () {
+                            context.pushNamed(AppRoutes.chatPage.name);
+                          },
+                          child: _buildStockCard(
+                            symbol: stock.symbol,
+                            company: stock.name!,
+                            price: "\$${stock.price.toString()}",
+                            change: stock.changesPercentage!,
+                            image: stock.logoUrl!,
+                            trendchart: stock.fiveDayTrend[0],
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
-          ):MdSnsText(
-            "Conversation Not Found"
-          ),
+                  ),
+                )
+              : MdSnsText("stocks not found"),
         ],
       ),
     );
@@ -186,6 +235,7 @@ Widget _buildStockCard({
   required String price,
   required double change,
   required String image,
+  required FiveDayTrend trendchart,
 }) {
   return Container(
     decoration: BoxDecoration(
@@ -199,26 +249,18 @@ Widget _buildStockCard({
       children: [
         Row(
           children: [
-            Image.network(
-              image,
-
-              // Assets.images.tesla.path,
-              width: 26.w,
-              height: 26.h,
-              fit: BoxFit.cover,
-            ),
+            Image.network(image, width: 26.w, height: 26.h, fit: BoxFit.cover),
             SizedBox(width: 7.w),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 MdSnsText(
                   symbol,
-
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
                   size: 12,
                 ),
-                Container(
+                SizedBox(
                   width: 50.w,
                   child: MdSnsText(
                     company.split("-").first.trim(),
@@ -245,14 +287,14 @@ Widget _buildStockCard({
               change.toString().contains("-")
                   ? Icons.arrow_drop_down
                   : Icons.arrow_drop_up,
-              color: change.toString(). contains("-")
+              color: change.toString().contains("-")
                   ? AppColors.redFF3B3B
                   : AppColors.color06D54E,
               size: 20,
             ),
             MdSnsText(
               change.toStringAsFixed(2),
-              color: change.toString() .contains("-")
+              color: change.toString().contains("-")
                   ? AppColors.redFF3B3B
                   : AppColors.color06D54E,
               size: 12,
@@ -267,9 +309,13 @@ Widget _buildStockCard({
           width: 86.w,
           height: 15.h,
           child: Sparkline(
-            data: generateStockLikeData(count: 50, start: 100),
+            data: trendchart.data,
+
             lineWidth: 2.0,
-            lineColor: AppColors.color06D54E,
+            lineColor: change.toString().contains("-")
+                ? AppColors.redFF3B3B
+                : AppColors.color06D54E,
+
             pointsMode: PointsMode.none,
             pointColor: Colors.white,
             useCubicSmoothing: false,
