@@ -65,10 +65,16 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.chatPage.path,
         name: AppRoutes.chatPage.name,
         builder: (BuildContext context, GoRouterState state) {
-     final args = state.extra!=null? state.extra as Map<String, dynamic>:{}; // 👈 Map cast
-    final stock =args!=null && args["stock"] !=null? args["stock"] as Stock?:null;
-    final chatId = args!=null && args["chatId"] !=null?args["chatId"] as String?:null;
-          return ChatPage(stock: stock,chatId: chatId,);
+          final args = state.extra != null
+              ? state.extra as Map<String, dynamic>
+              : {}; // 👈 Map cast
+          final stock = args != null && args["stock"] != null
+              ? args["stock"] as Stock?
+              : null;
+          final chatId = args != null && args["chatId"] != null
+              ? args["chatId"] as String?
+              : null;
+          return ChatPage(stock: stock, chatId: chatId);
         },
         routes: [],
       ),
