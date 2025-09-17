@@ -11,6 +11,7 @@ class AskingPopupWidget extends StatefulWidget    {
   final List<String> relatedQuestion;
   final TextEditingController controller;
   final int index;
+  bool? showSheet;
 
   Stock? selectedStock;
 
@@ -21,6 +22,7 @@ class AskingPopupWidget extends StatefulWidget    {
     required this.relatedQuestion,
     required this.index,
     this.selectedStock,
+    this.showSheet,
   });
 
   @override
@@ -83,7 +85,9 @@ class _AskingPopupWidgetState extends State<AskingPopupWidget>    with TickerPro
               child: TabBarView(
                 controller: tabController,
                 children: [
-                  _buildQuestionList(context, widget.questions, true),
+                  _buildQuestionList(context, widget.questions,
+                  widget.showSheet??true
+                   ),
                   _buildQuestionList(context, widget.relatedQuestion, false),
                 ],
               ),

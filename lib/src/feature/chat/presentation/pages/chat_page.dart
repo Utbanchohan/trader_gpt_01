@@ -1,7 +1,5 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +9,6 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
-import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
@@ -25,6 +22,7 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../../core/routes/routes.dart';
 
+// ignore: must_be_immutable
 class ChatPage extends ConsumerStatefulWidget {
   ChatRouting? chatRouting;
 
@@ -45,7 +43,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   bool startStream = false;
   final service = SseService();
   List<String> followupQuestions = [];
-
   var body;
   String? chadId;
 
@@ -65,7 +62,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             earningsAnnouncement: "",
             eps: 0.0,
             exchange: "",
-            fiveDayTrend:[ widget.chatRouting!.trendChart],
+            fiveDayTrend: [widget.chatRouting!.trendChart],
             marketCap: 0,
             name: widget.chatRouting!.companyName,
             open: 0,
@@ -97,7 +94,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         : Stock(
             avgVolume: 0,
             change: 0,
-            changesPercentage:0,
+            changesPercentage: 0,
             dayHigh: 0.0,
             dayLow: 0.0,
             earningsAnnouncement: "",
@@ -113,26 +110,28 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             priceAvg200: 0,
             priceAvg50: 0,
             sharesOutstanding: 0,
-            stockId:"",
-            symbol:"",
+            stockId: "",
+            symbol: "",
             timestamp: 0,
             volume: 0,
             yearHigh: 0,
             yearLow: 0.0,
-            logoUrl:"",
+            logoUrl: "",
             type: "",
             count: 0,
             dateHours: "",
             ticks: 0,
-            primaryLogoUrl:"",
-            secondaryLogoUrl:"",
-            tertiaryLogoUrl:"",
+            primaryLogoUrl: "",
+            secondaryLogoUrl: "",
+            tertiaryLogoUrl: "",
             status: "",
             updatedFrom: "",
             country: "us",
             exchangeSortOrder: 0,
           );
-    getRandomQuestions();
+    getRandomQuestions(
+      selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
+    );
     getchats(chadId!);
     super.initState();
   }
@@ -155,17 +154,24 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     super.dispose();
   }
 
-  logout() {
-    String token = "";
-    ref.read(localDataProvider).setAccessToken(token);
-    context.goNamed(AppRoutes.signInPage.name);
-  }
-
-  getRandomQuestions() async {
-    var res = await ref.read(chatRepository).randomQuestions("[symbol]");
+  
+  getRandomQuestions(String symbol) async {
+    var res = await ref.read(chatRepository).randomQuestions(symbol);
     if (res.isSuccess) {
       for (var ij in res.questions) {
-        questions.add(ij);
+        if (widget.chatRouting == null ||
+            widget.chatRouting!.companyName.isEmpty) {
+          questions.add(ij);
+        } else {
+          if (widget.chatRouting != null ||
+              widget.chatRouting!.symbol.isNotEmpty) {
+            questions.add(
+              ij.replaceAll('[SYMBOL]', widget.chatRouting!.symbol),
+            );
+          } else {
+            questions.add(ij);
+          }
+        }
       }
       setState(() {});
     } else {
@@ -202,6 +208,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           insetPadding: EdgeInsets.all(0),
           contentPadding: EdgeInsets.all(0),
           content: AskingPopupWidget(
+            showSheet:
+                widget.chatRouting == null || widget.chatRouting!.symbol.isEmpty
+                ? true
+                : false,
             index: index,
             questions: questions,
             relatedQuestion: relatedQuestion,
@@ -271,12 +281,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
       if (followupQuestions.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-          selectedStock = await showDialogue(
-            questions,
-            followupQuestions,
-            message,
-            1,
-          );
+          showDialogue(questions, followupQuestions, message, 1);
         });
       }
     });
@@ -293,7 +298,17 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             children: [
               GestureDetector(
                 onTap: () async {
-                  selectedStock = await showDialogue(questions, [], message, 0);
+                  if (widget.chatRouting == null ||
+                      widget.chatRouting!.companyName.isEmpty) {
+                    selectedStock = await showDialogue(
+                      questions,
+                      [],
+                      message,
+                      0,
+                    );
+                  } else {
+                    showDialogue(questions, [], message, 0);
+                  }
                 },
                 child: Center(
                   child: Container(
@@ -434,8 +449,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
       backgroundColor: AppColors.primaryColor,
       appBar:
-          widget.chatRouting == null ||
-              widget.chatRouting!.companyName.isEmpty
+          widget.chatRouting == null || widget.chatRouting!.companyName.isEmpty
           ? AppBar(
               scrolledUnderElevation: 0,
               centerTitle: false,

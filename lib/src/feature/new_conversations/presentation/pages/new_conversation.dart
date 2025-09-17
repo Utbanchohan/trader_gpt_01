@@ -15,6 +15,7 @@ import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../core/routes/routes.dart';
+import '../../../chat/domain/model/chat_stock_model.dart';
 
 class NewConversation extends ConsumerStatefulWidget {
   const NewConversation({super.key});
@@ -116,11 +117,23 @@ class _NewConversationState extends ConsumerState<NewConversation> {
         );
     if (res != null) {
       ChatHistory chatHistory = res;
-       context.pushNamed(
-                              AppRoutes.chatPage.name,
-                              // extra: stocks[index],
-                              
-                            );
+      if(mounted)
+      {
+  context.pushNamed(
+        AppRoutes.chatPage.name,
+        extra: ChatRouting(
+          chatId: chatHistory.id,
+          symbol: stock.symbol,
+          image: stock.logoUrl,
+          companyName: stock.name,
+          price: stock.price,
+          changePercentage: stock.changesPercentage,
+          trendChart: stock.fiveDayTrend[0],
+          stockid: stock.stockId,
+        ),
+      );
+      }
+    
     }
   }
 

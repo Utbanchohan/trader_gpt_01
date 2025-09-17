@@ -9,8 +9,10 @@ import 'package:trader_gpt/src/feature/chat/domain/model/conversation/conversati
 import 'package:trader_gpt/src/feature/chat/domain/model/random_question/random_question_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 
+import '../../data/dto/archive_chat_dto/archive_chat_dto.dart';
 import '../../data/dto/chat_message_dto/chat_message_dto.dart';
 import '../model/base_model/base_model.dart';
+import '../model/delete_model/delete_model.dart';
 
  class ChatApiRepository implements ChatRepository {
   ChatApiRepository(this.client);
@@ -41,6 +43,18 @@ import '../model/base_model/base_model.dart';
   Future<BaseModel<ChatHistory>> createNewChat(CreateChatDto createChatDto) async {
     return await ChatApi(client).createChat(createChatDto);
   }
+
+       @override
+  Future<BaseModel<DeleteResponse>> deleteChat(String chatId) async {
+    return await ChatApi(client).deleteChat(chatId);
+  }
+
+     @override
+  Future<BaseModel<ChatHistory>> archiveChat(ArchiveChatDto archiveChatDto) async {
+    return await ChatApi(client).archiveChat(archiveChatDto);
+  }
+  
+  
   
   
   
