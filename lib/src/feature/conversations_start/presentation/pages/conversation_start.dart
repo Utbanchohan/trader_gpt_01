@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -15,6 +16,10 @@ import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:chart_sparkline/chart_sparkline.dart';
 
+import '../../../../services/sockets/socket_service.dart';
+import '../../../../shared/socket/model/stock_model.dart/stock_model.dart'
+    show Stock;
+
 class ConversationStart extends ConsumerStatefulWidget {
   ConversationStart({super.key});
 
@@ -24,10 +29,16 @@ class ConversationStart extends ConsumerStatefulWidget {
 
 class _ConversationStartState extends ConsumerState<ConversationStart> {
   List<ChatHistory> convo = [];
+  final SocketService socketService = SocketService();
+  List<Stock> stocks = [];
+  Timer? pollingTimer;
+  bool loading = true;
 
   @override
   void initState() {
     getChats();
+    _connectSocket();
+    _startPolling();
     // TODO: implement initState
     super.initState();
   }
@@ -36,13 +47,65 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
     var res = await ref.read(chatRepository).chats();
     if (res.isSuccess) {
       for (int i = 0; i < res.data!.results.length; i++) {
-        convo.add(res.data!.results[i]);
+        if (res.data!.results[i].symbol.toLowerCase() != "tdgpt") {
+          convo.add(res.data!.results[i]);
+        }
       }
       // scrollToBottom();
       setState(() {});
     } else {
       return false;
     }
+  }
+
+  @override
+  void dispose() {
+    socketService.socket.dispose();
+    pollingTimer?.cancel();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  int findRelatedStock(String symbol) {
+    int i = stocks.indexWhere((ele) => ele.symbol == symbol);
+    if (i != -1) {
+      return i;
+    } else {
+      return 0;
+    }
+  }
+
+  void _connectSocket() {
+    socketService.connect();
+    socketService.onStockUpdate((data) {
+      updateStocks(data);
+    });
+  }
+
+  void _startPolling() {
+    pollingTimer = Timer.periodic(Duration(milliseconds: 100), (_) {
+      socketService.fetchStocks((data) {
+        updateStocks(data);
+      });
+    });
+  }
+
+  void updateStocks(List<dynamic> data) {
+    final updatedStocks = data
+        .map((item) => Stock.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+
+    setState(() {
+      for (var updated in updatedStocks) {
+        final index = stocks.indexWhere((s) => s.symbol == updated.symbol);
+        if (index >= 0) {
+          stocks[index] = updated;
+        } else {
+          stocks.add(updated);
+        }
+      }
+      loading = false;
+    });
   }
 
   List<double> generateStockLikeData({int count = 40, double start = 100}) {
@@ -54,7 +117,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
     });
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -81,12 +143,13 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
               ],
             ),
             SizedBox(height: 16.h),
-            convo != null && convo.length > 0
+            convo != null && convo.isNotEmpty && stocks.isNotEmpty 
                 ? Expanded(
                     child: ListView.separated(
                       itemCount: convo.length,
                       itemBuilder: (context, index) {
                         final stock = convo[index];
+                        int stockIndex = findRelatedStock(stock.symbol);
                         return Slidable(
                           // key: ValueKey(stock["symbol"]),
                           endActionPane: ActionPane(
@@ -172,8 +235,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
                               children: [
                                 Column(
                                   children: [
-                                    Image.asset(
-                                      Assets.images.tesla.path,
+                                    Image.network(
+                                      stocks[stockIndex].logoUrl,
                                       width: 42.w,
                                       height: 41.h,
                                       fit: BoxFit.cover,
@@ -181,7 +244,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
                                     SizedBox(height: 5.h),
                                     MdSnsText(
                                       // "3 days ago",
-                                      stock.lastMessage.createdAt.millisecondsSinceEpoch.timeAgoFromMilliseconds() ,
+                                      stock
+                                          .lastMessage
+                                          .createdAt
+                                          .millisecondsSinceEpoch
+                                          .timeAgoFromMilliseconds(),
                                       size: 10,
                                       fontWeight: FontWeight.w400,
                                       color: AppColors.color677FA4,
@@ -204,7 +271,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
                                       SizedBox(height: 2.h),
                                       MdSnsText(
                                         // stock["name"],
-                                        stock.companyName != null
+                                        stock.companyName.isNotEmpty
                                             ? stock.companyName
                                                   .split("-")
                                                   .first
@@ -216,13 +283,19 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
                                         size: 14,
                                       ),
                                       SizedBox(height: 5.h),
-                                      MdSnsText(
-                                        stock.lastMessage.message,
-                                        maxLines: 1,
-                                        // "Provide a company overview for...",
-                                        color: AppColors.color677FA4,
-                                        fontWeight: FontWeight.w400,
-                                        size: 12,
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                            0.5,
+                                        child: MdSnsText(
+                                          textOverflow: TextOverflow.ellipsis,
+                                          stock.lastMessage.message,
+                                          maxLines: 1,
+                                          // "Provide a company overview for...",
+                                          color: AppColors.color677FA4,
+                                          fontWeight: FontWeight.w400,
+                                          size: 12,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -231,19 +304,25 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     MdSnsText(
-                                      "\$200",
+                                      "\$${stocks[stockIndex].price.toStringAsFixed(2)}",
                                       size: 16,
                                       color: AppColors.white,
                                       fontWeight: FontWeight.w700,
                                     ),
                                     Row(
                                       children: [
-                                        Icon(
-                                          Icons.arrow_drop_up,
-                                          color: AppColors.color06D54E,
-                                        ),
+                                        stocks[stockIndex].changesPercentage < 0
+                                            ? Icon(
+                                                Icons.arrow_drop_down,
+                                                color: AppColors.redFF3B3B,
+                                              )
+                                            : Icon(
+                                                Icons.arrow_drop_up,
+                                                color: AppColors.color06D54E,
+                                              ),
                                         MdSnsText(
-                                          "2000",
+                                          stocks[stockIndex].changesPercentage
+                                              .toStringAsFixed(2),
                                           color: AppColors.color06D54E,
                                           size: 12,
                                           fontWeight: FontWeight.w400,
@@ -254,12 +333,16 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
                                       width: 86.w,
                                       height: 15.h,
                                       child: Sparkline(
-                                        data: generateStockLikeData(
-                                          count: 50,
-                                          start: 100,
-                                        ),
+                                        data: stocks[stockIndex]
+                                            .fiveDayTrend[0]
+                                            .data,
                                         lineWidth: 2.0,
-                                        lineColor: AppColors.color06D54E,
+                                        lineColor:
+                                            stocks[stockIndex]
+                                                    .changesPercentage <
+                                                0
+                                            ? AppColors.redFF3B3B
+                                            : AppColors.color06D54E,
                                         pointsMode: PointsMode.none,
                                         pointColor: Colors.white,
                                         useCubicSmoothing: false,
@@ -294,7 +377,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
           backgroundColor: Colors.blue,
           onPressed: () {
             context.pushNamed(AppRoutes.newConversation.name);
-
           },
           child: Icon(Icons.add),
         ),
