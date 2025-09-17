@@ -28,11 +28,32 @@ abstract class ChatHistory with _$ChatHistory {
     required String companyName,
     required DateTime createdAt,
     required DateTime updatedAt,
+    @JsonKey(name:"last_message") required LastMessage lastMessage,
   }) = _ChatHistory;
 
   factory ChatHistory.fromJson(Map<String, dynamic> json) =>
       _$ChatHistoryFromJson(json);
 
 
-      factory ChatHistory.initial() =>  ChatHistory( id: '', userId: '', symbol: '', stockId: '', type: '', companyName: '', createdAt: DateTime.now(), updatedAt: DateTime.now());
+      factory ChatHistory.initial() =>  ChatHistory( id: '', userId: '', symbol: '', stockId: '', type: '', companyName: '', createdAt: DateTime.now(), updatedAt: DateTime.now(),lastMessage: LastMessage.initial());
+}
+
+
+@freezed
+abstract class LastMessage with _$LastMessage {
+  const factory LastMessage({
+    required String chatId,
+    required String message,
+    required String type,
+    required String userId,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    @JsonKey(name: '_id') required String id, // maps to _id
+  }) = _LastMessage;
+
+  factory LastMessage.fromJson(Map<String, dynamic> json) =>
+      _$LastMessageFromJson(json);
+
+            factory LastMessage.initial() =>  LastMessage( chatId: '', message: '', type: '', userId: '', createdAt:  DateTime.now(), updatedAt:  DateTime.now(), id: "" );
+
 }

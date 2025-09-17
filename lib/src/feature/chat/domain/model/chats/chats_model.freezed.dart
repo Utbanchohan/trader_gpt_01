@@ -293,7 +293,7 @@ as List<ChatHistory>,
 /// @nodoc
 mixin _$ChatHistory {
 
-@JsonKey(name: '_id') String get id; String get userId; String get symbol; String get stockId; String get type; String get companyName; DateTime get createdAt; DateTime get updatedAt;
+@JsonKey(name: '_id') String get id; String get userId; String get symbol; String get stockId; String get type; String get companyName; DateTime get createdAt; DateTime get updatedAt;@JsonKey(name: "last_message") LastMessage get lastMessage;
 /// Create a copy of ChatHistory
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -306,16 +306,16 @@ $ChatHistoryCopyWith<ChatHistory> get copyWith => _$ChatHistoryCopyWithImpl<Chat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatHistory&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.symbol, symbol) || other.symbol == symbol)&&(identical(other.stockId, stockId) || other.stockId == stockId)&&(identical(other.type, type) || other.type == type)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatHistory&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.symbol, symbol) || other.symbol == symbol)&&(identical(other.stockId, stockId) || other.stockId == stockId)&&(identical(other.type, type) || other.type == type)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.lastMessage, lastMessage) || other.lastMessage == lastMessage));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,symbol,stockId,type,companyName,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,userId,symbol,stockId,type,companyName,createdAt,updatedAt,lastMessage);
 
 @override
 String toString() {
-  return 'ChatHistory(id: $id, userId: $userId, symbol: $symbol, stockId: $stockId, type: $type, companyName: $companyName, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ChatHistory(id: $id, userId: $userId, symbol: $symbol, stockId: $stockId, type: $type, companyName: $companyName, createdAt: $createdAt, updatedAt: $updatedAt, lastMessage: $lastMessage)';
 }
 
 
@@ -326,11 +326,11 @@ abstract mixin class $ChatHistoryCopyWith<$Res>  {
   factory $ChatHistoryCopyWith(ChatHistory value, $Res Function(ChatHistory) _then) = _$ChatHistoryCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String userId, String symbol, String stockId, String type, String companyName, DateTime createdAt, DateTime updatedAt
+@JsonKey(name: '_id') String id, String userId, String symbol, String stockId, String type, String companyName, DateTime createdAt, DateTime updatedAt,@JsonKey(name: "last_message") LastMessage lastMessage
 });
 
 
-
+$LastMessageCopyWith<$Res> get lastMessage;
 
 }
 /// @nodoc
@@ -343,7 +343,7 @@ class _$ChatHistoryCopyWithImpl<$Res>
 
 /// Create a copy of ChatHistory
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? symbol = null,Object? stockId = null,Object? type = null,Object? companyName = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? symbol = null,Object? stockId = null,Object? type = null,Object? companyName = null,Object? createdAt = null,Object? updatedAt = null,Object? lastMessage = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -353,10 +353,20 @@ as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non
 as String,companyName: null == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,lastMessage: null == lastMessage ? _self.lastMessage : lastMessage // ignore: cast_nullable_to_non_nullable
+as LastMessage,
   ));
 }
-
+/// Create a copy of ChatHistory
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LastMessageCopyWith<$Res> get lastMessage {
+  
+  return $LastMessageCopyWith<$Res>(_self.lastMessage, (value) {
+    return _then(_self.copyWith(lastMessage: value));
+  });
+}
 }
 
 
@@ -438,10 +448,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String userId,  String symbol,  String stockId,  String type,  String companyName,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String userId,  String symbol,  String stockId,  String type,  String companyName,  DateTime createdAt,  DateTime updatedAt, @JsonKey(name: "last_message")  LastMessage lastMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChatHistory() when $default != null:
-return $default(_that.id,_that.userId,_that.symbol,_that.stockId,_that.type,_that.companyName,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.userId,_that.symbol,_that.stockId,_that.type,_that.companyName,_that.createdAt,_that.updatedAt,_that.lastMessage);case _:
   return orElse();
 
 }
@@ -459,10 +469,10 @@ return $default(_that.id,_that.userId,_that.symbol,_that.stockId,_that.type,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String userId,  String symbol,  String stockId,  String type,  String companyName,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String userId,  String symbol,  String stockId,  String type,  String companyName,  DateTime createdAt,  DateTime updatedAt, @JsonKey(name: "last_message")  LastMessage lastMessage)  $default,) {final _that = this;
 switch (_that) {
 case _ChatHistory():
-return $default(_that.id,_that.userId,_that.symbol,_that.stockId,_that.type,_that.companyName,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.userId,_that.symbol,_that.stockId,_that.type,_that.companyName,_that.createdAt,_that.updatedAt,_that.lastMessage);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -479,10 +489,10 @@ return $default(_that.id,_that.userId,_that.symbol,_that.stockId,_that.type,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String id,  String userId,  String symbol,  String stockId,  String type,  String companyName,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String id,  String userId,  String symbol,  String stockId,  String type,  String companyName,  DateTime createdAt,  DateTime updatedAt, @JsonKey(name: "last_message")  LastMessage lastMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _ChatHistory() when $default != null:
-return $default(_that.id,_that.userId,_that.symbol,_that.stockId,_that.type,_that.companyName,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.userId,_that.symbol,_that.stockId,_that.type,_that.companyName,_that.createdAt,_that.updatedAt,_that.lastMessage);case _:
   return null;
 
 }
@@ -494,7 +504,7 @@ return $default(_that.id,_that.userId,_that.symbol,_that.stockId,_that.type,_tha
 @JsonSerializable()
 
 class _ChatHistory implements ChatHistory {
-  const _ChatHistory({@JsonKey(name: '_id') required this.id, required this.userId, required this.symbol, required this.stockId, required this.type, required this.companyName, required this.createdAt, required this.updatedAt});
+  const _ChatHistory({@JsonKey(name: '_id') required this.id, required this.userId, required this.symbol, required this.stockId, required this.type, required this.companyName, required this.createdAt, required this.updatedAt, @JsonKey(name: "last_message") required this.lastMessage});
   factory _ChatHistory.fromJson(Map<String, dynamic> json) => _$ChatHistoryFromJson(json);
 
 @override@JsonKey(name: '_id') final  String id;
@@ -505,6 +515,7 @@ class _ChatHistory implements ChatHistory {
 @override final  String companyName;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
+@override@JsonKey(name: "last_message") final  LastMessage lastMessage;
 
 /// Create a copy of ChatHistory
 /// with the given fields replaced by the non-null parameter values.
@@ -519,16 +530,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatHistory&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.symbol, symbol) || other.symbol == symbol)&&(identical(other.stockId, stockId) || other.stockId == stockId)&&(identical(other.type, type) || other.type == type)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatHistory&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.symbol, symbol) || other.symbol == symbol)&&(identical(other.stockId, stockId) || other.stockId == stockId)&&(identical(other.type, type) || other.type == type)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.lastMessage, lastMessage) || other.lastMessage == lastMessage));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,symbol,stockId,type,companyName,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,userId,symbol,stockId,type,companyName,createdAt,updatedAt,lastMessage);
 
 @override
 String toString() {
-  return 'ChatHistory(id: $id, userId: $userId, symbol: $symbol, stockId: $stockId, type: $type, companyName: $companyName, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ChatHistory(id: $id, userId: $userId, symbol: $symbol, stockId: $stockId, type: $type, companyName: $companyName, createdAt: $createdAt, updatedAt: $updatedAt, lastMessage: $lastMessage)';
 }
 
 
@@ -539,11 +550,11 @@ abstract mixin class _$ChatHistoryCopyWith<$Res> implements $ChatHistoryCopyWith
   factory _$ChatHistoryCopyWith(_ChatHistory value, $Res Function(_ChatHistory) _then) = __$ChatHistoryCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String userId, String symbol, String stockId, String type, String companyName, DateTime createdAt, DateTime updatedAt
+@JsonKey(name: '_id') String id, String userId, String symbol, String stockId, String type, String companyName, DateTime createdAt, DateTime updatedAt,@JsonKey(name: "last_message") LastMessage lastMessage
 });
 
 
-
+@override $LastMessageCopyWith<$Res> get lastMessage;
 
 }
 /// @nodoc
@@ -556,7 +567,7 @@ class __$ChatHistoryCopyWithImpl<$Res>
 
 /// Create a copy of ChatHistory
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? symbol = null,Object? stockId = null,Object? type = null,Object? companyName = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? symbol = null,Object? stockId = null,Object? type = null,Object? companyName = null,Object? createdAt = null,Object? updatedAt = null,Object? lastMessage = null,}) {
   return _then(_ChatHistory(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -566,7 +577,298 @@ as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non
 as String,companyName: null == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,lastMessage: null == lastMessage ? _self.lastMessage : lastMessage // ignore: cast_nullable_to_non_nullable
+as LastMessage,
+  ));
+}
+
+/// Create a copy of ChatHistory
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LastMessageCopyWith<$Res> get lastMessage {
+  
+  return $LastMessageCopyWith<$Res>(_self.lastMessage, (value) {
+    return _then(_self.copyWith(lastMessage: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$LastMessage {
+
+ String get chatId; String get message; String get type; String get userId; DateTime get createdAt; DateTime get updatedAt;@JsonKey(name: '_id') String get id;
+/// Create a copy of LastMessage
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LastMessageCopyWith<LastMessage> get copyWith => _$LastMessageCopyWithImpl<LastMessage>(this as LastMessage, _$identity);
+
+  /// Serializes this LastMessage to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LastMessage&&(identical(other.chatId, chatId) || other.chatId == chatId)&&(identical(other.message, message) || other.message == message)&&(identical(other.type, type) || other.type == type)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.id, id) || other.id == id));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,chatId,message,type,userId,createdAt,updatedAt,id);
+
+@override
+String toString() {
+  return 'LastMessage(chatId: $chatId, message: $message, type: $type, userId: $userId, createdAt: $createdAt, updatedAt: $updatedAt, id: $id)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LastMessageCopyWith<$Res>  {
+  factory $LastMessageCopyWith(LastMessage value, $Res Function(LastMessage) _then) = _$LastMessageCopyWithImpl;
+@useResult
+$Res call({
+ String chatId, String message, String type, String userId, DateTime createdAt, DateTime updatedAt,@JsonKey(name: '_id') String id
+});
+
+
+
+
+}
+/// @nodoc
+class _$LastMessageCopyWithImpl<$Res>
+    implements $LastMessageCopyWith<$Res> {
+  _$LastMessageCopyWithImpl(this._self, this._then);
+
+  final LastMessage _self;
+  final $Res Function(LastMessage) _then;
+
+/// Create a copy of LastMessage
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? chatId = null,Object? message = null,Object? type = null,Object? userId = null,Object? createdAt = null,Object? updatedAt = null,Object? id = null,}) {
+  return _then(_self.copyWith(
+chatId: null == chatId ? _self.chatId : chatId // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [LastMessage].
+extension LastMessagePatterns on LastMessage {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LastMessage value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LastMessage() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LastMessage value)  $default,){
+final _that = this;
+switch (_that) {
+case _LastMessage():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LastMessage value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LastMessage() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String chatId,  String message,  String type,  String userId,  DateTime createdAt,  DateTime updatedAt, @JsonKey(name: '_id')  String id)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LastMessage() when $default != null:
+return $default(_that.chatId,_that.message,_that.type,_that.userId,_that.createdAt,_that.updatedAt,_that.id);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String chatId,  String message,  String type,  String userId,  DateTime createdAt,  DateTime updatedAt, @JsonKey(name: '_id')  String id)  $default,) {final _that = this;
+switch (_that) {
+case _LastMessage():
+return $default(_that.chatId,_that.message,_that.type,_that.userId,_that.createdAt,_that.updatedAt,_that.id);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String chatId,  String message,  String type,  String userId,  DateTime createdAt,  DateTime updatedAt, @JsonKey(name: '_id')  String id)?  $default,) {final _that = this;
+switch (_that) {
+case _LastMessage() when $default != null:
+return $default(_that.chatId,_that.message,_that.type,_that.userId,_that.createdAt,_that.updatedAt,_that.id);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _LastMessage implements LastMessage {
+  const _LastMessage({required this.chatId, required this.message, required this.type, required this.userId, required this.createdAt, required this.updatedAt, @JsonKey(name: '_id') required this.id});
+  factory _LastMessage.fromJson(Map<String, dynamic> json) => _$LastMessageFromJson(json);
+
+@override final  String chatId;
+@override final  String message;
+@override final  String type;
+@override final  String userId;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
+@override@JsonKey(name: '_id') final  String id;
+
+/// Create a copy of LastMessage
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LastMessageCopyWith<_LastMessage> get copyWith => __$LastMessageCopyWithImpl<_LastMessage>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$LastMessageToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LastMessage&&(identical(other.chatId, chatId) || other.chatId == chatId)&&(identical(other.message, message) || other.message == message)&&(identical(other.type, type) || other.type == type)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.id, id) || other.id == id));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,chatId,message,type,userId,createdAt,updatedAt,id);
+
+@override
+String toString() {
+  return 'LastMessage(chatId: $chatId, message: $message, type: $type, userId: $userId, createdAt: $createdAt, updatedAt: $updatedAt, id: $id)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LastMessageCopyWith<$Res> implements $LastMessageCopyWith<$Res> {
+  factory _$LastMessageCopyWith(_LastMessage value, $Res Function(_LastMessage) _then) = __$LastMessageCopyWithImpl;
+@override @useResult
+$Res call({
+ String chatId, String message, String type, String userId, DateTime createdAt, DateTime updatedAt,@JsonKey(name: '_id') String id
+});
+
+
+
+
+}
+/// @nodoc
+class __$LastMessageCopyWithImpl<$Res>
+    implements _$LastMessageCopyWith<$Res> {
+  __$LastMessageCopyWithImpl(this._self, this._then);
+
+  final _LastMessage _self;
+  final $Res Function(_LastMessage) _then;
+
+/// Create a copy of LastMessage
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? chatId = null,Object? message = null,Object? type = null,Object? userId = null,Object? createdAt = null,Object? updatedAt = null,Object? id = null,}) {
+  return _then(_LastMessage(
+chatId: null == chatId ? _self.chatId : chatId // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

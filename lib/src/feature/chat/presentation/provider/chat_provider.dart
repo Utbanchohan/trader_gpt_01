@@ -19,6 +19,17 @@ final sseProvider = StreamProvider.family<String, Map<String, dynamic>>((
   return service.connect(body, token);
 });
 
+final followupProvider =
+    StreamProvider.family<String, Map<String, dynamic>>((ref, body) {
+  final service = SseService();
+  final token = ref.watch(localDataProvider).accessToken ?? "";
+
+  // make sure we "consume" connect so it starts producing events
+  service.connect(body, token);
+
+  return service.followupStream;
+});
+
 @riverpod
 class ChatProvider extends _$ChatProvider {
   final _controller = StreamController<String>.broadcast();
@@ -34,7 +45,4 @@ class ChatProvider extends _$ChatProvider {
       return false;
     }
   }
-
-  
-
 }

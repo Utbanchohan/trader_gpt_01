@@ -8,6 +8,10 @@ class SseService {
   final Dio _dio = Dio();
   final buffer = StringBuffer();
   final followUp = StringBuffer();
+  final _followupController = StreamController<String>.broadcast();
+  Stream<String> get followupStream => _followupController.stream;
+  final _writerController = StreamController<String>.broadcast();
+  Stream<String> get writerStream => _writerController.stream;
 
   Stream<String> connect(Map<String, dynamic> body, String token) async* {
     final url = "${BaseUrl.baseUrl}tgpt-python/api/user_ask_stream";
@@ -33,11 +37,12 @@ class SseService {
           if (json is Map && json["chunk"] != null) {
             if (json['type'] == "writer") {
               buffer.write(json["chunk"]);
+              _writerController.add(buffer.toString());
             } else if (json['type'] == "followup") {
-              followUp.write(json['chunk']);
+              buffer.write(json['chunk']);
+              _followupController.add(followUp.toString());
             }
-            yield buffer.toString();
-              
+            yield buffer.toString(); 
           }
         } catch (e) {
           debugPrint("❌ JSON decode error: $e");

@@ -13,6 +13,7 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
@@ -35,6 +36,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   ScrollController sc = ScrollController();
   Stock? selectedStock;
   List<ChatMessageModel> chats = [];
+  List<ChatHistory> convo = [];
+
   List<String> questions = [];
   dynamic asyncStream;
   bool startStream = false;
@@ -48,7 +51,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   void initState() {
     getRandomQuestions();
-    getchats();
+    getMessages();
+    // getChats();
     // TODO: implement initState
     super.initState();
   }
@@ -89,11 +93,24 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
-  getchats() async {
+  getMessages() async {
     var res = await ref.read(chatRepository).getMessages(chadId, 1);
     if (res.isSuccess) {
       for (int i = 0; i < res.data!.messages!.length; i++) {
         chats.add(res.data!.messages![i]);
+      }
+      scrollToBottom();
+      setState(() {});
+    } else {
+      return false;
+    }
+  }
+
+  getChats() async {
+    var res = await ref.read(chatRepository).chats();
+    if (res.isSuccess) {
+      for (int i = 0; i < res.data!.results.length; i++) {
+        convo.add(res.data!.results![i]);
       }
       scrollToBottom();
       setState(() {});
@@ -521,6 +538,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ),
             asyncStream.when(
               data: (line) {
+                if(line.contains("followup"))
+                {
+                  print('followup start');
+                }
                     scrollToBottom();
                 return Column(
                   children: [
@@ -535,7 +556,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: MarkdownBody(
-                            data: line.toString(),
+                            data: line,
                             selectable: true, // let user copy code
                             styleSheet:
                                 MarkdownStyleSheet.fromTheme(
@@ -586,7 +607,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         SizedBox(width: 10),
 
                         Visibility(
-                          visible: line.toString().isNotEmpty,
+                          visible: line.isNotEmpty,
                           child: Expanded(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
