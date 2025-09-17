@@ -43,6 +43,7 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/Vector1.png
   AssetGenImage get vector1 => const AssetGenImage('assets/images/Vector1.png');
+
   /// File path: assets/images/Visa.png
   AssetGenImage get visa => const AssetGenImage('assets/images/Visa.png');
 
@@ -67,6 +68,10 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/cpu8.png
   AssetGenImage get cpu8 => const AssetGenImage('assets/images/cpu8.png');
+
+  /// File path: assets/images/directbox-notif.png
+  AssetGenImage get directboxNotif =>
+      const AssetGenImage('assets/images/directbox-notif.png');
 
   /// File path: assets/images/dislike.png
   AssetGenImage get dislike => const AssetGenImage('assets/images/dislike.png');
@@ -112,15 +117,16 @@ class $AssetsImagesGen {
   AssetGenImage get messageSearch5 =>
       const AssetGenImage('assets/images/message-search5.png');
 
-  /// File path: assets/images/notification7.png
-  AssetGenImage get notification7 =>
-      const AssetGenImage('assets/images/notification7.png');
   /// File path: assets/images/message.png
   AssetGenImage get message => const AssetGenImage('assets/images/message.png');
 
   /// File path: assets/images/netFilex.png
   AssetGenImage get netFilex =>
       const AssetGenImage('assets/images/netFilex.png');
+
+  /// File path: assets/images/notification7.png
+  AssetGenImage get notification7 =>
+      const AssetGenImage('assets/images/notification7.png');
 
   /// File path: assets/images/profile.jpg
   AssetGenImage get profile => const AssetGenImage('assets/images/profile.jpg');
@@ -189,6 +195,7 @@ class $AssetsImagesGen {
     cerosil,
     copy,
     cpu8,
+    directboxNotif,
     dislike,
     driver9,
     edit1,
@@ -203,11 +210,12 @@ class $AssetsImagesGen {
     manicon,
     menu,
     messageSearch5,
-    notification7,
     message,
     netFilex,
+    notification7,
     profile,
     radar2,
+    receipt1,
     receipt,
     rotateLeft1,
     rotateLeft6,

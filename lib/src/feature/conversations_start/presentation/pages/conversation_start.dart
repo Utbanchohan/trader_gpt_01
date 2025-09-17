@@ -21,7 +21,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
     final random = Random();
     double value = start;
     return List.generate(count, (index) {
-      // small up/down variation
       value += (random.nextDouble() - 0.5) * 4; // change between -2 to +2
       return value;
     });
@@ -64,37 +63,29 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        backgroundColor: Color(0xff0E1525),
+        backgroundColor: AppColors.primaryColor,
         appBar: AppBar(
-          backgroundColor: Color(0xff0E1525),
+          scrolledUnderElevation: 0,
+          backgroundColor: AppColors.primaryColor,
           elevation: 0,
           title: Text("Conversations", style: TextStyle(color: Colors.white)),
         ),
         body: Column(
           children: [
             TabBar(
-              indicatorPadding: EdgeInsets.all(5),
-              isScrollable: false,
-              indicator: BoxDecoration(
-                color: Color(0xFF243773), 
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              indicatorSize: TabBarIndicatorSize.label,
-              labelColor: Colors.white,
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
-              unselectedLabelColor: Colors.white54,
-              labelPadding: EdgeInsets.all(0),
               dividerHeight: 0,
+              indicator: BoxDecoration(), // remove default indicator
+              labelPadding: EdgeInsets.zero,
               tabs: [
-                _buildTab("All"),
-                _buildTab("Stocks"),
-                _buildTab("Crypto"),
-                _buildTab("ETFs"),
+                _buildTab("All", 0),
+                _buildTab("Stocks", 1),
+                _buildTab("Crypto", 2),
+                _buildTab("ETFs", 3),
               ],
             ),
-
+            SizedBox(height: 16.h),
             Expanded(
-              child: ListView.builder(
+              child: ListView.separated(
                 itemCount: stocks.length,
                 itemBuilder: (context, index) {
                   final stock = stocks[index];
@@ -132,7 +123,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
                       ),
                       margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                       decoration: BoxDecoration(
-                        color: Color(0xff1A2235),
+                        color: Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -236,7 +227,12 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
                       ),
                     ),
                   );
-                },
+                }, separatorBuilder: (BuildContext context, int index) { 
+                  return Divider(
+                    height: 1,
+                    color: AppColors.colorB3B3B3,
+                  );
+                 },
               ),
             ),
           ],
@@ -251,15 +247,35 @@ class _ConversationStartState extends ConsumerState<ConversationStart> {
   }
 }
 
-Widget _buildTab(String text) {
+Widget _buildTab(String text, int index) {
   return Tab(
-    child: Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white24), // border for unselected
-        borderRadius: BorderRadius.circular(30),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-      child: MdSnsText(text),
+    child: Builder(
+      builder: (context) {
+        final TabController controller = DefaultTabController.of(context);
+        final bool isSelected = controller.index == index;
+
+        // Listen to changes
+        controller.addListener(() {
+          (context as Element).markNeedsBuild();
+        });
+
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.color203063 : Colors.transparent,
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(
+              color: isSelected ? AppColors.color203063 : AppColors.colorB3B3B3,
+              width: 1.5,
+            ),
+          ),
+          child: Text(
+            text,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        );
+      },
     ),
   );
 }
