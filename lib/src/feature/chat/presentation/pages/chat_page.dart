@@ -13,9 +13,9 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
-import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/provider/stream_service.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/custom_message.dart';
@@ -36,23 +36,19 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   ScrollController sc = ScrollController();
   Stock? selectedStock;
   List<ChatMessageModel> chats = [];
-  List<ChatHistory> convo = [];
-
   List<String> questions = [];
   dynamic asyncStream;
   bool startStream = false;
+  final service = SseService();
+  List<String> followupQuestions = [];
+
   var body;
-  String chadId = "68c2f0f5b77590fbe176f8e1";
-
-
-
-
+  String chadId = "68c3274cb77590fbe176f905";
 
   @override
   void initState() {
     getRandomQuestions();
-    getMessages();
-    // getChats();
+    getchats();
     // TODO: implement initState
     super.initState();
   }
@@ -93,7 +89,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
-  getMessages() async {
+  getchats() async {
     var res = await ref.read(chatRepository).getMessages(chadId, 1);
     if (res.isSuccess) {
       for (int i = 0; i < res.data!.messages!.length; i++) {
@@ -106,17 +102,30 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
-  getChats() async {
-    var res = await ref.read(chatRepository).chats();
-    if (res.isSuccess) {
-      for (int i = 0; i < res.data!.results.length; i++) {
-        convo.add(res.data!.results![i]);
-      }
-      scrollToBottom();
-      setState(() {});
-    } else {
-      return false;
-    }
+  showDialogue(
+    List<String> questions,
+    List<String> relatedQuestion,
+    TextEditingController message,
+    int index
+  ) async {
+    return await showDialog<Stock>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          alignment: Alignment.center,
+          backgroundColor: AppColors.primaryColor,
+          insetPadding: EdgeInsets.all(0),
+          contentPadding: EdgeInsets.all(0),
+          content: AskingPopupWidget(
+            index: index,
+            questions: questions,
+            relatedQuestion: relatedQuestion,
+            controller: message,
+          ),
+        );
+      },
+    );
   }
 
   void _sendMessage(WidgetRef ref) async {
@@ -148,7 +157,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           chats.add(
             ChatMessageModel(
               id: "temp",
-              chatId: "68c2f0f5b77590fbe176f8e1",
+              chatId: chadId,
               message: text,
               type: "user",
               userId: userid,
@@ -169,7 +178,24 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   Widget build(BuildContext context) {
     final asyncStream = startStream
         ? ref.watch(sseProvider(body))
-        : const AsyncValue.data("");
+        : const AsyncValue.data({'buffer': "", "followUp": []});
+
+    asyncStream.whenData((data) {
+      followupQuestions = data["followUp"].isNotEmpty
+          ? (data["followUp"] as List<String>?) ?? []
+          : [];
+
+      if (followupQuestions.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          selectedStock = await showDialogue(
+            questions,
+            followupQuestions,
+            message,
+            1
+          );
+        });
+      }
+    });
 
     return Scaffold(
       drawer: SideMenu(),
@@ -177,28 +203,13 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         bottom: true,
         child: Container(
           color: Colors.transparent,
-          height: MediaQuery.of(context).size.height * 0.2,
+          height: MediaQuery.of(context).size.height * 0.2385,
 
           child: Column(
             children: [
               GestureDetector(
                 onTap: () async {
-                  selectedStock = await showDialog<Stock>(
-                    context: context,
-                    barrierDismissible: true, // user must tap button!
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        alignment: Alignment.center,
-                        backgroundColor: AppColors.primaryColor,
-                        insetPadding: EdgeInsets.all(0),
-                        contentPadding: EdgeInsets.all(0),
-                        content: AskingPopupWidget(
-                          questions: questions,
-                          controller: message,
-                        ),
-                      );
-                    },
-                  );
+                  selectedStock = await showDialogue(questions, [], message,0);
                 },
                 child: Center(
                   child: Container(
@@ -232,7 +243,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               ),
 
               Container(
-                height: 100.h,
+                height: 140.h,
                 margin: EdgeInsets.all(10),
                 padding: EdgeInsets.all(2),
                 decoration: BoxDecoration(
@@ -255,7 +266,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         child: TextField(
                           controller: message,
                           style: TextStyle(color: AppColors.white),
+                          keyboardType: TextInputType.multiline,
+
+                          maxLines: null,
                           decoration: InputDecoration(
+                          
                             border: InputBorder.none,
                             hintText: "Ask anything about the market",
                             hintStyle: TextStyle(
@@ -340,20 +355,21 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         centerTitle: false,
         backgroundColor: AppColors.primaryColor,
         elevation: 0,
-        leading: Builder( // 👈 yahan Builder lagaya
-      builder: (context) {
-        return InkWell(
-          onTap: () {
-            Scaffold.of(context).openDrawer(); // abhi error nahi aayega
+        leading: Builder(
+          // 👈 yahan Builder lagaya
+          builder: (context) {
+            return InkWell(
+              onTap: () {
+                Scaffold.of(context).openDrawer(); // abhi error nahi aayega
+              },
+              child: Image.asset(
+                Assets.images.menu.path,
+                width: 40,
+                height: 40,
+              ),
+            );
           },
-          child: Image.asset(
-            Assets.images.menu.path,
-            width: 40,
-            height: 40,
-          ),
-        );
-      },
-    ),
+        ),
         title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
         actions: [
           Container(
@@ -367,6 +383,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         ],
       ),
       body: SingleChildScrollView(
+        controller: sc,
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
@@ -538,11 +555,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ),
             asyncStream.when(
               data: (line) {
-                if(line.contains("followup"))
-                {
-                  print('followup start');
-                }
-                    scrollToBottom();
+                final text = line["buffer"] ?? "";
+
+                scrollToBottom();
                 return Column(
                   children: [
                     Row(
@@ -556,13 +571,13 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: MarkdownBody(
-                            data: line,
+                            data: text.toString(),
                             selectable: true, // let user copy code
                             styleSheet:
                                 MarkdownStyleSheet.fromTheme(
                                   Theme.of(context),
                                 ).copyWith(
-                                    code: GoogleFonts.plusJakartaSans(
+                                  code: GoogleFonts.plusJakartaSans(
                                     color: AppColors.white,
                                     fontSize: 16,
 
@@ -607,7 +622,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         SizedBox(width: 10),
 
                         Visibility(
-                          visible: line.isNotEmpty,
+                          visible: text.toString().isNotEmpty,
                           child: Expanded(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
