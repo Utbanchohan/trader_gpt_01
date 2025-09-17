@@ -7,6 +7,7 @@ abstract final class AppColors {
   static const List<Color> gradient = [Color(0xFF00E47A), Color(0xFF401FFF)];
   static const primaryColor = Color(0xFF071020);
   static const secondaryColor = Color(0xFF0098E4);
+  static const black=Color.fromARGB(255, 0, 0, 0);
   static const bubbleColor = Color(0xFF111A3A);
   static const bluishgrey404F81 = Color(0xff404F81);
   static const white = Color(0xffffffff);
@@ -36,4 +37,7 @@ abstract final class AppColors {
   static const color677FA4 = Color(0xFF677FA4);
   static const color00FF55 = Color(0xFF00FF55);
   static const colorB3B3B3 = Color(0x1AB3B3B3);
+  static const color9EAAC0 = Color(0xFF9EAAC0);
+  static const color06D54E = Color(0xFF06D54E);
+  static const color5E646E = Color(0xFF5E646E);
 }

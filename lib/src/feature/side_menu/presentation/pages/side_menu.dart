@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
-import 'package:trader_gpt/src/feature/my_profile/my_profile.dart';
+import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class SideMenu extends ConsumerStatefulWidget {
   const SideMenu({super.key});
@@ -15,16 +17,31 @@ class SideMenu extends ConsumerStatefulWidget {
 }
 
 class _SideMenuState extends ConsumerState<SideMenu> {
+  /// Ye state track karegi kaunsa menu select hai
+  String selectedMenu = AppRoutes.chatPage.name;
+  User? userModel;
+
   logout() {
     String token = "";
     ref.read(localDataProvider).setAccessToken(token);
     context.goNamed(AppRoutes.signInPage.name);
   }
 
+  getUser() async {
+    dynamic userData = await ref.watch(localDataProvider).getUser();
+    if (userData != null) {
+      setState(() {
+        userModel = User.fromJson(userData);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    getUser();
+
     return Drawer(
-      backgroundColor: const Color(0xFF0D1B2A), // dark navy background
+      backgroundColor: AppColors.primaryColor,
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +52,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Logo + App name
                   Image.asset(
                     Assets.images.appLogo.path,
                     height: 41.h,
@@ -45,10 +61,10 @@ class _SideMenuState extends ConsumerState<SideMenu> {
 
                   // Free Trial card
                   Container(
-                    padding: EdgeInsets.all(12.w),
+                    padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF152238),
-                      borderRadius: BorderRadius.circular(12.r),
+                      color: AppColors.color1B254B,
+                      borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,20 +72,17 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            MdSnsText(
                               "Free Trial",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.sp,
-                              ),
+                              color: AppColors.white,
+                              fontWeight: FontWeight.w400,
+                              size: 16,
                             ),
-                            Text(
+                            MdSnsText(
                               "6 days left",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12.sp,
-                              ),
+                              color: AppColors.color9EAAC0,
+                              fontWeight: FontWeight.w400,
+                              size: 16,
                             ),
                           ],
                         ),
@@ -79,9 +92,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                           child: LinearProgressIndicator(
                             value: 0.6,
                             minHeight: 6.h,
-                            backgroundColor: Colors.grey.shade800,
+                            backgroundColor: AppColors.primaryColor,
                             valueColor: const AlwaysStoppedAnimation<Color>(
-                              Colors.greenAccent,
+                              AppColors.color06D54E,
                             ),
                           ),
                         ),
@@ -99,11 +112,40 @@ class _SideMenuState extends ConsumerState<SideMenu> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  _buildMenuItem(Icons.chat_bubble_outline, "General"),
-                  _buildMenuItem(Icons.forum_outlined, "Conversation"),
-                  _buildMenuItem(Icons.menu_book_outlined, "Books"),
-                  _buildMenuItem(Icons.analytics_outlined, "Analytics"),
-                  _buildMenuItem(Icons.settings_outlined, "Settings"),
+                  _buildMenuItem(
+                    context,
+                    Assets.images.message.path,
+                    "General",
+                    AppRoutes.chatPage.name,
+                  ),
+                  _buildMenuItem(
+                    context,
+                    Assets.images.conversation.path,
+
+                    "Conversation",
+                    AppRoutes.profilePage.name,
+                  ),
+                  _buildMenuItem(
+                    context,
+                    Assets.images.book.path,
+
+                    "Books",
+                    AppRoutes.profilePage.name,
+                  ),
+                  _buildMenuItem(
+                    context,
+                    Assets.images.statusUp.path,
+
+                    "Analytics",
+                    AppRoutes.profilePage.name,
+                  ),
+                  _buildMenuItem(
+                    context,
+                    Assets.images.setting2.path,
+
+                    "Settings",
+                    AppRoutes.profilePage.name,
+                  ),
                 ],
               ),
             ),
@@ -119,9 +161,10 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   children: [
                     CircleAvatar(
                       radius: 20.r,
-                      backgroundImage: const AssetImage(
-                        "assets/user.jpg",
-                      ), // user image
+                      backgroundImage:
+                          userModel != null && userModel!.imgUrl.isNotEmpty
+                          ? NetworkImage(userModel!.imgUrl)
+                          : AssetImage(Assets.images.profile.path),
                     ),
                     SizedBox(width: 12.w),
                     Expanded(
@@ -129,7 +172,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Burak Deniz",
+                            userModel != null && userModel!.name.isNotEmpty
+                                ? userModel!.name
+                                : "N/A",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -146,34 +191,59 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        logout();
-                      },
-                      child: Icon(
-                        Icons.logout,
-                        color: Colors.lightBlueAccent,
-                        size: 20.sp,
+                   
+                      GestureDetector(
+                        onTap: () {
+                          logout();
+                        },
+                        child: Icon(
+                          Icons.logout,
+                          color: Colors.lightBlueAccent,
+                          size: 20.sp,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
               ),
-            ),
+              ),
+           
           ],
+            ),
+      
+      
         ),
+      );
+  }
+
+  /// Ab ye menu item state ke hisaab se highlight hoga
+  Widget _buildMenuItem(
+    BuildContext context,
+    String icon,
+    String title,
+    String routeName,
+  ) {
+    final bool isSelected = selectedMenu == routeName;
+
+    return ListTile(
+      leading: Image.asset(
+        icon,
+        color: isSelected ? AppColors.white : AppColors.color5E646E,
+
+        height: 24.h,
+        width: 24.w,
       ),
+      title: MdSnsText(
+        title,
+        color: isSelected ? AppColors.white : AppColors.color5E646E,
+        size: 16,
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      ),
+      onTap: () {
+        setState(() {
+          selectedMenu = routeName; // update selected menu
+        });
+        context.goNamed(routeName); // navigate to route
+      },
     );
   }
-}
-
-Widget _buildMenuItem(IconData icon, String title) {
-  return ListTile(
-    leading: Icon(icon, color: Colors.white70, size: 20.sp),
-    title: Text(
-      title,
-      style: TextStyle(color: Colors.white, fontSize: 16.sp),
-    ),
-    onTap: () {},
-  );
 }

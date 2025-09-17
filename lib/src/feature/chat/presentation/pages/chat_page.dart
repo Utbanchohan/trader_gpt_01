@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
@@ -36,6 +40,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   bool startStream = false;
   var body;
   String chadId = "68c2f0f5b77590fbe176f8e1";
+
+
+
+
 
   @override
   void initState() {
@@ -174,51 +182,40 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       );
                     },
                   );
-
-                  // showModalBottomSheet(
-                  //   context: context,
-                  //   // isScrollControlled:
-                  //   //     true, // optional: allows full-screen height
-                  //   shape: RoundedRectangleBorder(
-                  //     borderRadius: BorderRadius.vertical(
-                  //       top: Radius.circular(20),
-                  //     ),
-                  //   ),
-                  //   builder: (BuildContext context) {
-                  //     return
-                  //   },
-                  // );
                 },
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.fieldTextColor),
-                    color: AppColors.bubbleColor,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      MdSnsText(
-                        "Top Asking Questions",
-                        size: 16,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.white,
-                      ),
-                      SizedBox(width: 5),
-                      Icon(
-                        Icons.keyboard_arrow_up,
-                        size: 25,
-                        color: AppColors.white,
-                      ),
-                    ],
+                child: Center(
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.fieldTextColor),
+                      color: AppColors.bubbleColor,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Row(
+                      mainAxisSize:
+                          MainAxisSize.min, // width sirf content ke hisaab se
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MdSnsText(
+                          "Top Asking Questions",
+                          size: 16,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.white,
+                        ),
+                        SizedBox(width: 5),
+                        Icon(
+                          Icons.keyboard_arrow_up,
+                          size: 25,
+                          color: AppColors.white,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
 
               Container(
-                height: MediaQuery.of(context).size.height * 0.13,
+                height: 100.h,
                 margin: EdgeInsets.all(10),
                 padding: EdgeInsets.all(2),
                 decoration: BoxDecoration(
@@ -258,8 +255,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           Row(
                             children: [
                               Container(
-                                height: 50,
-                                width: 50,
+                                height: 50.h,
+                                width: 50.w,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.color091224,
@@ -270,7 +267,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                 child: Icon(
                                   Icons.add,
                                   color: AppColors.color3C4E8A,
-                                  size: 40,
+                                  size: 30.sp,
                                 ),
                               ),
                               SizedBox(width: 8),
@@ -353,7 +350,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         ],
       ),
       body: SingleChildScrollView(
-        controller: sc,
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
@@ -424,11 +420,35 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     color: AppColors.white,
                                     fontSize: 16,
 
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  tableBody: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
                                     fontWeight: FontWeight.w400,
+                                  ),
+                                  p: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  h1: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 16,
+
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  h2: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
+                                    fontWeight: FontWeight.w600,
                                   ),
 
                                   blockquote: const TextStyle(
-                                    color: Colors.red,
+                                    color: AppColors.white,
                                   ),
                                 ),
                             onTapLink: (text, href, title) {
@@ -501,7 +521,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ),
             asyncStream.when(
               data: (line) {
-                scrollToBottom();
+                    scrollToBottom();
                 return Column(
                   children: [
                     Row(
@@ -515,21 +535,45 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: MarkdownBody(
-                            data: line,
+                            data: line.toString(),
                             selectable: true, // let user copy code
                             styleSheet:
                                 MarkdownStyleSheet.fromTheme(
                                   Theme.of(context),
                                 ).copyWith(
-                                  code: GoogleFonts.plusJakartaSans(
+                                    code: GoogleFonts.plusJakartaSans(
                                     color: AppColors.white,
                                     fontSize: 16,
 
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  tableBody: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
                                     fontWeight: FontWeight.w400,
+                                  ),
+                                  p: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  h1: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 16,
+
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  h2: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+
+                                    fontWeight: FontWeight.w600,
                                   ),
 
                                   blockquote: const TextStyle(
-                                    color: Colors.red,
+                                    color: AppColors.white,
                                   ),
                                 ),
                             onTapLink: (text, href, title) {
@@ -542,7 +586,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         SizedBox(width: 10),
 
                         Visibility(
-                          visible: line.isNotEmpty,
+                          visible: line.toString().isNotEmpty,
                           child: Expanded(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -600,7 +644,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 );
               },
 
-              loading: () => Column(
+              loading: () => Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     width: MediaQuery.sizeOf(context).width / 1.4,
@@ -649,21 +694,21 @@ class _ActionChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: AppColors.color091224,
           border: Border.all(color: AppColors.bluishgrey404F81),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
         ),
         child: Row(
           children: [
             Image.asset(
               icon,
-              width: 14,
-              height: 14,
+              width: 14.w,
+              height: 14.h,
               color: AppColors.color3C4E8A,
             ),
-            SizedBox(width: 4),
+            SizedBox(width: 4.w),
             MdSnsText(
               label,
               size: 16,

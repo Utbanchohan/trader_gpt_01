@@ -20,12 +20,22 @@ class $AssetsImagesGen {
   /// File path: assets/images/AppLogo.png
   AssetGenImage get appLogo => const AssetGenImage('assets/images/AppLogo.png');
 
+  /// File path: assets/images/Conversation.png
+  AssetGenImage get conversation =>
+      const AssetGenImage('assets/images/Conversation.png');
+
   /// File path: assets/images/Google.png
   AssetGenImage get google => const AssetGenImage('assets/images/Google.png');
+
+  /// File path: assets/images/Meta.png
+  AssetGenImage get meta => const AssetGenImage('assets/images/Meta.png');
 
   /// File path: assets/images/Microinteractions  Preloader  03.gif
   AssetGenImage get microinteractionsPreloader03 =>
       const AssetGenImage('assets/images/Microinteractions  Preloader  03.gif');
+
+  /// File path: assets/images/NVIDIA .png
+  AssetGenImage get nvidia => const AssetGenImage('assets/images/NVIDIA .png');
 
   /// File path: assets/images/Regenerate.png
   AssetGenImage get regenerate =>
@@ -33,6 +43,8 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/Vector1.png
   AssetGenImage get vector1 => const AssetGenImage('assets/images/Vector1.png');
+  /// File path: assets/images/Visa.png
+  AssetGenImage get visa => const AssetGenImage('assets/images/Visa.png');
 
   /// File path: assets/images/apple.png
   AssetGenImage get apple => const AssetGenImage('assets/images/apple.png');
@@ -40,6 +52,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/arrow_back.png
   AssetGenImage get arrowBack =>
       const AssetGenImage('assets/images/arrow_back.png');
+
+  /// File path: assets/images/book.png
+  AssetGenImage get book => const AssetGenImage('assets/images/book.png');
 
   /// File path: assets/images/camera.png
   AssetGenImage get camera => const AssetGenImage('assets/images/camera.png');
@@ -68,6 +83,12 @@ class $AssetsImagesGen {
   /// File path: assets/images/eye.png
   AssetGenImage get eye => const AssetGenImage('assets/images/eye.png');
 
+  /// File path: assets/images/hp.png
+  AssetGenImage get hp => const AssetGenImage('assets/images/hp.png');
+
+  /// File path: assets/images/j&j.png
+  AssetGenImage get jJ => const AssetGenImage('assets/images/j&j.png');
+
   /// File path: assets/images/lamp-charge.png
   AssetGenImage get lampCharge =>
       const AssetGenImage('assets/images/lamp-charge.png');
@@ -94,6 +115,12 @@ class $AssetsImagesGen {
   /// File path: assets/images/notification7.png
   AssetGenImage get notification7 =>
       const AssetGenImage('assets/images/notification7.png');
+  /// File path: assets/images/message.png
+  AssetGenImage get message => const AssetGenImage('assets/images/message.png');
+
+  /// File path: assets/images/netFilex.png
+  AssetGenImage get netFilex =>
+      const AssetGenImage('assets/images/netFilex.png');
 
   /// File path: assets/images/profile.jpg
   AssetGenImage get profile => const AssetGenImage('assets/images/profile.jpg');
@@ -120,25 +147,44 @@ class $AssetsImagesGen {
   AssetGenImage get searchNormal =>
       const AssetGenImage('assets/images/search-normal.png');
 
+  /// File path: assets/images/setting-2.png
+  AssetGenImage get setting2 =>
+      const AssetGenImage('assets/images/setting-2.png');
+
   /// File path: assets/images/sms.png
   AssetGenImage get sms => const AssetGenImage('assets/images/sms.png');
 
   /// File path: assets/images/splashScreen.json
   String get splashScreen => 'assets/images/splashScreen.json';
 
+  /// File path: assets/images/status-up.png
+  AssetGenImage get statusUp =>
+      const AssetGenImage('assets/images/status-up.png');
+
   /// File path: assets/images/stock.png
   AssetGenImage get stock => const AssetGenImage('assets/images/stock.png');
+
+  /// File path: assets/images/tesla.png
+  AssetGenImage get tesla => const AssetGenImage('assets/images/tesla.png');
+
+  /// File path: assets/images/window.png
+  AssetGenImage get window => const AssetGenImage('assets/images/window.png');
 
   /// List of all assets
   List<dynamic> get values => [
     a4,
     appLogo,
+    conversation,
     google,
+    meta,
     microinteractionsPreloader03,
+    nvidia,
     regenerate,
     vector1,
+    visa,
     apple,
     arrowBack,
+    book,
     camera,
     cerosil,
     copy,
@@ -148,6 +194,8 @@ class $AssetsImagesGen {
     edit1,
     edit2,
     eye,
+    hp,
+    jJ,
     lampCharge,
     like,
     lock,
@@ -156,16 +204,21 @@ class $AssetsImagesGen {
     menu,
     messageSearch5,
     notification7,
+    message,
+    netFilex,
     profile,
     radar2,
-    receipt1,
     receipt,
     rotateLeft1,
     rotateLeft6,
     searchNormal,
+    setting2,
     sms,
     splashScreen,
+    statusUp,
     stock,
+    tesla,
+    window,
   ];
 }
 
