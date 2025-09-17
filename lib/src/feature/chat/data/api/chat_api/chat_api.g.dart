@@ -80,6 +80,36 @@ class _ChatApi implements ChatApi {
   }
 
   @override
+  Future<BaseModel<ChatHistory>> createChat(CreateChatDto createChatDto) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = createChatDto;
+    final _options = _setStreamType<BaseModel<ChatHistory>>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/chat',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseModel<ChatHistory> _value;
+    try {
+      _value = BaseModel<ChatHistory>.fromJson(
+        _result.data!,
+        (json) => ChatHistory.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<BaseModel<Conversation>> getMessages(String chatId, int page) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'page': page};

@@ -51,6 +51,7 @@ Map<String, dynamic> _$ChatHistoryToJson(_ChatHistory instance) =>
       'companyName': instance.companyName,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
+      'isArchived': instance.isArchived,
       'last_message': instance.lastMessage,
     };
 

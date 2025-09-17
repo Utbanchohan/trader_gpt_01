@@ -6,15 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trader_gpt/gen/assets.gen.dart';
-import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/chat/data/dto/create_chat_dto/create_chat_dto.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
+import 'package:trader_gpt/src/feature/new_conversations/presentation/provider/create_chat/create_chat.dart';
 import 'package:trader_gpt/src/services/sockets/socket_service.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../../../core/routes/routes.dart';
+
 class NewConversation extends ConsumerStatefulWidget {
-  NewConversation({super.key});
+  const NewConversation({super.key});
 
   @override
   ConsumerState<NewConversation> createState() => _NewConversationState();
@@ -100,9 +103,25 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     _debounce = Timer(Duration(milliseconds: 300), searchStockItem(val));
   }
 
-  Color _getChangeColor(double? change) {
-    if (change == null) return Colors.black;
-    return change < 0 ? Colors.red : Colors.green;
+  createChat(Stock stock) async {
+    var res = await ref
+        .read(createChatProviderProvider.notifier)
+        .createChate(
+          CreateChatDto(
+            companyName: stock.name,
+            stockId: stock.stockId,
+            symbol: stock.symbol,
+            type: "stocks",
+          ),
+        );
+    if (res != null) {
+      ChatHistory chatHistory = res;
+       context.pushNamed(
+                              AppRoutes.chatPage.name,
+                              // extra: stocks[index],
+                              
+                            );
+    }
   }
 
   @override
@@ -203,17 +222,14 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                             : stocks[index];
                         return GestureDetector(
                           onTap: () {
-                            context.pushNamed(
-                              AppRoutes.chatPage.name,
-                              extra: stocks[index],
-                            );
+                            createChat(stock);
                           },
                           child: _buildStockCard(
                             symbol: stock.symbol,
-                            company: stock.name!,
+                            company: stock.name,
                             price: "\$${stock.price.toString()}",
-                            change: stock.changesPercentage!,
-                            image: stock.logoUrl!,
+                            change: stock.changesPercentage,
+                            image: stock.logoUrl,
                             trendchart: stock.fiveDayTrend[0],
                           ),
                         );
