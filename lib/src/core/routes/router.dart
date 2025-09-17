@@ -9,6 +9,7 @@ import 'package:trader_gpt/src/core/local/repository/local_storage_repository.da
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
+import 'package:trader_gpt/src/feature/conversations_start/presentation/pages/conversation_start.dart';
 import 'package:trader_gpt/src/feature/get_start/presentation/pages/getstart.dart';
 import 'package:trader_gpt/src/feature/my_profile/my_profile.dart';
 import 'package:trader_gpt/src/feature/profile_setup/presentation/pages/profile_setup.dart';
@@ -129,6 +130,14 @@ final routerConfigProvider = Provider((ref) {
         name: AppRoutes.myProfileScreen.name,
         builder: (BuildContext context, GoRouterState state) {
           return MyProfileScreen();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.conversationStart.path,
+        name: AppRoutes.conversationStart.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return ConversationStart();
         },
         routes: [],
       ),

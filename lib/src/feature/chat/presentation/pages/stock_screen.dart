@@ -196,6 +196,7 @@ class _StockScreenState extends State<StockScreen> {
                           ),
                         ),
                       );
+              
                     },
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(color: AppColors.colorB3B3B3,

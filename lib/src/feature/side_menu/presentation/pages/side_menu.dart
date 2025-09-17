@@ -17,7 +17,6 @@ class SideMenu extends ConsumerStatefulWidget {
 }
 
 class _SideMenuState extends ConsumerState<SideMenu> {
-  /// Ye state track karegi kaunsa menu select hai
   String selectedMenu = AppRoutes.chatPage.name;
   User? userModel;
 
@@ -123,7 +122,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     Assets.images.conversation.path,
 
                     "Conversation",
-                    AppRoutes.profilePage.name,
+                    AppRoutes.conversationStart.name,
                   ),
                   _buildMenuItem(
                     context,
@@ -171,48 +170,42 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          MdSnsText(
                             userModel != null && userModel!.name.isNotEmpty
                                 ? userModel!.name
                                 : "N/A",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.sp,
-                            ),
+                            color: AppColors.white,
+                            fontWeight: FontWeight.w600,
+                            size: 14,
                           ),
-                          Text(
+                          MdSnsText(
                             "Free Plan",
-                            style: TextStyle(
-                              color: Colors.lightBlueAccent,
-                              fontSize: 12.sp,
-                            ),
+
+                            color: Colors.lightBlueAccent,
+                            size: 12.sp,
                           ),
                         ],
                       ),
                     ),
-                   
-                      GestureDetector(
-                        onTap: () {
-                          logout();
-                        },
-                        child: Icon(
-                          Icons.logout,
-                          color: Colors.lightBlueAccent,
-                          size: 20.sp,
-                        ),
+
+                    GestureDetector(
+                      onTap: () {
+                        logout();
+                      },
+                      child: Icon(
+                        Icons.logout,
+                        color: Colors.lightBlueAccent,
+                        size: 20.sp,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
               ),
-              ),
-           
-          ],
             ),
-      
-      
+          ],
         ),
-      );
+      ),
+    );
   }
 
   /// Ab ye menu item state ke hisaab se highlight hoga
