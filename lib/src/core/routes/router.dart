@@ -22,6 +22,8 @@ import 'package:trader_gpt/src/feature/splash/presentation/pages/splash.dart';
 import 'package:trader_gpt/src/feature/verifaction/presentation/pages/verifaction.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
+import '../../feature/chat/domain/model/chat_stock_model.dart';
+
 final navigatorKey = GlobalKey<NavigatorState>();
 final shellKey = GlobalKey<NavigatorState>();
 final shellKeySettings = GlobalKey<NavigatorState>();
@@ -65,16 +67,8 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.chatPage.path,
         name: AppRoutes.chatPage.name,
         builder: (BuildContext context, GoRouterState state) {
-          final args = state.extra != null
-              ? state.extra as Map<String, dynamic>
-              : {}; // 👈 Map cast
-          final stock = args != null && args["stock"] != null
-              ? args["stock"] as Stock?
-              : null;
-          final chatId = args != null && args["chatId"] != null
-              ? args["chatId"] as String?
-              : null;
-          return ChatPage(stock: stock, chatId: chatId);
+          final chatRouting =state.extra!=null? state.extra as ChatRouting:ChatRouting(image: "", symbol: "", companyName: "", price: 0, changePercentage:0 , chatId: "", stockid: "", trendChart: FiveDayTrend(data: []));
+          return ChatPage(chatRouting: chatRouting);
         },
         routes: [],
       ),

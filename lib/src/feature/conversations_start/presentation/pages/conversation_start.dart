@@ -10,6 +10,7 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
@@ -149,509 +150,502 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
             // TabBarView(
             //   controller: tabController,
             //   children: [
-                convo != null && convo.isNotEmpty && stocks.isNotEmpty
-                    ? Expanded(
-                        child: ListView.separated(
-                          itemCount: convo.length,
-                          itemBuilder: (context, index) {
-                            final stock = convo[index];
-                            int stockIndex = findRelatedStock(stock.symbol);
-                            return GestureDetector(
-                              onTap: () {
+            convo != null && convo.isNotEmpty && stocks.isNotEmpty
+                ? Expanded(
+                    child: ListView.separated(
+                      itemCount: convo.length,
+                      itemBuilder: (context, index) {
+                        final stock = convo[index];
+                        int stockIndex = findRelatedStock(stock.symbol);
+                        return GestureDetector(
+                          onTap: () {
                             context.pushNamed(
                               AppRoutes.chatPage.name,
-                              extra: {
-                                "chatId": convo[index].id,
-                                "stock": stocks[index],
-                              },
+                              extra: ChatRouting(
+                                chatId: convo[index].id,
+                                symbol: stocks[stockIndex].symbol,
+                                image: stocks[stockIndex].logoUrl,
+                                companyName: stocks[stockIndex].name,
+                                price: stocks[stockIndex].price,
+                                changePercentage:
+                                    stocks[stockIndex].changesPercentage,
+                                trendChart: stocks[stockIndex].fiveDayTrend[0],
+                                stockid: stocks[stockIndex].stockId,
+                              ),
                             );
                           },
-                              child: Slidable(
-                                // key: ValueKey(stock["symbol"]),
-                                endActionPane: ActionPane(
-                                  motion: ScrollMotion(),
-                                  children: [
-                                    CustomSlidableAction(
-                                      onPressed: (context) {
-                                    
-                                      },
-                                      backgroundColor: AppColors.color1B254B,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            Assets
-                                                .images
-                                                .direct
-                                                .path, // yahan apni image lagegi
-                                            width: 24.w,
-                                            height: 24.h,
-                                            color: AppColors
-                                                .color9EAAC0, // agar white tint chahiye
-                                          ),
-                                          SizedBox(height: 4),
-                                          MdSnsText(
-                                            'Archive',
-                              
-                                            color: AppColors.color9EAAC0,
-                                            fontWeight: FontWeight.w400,
-                                            size: 12,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                              
-                                    CustomSlidableAction(
-                                      onPressed: (context) {
-                                        // Delete action
-                                        // print("Delete ${stock["symbol"]}");
-                                      },
-                                      backgroundColor: AppColors.color091224,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            Assets
-                                                .images
-                                                .trash
-                                                .path, // yahan apni image lagegi
-                                            width: 24.w,
-                                            height: 24.h,
-                                            color: AppColors
-                                                .color9EAAC0, // agar white tint chahiye
-                                          ),
-                                          SizedBox(height: 4),
-                                          MdSnsText(
-                                            'Delete',
-                              
-                                            color: AppColors.color9EAAC0,
-                                            fontWeight: FontWeight.w400,
-                                            size: 12,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 14,
-                                  ),
-                                  margin: EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 8,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Row(
+                          child: Slidable(
+                            // key: ValueKey(stock["symbol"]),
+                            endActionPane: ActionPane(
+                              motion: ScrollMotion(),
+                              children: [
+                                CustomSlidableAction(
+                                  onPressed: (context) {},
+                                  backgroundColor: AppColors.color1B254B,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Column(
-                                        children: [
-                                          Image.network(
-                                            stocks[stockIndex].logoUrl,
-                                            width: 42.w,
-                                            height: 41.h,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          SizedBox(height: 5.h),
-                                          MdSnsText(
-                                            stock.lastMessage != null
-                                                ? // "3 days ago",
-                                                  stock
-                                                      .lastMessage!
-                                                      .createdAt
-                                                      .millisecondsSinceEpoch
-                                                      .timeAgoFromMilliseconds()
-                                                : "",
-                                            size: 10,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.color677FA4,
-                                          ),
-                                        ],
+                                      Image.asset(
+                                        Assets
+                                            .images
+                                            .direct
+                                            .path, // yahan apni image lagegi
+                                        width: 24.w,
+                                        height: 24.h,
+                                        color: AppColors
+                                            .color9EAAC0, // agar white tint chahiye
                                       ),
-                                      SizedBox(width: 12),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            MdSnsText(
-                                              stock.symbol,
-                                              // stock["symbol"],
-                                              size: 16,
-                                              color: AppColors.white,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                            SizedBox(height: 2.h),
-                                            MdSnsText(
-                                              // stock["name"],
-                                              stock.companyName.isNotEmpty
-                                                  ? stock.companyName
-                                                        .split("-")
-                                                        .first
-                                                        .trim()
-                                                  : "",
-                              
-                                              color: AppColors.color677FA4,
-                                              fontWeight: FontWeight.w400,
-                                              size: 14,
-                                            ),
-                                            SizedBox(height: 5.h),
-                                            SizedBox(
-                                              width:
-                                                  MediaQuery.sizeOf(
-                                                    context,
-                                                  ).width *
-                                                  0.5,
-                                              child: MdSnsText(
-                                                textOverflow:
-                                                    TextOverflow.ellipsis,
-                                                stock.lastMessage != null
-                                                    ? stock.lastMessage!.message
-                                                    : "",
-                                                maxLines: 1,
-                                                // "Provide a company overview for...",
-                                                color: AppColors.color677FA4,
-                                                fontWeight: FontWeight.w400,
-                                                size: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          MdSnsText(
-                                            "\$${stocks[stockIndex].price.toStringAsFixed(2)}",
-                                            size: 16,
-                                            color: AppColors.white,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                          Row(
-                                            children: [
-                                              stocks[stockIndex]
-                                                          .changesPercentage <
-                                                      0
-                                                  ? Icon(
-                                                      Icons.arrow_drop_down,
-                                                      color: AppColors.redFF3B3B,
-                                                    )
-                                                  : Icon(
-                                                      Icons.arrow_drop_up,
-                                                      color:
-                                                          AppColors.color06D54E,
-                                                    ),
-                                              MdSnsText(
-                                                stocks[stockIndex]
-                                                    .changesPercentage
-                                                    .toStringAsFixed(2),
-                                                color: AppColors.color06D54E,
-                                                size: 12,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            width: 86.w,
-                                            height: 15.h,
-                                            child: Sparkline(
-                                              data: stocks[stockIndex]
-                                                  .fiveDayTrend[0]
-                                                  .data,
-                                              lineWidth: 2.0,
-                                              lineColor:
-                                                  stocks[stockIndex]
-                                                          .changesPercentage <
-                                                      0
-                                                  ? AppColors.redFF3B3B
-                                                  : AppColors.color06D54E,
-                                              pointsMode: PointsMode.none,
-                                              pointColor: Colors.white,
-                                              useCubicSmoothing: false,
-                                              sharpCorners: true,
-                                              fillMode: FillMode.below,
-                                              fillGradient: LinearGradient(
-                                                begin: Alignment.topCenter,
-                                                end: Alignment.bottomCenter,
-                                                colors: [
-                                                  Colors.transparent,
-                                                  Colors.transparent,
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                      SizedBox(height: 4),
+                                      MdSnsText(
+                                        'Archive',
+
+                                        color: AppColors.color9EAAC0,
+                                        fontWeight: FontWeight.w400,
+                                        size: 12,
                                       ),
                                     ],
                                   ),
                                 ),
+
+                                CustomSlidableAction(
+                                  onPressed: (context) {
+                                    // Delete action
+                                    // print("Delete ${stock["symbol"]}");
+                                  },
+                                  backgroundColor: AppColors.color091224,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        Assets
+                                            .images
+                                            .trash
+                                            .path, // yahan apni image lagegi
+                                        width: 24.w,
+                                        height: 24.h,
+                                        color: AppColors
+                                            .color9EAAC0, // agar white tint chahiye
+                                      ),
+                                      SizedBox(height: 4),
+                                      MdSnsText(
+                                        'Delete',
+
+                                        color: AppColors.color9EAAC0,
+                                        fontWeight: FontWeight.w400,
+                                        size: 12,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 14,
                               ),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return Divider(
-                              height: 1,
-                              color: AppColors.colorB3B3B3,
-                            );
-                          },
-                        ),
-                      )
-                    : MdSnsText("Conversation Not Fopunt"),
-                // convo != null && convo.isNotEmpty && stocks.isNotEmpty
-                //     ? Expanded(
-                //         child: ListView.separated(
-                //           itemCount: convo.length,
-                //           itemBuilder: (context, index) {
-                //             final stock = convo[index];
-                //             int stockIndex = findRelatedStock(stock.symbol);
-                //             return Slidable(
-                //               // key: ValueKey(stock["symbol"]),
-                //               endActionPane: ActionPane(
-                //                 motion: ScrollMotion(),
-                //                 children: [
-                //                   CustomSlidableAction(
-                //                     onPressed: (context) {
-                //                       // Delete action
-                //                       // print("Delete ${stock["symbol"]}");
-                //                     },
-                //                     backgroundColor: AppColors.color1B254B,
-                //                     child: Column(
-                //                       mainAxisAlignment:
-                //                           MainAxisAlignment.center,
-                //                       children: [
-                //                         Image.asset(
-                //                           Assets
-                //                               .images
-                //                               .direct
-                //                               .path, // yahan apni image lagegi
-                //                           width: 24.w,
-                //                           height: 24.h,
-                //                           color: AppColors
-                //                               .color9EAAC0, // agar white tint chahiye
-                //                         ),
-                //                         SizedBox(height: 4),
-                //                         MdSnsText(
-                //                           'Archive',
+                              margin: EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Image.network(
+                                        stocks[stockIndex].logoUrl,
+                                        width: 42.w,
+                                        height: 41.h,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      SizedBox(height: 5.h),
+                                      MdSnsText(
+                                        stock.lastMessage != null
+                                            ? // "3 days ago",
+                                              stock
+                                                  .lastMessage!
+                                                  .createdAt
+                                                  .millisecondsSinceEpoch
+                                                  .timeAgoFromMilliseconds()
+                                            : "",
+                                        size: 10,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.color677FA4,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        MdSnsText(
+                                          stock.symbol,
+                                          // stock["symbol"],
+                                          size: 16,
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        SizedBox(height: 2.h),
+                                        MdSnsText(
+                                          // stock["name"],
+                                          stock.companyName.isNotEmpty
+                                              ? stock.companyName
+                                                    .split("-")
+                                                    .first
+                                                    .trim()
+                                              : "",
 
-                //                           color: AppColors.color9EAAC0,
-                //                           fontWeight: FontWeight.w400,
-                //                           size: 12,
-                //                         ),
-                //                       ],
-                //                     ),
-                //                   ),
+                                          color: AppColors.color677FA4,
+                                          fontWeight: FontWeight.w400,
+                                          size: 14,
+                                        ),
+                                        SizedBox(height: 5.h),
+                                        SizedBox(
+                                          width:
+                                              MediaQuery.sizeOf(context).width *
+                                              0.5,
+                                          child: MdSnsText(
+                                            textOverflow: TextOverflow.ellipsis,
+                                            stock.lastMessage != null
+                                                ? stock.lastMessage!.message
+                                                : "",
+                                            maxLines: 1,
+                                            // "Provide a company overview for...",
+                                            color: AppColors.color677FA4,
+                                            fontWeight: FontWeight.w400,
+                                            size: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      MdSnsText(
+                                        "\$${stocks[stockIndex].price.toStringAsFixed(2)}",
+                                        size: 16,
+                                        color: AppColors.white,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      Row(
+                                        children: [
+                                          stocks[stockIndex].changesPercentage <
+                                                  0
+                                              ? Icon(
+                                                  Icons.arrow_drop_down,
+                                                  color: AppColors.redFF3B3B,
+                                                )
+                                              : Icon(
+                                                  Icons.arrow_drop_up,
+                                                  color: AppColors.color06D54E,
+                                                ),
+                                          MdSnsText(
+                                            stocks[stockIndex].changesPercentage
+                                                .toStringAsFixed(2),
+                                            color: AppColors.color06D54E,
+                                            size: 12,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 86.w,
+                                        height: 15.h,
+                                        child: Sparkline(
+                                          data: stocks[stockIndex]
+                                              .fiveDayTrend[0]
+                                              .data,
+                                          lineWidth: 2.0,
+                                          lineColor:
+                                              stocks[stockIndex]
+                                                      .changesPercentage <
+                                                  0
+                                              ? AppColors.redFF3B3B
+                                              : AppColors.color06D54E,
+                                          pointsMode: PointsMode.none,
+                                          pointColor: Colors.white,
+                                          useCubicSmoothing: false,
+                                          sharpCorners: true,
+                                          fillMode: FillMode.below,
+                                          fillGradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.transparent,
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Divider(height: 1, color: AppColors.colorB3B3B3);
+                      },
+                    ),
+                  )
+                : MdSnsText("Conversation Not Fopunt"),
+            // convo != null && convo.isNotEmpty && stocks.isNotEmpty
+            //     ? Expanded(
+            //         child: ListView.separated(
+            //           itemCount: convo.length,
+            //           itemBuilder: (context, index) {
+            //             final stock = convo[index];
+            //             int stockIndex = findRelatedStock(stock.symbol);
+            //             return Slidable(
+            //               // key: ValueKey(stock["symbol"]),
+            //               endActionPane: ActionPane(
+            //                 motion: ScrollMotion(),
+            //                 children: [
+            //                   CustomSlidableAction(
+            //                     onPressed: (context) {
+            //                       // Delete action
+            //                       // print("Delete ${stock["symbol"]}");
+            //                     },
+            //                     backgroundColor: AppColors.color1B254B,
+            //                     child: Column(
+            //                       mainAxisAlignment:
+            //                           MainAxisAlignment.center,
+            //                       children: [
+            //                         Image.asset(
+            //                           Assets
+            //                               .images
+            //                               .direct
+            //                               .path, // yahan apni image lagegi
+            //                           width: 24.w,
+            //                           height: 24.h,
+            //                           color: AppColors
+            //                               .color9EAAC0, // agar white tint chahiye
+            //                         ),
+            //                         SizedBox(height: 4),
+            //                         MdSnsText(
+            //                           'Archive',
 
-                //                   CustomSlidableAction(
-                //                     onPressed: (context) {
-                //                       // Delete action
-                //                       // print("Delete ${stock["symbol"]}");
-                //                     },
-                //                     backgroundColor: AppColors.color091224,
-                //                     child: Column(
-                //                       mainAxisAlignment:
-                //                           MainAxisAlignment.center,
-                //                       children: [
-                //                         Image.asset(
-                //                           Assets
-                //                               .images
-                //                               .trash
-                //                               .path, // yahan apni image lagegi
-                //                           width: 24.w,
-                //                           height: 24.h,
-                //                           color: AppColors
-                //                               .color9EAAC0, // agar white tint chahiye
-                //                         ),
-                //                         SizedBox(height: 4),
-                //                         MdSnsText(
-                //                           'Delete',
+            //                           color: AppColors.color9EAAC0,
+            //                           fontWeight: FontWeight.w400,
+            //                           size: 12,
+            //                         ),
+            //                       ],
+            //                     ),
+            //                   ),
 
-                //                           color: AppColors.color9EAAC0,
-                //                           fontWeight: FontWeight.w400,
-                //                           size: 12,
-                //                         ),
-                //                       ],
-                //                     ),
-                //                   ),
-                //                 ],
-                //               ),
-                //               child: Container(
-                //                 padding: EdgeInsets.symmetric(
-                //                   horizontal: 12,
-                //                   vertical: 14,
-                //                 ),
-                //                 margin: EdgeInsets.symmetric(
-                //                   vertical: 4,
-                //                   horizontal: 8,
-                //                 ),
-                //                 decoration: BoxDecoration(
-                //                   color: Colors.transparent,
-                //                   borderRadius: BorderRadius.circular(12),
-                //                 ),
-                //                 child: Row(
-                //                   children: [
-                //                     Column(
-                //                       children: [
-                //                         Image.network(
-                //                           stocks[stockIndex].logoUrl,
-                //                           width: 42.w,
-                //                           height: 41.h,
-                //                           fit: BoxFit.cover,
-                //                         ),
-                //                         SizedBox(height: 5.h),
-                //                         MdSnsText(
-                //                           stock.lastMessage != null
-                //                               ? // "3 days ago",
-                //                                 stock
-                //                                     .lastMessage!
-                //                                     .createdAt
-                //                                     .millisecondsSinceEpoch
-                //                                     .timeAgoFromMilliseconds()
-                //                               : "",
-                //                           size: 10,
-                //                           fontWeight: FontWeight.w400,
-                //                           color: AppColors.color677FA4,
-                //                         ),
-                //                       ],
-                //                     ),
-                //                     SizedBox(width: 12),
-                //                     Expanded(
-                //                       child: Column(
-                //                         crossAxisAlignment:
-                //                             CrossAxisAlignment.start,
-                //                         children: [
-                //                           MdSnsText(
-                //                             stock.symbol,
-                //                             // stock["symbol"],
-                //                             size: 16,
-                //                             color: AppColors.white,
-                //                             fontWeight: FontWeight.w700,
-                //                           ),
-                //                           SizedBox(height: 2.h),
-                //                           MdSnsText(
-                //                             // stock["name"],
-                //                             stock.companyName.isNotEmpty
-                //                                 ? stock.companyName
-                //                                       .split("-")
-                //                                       .first
-                //                                       .trim()
-                //                                 : "",
+            //                   CustomSlidableAction(
+            //                     onPressed: (context) {
+            //                       // Delete action
+            //                       // print("Delete ${stock["symbol"]}");
+            //                     },
+            //                     backgroundColor: AppColors.color091224,
+            //                     child: Column(
+            //                       mainAxisAlignment:
+            //                           MainAxisAlignment.center,
+            //                       children: [
+            //                         Image.asset(
+            //                           Assets
+            //                               .images
+            //                               .trash
+            //                               .path, // yahan apni image lagegi
+            //                           width: 24.w,
+            //                           height: 24.h,
+            //                           color: AppColors
+            //                               .color9EAAC0, // agar white tint chahiye
+            //                         ),
+            //                         SizedBox(height: 4),
+            //                         MdSnsText(
+            //                           'Delete',
 
-                //                             color: AppColors.color677FA4,
-                //                             fontWeight: FontWeight.w400,
-                //                             size: 14,
-                //                           ),
-                //                           SizedBox(height: 5.h),
-                //                           SizedBox(
-                //                             width:
-                //                                 MediaQuery.sizeOf(
-                //                                   context,
-                //                                 ).width *
-                //                                 0.5,
-                //                             child: MdSnsText(
-                //                               textOverflow:
-                //                                   TextOverflow.ellipsis,
-                //                               stock.lastMessage != null
-                //                                   ? stock.lastMessage!.message
-                //                                   : "",
-                //                               maxLines: 1,
-                //                               // "Provide a company overview for...",
-                //                               color: AppColors.color677FA4,
-                //                               fontWeight: FontWeight.w400,
-                //                               size: 12,
-                //                             ),
-                //                           ),
-                //                         ],
-                //                       ),
-                //                     ),
-                //                     Column(
-                //                       crossAxisAlignment:
-                //                           CrossAxisAlignment.end,
-                //                       children: [
-                //                         MdSnsText(
-                //                           "\$${stocks[stockIndex].price.toStringAsFixed(2)}",
-                //                           size: 16,
-                //                           color: AppColors.white,
-                //                           fontWeight: FontWeight.w700,
-                //                         ),
-                //                         Row(
-                //                           children: [
-                //                             stocks[stockIndex]
-                //                                         .changesPercentage <
-                //                                     0
-                //                                 ? Icon(
-                //                                     Icons.arrow_drop_down,
-                //                                     color: AppColors.redFF3B3B,
-                //                                   )
-                //                                 : Icon(
-                //                                     Icons.arrow_drop_up,
-                //                                     color:
-                //                                         AppColors.color06D54E,
-                //                                   ),
-                //                             MdSnsText(
-                //                               stocks[stockIndex]
-                //                                   .changesPercentage
-                //                                   .toStringAsFixed(2),
-                //                               color: AppColors.color06D54E,
-                //                               size: 12,
-                //                               fontWeight: FontWeight.w400,
-                //                             ),
-                //                           ],
-                //                         ),
-                //                         SizedBox(
-                //                           width: 86.w,
-                //                           height: 15.h,
-                //                           child: Sparkline(
-                //                             data: stocks[stockIndex]
-                //                                 .fiveDayTrend[0]
-                //                                 .data,
-                //                             lineWidth: 2.0,
-                //                             lineColor:
-                //                                 stocks[stockIndex]
-                //                                         .changesPercentage <
-                //                                     0
-                //                                 ? AppColors.redFF3B3B
-                //                                 : AppColors.color06D54E,
-                //                             pointsMode: PointsMode.none,
-                //                             pointColor: Colors.white,
-                //                             useCubicSmoothing: false,
-                //                             sharpCorners: true,
-                //                             fillMode: FillMode.below,
-                //                             fillGradient: LinearGradient(
-                //                               begin: Alignment.topCenter,
-                //                               end: Alignment.bottomCenter,
-                //                               colors: [
-                //                                 Colors.transparent,
-                //                                 Colors.transparent,
-                //                               ],
-                //                             ),
-                //                           ),
-                //                         ),
-                //                       ],
-                //                     ),
-                //                   ],
-                //                 ),
-                //               ),
-                //             );
-                //           },
-                //           separatorBuilder: (BuildContext context, int index) {
-                //             return Divider(
-                //               height: 1,
-                //               color: AppColors.colorB3B3B3,
-                //             );
-                //           },
-                //         ),
-                //       )
-                //     : MdSnsText("Conversation Not Fopunt"),
-                // SizedBox(),
-                // SizedBox(),
-              // ],
+            //                           color: AppColors.color9EAAC0,
+            //                           fontWeight: FontWeight.w400,
+            //                           size: 12,
+            //                         ),
+            //                       ],
+            //                     ),
+            //                   ),
+            //                 ],
+            //               ),
+            //               child: Container(
+            //                 padding: EdgeInsets.symmetric(
+            //                   horizontal: 12,
+            //                   vertical: 14,
+            //                 ),
+            //                 margin: EdgeInsets.symmetric(
+            //                   vertical: 4,
+            //                   horizontal: 8,
+            //                 ),
+            //                 decoration: BoxDecoration(
+            //                   color: Colors.transparent,
+            //                   borderRadius: BorderRadius.circular(12),
+            //                 ),
+            //                 child: Row(
+            //                   children: [
+            //                     Column(
+            //                       children: [
+            //                         Image.network(
+            //                           stocks[stockIndex].logoUrl,
+            //                           width: 42.w,
+            //                           height: 41.h,
+            //                           fit: BoxFit.cover,
+            //                         ),
+            //                         SizedBox(height: 5.h),
+            //                         MdSnsText(
+            //                           stock.lastMessage != null
+            //                               ? // "3 days ago",
+            //                                 stock
+            //                                     .lastMessage!
+            //                                     .createdAt
+            //                                     .millisecondsSinceEpoch
+            //                                     .timeAgoFromMilliseconds()
+            //                               : "",
+            //                           size: 10,
+            //                           fontWeight: FontWeight.w400,
+            //                           color: AppColors.color677FA4,
+            //                         ),
+            //                       ],
+            //                     ),
+            //                     SizedBox(width: 12),
+            //                     Expanded(
+            //                       child: Column(
+            //                         crossAxisAlignment:
+            //                             CrossAxisAlignment.start,
+            //                         children: [
+            //                           MdSnsText(
+            //                             stock.symbol,
+            //                             // stock["symbol"],
+            //                             size: 16,
+            //                             color: AppColors.white,
+            //                             fontWeight: FontWeight.w700,
+            //                           ),
+            //                           SizedBox(height: 2.h),
+            //                           MdSnsText(
+            //                             // stock["name"],
+            //                             stock.companyName.isNotEmpty
+            //                                 ? stock.companyName
+            //                                       .split("-")
+            //                                       .first
+            //                                       .trim()
+            //                                 : "",
+
+            //                             color: AppColors.color677FA4,
+            //                             fontWeight: FontWeight.w400,
+            //                             size: 14,
+            //                           ),
+            //                           SizedBox(height: 5.h),
+            //                           SizedBox(
+            //                             width:
+            //                                 MediaQuery.sizeOf(
+            //                                   context,
+            //                                 ).width *
+            //                                 0.5,
+            //                             child: MdSnsText(
+            //                               textOverflow:
+            //                                   TextOverflow.ellipsis,
+            //                               stock.lastMessage != null
+            //                                   ? stock.lastMessage!.message
+            //                                   : "",
+            //                               maxLines: 1,
+            //                               // "Provide a company overview for...",
+            //                               color: AppColors.color677FA4,
+            //                               fontWeight: FontWeight.w400,
+            //                               size: 12,
+            //                             ),
+            //                           ),
+            //                         ],
+            //                       ),
+            //                     ),
+            //                     Column(
+            //                       crossAxisAlignment:
+            //                           CrossAxisAlignment.end,
+            //                       children: [
+            //                         MdSnsText(
+            //                           "\$${stocks[stockIndex].price.toStringAsFixed(2)}",
+            //                           size: 16,
+            //                           color: AppColors.white,
+            //                           fontWeight: FontWeight.w700,
+            //                         ),
+            //                         Row(
+            //                           children: [
+            //                             stocks[stockIndex]
+            //                                         .changesPercentage <
+            //                                     0
+            //                                 ? Icon(
+            //                                     Icons.arrow_drop_down,
+            //                                     color: AppColors.redFF3B3B,
+            //                                   )
+            //                                 : Icon(
+            //                                     Icons.arrow_drop_up,
+            //                                     color:
+            //                                         AppColors.color06D54E,
+            //                                   ),
+            //                             MdSnsText(
+            //                               stocks[stockIndex]
+            //                                   .changesPercentage
+            //                                   .toStringAsFixed(2),
+            //                               color: AppColors.color06D54E,
+            //                               size: 12,
+            //                               fontWeight: FontWeight.w400,
+            //                             ),
+            //                           ],
+            //                         ),
+            //                         SizedBox(
+            //                           width: 86.w,
+            //                           height: 15.h,
+            //                           child: Sparkline(
+            //                             data: stocks[stockIndex]
+            //                                 .fiveDayTrend[0]
+            //                                 .data,
+            //                             lineWidth: 2.0,
+            //                             lineColor:
+            //                                 stocks[stockIndex]
+            //                                         .changesPercentage <
+            //                                     0
+            //                                 ? AppColors.redFF3B3B
+            //                                 : AppColors.color06D54E,
+            //                             pointsMode: PointsMode.none,
+            //                             pointColor: Colors.white,
+            //                             useCubicSmoothing: false,
+            //                             sharpCorners: true,
+            //                             fillMode: FillMode.below,
+            //                             fillGradient: LinearGradient(
+            //                               begin: Alignment.topCenter,
+            //                               end: Alignment.bottomCenter,
+            //                               colors: [
+            //                                 Colors.transparent,
+            //                                 Colors.transparent,
+            //                               ],
+            //                             ),
+            //                           ),
+            //                         ),
+            //                       ],
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ),
+            //             );
+            //           },
+            //           separatorBuilder: (BuildContext context, int index) {
+            //             return Divider(
+            //               height: 1,
+            //               color: AppColors.colorB3B3B3,
+            //             );
+            //           },
+            //         ),
+            //       )
+            //     : MdSnsText("Conversation Not Fopunt"),
+            // SizedBox(),
+            // SizedBox(),
+            // ],
             // ),
           ],
         ),

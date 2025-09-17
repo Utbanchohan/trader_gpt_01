@@ -13,6 +13,7 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/stream_service.dart';
@@ -25,10 +26,9 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../../core/routes/routes.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
-  final Stock? stock;
-  final String? chatId;
+  ChatRouting? chatRouting;
 
-  ChatPage({super.key, this.stock, this.chatId});
+  ChatPage({super.key, this.chatRouting});
 
   @override
   ConsumerState<ChatPage> createState() => _ChatPageState();
@@ -51,8 +51,87 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   @override
   void initState() {
-    chadId = widget.chatId ?? "68c3274cb77590fbe176f905";
-    selectedStock = widget.stock;
+    chadId = widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty
+        ? widget.chatRouting!.chatId
+        : "68c3274cb77590fbe176f905";
+    selectedStock =
+        widget.chatRouting != null && widget.chatRouting!.companyName.isNotEmpty
+        ? Stock(
+            avgVolume: 0,
+            change: 0,
+            changesPercentage: widget.chatRouting!.changePercentage,
+            dayHigh: 0.0,
+            dayLow: 0.0,
+            earningsAnnouncement: "",
+            eps: 0.0,
+            exchange: "",
+            fiveDayTrend:[ widget.chatRouting!.trendChart],
+            marketCap: 0,
+            name: widget.chatRouting!.companyName,
+            open: 0,
+            pe: 0,
+            previousClose: 0.0,
+            price: widget.chatRouting!.price,
+            priceAvg200: 0,
+            priceAvg50: 0,
+            sharesOutstanding: 0,
+            stockId: widget.chatRouting!.stockid,
+            symbol: widget.chatRouting!.symbol,
+            timestamp: 0,
+            volume: 0,
+            yearHigh: 0,
+            yearLow: 0.0,
+            logoUrl: widget.chatRouting!.image,
+            type: "",
+            count: 0,
+            dateHours: "",
+            ticks: 0,
+            primaryLogoUrl: widget.chatRouting!.image,
+            secondaryLogoUrl: widget.chatRouting!.image,
+            tertiaryLogoUrl: widget.chatRouting!.image,
+            status: "",
+            updatedFrom: "",
+            country: "us",
+            exchangeSortOrder: 0,
+          )
+        : Stock(
+            avgVolume: 0,
+            change: 0,
+            changesPercentage:0,
+            dayHigh: 0.0,
+            dayLow: 0.0,
+            earningsAnnouncement: "",
+            eps: 0.0,
+            exchange: "",
+            fiveDayTrend: [],
+            marketCap: 0,
+            name: "",
+            open: 0,
+            pe: 0,
+            previousClose: 0.0,
+            price: 0,
+            priceAvg200: 0,
+            priceAvg50: 0,
+            sharesOutstanding: 0,
+            stockId:"",
+            symbol:"",
+            timestamp: 0,
+            volume: 0,
+            yearHigh: 0,
+            yearLow: 0.0,
+            logoUrl:"",
+            type: "",
+            count: 0,
+            dateHours: "",
+            ticks: 0,
+            primaryLogoUrl:"",
+            secondaryLogoUrl:"",
+            tertiaryLogoUrl:"",
+            status: "",
+            updatedFrom: "",
+            country: "us",
+            exchangeSortOrder: 0,
+          );
     getRandomQuestions();
     getchats(chadId!);
     super.initState();
@@ -354,7 +433,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       ),
 
       backgroundColor: AppColors.primaryColor,
-      appBar: widget.stock == null
+      appBar:
+          widget.chatRouting == null ||
+              widget.chatRouting!.companyName.isEmpty
           ? AppBar(
               scrolledUnderElevation: 0,
               centerTitle: false,
@@ -415,7 +496,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
-                      widget.stock!.logoUrl!,
+                      widget.chatRouting!.image!,
                       width: 35,
                       height: 35,
                       fit: BoxFit.cover,
@@ -428,7 +509,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       Row(
                         children: [
                           MdSnsText(
-                            "#${widget.stock!.symbol}",
+                            "#${widget.chatRouting!.symbol}",
 
                             fontWeight: FontWeight.w700,
                             size: 16,
@@ -436,7 +517,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           ),
                           SizedBox(width: 4),
                           MdSnsText(
-                            widget.stock!.name!.split("-").first.trim(),
+                            widget.chatRouting!.companyName!
+                                .split("-")
+                                .first
+                                .trim(),
 
                             color: AppColors.colorB2B2B7,
                             size: 12,
@@ -453,22 +537,30 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       Row(
                         children: [
                           Text(
-                            widget.stock!.price.toString(),
+                            widget.chatRouting!.price.toString(),
                             style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                           SizedBox(width: 6),
                           Icon(
-                            widget.stock!.change.toString().contains("-")
+                            widget.chatRouting!.changePercentage
+                                    .toString()
+                                    .contains("-")
                                 ? Icons.arrow_drop_down
                                 : Icons.arrow_drop_up,
-                            color: widget.stock!.change.toString().contains("-")
+                            color:
+                                widget.chatRouting!.changePercentage
+                                    .toString()
+                                    .contains("-")
                                 ? AppColors.redFF3B3B
                                 : AppColors.color06D54E,
                             size: 20,
                           ),
                           MdSnsText(
-                            " ${widget.stock!.changesPercentage!.toStringAsFixed(2)}%",
-                            color: widget.stock!.change.toString().contains("-")
+                            " ${widget.chatRouting!.changePercentage!.toStringAsFixed(2)}%",
+                            color:
+                                widget.chatRouting!.changePercentage
+                                    .toString()
+                                    .contains("-")
                                 ? AppColors.redFF3B3B
                                 : AppColors.color06D54E,
                             size: 12,
