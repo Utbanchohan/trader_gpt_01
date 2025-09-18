@@ -38,7 +38,7 @@ class UploadImageScreen extends ConsumerWidget {
         // 📂 Gallery Button
         GestureDetector(
           onTap: () async {
-            bool result = await requestStoragePermission(isCamera: true);
+            bool result = await requestStoragePermission(isCamera: false);
 
             if (result) {
               pickAndUpload(context, ref, ImageSource.gallery);
@@ -142,7 +142,7 @@ Future<bool> requestStoragePermission({bool isCamera = false}) async {
       ? await Permission.camera.request()
       : await Permission.photos.request();
   if (status.isDenied || status.isPermanentlyDenied) {
-    return false;
+    openAppSettings();
   }
 
   return true;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
@@ -13,15 +13,13 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_mess
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
-import 'package:trader_gpt/src/feature/chat/presentation/provider/stream_service.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
-import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-
+import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'widgets/loading_widget.dart';
 
 // ignore: must_be_immutable
@@ -38,23 +36,49 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   TextEditingController message = TextEditingController();
   ScrollController sc = ScrollController();
   Stock? selectedStock;
-
   List<ChatMessageModel> chats = [];
   List<String> questions = [];
   dynamic asyncStream;
   bool startStream = false;
-  final service = SseService();
   List<String> followupQuestions = [];
   var body;
   String? chadId;
+  User? user;
+  bool dialogOpen = false;
 
   @override
   void initState() {
-    chadId = widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty
-        ? widget.chatRouting!.chatId
-        : "68c3274cb77590fbe176f905";
-    selectedStock =
-        widget.chatRouting != null && widget.chatRouting!.companyName.isNotEmpty
+    getChatsId();
+    selectedStock = _mapChatRoutingToStock(widget.chatRouting);
+    getRandomQuestions(
+      selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
+    );
+    super.initState();
+  }
+
+  getChatsId() async {
+    if (widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty) {
+      chadId = widget.chatRouting!.chatId;
+      getchats(chadId ?? "");
+    } else {
+      var res = await ref.read(chatRepository).chats();
+      if (res.isSuccess) {
+        for (int i = 0; i < res.data!.results.length; i++) {
+          if (res.data!.results[i].symbol.toLowerCase() == "tdgpt") {
+            chadId = res.data!.results[i].id;
+            getchats(chadId ?? "");
+            break;
+          }
+        }
+      } else {
+        getchats(chadId ?? "");
+      }
+    }
+  }
+
+  Stock _mapChatRoutingToStock(ChatRouting? routing) {
+    return widget.chatRouting != null &&
+            widget.chatRouting!.companyName.isNotEmpty
         ? Stock(
             avgVolume: 0,
             change: 0,
@@ -131,12 +155,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             country: "us",
             exchangeSortOrder: 0,
           );
-  
-    getRandomQuestions(
-      selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
-    );
-    getchats(chadId!);
-    super.initState();
   }
 
   void scrollToBottom() {
@@ -270,8 +288,24 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
+  getUser() async {
+    dynamic userData = await ref.watch(localDataProvider).getUser();
+    if (userData != null) {
+      setState(() {
+        user = User.fromJson(userData);
+      });
+    }
+  }
+
+  changeDialogueStatus() {
+    setState(() {
+      dialogOpen = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    getUser();
     final asyncStream = startStream
         ? ref.watch(sseProvider(body))
         : const AsyncValue.data({'buffer': "", "followUp": []});
@@ -283,7 +317,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
       if (followupQuestions.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-          showDialogue(questions, followupQuestions, message, 1);
+          if (!dialogOpen) {
+            showDialogue(questions, followupQuestions, message, 1);
+            changeDialogueStatus();
+          }
         });
       }
     });
@@ -615,10 +652,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 ),
               ],
             ),
-
-
       body: SingleChildScrollView(
-        controller: sc,
+       controller: sc,
+  physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
@@ -627,17 +663,20 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: chats.length,
               itemBuilder: (BuildContext context, int index) {
+                String name = chats[index].type != "user"
+                    ? widget.chatRouting == null ||
+                              widget.chatRouting!.symbol.isEmpty
+                          ? "TDGPT"
+                          : widget.chatRouting!.symbol
+                    : user!.name;
+                String image = chats[index].type != "user"
+                    ? widget.chatRouting == null ||
+                              widget.chatRouting!.image.isEmpty
+                          ? ""
+                          : widget.chatRouting!.image
+                    : user!.imgUrl;
                 return Column(
                   children: [
-                    // Row(
-                    //   children: [
-                    //     Container(
-                    //                   padding: EdgeInsets.symmetric(vertical: 8),
-                    //                   child: MdSnsText("Today", color: Colors.white70, size: 14),
-                    //                 ),
-                    //   ],
-                    // ),
-                    // SizedBox(height: 15),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: chats[index].type == "user"
@@ -645,88 +684,26 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           : MainAxisAlignment.start,
 
                       children: [
-                        Visibility(
-                          visible: chats[index].type == "user",
-                          child: GestureDetector(
-                            onTap: () {
-                              Clipboard.setData(
-                                ClipboardData(text: chats[index].message),
-                              );
-                              $showMessage("Copied to Clipboard");
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-
-                              decoration: BoxDecoration(
-                                color: AppColors.bubbleColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Image.asset(
-                                Assets.images.copy.path,
-                                width: 14,
-                                height: 14,
-                              ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            ChatMarkdownWidget(
+                              message: chats[index].message,
+                              name: name,
+                              image: image,
                             ),
-                          ),
-                        ),
-                        SizedBox(width: chats[index].type == "user" ? 10 : 0),
-                        ChatMarkdownWidget(message: chats[index].message),
-                        SizedBox(width: chats[index].type != "user" ? 10 : 0),
-                        Visibility(
-                          visible: chats[index].type != "user",
-                          child: Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(10),
-
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    Assets.images.like.path,
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-
-                                Container(
-                                  padding: EdgeInsets.all(10),
-
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/dislike.png",
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/Regenerate.png",
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                              ],
+                            SizedBox(
+                              height: chats[index].type != "user" ? 10 : 10,
                             ),
-                          ),
+                            MessageLikeCopyIcon(
+                              type: chats[index].type,
+                              message: chats[index].message,
+                            ),
+                          ],
                         ),
                       ],
                     ),
+
                     SizedBox(height: 20),
                   ],
                 );
@@ -735,81 +712,44 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             asyncStream.when(
               data: (line) {
                 final text = line["buffer"] ?? "";
-
-                scrollToBottom();
-                return Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        ChatMarkdownWidget(message: text.toString()),
-                        SizedBox(width: 10),
-
-                        Visibility(
-                          visible: text.toString().isNotEmpty,
-                          child: Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(10),
-
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    Assets.images.like.path,
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-
-                                Container(
-                                  padding: EdgeInsets.all(10),
-
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/dislike.png",
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/Regenerate.png",
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                              ],
+if(text.isNotEmpty)
+{ 
+// scrollToBottom();
+}
+              
+                return text.isNotEmpty
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          ChatMarkdownWidget(
+                            message: text.toString(),
+                            name:
+                                widget.chatRouting == null ||
+                                    widget.chatRouting!.symbol.isEmpty
+                                ? "TDGPT"
+                                : widget.chatRouting!.symbol,
+                            image:
+                                widget.chatRouting == null ||
+                                    widget.chatRouting!.image.isEmpty
+                                ? ""
+                                : widget.chatRouting!.image,
+                          ),
+                          SizedBox(height: 10),
+                          Visibility(
+                            visible: text.toString().isNotEmpty,
+                            child: MessageLikeCopyIcon(
+                              type: "ai",
+                              message: text.toString(),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
+                        ],
+                      )
+                    : SizedBox();
               },
 
               loading: () => Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  LoadingWidgetMarkdown()
-                 
-                ],
+                children: [LoadingWidgetMarkdown()],
               ),
               error: (err, _) => Center(child: Text("Error: $err")),
             ),
@@ -825,7 +765,11 @@ class _ActionChip extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  _ActionChip({required this.icon, required this.label, required this.onTap});
+  const _ActionChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -23,6 +23,10 @@ abstract interface class SharedPrefService {
 
   Future<bool> clearAllData();
 
+  Future<void> saveUserName(String userName);
+
+  String? get getUserName;
+
   Future<void> saveUserId(String userId);
 
   String get getUserId;
