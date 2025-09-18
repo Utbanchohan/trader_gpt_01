@@ -31,14 +31,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: false, 
+      barrierDismissible: false,
       builder: (context) {
         return LogoutDialog(
           onConfirm: () {
             logout();
           },
           onCancel: () {
-            Navigator.pop(context); 
+            Navigator.pop(context);
           },
         );
       },
@@ -230,7 +230,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     GestureDetector(
                       onTap: () {
                         _showLogoutDialog(context);
-                        // logout();
                       },
                       child: Icon(
                         Icons.logout,
@@ -271,12 +270,12 @@ class _SideMenuState extends ConsumerState<SideMenu> {
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
       onTap: routeName == null || routeName.isEmpty
-          ? null // disable tap if no route
+          ? null
           : () {
               setState(() {
                 selectedMenu = routeName;
               });
-              context.goNamed(routeName);
+              context.pushNamed(routeName);
             },
     );
   }
