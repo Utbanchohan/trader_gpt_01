@@ -326,151 +326,158 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     });
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
-      bottomNavigationBar: Container(
-        color: Colors.transparent,
-        height: 160.h,
+      bottomNavigationBar: AnimatedPadding(
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Container(
+          color: Colors.transparent,
+          height: 160.h,
 
-        child: Column(
-          children: [
-            Container(
-              height: 115.h,
-              margin: EdgeInsets.all(18),
-              padding: EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25.r),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: AppColors.gradient,
-                ),
-              ),
-              child: Container(
-                padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Container(
+                height: 115.h,
+                margin: EdgeInsets.all(18),
+                padding: EdgeInsets.all(1),
                 decoration: BoxDecoration(
-                  color: AppColors.color0E1738,
                   borderRadius: BorderRadius.circular(25.r),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: AppColors.gradient,
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: message,
-                      style: TextStyle(color: AppColors.white),
-                      keyboardType: TextInputType.multiline,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppColors.color0E1738,
+                    borderRadius: BorderRadius.circular(25.r),
+                  ),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: message,
+                        style: TextStyle(color: AppColors.white),
+                        keyboardType: TextInputType.multiline,
 
-                      maxLines: null,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Ask anything about the market",
-                        
-                        prefixIcon: Image.asset(
-                          Assets.images.prefixIcon.path,
-                          scale: 3.9,
-                        ),
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Ask anything about the market",
 
-                        hintStyle: TextStyle(
-                          color: AppColors.bluishgrey404F81,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
+                          prefixIcon: Image.asset(
+                            Assets.images.prefixIcon.path,
+                            scale: 3.9,
+                          ),
+
+                          hintStyle: TextStyle(
+                            color: AppColors.bluishgrey404F81,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
-                    ),
 
-                    SizedBox(height: 15.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                if (widget.chatRouting == null ||
-                                    widget.chatRouting!.companyName.isEmpty) {
-                                  selectedStock = await showDialogue(
-                                    questions,
-                                    [],
-                                    message,
-                                    0,
-                                  );
-                                } else {
-                                  showDialogue(questions, [], message, 0);
-                                }
-                              },
-                              child: Container(
+                      SizedBox(height: 15.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  if (widget.chatRouting == null ||
+                                      widget.chatRouting!.companyName.isEmpty) {
+                                    selectedStock = await showDialogue(
+                                      questions,
+                                      [],
+                                      message,
+                                      0,
+                                    );
+                                  } else {
+                                    showDialogue(questions, [], message, 0);
+                                  }
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(12),
+                                  height: 36.h,
+                                  width: 36.w,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.color091224,
+                                    border: Border.all(
+                                      color: AppColors.bluishgrey404F81,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Image.asset(
+                                    Assets.images.textfieldicon3.path,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                            ],
+                          ),
+
+                          Row(
+                            children: [
+                              Container(
                                 padding: EdgeInsets.all(12),
                                 height: 36.h,
                                 width: 36.w,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: AppColors.color091224,
-                                  border: Border.all(
-                                    color: AppColors.bluishgrey404F81,
-                                    width: 1.5,
-                                  ),
+                                  color: AppColors.bubbleColor,
                                 ),
                                 child: Image.asset(
-                                  Assets.images.textfieldicon3.path,
+                                  Assets.images.textfieldicon.path,
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 8),
-                          ],
-                        ),
-
-                        Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(12),
-                              height: 36.h,
-                              width: 36.w,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.bubbleColor,
-                              ),
-                              child: Image.asset(
-                                Assets.images.textfieldicon.path,
-                              ),
-                            ),
-                            SizedBox(width: 6.w),
-                            Container(
-                              padding: EdgeInsets.all(12),
-                              height: 36.h,
-                              width: 36.w,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.bubbleColor,
-                              ),
-                              child: Image.asset(
-                                Assets.images.textfieldicon4.path,
-                              ),
-                            ),
-                            SizedBox(width: 6.w),
-                            Container(
-                              height: 36,
-                              width: 36,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.color046297,
-                              ),
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                icon: Icon(
-                                  Icons.arrow_upward_rounded,
-                                  color: AppColors.white,
-                                  size: 18,
+                              SizedBox(width: 6.w),
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                height: 36.h,
+                                width: 36.w,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.bubbleColor,
                                 ),
-                                onPressed: () => _sendMessage(ref),
+                                child: Image.asset(
+                                  Assets.images.textfieldicon4.path,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                              SizedBox(width: 6.w),
+                              Container(
+                                height: 36,
+                                width: 36,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.color046297,
+                                ),
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  icon: Icon(
+                                    Icons.arrow_upward_rounded,
+                                    color: AppColors.white,
+                                    size: 18,
+                                  ),
+                                  onPressed: () => _sendMessage(ref),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
 
