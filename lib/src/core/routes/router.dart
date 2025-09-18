@@ -154,7 +154,19 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.analytics.path,
         name: AppRoutes.analytics.name,
         builder: (BuildContext context, GoRouterState state) {
-          return AnalyticsScreen();
+            final analytic = state.extra != null
+              ? state.extra as ChatRouting
+              : ChatRouting(
+                  image: "",
+                  symbol: "",
+                  companyName: "",
+                  price: 0,
+                  changePercentage: 0,
+                  chatId: "",
+                  stockid: "",
+                  trendChart: FiveDayTrend(data: []),
+                );
+          return AnalyticsScreen(chatRouting: analytic,);
         },
         routes: [],
       ),

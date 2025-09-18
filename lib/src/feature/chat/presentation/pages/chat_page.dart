@@ -131,6 +131,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             country: "us",
             exchangeSortOrder: 0,
           );
+  
     getRandomQuestions(
       selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
     );
@@ -532,7 +533,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           ),
                           SizedBox(width: 4),
                           MdSnsText(
-                            widget.chatRouting!.companyName!
+                            widget.chatRouting!.companyName
                                 .split("-")
                                 .first
                                 .trim(),
@@ -591,7 +592,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               actions: [
                 GestureDetector(
                   onTap: () {
-                    context.pushNamed(AppRoutes.analytics.name);
+                    context.pushNamed(AppRoutes.analytics.name,
+                    extra: widget.chatRouting
+                    );
                   },
                   child: Container(
                     width: 40.w,

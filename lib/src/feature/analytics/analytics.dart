@@ -2,23 +2,118 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/chart/lin_chart.dart';
 import 'package:trader_gpt/src/shared/chart/performance_table.dart';
+import 'package:trader_gpt/src/shared/chart/revenue_analysis.dart';
+import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
+import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class AnalyticsScreen extends StatefulWidget {
-  AnalyticsScreen({super.key});
+  ChatRouting? chatRouting;
+
+  AnalyticsScreen({super.key, this.chatRouting});
 
   @override
   State<AnalyticsScreen> createState() => _AnalyticsScreenState();
 }
 
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
+  Stock? selectedStock;
+
+  void initState() {
+    // chadId = widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty
+    //     ? widget.chatRouting!.chatId
+    //     : "68c3274cb77590fbe176f905";
+    selectedStock =
+        widget.chatRouting != null && widget.chatRouting!.companyName.isNotEmpty
+        ? Stock(
+            avgVolume: 0,
+            change: 0,
+            changesPercentage: widget.chatRouting!.changePercentage,
+            dayHigh: 0.0,
+            dayLow: 0.0,
+            earningsAnnouncement: "",
+            eps: 0.0,
+            exchange: "",
+            fiveDayTrend: [widget.chatRouting!.trendChart],
+            marketCap: 0,
+            name: widget.chatRouting!.companyName,
+            open: 0,
+            pe: 0,
+            previousClose: 0.0,
+            price: widget.chatRouting!.price,
+            priceAvg200: 0,
+            priceAvg50: 0,
+            sharesOutstanding: 0,
+            stockId: widget.chatRouting!.stockid,
+            symbol: widget.chatRouting!.symbol,
+            timestamp: 0,
+            volume: 0,
+            yearHigh: 0,
+            yearLow: 0.0,
+            logoUrl: widget.chatRouting!.image,
+            type: "",
+            count: 0,
+            dateHours: "",
+            ticks: 0,
+            primaryLogoUrl: widget.chatRouting!.image,
+            secondaryLogoUrl: widget.chatRouting!.image,
+            tertiaryLogoUrl: widget.chatRouting!.image,
+            status: "",
+            updatedFrom: "",
+            country: "us",
+            exchangeSortOrder: 0,
+          )
+        : Stock(
+            avgVolume: 0,
+            change: 0,
+            changesPercentage: 0,
+            dayHigh: 0.0,
+            dayLow: 0.0,
+            earningsAnnouncement: "",
+            eps: 0.0,
+            exchange: "",
+            fiveDayTrend: [],
+            marketCap: 0,
+            name: "",
+            open: 0,
+            pe: 0,
+            previousClose: 0.0,
+            price: 0,
+            priceAvg200: 0,
+            priceAvg50: 0,
+            sharesOutstanding: 0,
+            stockId: "",
+            symbol: "",
+            timestamp: 0,
+            volume: 0,
+            yearHigh: 0,
+            yearLow: 0.0,
+            logoUrl: "",
+            type: "",
+            count: 0,
+            dateHours: "",
+            ticks: 0,
+            primaryLogoUrl: "",
+            secondaryLogoUrl: "",
+            tertiaryLogoUrl: "",
+            status: "",
+            updatedFrom: "",
+            country: "us",
+            exchangeSortOrder: 0,
+          );
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF0D1B2A),
+      backgroundColor: AppColors.primaryColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -177,21 +272,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       Row(
                         children: [
                           MdSnsText(
-                            "#TSLA",
-
-                            // "#${widget.chatRouting!.symbol}",
+                            "#${selectedStock!.symbol}",
                             fontWeight: FontWeight.w700,
                             size: 16,
                             color: AppColors.white,
                           ),
                           SizedBox(width: 4),
                           MdSnsText(
-                            "TESLA INC",
-
-                            // widget.chatRouting!.companyName!
-                            //     .split("-")
-                            //     .first
-                            //     .trim(),
+                            selectedStock!.name.split("-").first.trim(),
                             color: AppColors.colorB2B2B7,
                             size: 12,
                             fontWeight: FontWeight.w400,
@@ -207,45 +295,39 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       Row(
                         children: [
                           MdSnsText(
-                            "173.19",
-                            // " ${widget.chatRouting!.changePercentage!.toStringAsFixed(2)}%",
-                            color: AppColors.white,
-                            // widget.chatRouting!.changePercentage
-                            //     .toString()
-                            //     .contains("-")
-                            // ? AppColors.redFF3B3B
-
-                            // :
+                            " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                            color:
+                                selectedStock!.changesPercentage
+                                    .toString()
+                                    .contains("-")
+                                ? AppColors.redFF3B3B
+                                : AppColors.white,
                             size: 12,
                             fontWeight: FontWeight.w400,
                           ),
                           SizedBox(width: 6),
                           Icon(
-                            // widget.chatRouting!.changePercentage
-                            //         .toString()
-                            //         .contains("-")
-                            //     ? Icons.arrow_drop_down
-                            //     :
-                            Icons.arrow_drop_up,
+                            selectedStock!.changesPercentage
+                                    .toString()
+                                    .contains("-")
+                                ? Icons.arrow_drop_down
+                                : Icons.arrow_drop_up,
                             color:
-                                // widget.chatRouting!.changePercentage
-                                //     .toString()
-                                //     .contains("-")
-                                // ? AppColors.redFF3B3B
-                                // :
-                                AppColors.color00FF55,
+                                selectedStock!.changesPercentage
+                                    .toString()
+                                    .contains("-")
+                                ? AppColors.redFF3B3B
+                                : AppColors.color00FF55,
                             size: 20,
                           ),
                           MdSnsText(
-                            "1.41%",
-                            // " ${widget.chatRouting!.changePercentage!.toStringAsFixed(2)}%",
-                            color: AppColors.color00FF55,
-                            // widget.chatRouting!.changePercentage
-                            //     .toString()
-                            //     .contains("-")
-                            // ? AppColors.redFF3B3B
-
-                            // :
+                            " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                            color:
+                                selectedStock!.changesPercentage
+                                    .toString()
+                                    .contains("-")
+                                ? AppColors.redFF3B3B
+                                : AppColors.color00FF55,
                             size: 12,
                             fontWeight: FontWeight.w400,
                           ),
@@ -256,12 +338,16 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 ],
               ),
               SizedBox(height: 20.h),
+
               CustomLineChart(),
+              SizedBox(height: 20.h),
+              RevenueAnalysisChart(),
               SizedBox(height: 20.h),
 
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.colorB3B3B3),
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -421,60 +507,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               SizedBox(height: 20.h),
 
               // ---------- WEEKLY SEASONALITY ----------
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Color(0xFF142233),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Weekly Seasonality",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    SizedBox(height: 12.h),
-                    Column(
-                      children: [
-                        _progressBar("Monday", 0.7),
-                        _progressBar("Tuesday", 0.6),
-                        _progressBar("Wednesday", 0.8),
-                        _progressBar("Thursday", 0.92),
-                        _progressBar("Friday", 0.5),
-                        _progressBar("Saturday", 0.7),
-                        _progressBar("Sunday", 0.9),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              WeeklySeasonalityChart(),
               SizedBox(height: 20.h),
 
               // ---------- SHARE STRUCTURE ----------
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Color(0xFF142233),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Share Structure",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    SizedBox(height: 12.h),
-                    _shareRow("Authorized Shares", "500.00M"),
-                    _shareRow("Outstanding Shares", "7.43B"),
-                    _shareRow("Percent Insiders", "0.052"),
-                    _shareRow("Percent Institutions", "73.21"),
-                    _shareRow("Held at DTC", "N/A"),
-                    _shareRow("Float", "7,423,671,316"),
-                  ],
-                ),
-              ),
+              ShareStructureCard(),
             ],
           ),
         ),
@@ -493,56 +530,6 @@ Widget _chip(String label, {bool isSelected = false}) {
     child: Text(
       label,
       style: TextStyle(color: Colors.white, fontSize: 14.sp),
-    ),
-  );
-}
-
-Widget _tableHeader(String text) => Container(
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(10.r),
-    color: AppColors.color1B254B,
-  ),
-  child: Text(
-    text,
-    style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-  ),
-);
-
-Widget _tableCell(String text) => Padding(
-  padding: EdgeInsets.all(8),
-  child: Text(text, style: TextStyle(color: Colors.white)),
-);
-
-Widget _progressBar(String label, double percent) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      children: [
-        SizedBox(
-          width: 70,
-          child: Text(label, style: TextStyle(color: Colors.white)),
-        ),
-        Expanded(
-          child: LinearProgressIndicator(
-            value: percent,
-            color: Colors.blueAccent,
-            backgroundColor: Colors.white12,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _shareRow(String label, String value) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 6),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label, style: TextStyle(color: Colors.grey)),
-        Text(value, style: TextStyle(color: Colors.white)),
-      ],
     ),
   );
 }
