@@ -204,20 +204,23 @@ class _AskingPopupWidgetState extends State<AskingPopupWidget>    with TickerPro
 
 Widget buildQuestionChip(String text) {
   return Align(
-    alignment: Alignment.centerLeft,
-    child: Chip(
-      label: MdSnsText(
-        text,
+  alignment: Alignment.centerLeft, 
+  child: Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+    
+    decoration: BoxDecoration(
+      color: AppColors.bubbleColor,
+      borderRadius: BorderRadius.circular(32.r),
+    ),
+    child: Text(
+      text,
+      style: TextStyle(
         color: AppColors.white,
-        size: 16,
+        fontSize: 16,
         fontWeight: FontWeight.w400,
       ),
-      backgroundColor: AppColors.bubbleColor,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(32),
-        side: const BorderSide(color: Colors.transparent),
-      ),
     ),
-  );
+  ),
+);
+
 }

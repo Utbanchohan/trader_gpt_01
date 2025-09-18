@@ -369,9 +369,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           scrollController: _textScrollController,
-                        
+
                           onChanged: (value) {
-                            // Auto scroll to bottom while typing
+
                             _textScrollController.jumpTo(
                               _textScrollController.position.maxScrollExtent,
                             );
