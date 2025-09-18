@@ -41,7 +41,7 @@ class _SplashState extends ConsumerState<Splash> with SingleTickerProviderStateM
       backgroundColor: Colors.white, // splash bg color
       body: Center(
         child: Lottie.asset(
-          Assets.images.splashScreen,
+          Assets.images.tGBTAimation,
           width: MediaQuery.sizeOf(context).width,
           height: MediaQuery.sizeOf(context).height,
           fit: BoxFit.cover,

@@ -67,6 +67,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                 ? mediaModel!.url
                 : "",
           );
+          
       if (result != null) {
         if (mounted) {
           context.goNamed(AppRoutes.chatPage.name);
@@ -86,7 +87,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
       bottomNavigationBar: SafeArea(
         bottom: true,
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20.w),
+          margin: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 30.h),
           height: 50.h,
           child: ButtonWidget(
             isLoading: isLoading,
@@ -98,14 +99,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
             fontSize: 18,
             fontWeight: FontWeight.w500,
             textColor: AppColors.white,
-            bgColor: AppColors.color147EE8,
+            bgColor: AppColors.color0098E4,
           ),
         ),
       ),
-      backgroundColor: Color(0xFF0E1738),
+      backgroundColor: AppColors.primaryColor,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 20.h),
           child: ListView(
             shrinkWrap: true,
             children: [
@@ -119,7 +120,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                 ),
               ),
 
-              SizedBox(height: 24.h),
+              SizedBox(height: 22.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -168,7 +169,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       GestureDetector(
                         onTap: () {
                           showModalBottomSheet(
-                            backgroundColor: AppColors.bubbleColor,
+                            backgroundColor: AppColors.color1B254B,
                             context: context,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.vertical(
@@ -194,8 +195,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                           padding: EdgeInsets.all(4.w),
                           child: Image.asset(
                             Assets.images.camera.path,
-                            width: 12.8.w,
-                            height: 13.33.h,
+                            width: 12.w,
+                            height: 13.h,
                           ),
                         ),
                       ),
@@ -207,7 +208,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                 key: formKey,
                 child: Column(
                   children: [
-                    SizedBox(height: 32.h),
+                    SizedBox(height: 40.h),
                     Row(
                       children: [
                         Image.asset(
@@ -215,7 +216,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                           height: 15.h,
                           width: 15.w,
                         ),
-                        SizedBox(width: 6.w),
+                        SizedBox(width: 5.w),
                         MdSnsText(
                           "Full Name",
                           size: 12,
@@ -224,7 +225,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: 9.h),
                     TextFormField(
                       controller: fullname,
                       style: TextStyle(
@@ -240,24 +241,28 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: AppColors.color141F35,
-                        hintText: 'Burak Deniz',
+                        fillColor: AppColors.bubbleColor,
+                        hintText: 'Full Name',
                         hintStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
                         contentPadding: EdgeInsets.symmetric(
-                          horizontal: 24.w,
+                          horizontal: 17.w,
                           vertical: 10.h,
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide.none,
+                          borderSide: BorderSide(color: Colors.transparent),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide.none,
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.r),
+                          borderSide: BorderSide(color: Colors.transparent),
                         ),
                       ),
                     ),
@@ -269,7 +274,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                           height: 15.h,
                           width: 15.w,
                         ),
-                        SizedBox(width: 6.w),
+                        SizedBox(width: 5.w),
                         MdSnsText(
                           "Email Address",
                           size: 12,
@@ -278,7 +283,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: 9.h),
                     TextFormField(
                       readOnly: true,
                       controller: email,
@@ -304,7 +309,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: AppColors.color141F35,
+                        fillColor: AppColors.bubbleColor,
                         hintText: 'Burakdeniz@gmail.com',
                         hintStyle: TextStyle(
                           color: Colors.white,
@@ -312,16 +317,20 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                           fontWeight: FontWeight.w400,
                         ),
                         contentPadding: EdgeInsets.symmetric(
-                          horizontal: 24.w,
+                          horizontal: 17.w,
                           vertical: 10.h,
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide.none,
+                          borderSide: BorderSide(color: Colors.transparent),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide.none,
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.r),
+                          borderSide: BorderSide(color: Colors.transparent),
                         ),
                       ),
                     ),
@@ -333,7 +342,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                           height: 15.h,
                           width: 15.w,
                         ),
-                        SizedBox(width: 6.w),
+                        SizedBox(width: 5.w),
                         MdSnsText(
                           "Create a password",
                           size: 12,
@@ -342,7 +351,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: 9.h),
                     TextFormField(
                       controller: password,
                       obscureText: !visible1,
@@ -370,23 +379,27 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                         hintText: "Create Password",
                         filled: true,
-                        fillColor: Color(0xFF161E31),
+                        fillColor: AppColors.bubbleColor,
                         contentPadding: EdgeInsets.symmetric(
-                          horizontal: 24.w,
+                          horizontal: 17.w,
                           vertical: 10.h,
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide.none,
+                          borderSide: BorderSide(color: Colors.transparent),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide.none,
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.r),
+                          borderSide: BorderSide(color: Colors.transparent),
                         ),
                         suffixIcon: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.check_circle, color: Colors.white70),
+                            Icon(Icons.check, color: Colors.white70),
                             SizedBox(width: 8.w),
                             IconButton(
                               icon: Icon(
@@ -412,7 +425,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                           height: 15.h,
                           width: 15.w,
                         ),
-                        SizedBox(width: 6.w),
+                        SizedBox(width: 5.w),
                         MdSnsText(
                           "Confirm Password",
                           size: 12,
@@ -421,7 +434,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: 9.h),
                     TextFormField(
                       controller: confirmPassword,
                       obscureText: !visible2,
@@ -449,23 +462,27 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                         hintText: 'Confirm Password',
                         filled: true,
-                        fillColor: Color(0xFF161E31),
+                        fillColor: AppColors.bubbleColor,
                         contentPadding: EdgeInsets.symmetric(
-                          horizontal: 24.w,
+                          horizontal: 17.w,
                           vertical: 10.h,
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide.none,
+                          borderSide: BorderSide(color: Colors.transparent),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide.none,
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.r),
+                          borderSide: BorderSide(color: Colors.transparent),
                         ),
                         suffixIcon: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.check_circle, color: Colors.white70),
+                            Icon(Icons.check, color: Colors.white70),
                             SizedBox(width: 8.w),
                             IconButton(
                               icon: Icon(

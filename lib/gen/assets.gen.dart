@@ -45,6 +45,9 @@ class $AssetsImagesGen {
   AssetGenImage get regenerate =>
       const AssetGenImage('assets/images/Regenerate.png');
 
+  /// File path: assets/images/TGBT-aimation.json
+  String get tGBTAimation => 'assets/images/TGBT-aimation.json';
+
   /// File path: assets/images/TradersGPT_Logo.png
   AssetGenImage get tradersGPTLogo =>
       const AssetGenImage('assets/images/TradersGPT_Logo.png');
@@ -154,6 +157,10 @@ class $AssetsImagesGen {
   AssetGenImage get notification7 =>
       const AssetGenImage('assets/images/notification7.png');
 
+  /// File path: assets/images/prefixIcon.png
+  AssetGenImage get prefixIcon =>
+      const AssetGenImage('assets/images/prefixIcon.png');
+
   /// File path: assets/images/profile.jpg
   AssetGenImage get profile => const AssetGenImage('assets/images/profile.jpg');
 
@@ -203,6 +210,22 @@ class $AssetsImagesGen {
   AssetGenImage get textalignJustifycenter =>
       const AssetGenImage('assets/images/textalign-justifycenter.png');
 
+  /// File path: assets/images/textfieldicon.png
+  AssetGenImage get textfieldicon =>
+      const AssetGenImage('assets/images/textfieldicon.png');
+
+  /// File path: assets/images/textfieldicon2.png
+  AssetGenImage get textfieldicon2 =>
+      const AssetGenImage('assets/images/textfieldicon2.png');
+
+  /// File path: assets/images/textfieldicon3.png
+  AssetGenImage get textfieldicon3 =>
+      const AssetGenImage('assets/images/textfieldicon3.png');
+
+  /// File path: assets/images/textfieldicon4.png
+  AssetGenImage get textfieldicon4 =>
+      const AssetGenImage('assets/images/textfieldicon4.png');
+
   /// File path: assets/images/trash.png
   AssetGenImage get trash => const AssetGenImage('assets/images/trash.png');
 
@@ -220,6 +243,7 @@ class $AssetsImagesGen {
     microinteractionsPreloader03,
     nvidia,
     regenerate,
+    tGBTAimation,
     tradersGPTLogo,
     vector1,
     visa,
@@ -253,6 +277,7 @@ class $AssetsImagesGen {
     message,
     netFilex,
     notification7,
+    prefixIcon,
     profile,
     radar2,
     receipt1,
@@ -267,6 +292,10 @@ class $AssetsImagesGen {
     stock,
     tesla,
     textalignJustifycenter,
+    textfieldicon,
+    textfieldicon2,
+    textfieldicon3,
+    textfieldicon4,
     trash,
     window,
   ];

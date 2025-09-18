@@ -509,6 +509,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         ),
                       ),
                     ),
+            
                   ],
                 ),
               ),
