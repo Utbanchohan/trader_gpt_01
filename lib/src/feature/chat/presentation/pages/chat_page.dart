@@ -566,15 +566,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             color: AppColors.white,
                           ),
                           SizedBox(width: 4),
-                          MdSnsText(
-                            widget.chatRouting!.companyName!
-                                .split("-")
-                                .first
-                                .trim(),
-
-                            color: AppColors.colorB2B2B7,
-                            size: 12,
-                            fontWeight: FontWeight.w400,
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width/3,
+                            child: MdSnsText(
+                            " "+  widget.chatRouting!.companyName!
+                                  .split("-")
+                                  .first
+                                  .trim(),
+                            
+                              color: AppColors.colorB2B2B7,
+                              size: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                           Icon(
                             Icons.keyboard_arrow_down,
@@ -642,8 +645,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               ],
             ),
       body: SingleChildScrollView(
-       controller: sc,
-  physics: const AlwaysScrollableScrollPhysics(),
+        controller: sc,
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
@@ -701,11 +704,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             asyncStream.when(
               data: (line) {
                 final text = line["buffer"] ?? "";
-if(text.isNotEmpty)
-{ 
-// scrollToBottom();
-}
-              
+                if (text.isNotEmpty) {
+                  // scrollToBottom();
+                }
+
                 return text.isNotEmpty
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.end,

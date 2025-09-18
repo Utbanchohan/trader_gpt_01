@@ -20,6 +20,7 @@ import 'package:chart_sparkline/chart_sparkline.dart';
 
 import '../../../../services/sockets/socket_service.dart';
 import '../../../../shared/socket/model/stock_model.dart/stock_model.dart';
+import '../../../../shared/socket/providers/stocks_price.dart';
 
 class ConversationStart extends ConsumerStatefulWidget {
   ConversationStart({super.key});
@@ -49,17 +50,20 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
 
   getChats() async {
     var res = await ref.read(chatRepository).chats();
-    if (res.isSuccess) {
-      for (int i = 0; i < res.data!.results.length; i++) {
-        if (res.data!.results[i].symbol.toLowerCase() != "tdgpt") {
-          convo.add(res.data!.results[i]);
-        }
+    if (!res.isSuccess) return false;
+
+    // make a set of existing symbols for O(1) lookup
+    final existingSymbols = convo.map((e) => e.symbol).toSet();
+
+    for (final chat in res.data!.results) {
+      if (chat.symbol.toLowerCase() != "tdgpt" &&
+          !existingSymbols.contains(chat.symbol)) {
+        convo.add(chat);
+        existingSymbols.add(chat.symbol); // keep set in sync
       }
-      // scrollToBottom();
-      setState(() {});
-    } else {
-      return false;
     }
+
+    setState(() {});
   }
 
   @override
@@ -123,6 +127,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
 
   @override
   Widget build(BuildContext context) {
+        
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -353,16 +359,26 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                             fontWeight: FontWeight.w700,
                                           ),
                                           SizedBox(height: 2.h),
-                                          MdSnsText(
-                                            stock.companyName.isNotEmpty
-                                                ? stock.companyName
-                                                      .split("-")
-                                                      .first
-                                                      .trim()
-                                                : "",
-                                            color: AppColors.color677FA4,
-                                            fontWeight: FontWeight.w400,
-                                            size: 14,
+                                          SizedBox(
+                                            width:
+                                                MediaQuery.sizeOf(
+                                                  context,
+                                                ).width /
+                                                2,
+                                            child: MdSnsText(
+                                              stock.companyName.isNotEmpty
+                                                  ? stock.companyName
+                                                        .split("-")
+                                                        .first
+                                                        .trim()
+                                                  : "",
+                                              color: AppColors.color677FA4,
+                                              fontWeight: FontWeight.w400,
+                                              size: 14,
+                                              maxLines: 1,
+                                              textOverflow:
+                                                  TextOverflow.ellipsis,
+                                            ),
                                           ),
                                           SizedBox(height: 5.h),
                                           SizedBox(
@@ -597,16 +613,26 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                             fontWeight: FontWeight.w700,
                                           ),
                                           SizedBox(height: 2.h),
-                                          MdSnsText(
-                                            stock.companyName.isNotEmpty
-                                                ? stock.companyName
-                                                      .split("-")
-                                                      .first
-                                                      .trim()
-                                                : "",
-                                            color: AppColors.color677FA4,
-                                            fontWeight: FontWeight.w400,
-                                            size: 14,
+                                          SizedBox(
+                                            width:
+                                                MediaQuery.sizeOf(
+                                                  context,
+                                                ).width /
+                                                2,
+                                            child: MdSnsText(
+                                              stock.companyName.isNotEmpty
+                                                  ? stock.companyName
+                                                        .split("-")
+                                                        .first
+                                                        .trim()
+                                                  : "",
+                                              color: AppColors.color677FA4,
+                                              fontWeight: FontWeight.w400,
+                                              size: 14,
+                                              maxLines: 1,
+                                              textOverflow:
+                                                  TextOverflow.ellipsis,
+                                            ),
                                           ),
                                           SizedBox(height: 5.h),
                                           SizedBox(

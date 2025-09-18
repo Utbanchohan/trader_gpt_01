@@ -34,11 +34,10 @@ _ChatHistory _$ChatHistoryFromJson(Map<String, dynamic> json) => _ChatHistory(
   companyName: json['companyName'] as String,
   createdAt: DateTime.parse(json['createdAt'] as String),
   updatedAt: DateTime.parse(json['updatedAt'] as String),
-  lastMessage:  json['last_message']!=null?
-  
-  LastMessage.fromJson(
-    json['last_message'] as Map<String, dynamic>,
-  ): LastMessage(chatId: "", message: "", type: "", userId: "", createdAt: DateTime.now(), updatedAt: DateTime.now(), id: "") ,
+  isArchived: json['isArchived'] as bool? ?? false,
+  lastMessage: json['last_message'] == null
+      ? null
+      : LastMessage.fromJson(json['last_message'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ChatHistoryToJson(_ChatHistory instance) =>

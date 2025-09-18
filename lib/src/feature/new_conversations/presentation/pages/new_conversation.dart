@@ -14,9 +14,10 @@ import 'package:trader_gpt/src/feature/new_conversations/presentation/provider/c
 import 'package:trader_gpt/src/services/sockets/socket_service.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../chat/domain/model/chat_stock_model.dart';
+
+final SocketService socketService = SocketService();
 
 class NewConversation extends ConsumerStatefulWidget {
   const NewConversation({super.key});
@@ -35,7 +36,6 @@ List<double> generateStockLikeData({int count = 40, double start = 100}) {
 }
 
 class _NewConversationState extends ConsumerState<NewConversation> {
-  final SocketService socketService = SocketService();
   final TextEditingController search = TextEditingController();
   List<Stock> stocks = [];
   List<Stock> searchStock = [];
@@ -65,18 +65,54 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     });
   }
 
-  void updateStocks(List<dynamic> data) {
-    final updatedStocks = data
-        .map((item) => Stock.fromJson(Map<String, dynamic>.from(item)))
-        .toList();
+  void _startPollingSearch(val) {
+    _debounce = Timer.periodic(Duration(milliseconds: 100), (_) {
+      socketService.searchStocks(val, (data) {
+        updateStocksSearch(data);
+      });
+    });
+  }
+
+  void updateStocksSearch(List<dynamic> data) {
+    final updatedStocks = data.map((item) {
+      try {
+        return Stock.fromJson(Map<String, dynamic>.from(item));
+      } catch (e) {
+        print(e);
+      }
+    }).toList();
 
     setState(() {
       for (var updated in updatedStocks) {
-        final index = stocks.indexWhere((s) => s.symbol == updated.symbol);
+        final index = searchStock.indexWhere(
+          (s) => s.symbol == updated!.symbol,
+        );
         if (index >= 0) {
-          stocks[index] = updated;
+          searchStock[index] = updated!;
         } else {
-          stocks.add(updated);
+          searchStock.add(updated!);
+        }
+      }
+      loading = false;
+    });
+  }
+
+  void updateStocks(List<dynamic> data) {
+    final updatedStocks = data.map((item) {
+      try {
+        return Stock.fromJson(Map<String, dynamic>.from(item));
+      } catch (e) {
+        print(e);
+      }
+    }).toList();
+
+    setState(() {
+      for (var updated in updatedStocks) {
+        final index = stocks.indexWhere((s) => s.symbol == updated!.symbol);
+        if (index >= 0) {
+          stocks[index] = updated!;
+        } else {
+          stocks.add(updated!);
         }
       }
       loading = false;
@@ -136,6 +172,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
             stockid: stock.stockId,
           ),
         );
+        socketService.dispose();
       }
     }
   }
@@ -189,10 +226,12 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               textInputAction: TextInputAction.search,
               style: TextStyle(color: Colors.white),
               onChanged: (value) {
-                debounceSearch(value);
+                // debounceSearch(value);
+                _startPollingSearch(value);
               },
               onSubmitted: (value) {
-                debounceSearch(value);
+                // debounceSearch(value);
+                _startPollingSearch(value);
               },
               decoration: InputDecoration(
                 hintText: "Search here",
@@ -202,7 +241,8 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                 fillColor: AppColors.color091224,
                 suffixIcon: InkWell(
                   onTap: () {
-                    debounceSearch(search.text);
+                    // debounceSearch(search.text);
+                    _startPollingSearch(search.text);
                   },
                   child: Icon(Icons.search, color: Colors.white54),
                 ),
@@ -259,7 +299,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                           onTap: () {
                             createChat(stock);
                           },
-                          child: _buildStockCard(
+                          child: BuildStockCard(
                             symbol: stock.symbol,
                             company: stock.name,
                             price: "\$${stock.price.toString()}",
@@ -295,106 +335,183 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   }
 }
 
-Widget _buildStockCard({
-  required String symbol,
-  required String company,
-  required String price,
-  required double change,
-  required String image,
-  required FiveDayTrend trendchart,
-}) {
-  return Container(
-    decoration: BoxDecoration(
-      color: AppColors.color091224,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: AppColors.color1B254B),
-    ),
-    padding: EdgeInsets.all(12),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Image.network(image, width: 26.w, height: 26.h, fit: BoxFit.cover),
-            SizedBox(width: 7.w),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MdSnsText(
-                  symbol,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  size: 12,
-                ),
-                SizedBox(
-                  width: 50.w,
-                  child: MdSnsText(
-                    company.split("-").first.trim(),
-                    color: Colors.white70,
-                    maxLines: 1,
-                    textOverflow: TextOverflow.ellipsis,
+class BuildStockCard extends StatefulWidget {
+  final String symbol;
+  final String company;
+  String price;
+  double change;
+  final String image;
+  FiveDayTrend trendchart;
+
+  BuildStockCard({
+    super.key,
+    required this.symbol,
+    required this.company,
+    required this.price,
+    required this.change,
+    required this.image,
+    required this.trendchart,
+  });
+
+  @override
+  State<BuildStockCard> createState() => _BuildStockCardState();
+}
+
+class _BuildStockCardState extends State<BuildStockCard> {
+  Timer? pollingTimer;
+  bool loading = true;
+  List<Stock> stocks = [];
+
+  @override
+  void dispose() {
+    if (pollingTimer != null) {
+      pollingTimer!.cancel();
+    }
+
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _connectSocket();
+    _startPolling();
+    super.initState();
+  }
+
+  void _connectSocket() {
+    socketService.connect();
+    socketService.onStockUpdate((data) {
+      updateStocks(data);
+    });
+  }
+
+  void _startPolling() {
+    pollingTimer = Timer.periodic(Duration(seconds: 2), (_) {
+      socketService.fetchStocks((data) {
+        updateStocks(data);
+      });
+    });
+  }
+
+  void updateStocks(List<dynamic> data) {
+    final updatedStocks = data
+        .map((item) => Stock.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+
+    setState(() {
+      for (var updated in updatedStocks) {
+        if (widget.symbol == updated.symbol) {
+          widget.price = updated.price.toStringAsFixed(2);
+          widget.change = updated.change;
+          widget.trendchart = updated.fiveDayTrend[0];
+        }
+      }
+      loading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.color091224,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.color1B254B),
+      ),
+      padding: EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Image.network(
+                widget.image,
+                width: 26.w,
+                height: 26.h,
+                fit: BoxFit.cover,
+              ),
+              SizedBox(width: 7.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MdSnsText(
+                    widget.symbol,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
                     size: 12,
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        SizedBox(height: 10.h),
-        MdSnsText(
-          price,
-          color: AppColors.white,
-          fontWeight: FontWeight.bold,
-          size: 16,
-        ),
-        Row(
-          children: [
-            Icon(
-              change.toString().contains("-")
-                  ? Icons.arrow_drop_down
-                  : Icons.arrow_drop_up,
-              color: change.toString().contains("-")
+                  SizedBox(
+                    width: 50.w,
+                    child: MdSnsText(
+                      widget.company.split("-").first.trim(),
+                      color: Colors.white70,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      size: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          MdSnsText(
+            widget.price,
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+            size: 16,
+          ),
+          Row(
+            children: [
+              Icon(
+                widget.change.toString().contains("-")
+                    ? Icons.arrow_drop_down
+                    : Icons.arrow_drop_up,
+                color: widget.change.toString().contains("-")
+                    ? AppColors.redFF3B3B
+                    : AppColors.color06D54E,
+                size: 20,
+              ),
+              MdSnsText(
+                widget.change.toStringAsFixed(2),
+                color: widget.change.toString().contains("-")
+                    ? AppColors.redFF3B3B
+                    : AppColors.color06D54E,
+                size: 12,
+                fontWeight: FontWeight.w400,
+              ),
+            ],
+          ),
+
+          SizedBox(height: 4),
+          // Mini Graph Placeholder
+          SizedBox(
+            width: 86.w,
+            height: 15.h,
+            child: Sparkline(
+              data: widget.trendchart.data,
+
+              lineWidth: 2.0,
+              lineColor: widget.change.toString().contains("-")
                   ? AppColors.redFF3B3B
                   : AppColors.color06D54E,
-              size: 20,
-            ),
-            MdSnsText(
-              change.toStringAsFixed(2),
-              color: change.toString().contains("-")
-                  ? AppColors.redFF3B3B
-                  : AppColors.color06D54E,
-              size: 12,
-              fontWeight: FontWeight.w400,
-            ),
-          ],
-        ),
 
-        SizedBox(height: 4),
-        // Mini Graph Placeholder
-        SizedBox(
-          width: 86.w,
-          height: 15.h,
-          child: Sparkline(
-            data: trendchart.data,
-
-            lineWidth: 2.0,
-            lineColor: change.toString().contains("-")
-                ? AppColors.redFF3B3B
-                : AppColors.color06D54E,
-
-            pointsMode: PointsMode.none,
-            pointColor: Colors.white,
-            useCubicSmoothing: false,
-            sharpCorners: true,
-            fillMode: FillMode.below,
-            fillGradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.transparent, Colors.transparent],
+              pointsMode: PointsMode.none,
+              pointColor: Colors.white,
+              useCubicSmoothing: false,
+              sharpCorners: true,
+              fillMode: FillMode.below,
+              fillGradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.transparent, Colors.transparent],
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }

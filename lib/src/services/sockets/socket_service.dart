@@ -1,11 +1,15 @@
+import 'dart:async';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
   late IO.Socket socket;
+  final _stockStreamController = StreamController<List<dynamic>>.broadcast();
+
+  Stream<List<dynamic>> get stockStream => _stockStreamController.stream;
 
   void connect() {
     socket = IO.io(
-      'https://stage.tradersgpt.io', // your socket URL
+      'https://stage.tradersgpt.io',
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .enableForceNew()
@@ -15,8 +19,13 @@ class SocketService {
 
     socket.onConnect((_) {
       print('✅ Connected: ${socket.id}');
-      fetchStocks((data) {
-        print('✅ Initial stocks fetched: ${data.length}');
+
+      // Fetch once via ack
+
+
+      // Start listening for live updates
+      onStockUpdate((data) {
+        _stockStreamController.add(data);
       });
     });
 
@@ -33,9 +42,11 @@ class SocketService {
 
     socket.emitWithAck(
       'getpopularnasdaqstocks',
-      {'param1': 'value1'},
+      {'searchStockByKeyword': 'aapl'},
       ack: (data) {
         if (data != null && data is List) {
+                  _stockStreamController.add(data);
+
           callback(data);
         } else {
           print('⚠️ Invalid stock data');
@@ -44,13 +55,37 @@ class SocketService {
     );
   }
 
-  /// Listen to live updates from server
+void searchStocks(String keyword, Function(List<dynamic>) callback) {
+  if (!socket.connected) {
+    print('⚠️ Socket not connected yet');
+    return;
+  }
+
+  socket.emitWithAck(
+    'searchStockByKeyword', // 👈 event name from backend
+    keyword, // 👈 they expect just the string
+    ack: (data) {
+      if (data != null && data is List) {
+        callback(data);
+      } else {
+        print('⚠️ Invalid search result: $data');
+      }
+    },
+    
+  );
+}
+
+  /// Listen to live updates (replace event with actual one)
   void onStockUpdate(Function(List<dynamic>) callback) {
-    // Replace with actual event name from server if different
     socket.on('popularNasdaqStocksUpdate', (data) {
       if (data != null && data is List) {
         callback(data);
       }
     });
+  }
+
+  void dispose() {
+    _stockStreamController.close();
+    socket.dispose();
   }
 }
