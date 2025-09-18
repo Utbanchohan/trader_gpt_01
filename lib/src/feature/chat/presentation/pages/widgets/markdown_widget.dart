@@ -9,7 +9,8 @@ import '../../../../../core/theme/app_colors.dart';
 class ChatMarkdownWidget extends StatefulWidget {
   String message;
   String name;
-  ChatMarkdownWidget({super.key,required this.name, required this.message});
+  String image;
+  ChatMarkdownWidget({super.key,required this.name,required this.image, required this.message});
   @override
   State<ChatMarkdownWidget> createState() => _ChatMarkdownWidgetState();
 }
@@ -24,7 +25,14 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
           SizedBox(width: 6),
-            Container(height: 20, width: 20, color: Colors.red),
+            Container(height: 20, width: 20, decoration: BoxDecoration(
+              image: 
+              DecorationImage(
+                fit: BoxFit.cover,
+                image: 
+                widget.image.isEmpty?
+              NetworkImage("https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D"):NetworkImage(widget.image))
+            ),),
             SizedBox(width: 6),
             MdSnsText(widget.name, size: 12, color: AppColors.white,fontWeight: FontWeight.w500,),
           ],
