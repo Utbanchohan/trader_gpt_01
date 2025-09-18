@@ -271,12 +271,12 @@ class _SideMenuState extends ConsumerState<SideMenu> {
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
       onTap: routeName == null || routeName.isEmpty
-          ? null // disable tap if no route
+          ? null 
           : () {
               setState(() {
                 selectedMenu = routeName;
               });
-              context.goNamed(routeName);
+              context.pushNamed(routeName);
             },
     );
   }
