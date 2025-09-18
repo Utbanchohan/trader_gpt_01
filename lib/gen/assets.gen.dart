@@ -27,6 +27,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/Google.png
   AssetGenImage get google => const AssetGenImage('assets/images/Google.png');
 
+  /// File path: assets/images/Group 702.png
+  AssetGenImage get group702 =>
+      const AssetGenImage('assets/images/Group 702.png');
+
   /// File path: assets/images/Meta.png
   AssetGenImage get meta => const AssetGenImage('assets/images/Meta.png');
 
@@ -40,6 +44,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/Regenerate.png
   AssetGenImage get regenerate =>
       const AssetGenImage('assets/images/Regenerate.png');
+
+  /// File path: assets/images/TradersGPT_Logo.png
+  AssetGenImage get tradersGPTLogo =>
+      const AssetGenImage('assets/images/TradersGPT_Logo.png');
 
   /// File path: assets/images/Vector1.png
   AssetGenImage get vector1 => const AssetGenImage('assets/images/Vector1.png');
@@ -66,6 +74,9 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/cerosil.png
   AssetGenImage get cerosil => const AssetGenImage('assets/images/cerosil.png');
+
+  /// File path: assets/images/chart.png
+  AssetGenImage get chart => const AssetGenImage('assets/images/chart.png');
 
   /// File path: assets/images/copy.png
   AssetGenImage get copy => const AssetGenImage('assets/images/copy.png');
@@ -148,10 +159,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/receipt.png
   AssetGenImage get receipt => const AssetGenImage('assets/images/receipt.png');
 
-  /// File path: assets/images/rotate-left (1).png
-  AssetGenImage get rotateLeft1 =>
-      const AssetGenImage('assets/images/rotate-left (1).png');
-
   /// File path: assets/images/rotate-left6.png
   AssetGenImage get rotateLeft6 =>
       const AssetGenImage('assets/images/rotate-left6.png');
@@ -184,6 +191,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/tesla.png
   AssetGenImage get tesla => const AssetGenImage('assets/images/tesla.png');
 
+  /// File path: assets/images/textalign-justifycenter.png
+  AssetGenImage get textalignJustifycenter =>
+      const AssetGenImage('assets/images/textalign-justifycenter.png');
+
   /// File path: assets/images/trash.png
   AssetGenImage get trash => const AssetGenImage('assets/images/trash.png');
 
@@ -196,10 +207,12 @@ class $AssetsImagesGen {
     appLogo,
     conversation,
     google,
+    group702,
     meta,
     microinteractionsPreloader03,
     nvidia,
     regenerate,
+    tradersGPTLogo,
     vector1,
     visa,
     analytics,
@@ -208,6 +221,7 @@ class $AssetsImagesGen {
     book,
     camera,
     cerosil,
+    chart,
     copy,
     cpu8,
     direct,
@@ -233,7 +247,6 @@ class $AssetsImagesGen {
     radar2,
     receipt1,
     receipt,
-    rotateLeft1,
     rotateLeft6,
     searchNormal,
     setting2,
@@ -243,6 +256,7 @@ class $AssetsImagesGen {
     statusUp,
     stock,
     tesla,
+    textalignJustifycenter,
     trash,
     window,
   ];

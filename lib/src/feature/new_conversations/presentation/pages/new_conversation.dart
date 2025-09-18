@@ -162,6 +162,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: AppColors.primaryColor,
         centerTitle: false,
         elevation: 0,

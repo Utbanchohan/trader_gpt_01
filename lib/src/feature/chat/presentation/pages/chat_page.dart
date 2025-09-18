@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
@@ -567,7 +570,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           ),
                           SizedBox(width: 4),
                           MdSnsText(
-                            widget.chatRouting!.companyName!
+                            widget.chatRouting!.companyName
                                 .split("-")
                                 .first
                                 .trim(),
@@ -618,25 +621,33 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           ),
                         ],
                       ),
+                 
                     ],
                   ),
                 ],
               ),
               actions: [
-                Container(
-                  width: 40.w,
-                  height: 71.h,
-
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(Assets.images.shapeAngle.path),
+                GestureDetector(
+                  onTap: () {
+                    context.pushNamed(AppRoutes.analytics.name,
+                    extra: widget.chatRouting
+                    );
+                  },
+                  child: Container(
+                    width: 40.w,
+                    height: 71.h,
+                  
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(Assets.images.shapeAngle.path),
+                      ),
                     ),
-                  ),
-                  padding: EdgeInsets.all(10),
-                  child: Image.asset(
-                    Assets.images.analytics.path,
-                    width: 25.w,
-                    height: 21.h,
+                    padding: EdgeInsets.all(10),
+                    child: Image.asset(
+                      Assets.images.analytics.path,
+                      width: 25.w,
+                      height: 21.h,
+                    ),
                   ),
                 ),
               ],
