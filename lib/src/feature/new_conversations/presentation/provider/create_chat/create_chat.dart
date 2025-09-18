@@ -14,10 +14,13 @@ class CreateChatProvider extends _$CreateChatProvider {
   AppLoadingState build() => const AppLoadingState();
 
   createChate(CreateChatDto createChatDto) async {
+    state=AppLoadingState.loading();
     var res = await ref.read(chatRepository).createNewChat(createChatDto);
     if (res.isSuccess) {
+      state=AppLoadingState();
       return res.data;
     } else {
+      state=AppLoadingState();
       return false;
     }
   }

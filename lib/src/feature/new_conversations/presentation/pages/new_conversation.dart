@@ -9,11 +9,12 @@ import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/create_chat_dto/create_chat_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
+import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/widget/shimmer_widget.dart';
 import 'package:trader_gpt/src/feature/new_conversations/presentation/provider/create_chat/create_chat.dart';
 import 'package:trader_gpt/src/services/sockets/socket_service.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-
+import 'package:shimmer/shimmer.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../chat/domain/model/chat_stock_model.dart';
 
@@ -98,10 +99,14 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   }
 
   debounceSearch(String val) {
-    if (_debounce != null) {
+    if (_debounce?.isActive ?? false) {
       _debounce!.cancel();
     }
-    _debounce = Timer(Duration(milliseconds: 300), searchStockItem(val));
+
+    _debounce = Timer(
+      const Duration(milliseconds: 300),
+      () => searchStockItem(val),
+    );
   }
 
   createChat(Stock stock) async {
@@ -117,23 +122,21 @@ class _NewConversationState extends ConsumerState<NewConversation> {
         );
     if (res != null) {
       ChatHistory chatHistory = res;
-      if(mounted)
-      {
-  context.pushNamed(
-        AppRoutes.chatPage.name,
-        extra: ChatRouting(
-          chatId: chatHistory.id,
-          symbol: stock.symbol,
-          image: stock.logoUrl,
-          companyName: stock.name,
-          price: stock.price,
-          changePercentage: stock.changesPercentage,
-          trendChart: stock.fiveDayTrend[0],
-          stockid: stock.stockId,
-        ),
-      );
+      if (mounted) {
+        context.pushNamed(
+          AppRoutes.chatPage.name,
+          extra: ChatRouting(
+            chatId: chatHistory.id,
+            symbol: stock.symbol,
+            image: stock.logoUrl,
+            companyName: stock.name,
+            price: stock.price,
+            changePercentage: stock.changesPercentage,
+            trendChart: stock.fiveDayTrend[0],
+            stockid: stock.stockId,
+          ),
+        );
       }
-    
     }
   }
 
@@ -142,7 +145,10 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     search.dispose();
     socketService.socket.dispose();
     pollingTimer?.cancel();
-    _debounce!.cancel();
+    if (_debounce != null) {
+      _debounce!.cancel();
+    }
+
     super.dispose();
   }
 
@@ -212,7 +218,23 @@ class _NewConversationState extends ConsumerState<NewConversation> {
             ),
           ),
           search.text.isNotEmpty && searchStock.isEmpty
-              ? SizedBox()
+              ? Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: GridView.builder(
+                      itemCount: 21,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, // 3 cards per row
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 0.9.h,
+                      ),
+                      itemBuilder: (context, index) {
+                        return ShimmerCardStock();
+                      },
+                    ),
+                  ),
+                )
               : stocks.isNotEmpty
               ? Expanded(
                   child: Padding(
@@ -250,7 +272,23 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                     ),
                   ),
                 )
-              : MdSnsText("stocks not found"),
+              : Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: GridView.builder(
+                      itemCount: 21,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, // 3 cards per row
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 0.9.h,
+                      ),
+                      itemBuilder: (context, index) {
+                        return ShimmerCardStock();
+                      },
+                    ),
+                  ),
+                ),
         ],
       ),
     );

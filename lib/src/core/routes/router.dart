@@ -33,7 +33,13 @@ final routerConfigProvider = Provider((ref) {
       bool isPublic = AppRoutes.isPublicRoute(state);
       bool isLogin =
           (ref.watch(localDataProvider).accessToken ?? "").isNotEmpty;
-      if (isLogin && !isPublic) {
+          bool profileComplete=(ref.watch(localDataProvider).getUserName ??"").isNotEmpty;
+
+          if(isLogin && !profileComplete && !isPublic)
+          {
+return AppRoutes.profilePage.path;
+          }
+      else if (isLogin && !isPublic) {
         return null;
       } else if (!isLogin && isPublic) {
         state.fullPath;
