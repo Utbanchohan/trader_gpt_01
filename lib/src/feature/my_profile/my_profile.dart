@@ -1,22 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-class MyProfileScreen extends StatefulWidget {
+class MyProfileScreen extends ConsumerStatefulWidget {
   const MyProfileScreen({super.key});
 
   @override
-  State<MyProfileScreen> createState() => _MyProfileScreenState();
+  ConsumerState<MyProfileScreen> createState() => _MyProfileScreenState();
 }
 
-class _MyProfileScreenState extends State<MyProfileScreen> {
+class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
   bool updatesEnabled = true;
   bool alertsEnabled = true;
+  User? userModel;
+
+  getUser() async {
+    dynamic userData = await ref.watch(localDataProvider).getUser();
+    if (userData != null) {
+      setState(() {
+        userModel = User.fromJson(userData);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    getUser();
     return Scaffold(
       backgroundColor: const Color(0xFF0D1B2A),
       body: SafeArea(
@@ -42,11 +56,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   children: [
                     Stack(
                       children: [
-                        const CircleAvatar(
-                          radius: 50,
-                          backgroundImage: AssetImage(
-                            "assets/images/profile.jpg",
-                          ),
+                        CircleAvatar(
+                          radius: 50.r,
+                          backgroundImage:
+                              userModel != null && userModel!.imgUrl.isNotEmpty
+                              ? NetworkImage(userModel!.imgUrl)
+                              : AssetImage(Assets.images.profile.path),
                         ),
 
                         Positioned(
@@ -69,13 +84,20 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                     SizedBox(height: 12),
                     MdSnsText(
-                      "Burak Deniz",
+                      userModel != null && userModel!.name.isNotEmpty
+                          ? userModel!.name
+                          : "N/A",
                       color: AppColors.white,
                       size: 32,
                       fontWeight: FontWeight.bold,
                     ),
+
                     MdSnsText(
-                      "Burakdeniz@gmail.com",
+                      userModel != null && userModel!.email.isNotEmpty
+                          ? userModel!.email
+                          : "N/A",
+
+                      // "Burakdeniz@gmail.com",
                       color: AppColors.colorB2B2B7,
                       size: 16,
                       fontWeight: FontWeight.w400,

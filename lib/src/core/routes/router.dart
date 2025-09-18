@@ -9,8 +9,10 @@ import 'package:trader_gpt/src/core/local/repository/local_storage_repository.da
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
+import 'package:trader_gpt/src/feature/conversations_start/presentation/pages/conversation_start.dart';
 import 'package:trader_gpt/src/feature/get_start/presentation/pages/getstart.dart';
 import 'package:trader_gpt/src/feature/my_profile/my_profile.dart';
+import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/new_conversation.dart';
 import 'package:trader_gpt/src/feature/profile_setup/presentation/pages/profile_setup.dart';
 import 'package:trader_gpt/src/feature/s3_uploader/presentation/image_pickert.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
@@ -18,6 +20,9 @@ import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart
 import 'package:trader_gpt/src/feature/sign_in/presentation/pages/sigin_in.dart';
 import 'package:trader_gpt/src/feature/splash/presentation/pages/splash.dart';
 import 'package:trader_gpt/src/feature/verifaction/presentation/pages/verifaction.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+
+import '../../feature/chat/domain/model/chat_stock_model.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 final shellKey = GlobalKey<NavigatorState>();
@@ -62,7 +67,8 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.chatPage.path,
         name: AppRoutes.chatPage.name,
         builder: (BuildContext context, GoRouterState state) {
-          return ChatPage();
+          final chatRouting =state.extra!=null? state.extra as ChatRouting:ChatRouting(image: "", symbol: "", companyName: "", price: 0, changePercentage:0 , chatId: "", stockid: "", trendChart: FiveDayTrend(data: []));
+          return ChatPage(chatRouting: chatRouting);
         },
         routes: [],
       ),
@@ -88,7 +94,6 @@ final routerConfigProvider = Provider((ref) {
         builder: (BuildContext context, GoRouterState state) {
           final email = state.pathParameters['email']!;
           return Verifaction(email: email);
-          // return Verifaction();
         },
         routes: [],
       ),
@@ -129,6 +134,22 @@ final routerConfigProvider = Provider((ref) {
         name: AppRoutes.myProfileScreen.name,
         builder: (BuildContext context, GoRouterState state) {
           return MyProfileScreen();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.conversationStart.path,
+        name: AppRoutes.conversationStart.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return ConversationStart();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.newConversation.path,
+        name: AppRoutes.newConversation.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return NewConversation();
         },
         routes: [],
       ),

@@ -1,31 +1,32 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
-import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
-import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/provider/stream_service.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import '../../../../core/routes/routes.dart';
 
+import 'widgets/loading_widget.dart';
+
+// ignore: must_be_immutable
 class ChatPage extends ConsumerStatefulWidget {
-  ChatPage({super.key});
+  ChatRouting? chatRouting;
+
+  ChatPage({super.key, this.chatRouting});
 
   @override
   ConsumerState<ChatPage> createState() => _ChatPageState();
@@ -35,25 +36,103 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   TextEditingController message = TextEditingController();
   ScrollController sc = ScrollController();
   Stock? selectedStock;
-  List<ChatMessageModel> chats = [];
-  List<ChatHistory> convo = [];
 
+  List<ChatMessageModel> chats = [];
   List<String> questions = [];
   dynamic asyncStream;
   bool startStream = false;
+  final service = SseService();
+  List<String> followupQuestions = [];
   var body;
-  String chadId = "68c2f0f5b77590fbe176f8e1";
-
-
-
-
+  String? chadId;
 
   @override
   void initState() {
-    getRandomQuestions();
-    getMessages();
-    // getChats();
-    // TODO: implement initState
+    chadId = widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty
+        ? widget.chatRouting!.chatId
+        : "68c3274cb77590fbe176f905";
+    selectedStock =
+        widget.chatRouting != null && widget.chatRouting!.companyName.isNotEmpty
+        ? Stock(
+            avgVolume: 0,
+            change: 0,
+            changesPercentage: widget.chatRouting!.changePercentage,
+            dayHigh: 0.0,
+            dayLow: 0.0,
+            earningsAnnouncement: "",
+            eps: 0.0,
+            exchange: "",
+            fiveDayTrend: [widget.chatRouting!.trendChart],
+            marketCap: 0,
+            name: widget.chatRouting!.companyName,
+            open: 0,
+            pe: 0,
+            previousClose: 0.0,
+            price: widget.chatRouting!.price,
+            priceAvg200: 0,
+            priceAvg50: 0,
+            sharesOutstanding: 0,
+            stockId: widget.chatRouting!.stockid,
+            symbol: widget.chatRouting!.symbol,
+            timestamp: 0,
+            volume: 0,
+            yearHigh: 0,
+            yearLow: 0.0,
+            logoUrl: widget.chatRouting!.image,
+            type: "",
+            count: 0,
+            dateHours: "",
+            ticks: 0,
+            primaryLogoUrl: widget.chatRouting!.image,
+            secondaryLogoUrl: widget.chatRouting!.image,
+            tertiaryLogoUrl: widget.chatRouting!.image,
+            status: "",
+            updatedFrom: "",
+            country: "us",
+            exchangeSortOrder: 0,
+          )
+        : Stock(
+            avgVolume: 0,
+            change: 0,
+            changesPercentage: 0,
+            dayHigh: 0.0,
+            dayLow: 0.0,
+            earningsAnnouncement: "",
+            eps: 0.0,
+            exchange: "",
+            fiveDayTrend: [],
+            marketCap: 0,
+            name: "",
+            open: 0,
+            pe: 0,
+            previousClose: 0.0,
+            price: 0,
+            priceAvg200: 0,
+            priceAvg50: 0,
+            sharesOutstanding: 0,
+            stockId: "",
+            symbol: "",
+            timestamp: 0,
+            volume: 0,
+            yearHigh: 0,
+            yearLow: 0.0,
+            logoUrl: "",
+            type: "",
+            count: 0,
+            dateHours: "",
+            ticks: 0,
+            primaryLogoUrl: "",
+            secondaryLogoUrl: "",
+            tertiaryLogoUrl: "",
+            status: "",
+            updatedFrom: "",
+            country: "us",
+            exchangeSortOrder: 0,
+          );
+    getRandomQuestions(
+      selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
+    );
+    getchats(chadId!);
     super.initState();
   }
 
@@ -75,17 +154,23 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     super.dispose();
   }
 
-  logout() {
-    String token = "";
-    ref.read(localDataProvider).setAccessToken(token);
-    context.goNamed(AppRoutes.signInPage.name);
-  }
-
-  getRandomQuestions() async {
-    var res = await ref.read(chatRepository).randomQuestions("[symbol]");
+  getRandomQuestions(String symbol) async {
+    var res = await ref.read(chatRepository).randomQuestions(symbol);
     if (res.isSuccess) {
       for (var ij in res.questions) {
-        questions.add(ij);
+        if (widget.chatRouting == null ||
+            widget.chatRouting!.companyName.isEmpty) {
+          questions.add(ij);
+        } else {
+          if (widget.chatRouting != null ||
+              widget.chatRouting!.symbol.isNotEmpty) {
+            questions.add(
+              ij.replaceAll('[SYMBOL]', widget.chatRouting!.symbol),
+            );
+          } else {
+            questions.add(ij);
+          }
+        }
       }
       setState(() {});
     } else {
@@ -93,8 +178,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
-  getMessages() async {
-    var res = await ref.read(chatRepository).getMessages(chadId, 1);
+  getchats(String id) async {
+    var res = await ref.read(chatRepository).getMessages(id, 1);
     if (res.isSuccess) {
       for (int i = 0; i < res.data!.messages!.length; i++) {
         chats.add(res.data!.messages![i]);
@@ -106,17 +191,34 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
-  getChats() async {
-    var res = await ref.read(chatRepository).chats();
-    if (res.isSuccess) {
-      for (int i = 0; i < res.data!.results.length; i++) {
-        convo.add(res.data!.results![i]);
-      }
-      scrollToBottom();
-      setState(() {});
-    } else {
-      return false;
-    }
+  showDialogue(
+    List<String> questions,
+    List<String> relatedQuestion,
+    TextEditingController message,
+    int index,
+  ) async {
+    return await showDialog<Stock>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          alignment: Alignment.center,
+          backgroundColor: AppColors.primaryColor,
+          insetPadding: EdgeInsets.all(0),
+          contentPadding: EdgeInsets.all(0),
+          content: AskingPopupWidget(
+            showSheet:
+                widget.chatRouting == null || widget.chatRouting!.symbol.isEmpty
+                ? true
+                : false,
+            index: index,
+            questions: questions,
+            relatedQuestion: relatedQuestion,
+            controller: message,
+          ),
+        );
+      },
+    );
   }
 
   void _sendMessage(WidgetRef ref) async {
@@ -126,7 +228,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       var res = await ref
           .read(chatProviderProvider.notifier)
           .sendMessage(
-            ChatMessageDto(chatId: chadId, message: text, type: "user"),
+            ChatMessageDto(chatId: chadId!, message: text, type: "user"),
           );
       if (res != null) {
         body = {
@@ -148,7 +250,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           chats.add(
             ChatMessageModel(
               id: "temp",
-              chatId: "68c2f0f5b77590fbe176f8e1",
+              chatId: chadId!,
               message: text,
               type: "user",
               userId: userid,
@@ -169,7 +271,19 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   Widget build(BuildContext context) {
     final asyncStream = startStream
         ? ref.watch(sseProvider(body))
-        : const AsyncValue.data("");
+        : const AsyncValue.data({'buffer': "", "followUp": []});
+
+    asyncStream.whenData((data) {
+      followupQuestions = data["followUp"].isNotEmpty
+          ? (data["followUp"] as List<String>?) ?? []
+          : [];
+
+      if (followupQuestions.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          showDialogue(questions, followupQuestions, message, 1);
+        });
+      }
+    });
 
     return Scaffold(
       drawer: SideMenu(),
@@ -177,28 +291,23 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         bottom: true,
         child: Container(
           color: Colors.transparent,
-          height: MediaQuery.of(context).size.height * 0.2,
+          height: MediaQuery.of(context).size.height * 0.2385,
 
           child: Column(
             children: [
               GestureDetector(
                 onTap: () async {
-                  selectedStock = await showDialog<Stock>(
-                    context: context,
-                    barrierDismissible: true, // user must tap button!
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        alignment: Alignment.center,
-                        backgroundColor: AppColors.primaryColor,
-                        insetPadding: EdgeInsets.all(0),
-                        contentPadding: EdgeInsets.all(0),
-                        content: AskingPopupWidget(
-                          questions: questions,
-                          controller: message,
-                        ),
-                      );
-                    },
-                  );
+                  if (widget.chatRouting == null ||
+                      widget.chatRouting!.companyName.isEmpty) {
+                    selectedStock = await showDialogue(
+                      questions,
+                      [],
+                      message,
+                      0,
+                    );
+                  } else {
+                    showDialogue(questions, [], message, 0);
+                  }
                 },
                 child: Center(
                   child: Container(
@@ -232,7 +341,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               ),
 
               Container(
-                height: 100.h,
+                height: 140.h,
                 margin: EdgeInsets.all(10),
                 padding: EdgeInsets.all(2),
                 decoration: BoxDecoration(
@@ -255,6 +364,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         child: TextField(
                           controller: message,
                           style: TextStyle(color: AppColors.white),
+                          keyboardType: TextInputType.multiline,
+
+                          maxLines: null,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: "Ask anything about the market",
@@ -335,38 +447,198 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       ),
 
       backgroundColor: AppColors.primaryColor,
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        centerTitle: false,
-        backgroundColor: AppColors.primaryColor,
-        elevation: 0,
-        leading: Builder( // 👈 yahan Builder lagaya
-      builder: (context) {
-        return InkWell(
-          onTap: () {
-            Scaffold.of(context).openDrawer(); // abhi error nahi aayega
-          },
-          child: Image.asset(
-            Assets.images.menu.path,
-            width: 40,
-            height: 40,
-          ),
-        );
-      },
-    ),
-        title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child: Image.asset(
-              Assets.images.searchNormal.path,
-              width: 20,
-              height: 20,
+      appBar:
+          widget.chatRouting == null || widget.chatRouting!.companyName.isEmpty
+          ? AppBar(
+              scrolledUnderElevation: 0,
+              centerTitle: false,
+              backgroundColor: AppColors.primaryColor,
+              elevation: 0,
+              leading: Builder(
+                builder: (context) {
+                  return InkWell(
+                    onTap: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: Image.asset(
+                      Assets.images.menu.path,
+                      width: 40,
+                      height: 40,
+                    ),
+                  );
+                },
+              ),
+              title: Image.asset(
+                Assets.images.logo.path,
+                width: 187,
+                height: 35.27,
+              ),
+              actions: [
+                Container(
+                  margin: EdgeInsets.only(right: 20),
+                  child: Image.asset(
+                    Assets.images.searchNormal.path,
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+              ],
+            )
+          : AppBar(
+              scrolledUnderElevation: 0,
+              centerTitle: false,
+              backgroundColor: AppColors.primaryColor,
+              elevation: 0,
+              titleSpacing: 0,
+              leading: Builder(
+                builder: (context) {
+                  return InkWell(
+                    onTap: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: Image.asset(
+                      Assets.images.menu.path,
+                      width: 40,
+                      height: 40,
+                    ),
+                  );
+                },
+              ),
+              title: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      widget.chatRouting!.image!,
+                      width: 35,
+                      height: 35,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          MdSnsText(
+                            "#${widget.chatRouting!.symbol}",
+
+                            fontWeight: FontWeight.w700,
+                            size: 16,
+                            color: AppColors.white,
+                          ),
+                          SizedBox(width: 4),
+                          MdSnsText(
+                            widget.chatRouting!.companyName!
+                                .split("-")
+                                .first
+                                .trim(),
+
+                            color: AppColors.colorB2B2B7,
+                            size: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            color: AppColors.white,
+
+                            size: 20.sp,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            widget.chatRouting!.price.toString(),
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                          SizedBox(width: 6),
+                          Icon(
+                            widget.chatRouting!.changePercentage
+                                    .toString()
+                                    .contains("-")
+                                ? Icons.arrow_drop_down
+                                : Icons.arrow_drop_up,
+                            color:
+                                widget.chatRouting!.changePercentage
+                                    .toString()
+                                    .contains("-")
+                                ? AppColors.redFF3B3B
+                                : AppColors.color06D54E,
+                            size: 20,
+                          ),
+                          MdSnsText(
+                            " ${widget.chatRouting!.changePercentage!.toStringAsFixed(2)}%",
+                            color:
+                                widget.chatRouting!.changePercentage
+                                    .toString()
+                                    .contains("-")
+                                ? AppColors.redFF3B3B
+                                : AppColors.color06D54E,
+                            size: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                Container(
+                  width: 40.w,
+                  height: 71.h,
+
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(Assets.images.shapeAngle.path),
+                    ),
+                  ),
+                  padding: EdgeInsets.all(10),
+                  child: Image.asset(
+                    Assets.images.analytics.path,
+                    width: 25.w,
+                    height: 21.h,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
+
+      //  AppBar(
+      //   scrolledUnderElevation: 0,
+      //   centerTitle: false,
+      //   backgroundColor: AppColors.primaryColor,
+      //   elevation: 0,
+      //   leading: Builder(
+      //     // 👈 yahan Builder lagaya
+      //     builder: (context) {
+      //       return InkWell(
+      //         onTap: () {
+      //           Scaffold.of(context).openDrawer(); // abhi error nahi aayega
+      //         },
+      //         child: Image.asset(
+      //           Assets.images.menu.path,
+      //           width: 40,
+      //           height: 40,
+      //         ),
+      //       );
+      //     },
+      //   ),
+      //   title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
+      //   actions: [
+      //     Container(
+      //       margin: EdgeInsets.only(right: 20),
+      //       child: Image.asset(
+      //         Assets.images.searchNormal.path,
+      //         width: 20,
+      //         height: 20,
+      //       ),
+      //     ),
+      //   ],
+      // ),
       body: SingleChildScrollView(
+        controller: sc,
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
@@ -418,63 +690,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           ),
                         ),
                         SizedBox(width: chats[index].type == "user" ? 10 : 0),
-                        Container(
-                          width: MediaQuery.sizeOf(context).width / 1.5,
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: AppColors.bubbleColor,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          // child: Flexible(
-                          child: MarkdownBody(
-                            data: chats[index].message,
-                            selectable: true, // let user copy code
-                            styleSheet:
-                                MarkdownStyleSheet.fromTheme(
-                                  Theme.of(context),
-                                ).copyWith(
-                                  code: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  tableBody: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  p: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  h1: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  h2: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-
-                                  blockquote: const TextStyle(
-                                    color: AppColors.white,
-                                  ),
-                                ),
-                            onTapLink: (text, href, title) {
-                              if (href != null) {
-                                // launchUrl(Uri.parse(href)); // needs url_launcher
-                              }
-                            },
-                          ),
-                        ),
+                        ChatMarkdownWidget(message: chats[index].message),
                         SizedBox(width: chats[index].type != "user" ? 10 : 0),
                         Visibility(
                           visible: chats[index].type != "user",
@@ -538,76 +754,19 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ),
             asyncStream.when(
               data: (line) {
-                if(line.contains("followup"))
-                {
-                  print('followup start');
-                }
-                    scrollToBottom();
+                final text = line["buffer"] ?? "";
+
+                scrollToBottom();
                 return Column(
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Container(
-                          width: MediaQuery.sizeOf(context).width / 1.4,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: AppColors.bubbleColor,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: MarkdownBody(
-                            data: line,
-                            selectable: true, // let user copy code
-                            styleSheet:
-                                MarkdownStyleSheet.fromTheme(
-                                  Theme.of(context),
-                                ).copyWith(
-                                    code: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  tableBody: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  p: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  h1: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  h2: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-
-                                  blockquote: const TextStyle(
-                                    color: AppColors.white,
-                                  ),
-                                ),
-                            onTapLink: (text, href, title) {
-                              if (href != null) {
-                                // launchUrl(Uri.parse(href)); // needs url_launcher
-                              }
-                            },
-                          ),
-                        ),
+                        ChatMarkdownWidget(message: text.toString()),
                         SizedBox(width: 10),
 
                         Visibility(
-                          visible: line.isNotEmpty,
+                          visible: text.toString().isNotEmpty,
                           child: Expanded(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -668,30 +827,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               loading: () => Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    width: MediaQuery.sizeOf(context).width / 1.4,
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppColors.bubbleColor,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        MdSnsText(
-                          "Thinking",
-                          color: AppColors.white,
-                          size: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        Image.asset(
-                          Assets.images.microinteractionsPreloader03.path,
-                          height: 40,
-                          width: 40,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
+                  LoadingWidgetMarkdown()
+                 
                 ],
               ),
               error: (err, _) => Center(child: Text("Error: $err")),

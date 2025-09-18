@@ -28,7 +28,8 @@ abstract class ChatHistory with _$ChatHistory {
     required String companyName,
     required DateTime createdAt,
     required DateTime updatedAt,
-    @JsonKey(name:"last_message") required LastMessage lastMessage,
+    @Default(false) bool isArchived,
+    @JsonKey(name:"last_message")  LastMessage? lastMessage,
   }) = _ChatHistory;
 
   factory ChatHistory.fromJson(Map<String, dynamic> json) =>
