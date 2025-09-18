@@ -404,9 +404,15 @@ class _BuildStockCardState extends State<BuildStockCard> {
     setState(() {
       for (var updated in updatedStocks) {
         if (widget.symbol == updated.symbol) {
-          widget.price = updated.price.toStringAsFixed(2);
-          widget.change = updated.change;
-          widget.trendchart = updated.fiveDayTrend[0];
+          if (widget.price != updated.price.toString()) {
+            widget.price = updated.price.toString();
+          }
+          if (widget.change != updated.change) {
+            widget.change = updated.change;
+          }
+          if (widget.trendchart != updated.fiveDayTrend[0]) {
+            widget.trendchart = updated.fiveDayTrend[0];
+          }
         }
       }
       loading = false;
