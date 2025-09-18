@@ -7,7 +7,7 @@ part of 'create_chat.dart';
 // **************************************************************************
 
 String _$createChatProviderHash() =>
-    r'd755f60d37f8e44a597962eeb23f2969f2df2dbf';
+    r'58b70f9d8605afc52bb216fd0a3a4a810e0ac709';
 
 /// See also [CreateChatProvider].
 @ProviderFor(CreateChatProvider)
