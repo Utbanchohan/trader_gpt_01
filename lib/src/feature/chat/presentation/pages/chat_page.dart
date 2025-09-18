@@ -16,6 +16,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_wid
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'widgets/loading_widget.dart';
 
 // ignore: must_be_immutable
@@ -39,6 +40,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   List<String> followupQuestions = [];
   var body;
   String? chadId;
+  User? user;
+  bool dialogOpen = false;
 
   @override
   void initState() {
@@ -282,8 +285,24 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
+  getUser() async {
+    dynamic userData = await ref.watch(localDataProvider).getUser();
+    if (userData != null) {
+      setState(() {
+        user = User.fromJson(userData);
+      });
+    }
+  }
+
+  changeDialogueStatus() {
+    setState(() {
+      dialogOpen = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    getUser();
     final asyncStream = startStream
         ? ref.watch(sseProvider(body))
         : const AsyncValue.data({'buffer': "", "followUp": []});
@@ -295,7 +314,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
       if (followupQuestions.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-          showDialogue(questions, followupQuestions, message, 1);
+          if (!dialogOpen) {
+            showDialogue(questions, followupQuestions, message, 1);
+            changeDialogueStatus();
+          }
         });
       }
     });
@@ -632,7 +654,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               ],
             ),
       body: SingleChildScrollView(
-        controller: sc,
+       controller: sc,
+  physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
@@ -646,7 +669,13 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                               widget.chatRouting!.symbol.isEmpty
                           ? "TDGPT"
                           : widget.chatRouting!.symbol
-                    : "Raza";
+                    : user!.name;
+                String image = chats[index].type != "user"
+                    ? widget.chatRouting == null ||
+                              widget.chatRouting!.image.isEmpty
+                          ? ""
+                          : widget.chatRouting!.image
+                    : user!.imgUrl;
                 return Column(
                   children: [
                     Row(
@@ -662,6 +691,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             ChatMarkdownWidget(
                               message: chats[index].message,
                               name: name,
+                              image: image,
                             ),
                             SizedBox(
                               height: chats[index].type != "user" ? 10 : 10,
@@ -683,33 +713,39 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             asyncStream.when(
               data: (line) {
                 final text = line["buffer"] ?? "";
-
-                scrollToBottom();
-                return Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        ChatMarkdownWidget(
-                          message: text.toString(),
-                          name:
-                              widget.chatRouting == null ||
-                                  widget.chatRouting!.symbol.isEmpty
-                              ? "TDGPT"
-                              : widget.chatRouting!.symbol,
-                        ),
-                        SizedBox(width: 10),
-                        Visibility(
-                          visible: text.toString().isNotEmpty,
-                          child: MessageLikeCopyIcon(
-                            type: "ai",
+if(text.isNotEmpty)
+{ 
+// scrollToBottom();
+}
+              
+                return text.isNotEmpty
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          ChatMarkdownWidget(
                             message: text.toString(),
+                            name:
+                                widget.chatRouting == null ||
+                                    widget.chatRouting!.symbol.isEmpty
+                                ? "TDGPT"
+                                : widget.chatRouting!.symbol,
+                            image:
+                                widget.chatRouting == null ||
+                                    widget.chatRouting!.image.isEmpty
+                                ? ""
+                                : widget.chatRouting!.image,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
+                          SizedBox(height: 10),
+                          Visibility(
+                            visible: text.toString().isNotEmpty,
+                            child: MessageLikeCopyIcon(
+                              type: "ai",
+                              message: text.toString(),
+                            ),
+                          ),
+                        ],
+                      )
+                    : SizedBox();
               },
 
               loading: () => Row(

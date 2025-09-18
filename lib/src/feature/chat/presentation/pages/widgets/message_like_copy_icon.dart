@@ -8,7 +8,8 @@ import '../../../../../shared/custom_message.dart';
 class MessageLikeCopyIcon extends StatefulWidget {
   final String message;
   final String type;
-  const MessageLikeCopyIcon({super.key,required this.message,required this.type});
+
+  const MessageLikeCopyIcon({super.key,required this.message,required this.type,});
 
   @override
   State<MessageLikeCopyIcon> createState() => _MessageLikeCopyIconState();
