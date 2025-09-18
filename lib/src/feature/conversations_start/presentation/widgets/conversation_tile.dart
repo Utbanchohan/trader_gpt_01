@@ -136,7 +136,7 @@ class ConversationTile extends StatelessWidget {
                                               MdSnsText(
                                                 stocks
                                                     .changesPercentage
-                                                    .toStringAsFixed(2),
+                                                    .toStringAsFixed(2).replaceAll("-", ""),
                                                 color:
                                                    stocks.
                                                           changesPercentage <

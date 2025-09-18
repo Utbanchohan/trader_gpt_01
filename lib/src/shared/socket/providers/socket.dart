@@ -12,7 +12,7 @@ class SocketConnection extends _$SocketConnection {
     // ✅ Get token from argument or local storage
     final localToken =
         token ??
-        ref.read(sharedPreferencesProvider).value!.getString('accessToken');
+        ref.read(sharedPreferencesProvider).value!.getString('access-token');
 
     if (localToken != null && localToken.isNotEmpty) {
       repo.initConnection(localToken);
