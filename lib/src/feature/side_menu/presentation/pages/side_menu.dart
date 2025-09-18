@@ -120,7 +120,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     _buildMenuItem(
                       context,
                       Assets.images.conversation.path,
-
                       "Conversation",
                       AppRoutes.conversationStart.name,
                     ),
@@ -130,16 +129,10 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       "Books",
                       "",
                     ),
+
                     _buildMenuItem(
                       context,
                       Assets.images.statusUp.path,
-
-                    "Books",
-                    AppRoutes.analytics.name,
-                  ),
-                  _buildMenuItem(
-                    context,
-                    Assets.images.statusUp.path,
                       "Analytics",
                       "",
                     ),
@@ -183,7 +176,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                           ),
                           MdSnsText(
                             "Free Plan",
-              
+
                             color: Colors.lightBlueAccent,
                             size: 12.sp,
                           ),
@@ -203,9 +196,8 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   ],
                 ),
               ),
-            ]
-            ),
-          
+            ],
+          ),
         ),
       ),
     );
