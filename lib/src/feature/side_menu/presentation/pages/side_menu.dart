@@ -6,6 +6,7 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/shared/widgets/confirmation_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/logout_widgets.dart';
@@ -167,7 +168,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       "",
                     ),
 
-               
                     _buildMenuItem(
                       context,
                       Assets.images.statusUp.path,
@@ -179,7 +179,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       Assets.images.setting2.path,
 
                       "Settings",
-                      AppRoutes.swipeScreen.name,
+                      "Settings",
                     ),
                   ],
                 ),
@@ -269,6 +269,16 @@ class _SideMenuState extends ConsumerState<SideMenu> {
               setState(() {
                 selectedMenu = routeName;
               });
+              if (routeName == "Settings") {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: AppColors.shadowColor,
+                  builder: (context) {
+                    return OnboardingBottomSheet();
+                  },
+                );
+              }
               // context.pop();
               context.pushNamed(routeName);
             },

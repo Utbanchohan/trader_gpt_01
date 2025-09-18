@@ -131,6 +131,10 @@ class $AssetsImagesGen {
   AssetGenImage get leftscrollicon =>
       const AssetGenImage('assets/images/leftscrollicon.png');
 
+  /// File path: assets/images/leftsideimage.png
+  AssetGenImage get leftsideimage =>
+      const AssetGenImage('assets/images/leftsideimage.png');
+
   /// File path: assets/images/like.png
   AssetGenImage get like => const AssetGenImage('assets/images/like.png');
 
@@ -161,9 +165,6 @@ class $AssetsImagesGen {
   AssetGenImage get notification7 =>
       const AssetGenImage('assets/images/notification7.png');
 
-  /// File path: assets/images/phone.png
-  AssetGenImage get phone => const AssetGenImage('assets/images/phone.png');
-
   /// File path: assets/images/prefixIcon.png
   AssetGenImage get prefixIcon =>
       const AssetGenImage('assets/images/prefixIcon.png');
@@ -185,9 +186,9 @@ class $AssetsImagesGen {
   AssetGenImage get rightscrollicon =>
       const AssetGenImage('assets/images/rightscrollicon.png');
 
-  /// File path: assets/images/rightsidephone.png
-  AssetGenImage get rightsidephone =>
-      const AssetGenImage('assets/images/rightsidephone.png');
+  /// File path: assets/images/rightsideimage.png
+  AssetGenImage get rightsideimage =>
+      const AssetGenImage('assets/images/rightsideimage.png');
 
   /// File path: assets/images/rotate-left6.png
   AssetGenImage get rotateLeft6 =>
@@ -284,6 +285,7 @@ class $AssetsImagesGen {
     jJ,
     lampCharge,
     leftscrollicon,
+    leftsideimage,
     like,
     lock,
     logo,
@@ -293,14 +295,13 @@ class $AssetsImagesGen {
     message,
     netFilex,
     notification7,
-    phone,
     prefixIcon,
     profile,
     radar2,
     receipt1,
     receipt,
     rightscrollicon,
-    rightsidephone,
+    rightsideimage,
     rotateLeft6,
     searchNormal,
     setting2,

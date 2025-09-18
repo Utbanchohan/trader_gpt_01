@@ -426,24 +426,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             ],
                           ),
 
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(12),
-                                height: 36.h,
-                                width: 36.w,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.bubbleColor,
-                                ),
-                                child: Image.asset(
-                                  Assets.images.textfieldicon.path,
-                                ),
-                              
-                            ),
-                          ],
-                        ),
-                            SizedBox(width: 8),
+                        
 
                         Row(
                           children: [
@@ -461,28 +444,16 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             ),
                             SizedBox(width: 6.w),
 
-                            GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (context) {
-                                    return OnboardingBottomSheet();
-                                  },
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(12),
-                                height: 36.h,
-                                width: 36.w,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.bubbleColor,
-                                ),
-                                child: Image.asset(
-                                  Assets.images.textfieldicon4.path,
-                                ),
+                            Container(
+                              padding: EdgeInsets.all(12),
+                              height: 36.h,
+                              width: 36.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.bubbleColor,
+                              ),
+                              child: Image.asset(
+                                Assets.images.textfieldicon4.path,
                               ),
                             ),
 
