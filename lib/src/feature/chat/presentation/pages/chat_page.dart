@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
@@ -12,6 +10,7 @@ import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_messa
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/stream_service.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
@@ -20,7 +19,8 @@ import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import '../../../../core/routes/routes.dart';
+
+import 'widgets/loading_widget.dart';
 
 // ignore: must_be_immutable
 class ChatPage extends ConsumerStatefulWidget {
@@ -154,7 +154,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     super.dispose();
   }
 
-  
   getRandomQuestions(String symbol) async {
     var res = await ref.read(chatRepository).randomQuestions(symbol);
     if (res.isSuccess) {
@@ -691,63 +690,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           ),
                         ),
                         SizedBox(width: chats[index].type == "user" ? 10 : 0),
-                        Container(
-                          width: MediaQuery.sizeOf(context).width / 1.5,
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: AppColors.bubbleColor,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          // child: Flexible(
-                          child: MarkdownBody(
-                            data: chats[index].message,
-                            selectable: true, // let user copy code
-                            styleSheet:
-                                MarkdownStyleSheet.fromTheme(
-                                  Theme.of(context),
-                                ).copyWith(
-                                  code: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  tableBody: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  p: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  h1: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  h2: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-
-                                  blockquote: const TextStyle(
-                                    color: AppColors.white,
-                                  ),
-                                ),
-                            onTapLink: (text, href, title) {
-                              if (href != null) {
-                                // launchUrl(Uri.parse(href)); // needs url_launcher
-                              }
-                            },
-                          ),
-                        ),
+                        ChatMarkdownWidget(message: chats[index].message),
                         SizedBox(width: chats[index].type != "user" ? 10 : 0),
                         Visibility(
                           visible: chats[index].type != "user",
@@ -819,62 +762,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Container(
-                          width: MediaQuery.sizeOf(context).width / 1.4,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: AppColors.bubbleColor,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: MarkdownBody(
-                            data: text.toString(),
-                            selectable: true, // let user copy code
-                            styleSheet:
-                                MarkdownStyleSheet.fromTheme(
-                                  Theme.of(context),
-                                ).copyWith(
-                                  code: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  tableBody: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  p: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  h1: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  h2: GoogleFonts.plusJakartaSans(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-
-                                    fontWeight: FontWeight.w600,
-                                  ),
-
-                                  blockquote: const TextStyle(
-                                    color: AppColors.white,
-                                  ),
-                                ),
-                            onTapLink: (text, href, title) {
-                              if (href != null) {
-                                // launchUrl(Uri.parse(href)); // needs url_launcher
-                              }
-                            },
-                          ),
-                        ),
+                        ChatMarkdownWidget(message: text.toString()),
                         SizedBox(width: 10),
 
                         Visibility(
@@ -939,30 +827,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               loading: () => Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    width: MediaQuery.sizeOf(context).width / 1.4,
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppColors.bubbleColor,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        MdSnsText(
-                          "Thinking",
-                          color: AppColors.white,
-                          size: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        Image.asset(
-                          Assets.images.microinteractionsPreloader03.path,
-                          height: 40,
-                          width: 40,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
+                  LoadingWidgetMarkdown()
+                 
                 ],
               ),
               error: (err, _) => Center(child: Text("Error: $err")),
