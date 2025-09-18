@@ -39,6 +39,19 @@ class Profile extends _$Profile {
           );
       if (response.isSuccess) {
         state = AppLoadingState();
+        await ref
+            .read(localDataProvider)
+            .setAccessToken(response.data?.accessToken ?? '');
+        await ref
+            .read(localDataProvider)
+            .saveUserId(response.data?.user?.id ?? '');
+        await ref
+            .read(localDataProvider)
+            .saveUserName(response.data?.user?.name ?? '');
+        await ref
+            .read(localDataProvider)
+            .saveUser(response.data!.user.toJson());
+
         return response.data!;
       } else {
         $showMessage(response.message, isError: true);

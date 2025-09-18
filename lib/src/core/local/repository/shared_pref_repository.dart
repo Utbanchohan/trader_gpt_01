@@ -12,9 +12,15 @@ class SharedPreferencesService implements SharedPrefService {
   final idKey = 'id-user';
   final login = 'login';
   final _userKey = 'user';
+  final userNameKey="user-name";
 
   @override
   String? get accessToken => sharedPreferences.getString(_tokenKey);
+
+
+  @override
+   String? get getUserName => sharedPreferences.getString(userNameKey);
+
 
   @override
   Future<bool> setAccessToken(String token) async {
@@ -58,6 +64,11 @@ class SharedPreferencesService implements SharedPrefService {
   @override
   Future<void> saveUserId(String userId) {
     return sharedPreferences.setString(idKey, userId);
+  }
+
+   @override
+  Future<void> saveUserName(String userName) {
+    return sharedPreferences.setString(userNameKey, userName);
   }
 
   @override

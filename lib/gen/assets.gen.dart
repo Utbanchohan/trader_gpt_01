@@ -45,11 +45,19 @@ class $AssetsImagesGen {
   AssetGenImage get regenerate =>
       const AssetGenImage('assets/images/Regenerate.png');
 
+  /// File path: assets/images/TradersGPT_Logo.png
+  AssetGenImage get tradersGPTLogo =>
+      const AssetGenImage('assets/images/TradersGPT_Logo.png');
+
   /// File path: assets/images/Vector1.png
   AssetGenImage get vector1 => const AssetGenImage('assets/images/Vector1.png');
 
   /// File path: assets/images/Visa.png
   AssetGenImage get visa => const AssetGenImage('assets/images/Visa.png');
+
+  /// File path: assets/images/analytics.png
+  AssetGenImage get analytics =>
+      const AssetGenImage('assets/images/analytics.png');
 
   /// File path: assets/images/apple.png
   AssetGenImage get apple => const AssetGenImage('assets/images/apple.png');
@@ -67,11 +75,21 @@ class $AssetsImagesGen {
   /// File path: assets/images/cerosil.png
   AssetGenImage get cerosil => const AssetGenImage('assets/images/cerosil.png');
 
+  /// File path: assets/images/chart.png
+  AssetGenImage get chart => const AssetGenImage('assets/images/chart.png');
+
   /// File path: assets/images/copy.png
   AssetGenImage get copy => const AssetGenImage('assets/images/copy.png');
 
   /// File path: assets/images/cpu8.png
   AssetGenImage get cpu8 => const AssetGenImage('assets/images/cpu8.png');
+
+  /// File path: assets/images/direct.png
+  AssetGenImage get direct => const AssetGenImage('assets/images/direct.png');
+
+  /// File path: assets/images/directbox-notif.png
+  AssetGenImage get directboxNotif =>
+      const AssetGenImage('assets/images/directbox-notif.png');
 
   /// File path: assets/images/dislike.png
   AssetGenImage get dislike => const AssetGenImage('assets/images/dislike.png');
@@ -161,6 +179,10 @@ class $AssetsImagesGen {
   AssetGenImage get setting2 =>
       const AssetGenImage('assets/images/setting-2.png');
 
+  /// File path: assets/images/shapeAngle.png
+  AssetGenImage get shapeAngle =>
+      const AssetGenImage('assets/images/shapeAngle.png');
+
   /// File path: assets/images/sms.png
   AssetGenImage get sms => const AssetGenImage('assets/images/sms.png');
 
@@ -177,6 +199,13 @@ class $AssetsImagesGen {
   /// File path: assets/images/tesla.png
   AssetGenImage get tesla => const AssetGenImage('assets/images/tesla.png');
 
+  /// File path: assets/images/textalign-justifycenter.png
+  AssetGenImage get textalignJustifycenter =>
+      const AssetGenImage('assets/images/textalign-justifycenter.png');
+
+  /// File path: assets/images/trash.png
+  AssetGenImage get trash => const AssetGenImage('assets/images/trash.png');
+
   /// File path: assets/images/window.png
   AssetGenImage get window => const AssetGenImage('assets/images/window.png');
 
@@ -191,15 +220,20 @@ class $AssetsImagesGen {
     microinteractionsPreloader03,
     nvidia,
     regenerate,
+    tradersGPTLogo,
     vector1,
     visa,
+    analytics,
     apple,
     arrowBack,
     book,
     camera,
     cerosil,
+    chart,
     copy,
     cpu8,
+    direct,
+    directboxNotif,
     dislike,
     driver9,
     edit1,
@@ -226,11 +260,14 @@ class $AssetsImagesGen {
     rotateLeft6,
     searchNormal,
     setting2,
+    shapeAngle,
     sms,
     splashScreen,
     statusUp,
     stock,
     tesla,
+    textalignJustifycenter,
+    trash,
     window,
   ];
 }

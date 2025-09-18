@@ -94,7 +94,7 @@ class StocksPrices extends _$StocksPrices {
     debugPrint("onGetData");
     ref.read(socketRepository).getUpdatedStocks(stockIds, (stocks) {
       state = [
-        ...state.where((s) => !stocks.any((u) => u.id == s.id)),
+        ...state.where((s) => !stocks.any((u) => u.name == s.name)),
         ...stocks,
       ];
     });

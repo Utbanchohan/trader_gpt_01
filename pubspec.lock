@@ -153,6 +153,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  chart_sparkline:
+    dependency: "direct main"
+    description:
+      name: chart_sparkline
+      sha256: "3b224a3d1d2dabfd1c8690153694d1c874b9d9f68a9dccd79151d345435dad0a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   checked_yaml:
     dependency: transitive
     description:
@@ -273,6 +281,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -334,6 +350,14 @@ packages:
     description:
       name: fixnum
       sha256: b6dc7065e46c974bc7c5f143080a6764ec7a4be6da1285ececdc37be96de53be
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
+  fl_chart:
+    dependency: "direct main"
+    description:
+      name: fl_chart
+      sha256: "7ca9a40f4eb85949190e54087be8b4d6ac09dc4c54238d782a34cf1f7c011de9"
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
@@ -470,6 +494,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.9.3"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      sha256: e6bd17290cf0d011f9ed66c74d4159b8fe3b3050afedac0f11fab1ba8687e710
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -1141,6 +1173,14 @@ packages:
     description:
       name: shelf_web_socket
       sha256: "3632775c8e90d6c9712f883e633716432a27758216dfb61bd86a8321c0580925"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  shimmer:
+    dependency: "direct main"
+    description:
+      name: shimmer
+      sha256: "5f88c883a22e9f9f299e5ba0e4f7e6054857224976a5d9f839d4ebdc94a14ac9"
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"

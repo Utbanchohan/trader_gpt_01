@@ -7,9 +7,13 @@ import 'package:trader_gpt/src/shared/flavours.dart';
 class SseService {
   final Dio _dio = Dio();
   final buffer = StringBuffer();
-  final followUp = StringBuffer();
+  List<String> followupList = [];
+  bool streamEnd = false;
 
-  Stream<String> connect(Map<String, dynamic> body, String token) async* {
+  Stream<Map<String, dynamic>> connect(
+    Map<String, dynamic> body,
+    String token,
+  ) async* {
     final url = "${BaseUrl.baseUrl}tgpt-python/api/user_ask_stream";
 
     final headers = {
@@ -23,6 +27,7 @@ class SseService {
       data: body,
       options: Options(headers: headers, responseType: ResponseType.stream),
     );
+    String followUpText = '';
     await for (final chunk in response.data!.stream) {
       final decoded = utf8.decode(chunk);
       for (final line in const LineSplitter().convert(decoded)) {
@@ -33,16 +38,24 @@ class SseService {
           if (json is Map && json["chunk"] != null) {
             if (json['type'] == "writer") {
               buffer.write(json["chunk"]);
+              yield {"buffer": buffer.toString(), "followUp": []};
             } else if (json['type'] == "followup") {
-              followUp.write(json['chunk']);
+              followUpText += json["chunk"];
             }
-            yield buffer.toString();
-              
           }
         } catch (e) {
           debugPrint("❌ JSON decode error: $e");
         }
       }
     }
+    streamEnd = true;
+    print(followUpText);
+    dynamic decodedJsonfollow = jsonDecode(followUpText);
+    List<dynamic> loist = decodedJsonfollow['followup_questions'];
+    for (int i = 0; i < loist.length; i++) {
+      followupList.add(loist[i]);
+    }
+
+    yield {"buffer": buffer.toString(), "followUp": followupList};
   }
 }

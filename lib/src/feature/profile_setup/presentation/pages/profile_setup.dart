@@ -63,7 +63,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
             email: email.value.text,
             password: password.value.text,
             fullname: fullname.value.text,
-            imageUrl: mediaModel!.url,
+            imageUrl: mediaModel != null && mediaModel!.url.isNotEmpty
+                ? mediaModel!.url
+                : "",
           );
       if (result != null) {
         if (mounted) {
@@ -100,7 +102,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
           ),
         ),
       ),
-      backgroundColor:  Color(0xFF0E1738),
+      backgroundColor: Color(0xFF0E1738),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -160,7 +162,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                             ),
                           );
                         },
-                        loading: () =>  CircularProgressIndicator(),
+                        loading: () => CircularProgressIndicator(),
                         error: (e, st) => Text("Error: $e"),
                       ),
                       GestureDetector(
@@ -168,7 +170,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                           showModalBottomSheet(
                             backgroundColor: AppColors.bubbleColor,
                             context: context,
-                            shape:  RoundedRectangleBorder(
+                            shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.vertical(
                                 top: Radius.circular(20),
                               ),
@@ -278,6 +280,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     ),
                     SizedBox(height: 8.h),
                     TextFormField(
+                      readOnly: true,
                       controller: email,
                       style: TextStyle(
                         color: Colors.white,
@@ -367,7 +370,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                         hintText: "Create Password",
                         filled: true,
-                        fillColor:  Color(0xFF161E31),
+                        fillColor: Color(0xFF161E31),
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 24.w,
                           vertical: 10.h,
@@ -446,7 +449,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                         hintText: 'Confirm Password',
                         filled: true,
-                        fillColor:  Color(0xFF161E31),
+                        fillColor: Color(0xFF161E31),
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 24.w,
                           vertical: 10.h,

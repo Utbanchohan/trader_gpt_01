@@ -22,7 +22,7 @@ final stocksStreamProvider =
     );
 
 typedef _$StocksStream = Notifier<List<Stock>>;
-String _$stocksPricesHash() => r'3a234e548738c4558b49a2e230b43819b387bde9';
+String _$stocksPricesHash() => r'e10e3d69171d3089c092861c07661b0f966a7bc3';
 
 /// See also [StocksPrices].
 @ProviderFor(StocksPrices)
