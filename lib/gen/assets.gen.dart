@@ -45,6 +45,9 @@ class $AssetsImagesGen {
   AssetGenImage get regenerate =>
       const AssetGenImage('assets/images/Regenerate.png');
 
+  /// File path: assets/images/TGBT-aimation.json
+  String get tGBTAimation => 'assets/images/TGBT-aimation.json';
+
   /// File path: assets/images/TradersGPT_Logo.png
   AssetGenImage get tradersGPTLogo =>
       const AssetGenImage('assets/images/TradersGPT_Logo.png');
@@ -146,6 +149,10 @@ class $AssetsImagesGen {
   AssetGenImage get notification7 =>
       const AssetGenImage('assets/images/notification7.png');
 
+  /// File path: assets/images/prefixIcon.png
+  AssetGenImage get prefixIcon =>
+      const AssetGenImage('assets/images/prefixIcon.png');
+
   /// File path: assets/images/profile.jpg
   AssetGenImage get profile => const AssetGenImage('assets/images/profile.jpg');
 
@@ -191,6 +198,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/tesla.png
   AssetGenImage get tesla => const AssetGenImage('assets/images/tesla.png');
 
+  /// File path: assets/images/textalign-justifycenter.png
+  AssetGenImage get textalignJustifycenter =>
+      const AssetGenImage('assets/images/textalign-justifycenter.png');
+
   /// File path: assets/images/textfieldicon.png
   AssetGenImage get textfieldicon =>
       const AssetGenImage('assets/images/textfieldicon.png');
@@ -206,9 +217,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/textfieldicon4.png
   AssetGenImage get textfieldicon4 =>
       const AssetGenImage('assets/images/textfieldicon4.png');
-  /// File path: assets/images/textalign-justifycenter.png
-  AssetGenImage get textalignJustifycenter =>
-      const AssetGenImage('assets/images/textalign-justifycenter.png');
 
   /// File path: assets/images/trash.png
   AssetGenImage get trash => const AssetGenImage('assets/images/trash.png');
@@ -227,6 +235,7 @@ class $AssetsImagesGen {
     microinteractionsPreloader03,
     nvidia,
     regenerate,
+    tGBTAimation,
     tradersGPTLogo,
     vector1,
     visa,
@@ -258,6 +267,7 @@ class $AssetsImagesGen {
     message,
     netFilex,
     notification7,
+    prefixIcon,
     profile,
     radar2,
     receipt1,
@@ -271,10 +281,12 @@ class $AssetsImagesGen {
     statusUp,
     stock,
     tesla,
+    textalignJustifycenter,
     textfieldicon,
     textfieldicon2,
+    textfieldicon3,
     textfieldicon4,
-    textalignJustifycenter,
+    trash,
     window,
   ];
 }
