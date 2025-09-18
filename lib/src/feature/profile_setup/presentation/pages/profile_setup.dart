@@ -67,7 +67,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                 ? mediaModel!.url
                 : "",
           );
-          
+
       if (result != null) {
         if (mounted) {
           context.goNamed(AppRoutes.chatPage.name);

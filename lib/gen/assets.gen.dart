@@ -72,8 +72,15 @@ class $AssetsImagesGen {
   /// File path: assets/images/book.png
   AssetGenImage get book => const AssetGenImage('assets/images/book.png');
 
+  /// File path: assets/images/c2.png
+  AssetGenImage get c2 => const AssetGenImage('assets/images/c2.png');
+
   /// File path: assets/images/camera.png
   AssetGenImage get camera => const AssetGenImage('assets/images/camera.png');
+
+  /// File path: assets/images/categoryc1.png
+  AssetGenImage get categoryc1 =>
+      const AssetGenImage('assets/images/categoryc1.png');
 
   /// File path: assets/images/cerosil.png
   AssetGenImage get cerosil => const AssetGenImage('assets/images/cerosil.png');
@@ -87,12 +94,16 @@ class $AssetsImagesGen {
   /// File path: assets/images/cpu8.png
   AssetGenImage get cpu8 => const AssetGenImage('assets/images/cpu8.png');
 
+  /// File path: assets/images/diagramc3.png
+  AssetGenImage get diagramc3 =>
+      const AssetGenImage('assets/images/diagramc3.png');
+
   /// File path: assets/images/direct.png
   AssetGenImage get direct => const AssetGenImage('assets/images/direct.png');
 
-  /// File path: assets/images/directbox-notif.png
-  AssetGenImage get directboxNotif =>
-      const AssetGenImage('assets/images/directbox-notif.png');
+  /// File path: assets/images/directbox-notifc4.png
+  AssetGenImage get directboxNotifc4 =>
+      const AssetGenImage('assets/images/directbox-notifc4.png');
 
   /// File path: assets/images/dislike.png
   AssetGenImage get dislike => const AssetGenImage('assets/images/dislike.png');
@@ -105,6 +116,10 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/edit2.png
   AssetGenImage get edit2 => const AssetGenImage('assets/images/edit2.png');
+
+  /// File path: assets/images/empty-wallet (1).png
+  AssetGenImage get emptyWallet1 =>
+      const AssetGenImage('assets/images/empty-wallet (1).png');
 
   /// File path: assets/images/eye.png
   AssetGenImage get eye => const AssetGenImage('assets/images/eye.png');
@@ -251,17 +266,21 @@ class $AssetsImagesGen {
     apple,
     arrowBack,
     book,
+    c2,
     camera,
+    categoryc1,
     cerosil,
     chart,
     copy,
     cpu8,
+    diagramc3,
     direct,
-    directboxNotif,
+    directboxNotifc4,
     dislike,
     driver9,
     edit1,
     edit2,
+    emptyWallet1,
     eye,
     hp,
     information1,
