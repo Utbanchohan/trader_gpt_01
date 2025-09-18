@@ -369,6 +369,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           scrollController: _textScrollController,
+                        
                           onChanged: (value) {
                             // Auto scroll to bottom while typing
                             _textScrollController.jumpTo(
@@ -394,8 +395,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                               },
                               child: Image.asset(
                                 Assets.images.prefixIcon.path,
-                                scale: 3.9,
+                                scale: 3.3.sp,
                               ),
+                            ),
+                            prefixIconConstraints: BoxConstraints(
+                              minWidth: 0,
+                              minHeight: 0,
                             ),
                             hintStyle: TextStyle(
                               color: AppColors.bluishgrey404F81,
@@ -405,6 +410,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           ),
                         ),
                       ),
+
                       SizedBox(height: 15.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -413,8 +419,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             children: [
                               Container(
                                 padding: EdgeInsets.all(12),
-                                height: 36.h,
-                                width: 36.w,
+                                height: 35.h,
+                                width: 35.w,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.color091224,
