@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class LogoutDialog extends StatelessWidget {
@@ -12,9 +14,10 @@ class LogoutDialog extends StatelessWidget {
     required this.onConfirm,
     required this.onCancel,
   }) : super(key: key);
-
+ 
   @override
   Widget build(BuildContext context) {
+    
     return Dialog(
       backgroundColor: Color(0xFF0B1433), // Dark navy background
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

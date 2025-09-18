@@ -31,17 +31,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevents closing by tapping outside
+      barrierDismissible: false, 
       builder: (context) {
         return LogoutDialog(
           onConfirm: () {
-            Navigator.pop(context); // Close dialog
-
-            // Add your logout logic here
-            print("User logged out");
+            logout();
           },
           onCancel: () {
-            Navigator.pop(context); // Just close the dialog
+            Navigator.pop(context); 
           },
         );
       },
@@ -174,12 +171,12 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       context,
                       Assets.images.statusUp.path,
 
-                    "Books",
-                    AppRoutes.analytics.name,
-                  ),
-                  _buildMenuItem(
-                    context,
-                    Assets.images.statusUp.path,
+                      "Books",
+                      AppRoutes.analytics.name,
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Assets.images.statusUp.path,
                       "Analytics",
                       "",
                     ),
@@ -223,7 +220,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                           ),
                           MdSnsText(
                             "Free Plan",
-              
+
                             color: Colors.lightBlueAccent,
                             size: 12.sp,
                           ),
@@ -244,9 +241,8 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   ],
                 ),
               ),
-            ]
-            ),
-          
+            ],
+          ),
         ),
       ),
     );
