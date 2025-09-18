@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../../core/theme/app_colors.dart';
@@ -10,7 +12,15 @@ class ChatMarkdownWidget extends StatefulWidget {
   String message;
   String name;
   String image;
-  ChatMarkdownWidget({super.key,required this.name,required this.image, required this.message});
+  String type;
+
+  ChatMarkdownWidget({
+    super.key,
+    required this.name,
+    required this.image,
+    required this.message,
+    required this.type,
+  });
   @override
   State<ChatMarkdownWidget> createState() => _ChatMarkdownWidgetState();
 }
@@ -24,32 +34,39 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-          SizedBox(width: 6),
-            Container(height: 20, width: 20, decoration: BoxDecoration(
-              image: 
-              DecorationImage(
-                fit: BoxFit.cover,
-                image: 
-                widget.image.isEmpty?
-              NetworkImage("https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D"):NetworkImage(widget.image))
-            ),),
             SizedBox(width: 6),
-            MdSnsText(widget.name, size: 12, color: AppColors.white,fontWeight: FontWeight.w500,),
+            Container(
+              height: widget.type == "user" ? 20.h : 50.h,
+              width: widget.type == "user" ? 20.w : 90.w,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  // fit: BoxFit.cover,
+                  image: widget.image.isEmpty
+                      ? AssetImage(Assets.images.appLogo.path)
+                      : NetworkImage(widget.image),
+                ),
+              ),
+            ),
           ],
         ),
         SizedBox(height: 6),
 
         Container(
-          width: MediaQuery.sizeOf(context).width / 1.5,
+          width: widget.type == "user"
+              ? MediaQuery.sizeOf(context).width / 1.5.w
+              : MediaQuery.sizeOf(context).width * 0.75.w,
+
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.bubbleColor,
+            color: widget.type == "user"
+                ? AppColors.bubbleColor
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(16),
           ),
           // child: Flexible(
           child: MarkdownBody(
             data: widget.message,
-            selectable: true, // let user copy code
+            selectable: true,
             styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
                 .copyWith(
                   code: GoogleFonts.plusJakartaSans(
