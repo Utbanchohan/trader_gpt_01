@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
+import 'package:trader_gpt/src/feature/analytics/analytics.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/get_start/presentation/pages/getstart.dart';
@@ -124,11 +125,20 @@ final routerConfigProvider = Provider((ref) {
         },
         routes: [],
       ),
+
       GoRoute(
         path: AppRoutes.myProfileScreen.path,
         name: AppRoutes.myProfileScreen.name,
         builder: (BuildContext context, GoRouterState state) {
           return MyProfileScreen();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.analytics.path,
+        name: AppRoutes.analytics.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return AnalyticsScreen();
         },
         routes: [],
       ),

@@ -12,6 +12,7 @@ enum AppRoutes {
   stockScreen('stockScreen', '/stockScreen'),
   uploadImage('uploadImage', '/uploadImage'),
   sideMenu('sideMenu', '/sideMenu'),
+  analytics('analytics', '/analytics'),
   myProfileScreen('myProfileScreen', '/myProfileScreen');
 
   final String name;

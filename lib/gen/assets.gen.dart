@@ -27,6 +27,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/Google.png
   AssetGenImage get google => const AssetGenImage('assets/images/Google.png');
 
+  /// File path: assets/images/Group 702.png
+  AssetGenImage get group702 =>
+      const AssetGenImage('assets/images/Group 702.png');
+
   /// File path: assets/images/Meta.png
   AssetGenImage get meta => const AssetGenImage('assets/images/Meta.png');
 
@@ -43,6 +47,7 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/Vector1.png
   AssetGenImage get vector1 => const AssetGenImage('assets/images/Vector1.png');
+
   /// File path: assets/images/Visa.png
   AssetGenImage get visa => const AssetGenImage('assets/images/Visa.png');
 
@@ -112,15 +117,16 @@ class $AssetsImagesGen {
   AssetGenImage get messageSearch5 =>
       const AssetGenImage('assets/images/message-search5.png');
 
-  /// File path: assets/images/notification7.png
-  AssetGenImage get notification7 =>
-      const AssetGenImage('assets/images/notification7.png');
   /// File path: assets/images/message.png
   AssetGenImage get message => const AssetGenImage('assets/images/message.png');
 
   /// File path: assets/images/netFilex.png
   AssetGenImage get netFilex =>
       const AssetGenImage('assets/images/netFilex.png');
+
+  /// File path: assets/images/notification7.png
+  AssetGenImage get notification7 =>
+      const AssetGenImage('assets/images/notification7.png');
 
   /// File path: assets/images/profile.jpg
   AssetGenImage get profile => const AssetGenImage('assets/images/profile.jpg');
@@ -134,10 +140,6 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/receipt.png
   AssetGenImage get receipt => const AssetGenImage('assets/images/receipt.png');
-
-  /// File path: assets/images/rotate-left (1).png
-  AssetGenImage get rotateLeft1 =>
-      const AssetGenImage('assets/images/rotate-left (1).png');
 
   /// File path: assets/images/rotate-left6.png
   AssetGenImage get rotateLeft6 =>
@@ -176,6 +178,7 @@ class $AssetsImagesGen {
     appLogo,
     conversation,
     google,
+    group702,
     meta,
     microinteractionsPreloader03,
     nvidia,
@@ -203,13 +206,13 @@ class $AssetsImagesGen {
     manicon,
     menu,
     messageSearch5,
-    notification7,
     message,
     netFilex,
+    notification7,
     profile,
     radar2,
+    receipt1,
     receipt,
-    rotateLeft1,
     rotateLeft6,
     searchNormal,
     setting2,

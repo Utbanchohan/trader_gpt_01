@@ -130,7 +130,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     Assets.images.book.path,
 
                     "Books",
-                    AppRoutes.profilePage.name,
+                    AppRoutes.analytics.name,
                   ),
                   _buildMenuItem(
                     context,
@@ -191,28 +191,25 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                         ],
                       ),
                     ),
-                   
-                      GestureDetector(
-                        onTap: () {
-                          logout();
-                        },
-                        child: Icon(
-                          Icons.logout,
-                          color: Colors.lightBlueAccent,
-                          size: 20.sp,
-                        ),
+
+                    GestureDetector(
+                      onTap: () {
+                        logout();
+                      },
+                      child: Icon(
+                        Icons.logout,
+                        color: Colors.lightBlueAccent,
+                        size: 20.sp,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
               ),
-              ),
-           
-          ],
             ),
-      
-      
+          ],
         ),
-      );
+      ),
+    );
   }
 
   /// Ab ye menu item state ke hisaab se highlight hoga

@@ -8,7 +8,6 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/started_page_gride_scroll.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-import 'package:scroll_loop_auto_scroll/scroll_loop_auto_scroll.dart';
 
 class GetStartedScreen extends StatefulWidget {
   const GetStartedScreen({super.key});
@@ -110,7 +109,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
               fontWeight: FontWeight.w400,
               height: 1.2,
               color: AppColors.white.withOpacity(0.8),
-              size: 11, // 👈 responsive text
+              size: 11,
             ),
           ],
         ),
