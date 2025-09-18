@@ -50,48 +50,44 @@ class ConfirmationDialog extends StatelessWidget {
 
             // Buttons
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // No Button
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF203864), // dark grey
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF203864), // dark grey
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                    onPressed: onCancel,
-                    child: MdSnsText(
-                      "No",
-                      textAlign: TextAlign.center,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xffffffff),
-                      size: 16,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  onPressed: onCancel,
+                  child: MdSnsText(
+                    "No",
+                    textAlign: TextAlign.center,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xffffffff),
+                    size: 16,
                   ),
                 ),
                 const SizedBox(width: 15),
 
                 // Yes Button
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0098E4), // blue
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0098E4), // blue
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                    onPressed: onConfirm,
-                    child: MdSnsText(
-                      "Yes",
-                      textAlign: TextAlign.center,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xffffffff),
-                      size: 16,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  onPressed: onConfirm,
+                  child: MdSnsText(
+                    "Yes",
+                    textAlign: TextAlign.center,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xffffffff),
+                    size: 16,
                   ),
                 ),
               ],

@@ -50,35 +50,32 @@ class LogoutDialog extends StatelessWidget {
             const SizedBox(height: 20),
 
             // 🔹 Buttons Row
-            Container(margin: EdgeInsets.only(left: 80, right: 80)),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // No Button
-                Expanded(
-                  child: SizedBox(
-                    height: 43.h,
-                    width: 90.w,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        // minimumSize: const Size(80, 40),
-                        backgroundColor: const Color(0xFF203864), // Dark grey
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        // padding: const EdgeInsets.symmetric(
-                        //   vertical: 8,
-                        //   horizontal: 12,
-                        // ), // 👈 Reduce internal padding
+                SizedBox(
+                  height: 43.h,
+                  width: 90.w,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      // minimumSize: const Size(80, 40),
+                      backgroundColor: Color(0xFF203864),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
                       ),
-                      onPressed: onCancel,
-                      child: MdSnsText(
-                        "No",
-                        textAlign: TextAlign.center,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xffffffff),
-                        size: 14, // 👈 Text size smaller
-                      ),
+                      // padding: const EdgeInsets.symmetric(
+                      //   vertical: 8,
+                      //   horizontal: 12,
+                      // ), // 👈 Reduce internal padding
+                    ),
+                    onPressed: onCancel,
+                    child: MdSnsText(
+                      "No",
+                      textAlign: TextAlign.center,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xffffffff),
+                      size: 14, // 👈 Text size smaller
                     ),
                   ),
                 ),
@@ -86,33 +83,31 @@ class LogoutDialog extends StatelessWidget {
                 const SizedBox(width: 10),
 
                 // Yes Button
-                Expanded(
-                  child: SizedBox(
-                    height: 43.h,
-                    width: 90.w,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        // minimumSize: const Size(
-                        //   80,
-                        //   40,
-                        // ), // 👈 Minimum width & height
-                        backgroundColor: const Color(0xFF0098E4), // Blue
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        // padding: const EdgeInsets.symmetric(
-                        //   vertical: 8,
-                        //   horizontal: 8,
-                        // ), // 👈 Reduce internal padding
+                SizedBox(
+                  height: 43.h,
+                  width: 90.w,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      // minimumSize: const Size(
+                      //   80,
+                      //   40,
+                      // ), // 👈 Minimum width & height
+                      backgroundColor: const Color(0xFF0098E4), // Blue
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
                       ),
-                      onPressed: onConfirm,
-                      child: MdSnsText(
-                        "Yes",
-                        textAlign: TextAlign.center,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xffffffff),
-                        size: 14, // 👈 Text size smaller
-                      ),
+                      // padding: const EdgeInsets.symmetric(
+                      //   vertical: 8,
+                      //   horizontal: 8,
+                      // ), // 👈 Reduce internal padding
+                    ),
+                    onPressed: onConfirm,
+                    child: MdSnsText(
+                      "Yes",
+                      textAlign: TextAlign.center,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xffffffff),
+                      size: 14, // 👈 Text size smaller
                     ),
                   ),
                 ),
