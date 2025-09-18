@@ -310,54 +310,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
           child: Column(
             children: [
-              GestureDetector(
-                onTap: () async {
-                  if (widget.chatRouting == null ||
-                      widget.chatRouting!.companyName.isEmpty) {
-                    selectedStock = await showDialogue(
-                      questions,
-                      [],
-                      message,
-                      0,
-                    );
-                  } else {
-                    showDialogue(questions, [], message, 0);
-                  }
-                },
-                child: Center(
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.fieldTextColor),
-                      color: AppColors.bubbleColor,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Row(
-                      mainAxisSize:
-                          MainAxisSize.min, // width sirf content ke hisaab se
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MdSnsText(
-                          "Top Asking Questions",
-                          size: 16,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.white,
-                        ),
-                        SizedBox(width: 5),
-                        Icon(
-                          Icons.keyboard_arrow_up,
-                          size: 25,
-                          color: AppColors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
               Container(
-                height: 140.h,
-                margin: EdgeInsets.all(10),
+                height: 118.h,
+                margin: EdgeInsets.all(18),
                 padding: EdgeInsets.all(2),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
@@ -385,6 +340,23 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: "Ask anything about the market",
+                            prefixIcon: Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.color1B254B,
+                                border: Border.all(
+                                  color: AppColors.bubbleColor,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.lock,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
                             hintStyle: TextStyle(
                               color: AppColors.bluishgrey404F81,
                               fontSize: 16,
@@ -398,57 +370,97 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         children: [
                           Row(
                             children: [
-                              Container(
-                                height: 50.h,
-                                width: 50.w,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.color091224,
-                                  border: Border.all(
-                                    color: AppColors.bluishgrey404F81,
+                              GestureDetector(
+                                onTap: () async {
+                                  if (widget.chatRouting == null ||
+                                      widget.chatRouting!.companyName.isEmpty) {
+                                    selectedStock = await showDialogue(
+                                      questions,
+                                      [],
+                                      message,
+                                      0,
+                                    );
+                                  } else {
+                                    showDialogue(questions, [], message, 0);
+                                  }
+                                },
+                                child: Container(
+                                  height: 36.h,
+                                  width: 36.w,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.color091224,
+                                    border: Border.all(
+                                      color: AppColors.bluishgrey404F81,
+                                      width: 1.5,
+                                    ),
                                   ),
-                                ),
-                                child: Icon(
-                                  Icons.add,
-                                  color: AppColors.color3C4E8A,
-                                  size: 30.sp,
+                                  child: Icon(
+                                    Icons.add,
+                                    color: AppColors.color3C4E8A,
+                                    size: 30.sp,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 8),
 
-                              _ActionChip(
-                                icon: Assets.images.radar2.path,
-                                label: "Deep Search",
-                                onTap: () {},
-                              ),
-                              SizedBox(width: 6),
+                              // _ActionChip(
+                              //   icon: Assets.images.radar2.path,
+                              //   label: "Deep Search",
+                              //   onTap: () {},
+                              // ),
+                              // SizedBox(width: 6),
 
-                              // Think Button
-                              _ActionChip(
-                                icon: Assets.images.lampCharge.path,
-                                label: "Think",
-                                onTap: () {},
-                              ),
+                              // // Think Button
+                              // _ActionChip(
+                              //   icon: Assets.images.lampCharge.path,
+                              //   label: "Think",
+                              //   onTap: () {},
+                              // ),
                             ],
                           ),
 
                           // Send Button
-                          Container(
-                            height: 36,
-                            width: 36,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.color046297,
-                            ),
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              icon: Icon(
-                                Icons.arrow_upward_rounded,
-                                color: AppColors.white,
-                                size: 18,
+                          Row(
+                            children: [
+                              Container(
+                                height: 36,
+                                width: 36,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.bubbleColor,
+                                ),
+                                child: Icon(Icons.euro_symbol),
                               ),
-                              onPressed: () => _sendMessage(ref),
-                            ),
+                              SizedBox(width: 6.w),
+                              Container(
+                                height: 36,
+                                width: 36,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.bubbleColor,
+                                ),
+                                child: Icon(Icons.euro_symbol),
+                              ),
+                              SizedBox(width: 6.w),
+                              Container(
+                                height: 36,
+                                width: 36,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.color046297,
+                                ),
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  icon: Icon(
+                                    Icons.arrow_upward_rounded,
+                                    color: AppColors.white,
+                                    size: 18,
+                                  ),
+                                  onPressed: () => _sendMessage(ref),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -629,7 +641,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: chats.length,
               itemBuilder: (BuildContext context, int index) {
-                String name=chats[index].type != "user"? widget.chatRouting == null || widget.chatRouting!.symbol.isEmpty?"TDGPT":widget.chatRouting!.symbol:"Raza" ;
+                String name = chats[index].type != "user"
+                    ? widget.chatRouting == null ||
+                              widget.chatRouting!.symbol.isEmpty
+                          ? "TDGPT"
+                          : widget.chatRouting!.symbol
+                    : "Raza";
                 return Column(
                   children: [
                     Row(
@@ -639,25 +656,25 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           : MainAxisAlignment.start,
 
                       children: [
-                       
-                      
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            ChatMarkdownWidget(message: chats[index].message,name: name,),
-                             SizedBox(height: chats[index].type != "user" ? 10 : 10),
-                        MessageLikeCopyIcon(
-                            type: chats[index].type,
-                            message: chats[index].message,
-                          ),
-                     
+                            ChatMarkdownWidget(
+                              message: chats[index].message,
+                              name: name,
+                            ),
+                            SizedBox(
+                              height: chats[index].type != "user" ? 10 : 10,
+                            ),
+                            MessageLikeCopyIcon(
+                              type: chats[index].type,
+                              message: chats[index].message,
+                            ),
                           ],
                         ),
-                       
                       ],
                     ),
-                   
-                   
+
                     SizedBox(height: 20),
                   ],
                 );
@@ -673,7 +690,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        ChatMarkdownWidget(message: text.toString(),name: widget.chatRouting == null || widget.chatRouting!.symbol.isEmpty?"TDGPT":widget.chatRouting!.symbol,),
+                        ChatMarkdownWidget(
+                          message: text.toString(),
+                          name:
+                              widget.chatRouting == null ||
+                                  widget.chatRouting!.symbol.isEmpty
+                              ? "TDGPT"
+                              : widget.chatRouting!.symbol,
+                        ),
                         SizedBox(width: 10),
                         Visibility(
                           visible: text.toString().isNotEmpty,

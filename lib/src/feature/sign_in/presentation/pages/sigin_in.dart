@@ -9,6 +9,7 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sign_in/presentation/provider/sign_in.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -50,113 +51,36 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
       body: SafeArea(
         top: true,
         child: Padding(
-          padding: EdgeInsets.only(top: 40.h, left: 20.w, right: 20.w),
+          padding: EdgeInsets.only(top: 80.h, left: 20.w, right: 20.w),
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 MdSnsText(
-                  "Sign in to TradersGPT",
-                  size: 32, 
+                  "Sign in to",
+                  size: 32,
                   fontWeight: FontWeight.w700,
                   color: AppColors.white,
                 ),
-                SizedBox(height: 10.h),
+                // SizedBox(height: 5.h),
+                Image.asset(
+                  Assets.images.appLogo.path,
+                  width: 203.w,
+                  height: 50.h,
+                ),
 
+                SizedBox(height: 20.h),
                 MdSnsText(
                   "Ready to start where you left of?",
                   size: 16,
                   fontWeight: FontWeight.w400,
                   color: AppColors.white,
                 ),
-
                 SizedBox(height: 40.h),
 
                 // Google button
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: AppColors.color274E87),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.r),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          Assets.images.google.path,
-                          height: 24.h,
-                          width: 24.w,
-                        ),
-                        SizedBox(width: 10.w),
-                        MdSnsText(
-                          "Continue With Google",
-                          size: 18,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.color274E87,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 10.h),
-
-                // Apple button
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: AppColors.color274E87),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.r),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          Assets.images.apple.path,
-                          height: 24.h,
-                          width: 24.w,
-                        ),
-                        SizedBox(width: 10.w),
-                        MdSnsText(
-                          "Continue With Apple",
-                          size: 18,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.color274E87,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 25.h),
 
                 // Divider
-                Row(
-                  children: [
-                    Expanded(child: Divider(color: AppColors.colorB2B2B7)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w),
-                      child: MdSnsText(
-                        "Sign in with Google or Email",
-                        size: 12,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.white,
-                      ),
-                    ),
-                    Expanded(child: Divider(color: AppColors.colorB2B2B7)),
-                  ],
-                ),
-
-                SizedBox(height: 30.h),
-
                 Form(
                   key: formKey,
                   child: Column(
@@ -178,7 +102,7 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8.h),
+                      SizedBox(height: 9.h),
 
                       // Email field
                       TextFormField(
@@ -190,8 +114,8 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                         ),
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: AppColors.color141F35,
-                          hintText: 'Burakdeniz@gmail.com',
+                          fillColor: AppColors.bubbleColor,
+                          hintText: 'Email',
                           hintStyle: GoogleFonts.plusJakartaSans(
                             color: AppColors.white,
                             fontSize: 16,
@@ -204,14 +128,20 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.r),
+                            borderSide: BorderSide(color: Colors.transparent),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.r),
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.r),
+                            borderSide: BorderSide(color: Colors.transparent),
                           ),
                         ),
                       ),
 
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 16.h),
 
                       // Password label
                       Row(
@@ -230,7 +160,7 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8.h),
+                      SizedBox(height: 9.h),
 
                       // Password field
                       TextFormField(
@@ -252,8 +182,8 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                             }),
                           ),
                           filled: true,
-                          fillColor: AppColors.color141F35,
-                          hintText: '*********',
+                          fillColor: AppColors.bubbleColor,
+                          hintText: 'Password',
                           hintStyle: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -265,9 +195,15 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.r),
+                            borderSide: BorderSide(color: Colors.transparent),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.r),
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.r),
+                            borderSide: BorderSide(color: Colors.transparent),
                           ),
                         ),
                       ),
@@ -288,7 +224,7 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                   ),
                 ),
 
-                SizedBox(height: 20.h),
+                SizedBox(height: 35.h),
 
                 // Sign in button
                 SizedBox(
@@ -301,13 +237,99 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                     title: 'Sign in',
                     borderRadius: 50.r,
                     fontSize: 18,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     textColor: AppColors.white,
                     bgColor: AppColors.color0098E4,
                   ),
                 ),
 
-                SizedBox(height: 20.h),
+                SizedBox(height: 35.h),
+
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: AppColors.colorB2B2B7)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: MdSnsText(
+                        "Or",
+                        size: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.white,
+                      ),
+                    ),
+                    Expanded(child: Divider(color: AppColors.colorB2B2B7)),
+                  ],
+                ),
+
+                SizedBox(height: 35.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 162.w,
+                      height: 55.h,
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: AppColors.color274E87),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50.r),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              Assets.images.google.path,
+                              height: 24.h,
+                              width: 24.w,
+                            ),
+                            SizedBox(width: 10.w),
+                            MdSnsText(
+                              "Google",
+                              size: 18,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.color274E87,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 162.w,
+                      height: 55.h,
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: AppColors.color274E87),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50.r),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              Assets.images.apple.path,
+                              height: 24.h,
+                              width: 24.w,
+                            ),
+                            SizedBox(width: 10.w),
+                            MdSnsText(
+                              "Apple",
+                              size: 18,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.color274E87,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Apple button
+                SizedBox(height: 35.h),
 
                 // Sign up text
                 Center(
@@ -316,9 +338,9 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                       context.goNamed(AppRoutes.signUpPage.name);
                     },
                     child: Text(
-                      "Don't have an account? Sign up",
+                      "Don’t have an account? Sign up",
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: Colors.white,
                       ),
