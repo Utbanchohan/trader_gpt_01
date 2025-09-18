@@ -12,10 +12,8 @@ _Stock _$StockFromJson(Map<String, dynamic> json) => _Stock(
   changesPercentage: (json['changesPercentage'] as num).toDouble(),
   dayHigh: (json['dayHigh'] as num).toDouble(),
   dayLow: (json['dayLow'] as num).toDouble(),
-  earningsAnnouncement:
-   json['earningsAnnouncement']!=null?
-   json['earningsAnnouncement'] as String:"",
-  eps:json['eps']!=null? (json['eps'] as num).toDouble():0,
+  earningsAnnouncement: json['earningsAnnouncement'] as String,
+  eps: (json['eps'] as num).toDouble(),
   exchange: json['exchange'] as String,
   fiveDayTrend: (json['fiveDayTrend'] as List<dynamic>)
       .map((e) => FiveDayTrend.fromJson(e as Map<String, dynamic>))
@@ -23,9 +21,9 @@ _Stock _$StockFromJson(Map<String, dynamic> json) => _Stock(
   marketCap: (json['marketCap'] as num).toInt(),
   name: json['name'] as String,
   open: (json['open'] as num).toDouble(),
-  pe:json['pe']!=null? (json['pe'] as num).toDouble():0,
+  pe: (json['pe'] as num).toDouble(),
   previousClose: (json['previousClose'] as num).toDouble(),
-  price: json['price']!=null?(json['price'] as num).toDouble():0,
+  price: (json['price'] as num).toDouble(),
   priceAvg200: (json['priceAvg200'] as num).toDouble(),
   priceAvg50: (json['priceAvg50'] as num).toDouble(),
   sharesOutstanding: (json['sharesOutstanding'] as num).toInt(),

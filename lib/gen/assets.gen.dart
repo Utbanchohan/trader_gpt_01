@@ -62,6 +62,10 @@ class $AssetsImagesGen {
   AssetGenImage get analytics =>
       const AssetGenImage('assets/images/analytics.png');
 
+  /// File path: assets/images/app_icon.png
+  AssetGenImage get appIcon =>
+      const AssetGenImage('assets/images/app_icon.png');
+
   /// File path: assets/images/apple.png
   AssetGenImage get apple => const AssetGenImage('assets/images/apple.png');
 
@@ -264,6 +268,7 @@ class $AssetsImagesGen {
     vector1,
     visa,
     analytics,
+    appIcon,
     apple,
     arrowBack,
     book,
