@@ -184,6 +184,22 @@ class $AssetsImagesGen {
   /// File path: assets/images/tesla.png
   AssetGenImage get tesla => const AssetGenImage('assets/images/tesla.png');
 
+  /// File path: assets/images/textfieldicon.png
+  AssetGenImage get textfieldicon =>
+      const AssetGenImage('assets/images/textfieldicon.png');
+
+  /// File path: assets/images/textfieldicon2.png
+  AssetGenImage get textfieldicon2 =>
+      const AssetGenImage('assets/images/textfieldicon2.png');
+
+  /// File path: assets/images/textfieldicon3.png
+  AssetGenImage get textfieldicon3 =>
+      const AssetGenImage('assets/images/textfieldicon3.png');
+
+  /// File path: assets/images/textfieldicon4.png
+  AssetGenImage get textfieldicon4 =>
+      const AssetGenImage('assets/images/textfieldicon4.png');
+
   /// File path: assets/images/trash.png
   AssetGenImage get trash => const AssetGenImage('assets/images/trash.png');
 
@@ -243,6 +259,10 @@ class $AssetsImagesGen {
     statusUp,
     stock,
     tesla,
+    textfieldicon,
+    textfieldicon2,
+    textfieldicon3,
+    textfieldicon4,
     trash,
     window,
   ];

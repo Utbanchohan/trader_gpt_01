@@ -363,8 +363,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             border: InputBorder.none,
                             hintText: "Ask anything about the market",
                             prefixIcon: Container(
-                              width: 32,
-                              height: 32,
+                              padding: EdgeInsets.all(8),
+
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: AppColors.color1B254B,
@@ -373,10 +373,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                   width: 1,
                                 ),
                               ),
-                              child: Icon(
-                                Icons.lock,
-                                color: Colors.white,
-                                size: 20,
+                              child: Image.asset(
+                                Assets.images.textfieldicon2.path,
+                                width: 20,
+                                height: 20,
                               ),
                             ),
                             hintStyle: TextStyle(
@@ -407,6 +407,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                   }
                                 },
                                 child: Container(
+                                  padding: EdgeInsets.all(8),
                                   height: 36.h,
                                   width: 36.w,
                                   decoration: BoxDecoration(
@@ -417,10 +418,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                       width: 1.5,
                                     ),
                                   ),
-                                  child: Icon(
-                                    Icons.add,
-                                    color: AppColors.color3C4E8A,
-                                    size: 30.sp,
+                                  child: Image.asset(
+                                    Assets.images.textfieldicon3.path,
                                   ),
                                 ),
                               ),
@@ -446,23 +445,29 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           Row(
                             children: [
                               Container(
+                                padding: EdgeInsets.all(8),
                                 height: 36,
                                 width: 36,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.bubbleColor,
                                 ),
-                                child: Icon(Icons.euro_symbol),
+                                child: Image.asset(
+                                  Assets.images.textfieldicon.path,
+                                ),
                               ),
                               SizedBox(width: 6.w),
                               Container(
+                                padding: EdgeInsets.all(8),
                                 height: 36,
                                 width: 36,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.bubbleColor,
                                 ),
-                                child: Icon(Icons.euro_symbol),
+                                child: Image.asset(
+                                  Assets.images.textfieldicon4.path,
+                                ),
                               ),
                               SizedBox(width: 6.w),
                               Container(
@@ -654,8 +659,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               ],
             ),
       body: SingleChildScrollView(
-       controller: sc,
-  physics: const AlwaysScrollableScrollPhysics(),
+        controller: sc,
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
@@ -713,11 +718,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             asyncStream.when(
               data: (line) {
                 final text = line["buffer"] ?? "";
-if(text.isNotEmpty)
-{ 
-// scrollToBottom();
-}
-              
+                if (text.isNotEmpty) {
+                  // scrollToBottom();
+                }
+
                 return text.isNotEmpty
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
