@@ -162,7 +162,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                           ? NetworkImage(userModel!.imgUrl)
                           : AssetImage(Assets.images.profile.path),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: 14.w),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
