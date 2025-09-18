@@ -185,7 +185,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       Assets.images.setting2.path,
 
                       "Settings",
-                      "",
+                      AppRoutes.swipeScreen.name,
                     ),
                   ],
                 ),
@@ -275,6 +275,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
               setState(() {
                 selectedMenu = routeName;
               });
+              // context.pop();
               context.pushNamed(routeName);
             },
     );

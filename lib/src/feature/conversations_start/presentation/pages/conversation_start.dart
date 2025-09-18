@@ -14,6 +14,7 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_mess
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:chart_sparkline/chart_sparkline.dart';
@@ -126,6 +127,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
     return DefaultTabController(
       length: 4,
       child: Scaffold(
+        drawer: SideMenu(),
+
         backgroundColor: AppColors.primaryColor,
         appBar: AppBar(
           centerTitle: false,
@@ -134,14 +137,24 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
           backgroundColor: AppColors.primaryColor,
           elevation: 0,
           leadingWidth: 40.w,
-          leading: Container(
-            margin: EdgeInsets.only(left: 20.w),
-            child: Image.asset(
-              Assets.images.directboxNotif.path,
-              // scale: 2.9,
-              height: 20.h,
-              width: 18.16.w,
-            ),
+
+          leading: Builder(
+            builder: (context) {
+              return InkWell(
+                onTap: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: 20.w),
+                  child: Image.asset(
+                    Assets.images.directboxNotif.path,
+                    // scale: 2.9,
+                    height: 20.h,
+                    width: 18.16.w,
+                  ),
+                ),
+              );
+            },
           ),
           title: Row(
             children: [
@@ -221,6 +234,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
             // Yeh Expanded me rakho
             Expanded(
               child: TabBarView(
+                physics: NeverScrollableScrollPhysics(),
                 controller: tabController,
                 children: [
                   // First tab
