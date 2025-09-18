@@ -134,6 +134,12 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       context,
                       Assets.images.statusUp.path,
 
+                    "Books",
+                    AppRoutes.analytics.name,
+                  ),
+                  _buildMenuItem(
+                    context,
+                    Assets.images.statusUp.path,
                       "Analytics",
                       "",
                     ),
@@ -184,7 +190,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                         ],
                       ),
                     ),
-              
                     GestureDetector(
                       onTap: () {
                         logout();
@@ -198,8 +203,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   ],
                 ),
               ),
-            ],
-          ),
+            ]
+            ),
+          
         ),
       ),
     );

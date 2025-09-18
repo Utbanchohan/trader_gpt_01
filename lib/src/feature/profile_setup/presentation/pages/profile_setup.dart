@@ -63,7 +63,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
             email: email.value.text,
             password: password.value.text,
             fullname: fullname.value.text,
-            imageUrl: mediaModel!.url,
+            imageUrl: mediaModel != null && mediaModel!.url.isNotEmpty
+                ? mediaModel!.url
+                : "",
           );
           
       if (result != null) {
