@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/services/sockets/socket_service.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
-import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class StockScreen extends StatefulWidget {

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
@@ -13,10 +11,8 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
-import 'package:trader_gpt/src/feature/chat/presentation/provider/stream_service.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
-import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'widgets/loading_widget.dart';
