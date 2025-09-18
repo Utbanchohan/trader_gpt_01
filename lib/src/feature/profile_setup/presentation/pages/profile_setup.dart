@@ -278,6 +278,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     ),
                     SizedBox(height: 8.h),
                     TextFormField(
+                      readOnly: true,
                       controller: email,
                       style: TextStyle(
                         color: Colors.white,

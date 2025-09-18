@@ -43,7 +43,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
         }
         _scrollController.animateTo(
           _scrollPosition,
-          duration: const Duration(milliseconds: 60),
+          duration: Duration(milliseconds: 60),
           curve: Curves.linear,
         );
       }
@@ -129,7 +129,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                 SizedBox(height: 40.h),
                 Transform.rotate(angle: 0.04, child: StartedPageGrideScroll()),
 
-                SizedBox(height: 40.h),
+                SizedBox(height: 80.h),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 20.w),
                   child: MdSnsText(
@@ -141,9 +141,9 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                     color: AppColors.white,
                   ),
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 30.h),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 25.w),
+                  margin: EdgeInsets.symmetric(horizontal: 20.w),
                   child: MdSnsText(
                     maxLines: 2,
                     "Experience real-time market insights, advanced analytics, and intelligent trade signals",

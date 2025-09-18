@@ -17,7 +17,6 @@ class SideMenu extends ConsumerStatefulWidget {
 }
 
 class _SideMenuState extends ConsumerState<SideMenu> {
-  /// Ye state track karegi kaunsa menu select hai
   String selectedMenu = AppRoutes.chatPage.name;
   User? userModel;
 
@@ -43,13 +42,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     return Drawer(
       backgroundColor: AppColors.primaryColor,
       child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Column(
+        child: Container(
+          padding: EdgeInsets.all(15.w),
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
@@ -103,31 +103,36 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   ),
                 ],
               ),
-            ),
 
-            SizedBox(height: 20.h),
+              SizedBox(height: 20.h),
 
-            // Menu Items
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  _buildMenuItem(
-                    context,
-                    Assets.images.message.path,
-                    "General",
-                    AppRoutes.chatPage.name,
-                  ),
-                  _buildMenuItem(
-                    context,
-                    Assets.images.conversation.path,
+              // Menu Items
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _buildMenuItem(
+                      context,
+                      Assets.images.message.path,
+                      "General",
+                      AppRoutes.chatPage.name,
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Assets.images.conversation.path,
 
-                    "Conversation",
-                    AppRoutes.profilePage.name,
-                  ),
-                  _buildMenuItem(
-                    context,
-                    Assets.images.book.path,
+                      "Conversation",
+                      AppRoutes.conversationStart.name,
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Assets.images.book.path,
+                      "Books",
+                      "",
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Assets.images.statusUp.path,
 
                     "Books",
                     AppRoutes.analytics.name,
@@ -135,25 +140,22 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   _buildMenuItem(
                     context,
                     Assets.images.statusUp.path,
+                      "Analytics",
+                      "",
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Assets.images.setting2.path,
 
-                    "Analytics",
-                    AppRoutes.profilePage.name,
-                  ),
-                  _buildMenuItem(
-                    context,
-                    Assets.images.setting2.path,
-
-                    "Settings",
-                    AppRoutes.profilePage.name,
-                  ),
-                ],
+                      "Settings",
+                      "",
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            // Bottom User Profile
-            Padding(
-              padding: EdgeInsets.all(16.w),
-              child: GestureDetector(
+              // Bottom User Profile
+              GestureDetector(
                 onTap: () {
                   context.pushNamed(AppRoutes.myProfileScreen.name);
                 },
@@ -166,32 +168,28 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                           ? NetworkImage(userModel!.imgUrl)
                           : AssetImage(Assets.images.profile.path),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: 14.w),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          MdSnsText(
                             userModel != null && userModel!.name.isNotEmpty
                                 ? userModel!.name
                                 : "N/A",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.sp,
-                            ),
+                            color: AppColors.white,
+                            fontWeight: FontWeight.w600,
+                            size: 14,
                           ),
-                          Text(
+                          MdSnsText(
                             "Free Plan",
-                            style: TextStyle(
-                              color: Colors.lightBlueAccent,
-                              fontSize: 12.sp,
-                            ),
+              
+                            color: Colors.lightBlueAccent,
+                            size: 12.sp,
                           ),
                         ],
                       ),
                     ),
-
                     GestureDetector(
                       onTap: () {
                         logout();
@@ -205,27 +203,27 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   ],
                 ),
               ),
+            ]
             ),
-          ],
+          
         ),
       ),
     );
   }
 
-  /// Ab ye menu item state ke hisaab se highlight hoga
   Widget _buildMenuItem(
     BuildContext context,
     String icon,
     String title,
-    String routeName,
+    String? routeName,
   ) {
     final bool isSelected = selectedMenu == routeName;
 
     return ListTile(
+      contentPadding: EdgeInsets.zero,
       leading: Image.asset(
         icon,
         color: isSelected ? AppColors.white : AppColors.color5E646E,
-
         height: 24.h,
         width: 24.w,
       ),
@@ -235,12 +233,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
         size: 16,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
-      onTap: () {
-        setState(() {
-          selectedMenu = routeName; // update selected menu
-        });
-        context.goNamed(routeName); // navigate to route
-      },
+      onTap: routeName == null || routeName.isEmpty
+          ? null // disable tap if no route
+          : () {
+              setState(() {
+                selectedMenu = routeName;
+              });
+              context.goNamed(routeName);
+            },
     );
   }
 }

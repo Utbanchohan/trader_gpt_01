@@ -34,6 +34,11 @@ _ChatHistory _$ChatHistoryFromJson(Map<String, dynamic> json) => _ChatHistory(
   companyName: json['companyName'] as String,
   createdAt: DateTime.parse(json['createdAt'] as String),
   updatedAt: DateTime.parse(json['updatedAt'] as String),
+  lastMessage:  json['last_message']!=null?
+  
+  LastMessage.fromJson(
+    json['last_message'] as Map<String, dynamic>,
+  ): LastMessage(chatId: "", message: "", type: "", userId: "", createdAt: DateTime.now(), updatedAt: DateTime.now(), id: "") ,
 );
 
 Map<String, dynamic> _$ChatHistoryToJson(_ChatHistory instance) =>
@@ -46,4 +51,27 @@ Map<String, dynamic> _$ChatHistoryToJson(_ChatHistory instance) =>
       'companyName': instance.companyName,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
+      'isArchived': instance.isArchived,
+      'last_message': instance.lastMessage,
+    };
+
+_LastMessage _$LastMessageFromJson(Map<String, dynamic> json) => _LastMessage(
+  chatId: json['chatId'] as String,
+  message: json['message'] as String,
+  type: json['type'] as String,
+  userId: json['userId'] as String,
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  updatedAt: DateTime.parse(json['updatedAt'] as String),
+  id: json['_id'] as String,
+);
+
+Map<String, dynamic> _$LastMessageToJson(_LastMessage instance) =>
+    <String, dynamic>{
+      'chatId': instance.chatId,
+      'message': instance.message,
+      'type': instance.type,
+      'userId': instance.userId,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      '_id': instance.id,
     };
