@@ -11,6 +11,7 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_mess
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/stream_service.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
@@ -18,8 +19,6 @@ import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.da
 import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-
 import 'widgets/loading_widget.dart';
 
 // ignore: must_be_immutable
@@ -36,12 +35,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   TextEditingController message = TextEditingController();
   ScrollController sc = ScrollController();
   Stock? selectedStock;
-
   List<ChatMessageModel> chats = [];
   List<String> questions = [];
   dynamic asyncStream;
   bool startStream = false;
-  final service = SseService();
   List<String> followupQuestions = [];
   var body;
   String? chadId;
@@ -604,39 +601,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 ),
               ],
             ),
-
-      //  AppBar(
-      //   scrolledUnderElevation: 0,
-      //   centerTitle: false,
-      //   backgroundColor: AppColors.primaryColor,
-      //   elevation: 0,
-      //   leading: Builder(
-      //     // 👈 yahan Builder lagaya
-      //     builder: (context) {
-      //       return InkWell(
-      //         onTap: () {
-      //           Scaffold.of(context).openDrawer(); // abhi error nahi aayega
-      //         },
-      //         child: Image.asset(
-      //           Assets.images.menu.path,
-      //           width: 40,
-      //           height: 40,
-      //         ),
-      //       );
-      //     },
-      //   ),
-      //   title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
-      //   actions: [
-      //     Container(
-      //       margin: EdgeInsets.only(right: 20),
-      //       child: Image.asset(
-      //         Assets.images.searchNormal.path,
-      //         width: 20,
-      //         height: 20,
-      //       ),
-      //     ),
-      //   ],
-      // ),
       body: SingleChildScrollView(
         controller: sc,
         padding: EdgeInsets.all(16),
@@ -649,15 +613,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               itemBuilder: (BuildContext context, int index) {
                 return Column(
                   children: [
-                    // Row(
-                    //   children: [
-                    //     Container(
-                    //                   padding: EdgeInsets.symmetric(vertical: 8),
-                    //                   child: MdSnsText("Today", color: Colors.white70, size: 14),
-                    //                 ),
-                    //   ],
-                    // ),
-                    // SizedBox(height: 15),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: chats[index].type == "user"
@@ -667,83 +622,16 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       children: [
                         Visibility(
                           visible: chats[index].type == "user",
-                          child: GestureDetector(
-                            onTap: () {
-                              Clipboard.setData(
-                                ClipboardData(text: chats[index].message),
-                              );
-                              $showMessage("Copied to Clipboard");
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-
-                              decoration: BoxDecoration(
-                                color: AppColors.bubbleColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Image.asset(
-                                Assets.images.copy.path,
-                                width: 14,
-                                height: 14,
-                              ),
-                            ),
-                          ),
+                          child:  MessageLikeCopyIcon(type: chats[index].type,message:  chats[index].message)
                         ),
                         SizedBox(width: chats[index].type == "user" ? 10 : 0),
                         ChatMarkdownWidget(message: chats[index].message),
                         SizedBox(width: chats[index].type != "user" ? 10 : 0),
                         Visibility(
                           visible: chats[index].type != "user",
-                          child: Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(10),
-
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    Assets.images.like.path,
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-
-                                Container(
-                                  padding: EdgeInsets.all(10),
-
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/dislike.png",
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/Regenerate.png",
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          child: MessageLikeCopyIcon(type: chats[index].type,message:  chats[index].message)
+                     
+                     
                         ),
                       ],
                     ),
@@ -764,60 +652,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       children: [
                         ChatMarkdownWidget(message: text.toString()),
                         SizedBox(width: 10),
-
                         Visibility(
                           visible: text.toString().isNotEmpty,
-                          child: Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(10),
-
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    Assets.images.like.path,
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-
-                                Container(
-                                  padding: EdgeInsets.all(10),
-
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/dislike.png",
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.fieldColor,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/Regenerate.png",
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                          child: MessageLikeCopyIcon(type: "ai",message: text.toString(),)
+                     
+                       ),
                       ],
                     ),
                   ],
@@ -845,7 +684,7 @@ class _ActionChip extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  _ActionChip({required this.icon, required this.label, required this.onTap});
+  const _ActionChip({required this.icon, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
