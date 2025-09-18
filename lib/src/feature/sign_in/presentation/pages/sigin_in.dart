@@ -51,7 +51,7 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
       body: SafeArea(
         top: true,
         child: Padding(
-          padding: EdgeInsets.only(top: 80.h, left: 20.w, right: 20.w),
+          padding: EdgeInsets.only(top: 30.h, left: 20.w, right: 20.w),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
