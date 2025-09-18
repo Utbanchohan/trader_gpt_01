@@ -615,7 +615,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             size: 20,
                           ),
                           MdSnsText(
-                            " ${widget.chatRouting!.changePercentage!.toStringAsFixed(2)}%",
+                            " ${widget.chatRouting!.changePercentage.toStringAsFixed(2).replaceAll("-", "")}%",
                             color:
                                 widget.chatRouting!.changePercentage
                                     .toString()

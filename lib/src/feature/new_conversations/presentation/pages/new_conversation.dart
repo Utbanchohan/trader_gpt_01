@@ -482,7 +482,7 @@ class _BuildStockCardState extends State<BuildStockCard> {
                 size: 20,
               ),
               MdSnsText(
-                widget.change.toStringAsFixed(2),
+                widget.change.toStringAsFixed(2).replaceAll("-", ""),
                 color: widget.change.toString().contains("-")
                     ? AppColors.redFF3B3B
                     : AppColors.color06D54E,
