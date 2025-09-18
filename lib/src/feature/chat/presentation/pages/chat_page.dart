@@ -41,11 +41,36 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   @override
   void initState() {
-    chadId = widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty
-        ? widget.chatRouting!.chatId
-        : "68c3274cb77590fbe176f905";
-    selectedStock =
-        widget.chatRouting != null && widget.chatRouting!.companyName.isNotEmpty
+    getChatsId();
+    selectedStock = _mapChatRoutingToStock(widget.chatRouting);
+    getRandomQuestions(
+      selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
+    );
+    super.initState();
+  }
+
+  getChatsId() async {
+    if (widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty) {
+      chadId = widget.chatRouting!.chatId;
+    } else {
+      var res = await ref.read(chatRepository).chats();
+      if (res.isSuccess) {
+        for (int i = 0; i < res.data!.results.length; i++) {
+          if (res.data!.results[i].symbol.toLowerCase() == "tdgpt") {
+            chadId = res.data!.results[i].id;
+            getchats(chadId ?? "");
+            break;
+          }
+        }
+      } else {
+        getchats(chadId ?? "");
+      }
+    }
+  }
+
+  Stock _mapChatRoutingToStock(ChatRouting? routing) {
+    return widget.chatRouting != null &&
+            widget.chatRouting!.companyName.isNotEmpty
         ? Stock(
             avgVolume: 0,
             change: 0,
@@ -122,11 +147,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             country: "us",
             exchangeSortOrder: 0,
           );
-    getRandomQuestions(
-      selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
-    );
-    getchats(chadId!);
-    super.initState();
   }
 
   void scrollToBottom() {
@@ -618,16 +638,20 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       children: [
                         Visibility(
                           visible: chats[index].type == "user",
-                          child:  MessageLikeCopyIcon(type: chats[index].type,message:  chats[index].message)
+                          child: MessageLikeCopyIcon(
+                            type: chats[index].type,
+                            message: chats[index].message,
+                          ),
                         ),
                         SizedBox(width: chats[index].type == "user" ? 10 : 0),
                         ChatMarkdownWidget(message: chats[index].message),
                         SizedBox(width: chats[index].type != "user" ? 10 : 0),
                         Visibility(
                           visible: chats[index].type != "user",
-                          child: MessageLikeCopyIcon(type: chats[index].type,message:  chats[index].message)
-                     
-                     
+                          child: MessageLikeCopyIcon(
+                            type: chats[index].type,
+                            message: chats[index].message,
+                          ),
                         ),
                       ],
                     ),
@@ -650,9 +674,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         SizedBox(width: 10),
                         Visibility(
                           visible: text.toString().isNotEmpty,
-                          child: MessageLikeCopyIcon(type: "ai",message: text.toString(),)
-                     
-                       ),
+                          child: MessageLikeCopyIcon(
+                            type: "ai",
+                            message: text.toString(),
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -661,10 +687,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
               loading: () => Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  LoadingWidgetMarkdown()
-                 
-                ],
+                children: [LoadingWidgetMarkdown()],
               ),
               error: (err, _) => Center(child: Text("Error: $err")),
             ),
@@ -680,7 +703,11 @@ class _ActionChip extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const _ActionChip({required this.icon, required this.label, required this.onTap});
+  const _ActionChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
