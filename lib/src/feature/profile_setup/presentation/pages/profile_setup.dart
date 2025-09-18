@@ -357,6 +357,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       obscureText: !visible1,
                       onChanged: (_) => setState(() {}),
                       style: TextStyle(color: Colors.white, fontSize: 20),
+                      
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Password is required";
@@ -372,6 +373,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                                   "✖ At least one special character";
                       },
                       decoration: InputDecoration(
+                        errorMaxLines: 4,
                         hintStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -455,6 +457,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                                   "✖ At least one special character";
                       },
                       decoration: InputDecoration(
+                        errorMaxLines: 4,
                         hintStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
