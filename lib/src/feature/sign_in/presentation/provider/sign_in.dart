@@ -38,7 +38,9 @@ class Login extends _$Login {
           await ref
               .read(localDataProvider)
               .saveUserId(response.data?.user?.id ?? '');
-
+  await ref
+              .read(localDataProvider)
+              .saveUserName(response.data?.user?.name ?? '');
           await ref
               .read(localDataProvider)
               .saveUser(response.data!.user.toJson());

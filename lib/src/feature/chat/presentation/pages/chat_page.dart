@@ -52,6 +52,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   getChatsId() async {
     if (widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty) {
       chadId = widget.chatRouting!.chatId;
+      getchats(chadId ?? "");
     } else {
       var res = await ref.read(chatRepository).chats();
       if (res.isSuccess) {
