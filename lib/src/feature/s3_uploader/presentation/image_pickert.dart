@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:trader_gpt/main.dart';
+import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/s3_uploader/providers/upload_provider.dart';
 
 class UploadImageScreen extends ConsumerWidget {
@@ -50,13 +51,14 @@ class UploadImageScreen extends ConsumerWidget {
           child: Container(
             height: 55,
             width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF6D5DF6), Color(0xFF53E88B)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: AppColors.color0098E4,
+              // gradient: const LinearGradient(
+              //   colors: [Color(0xFF6D5DF6), Color(0xFF53E88B)],
+              //   begin: Alignment.topLeft,
+              //   end: Alignment.bottomRight,
+              // ),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
@@ -101,11 +103,8 @@ class UploadImageScreen extends ConsumerWidget {
             width: double.infinity,
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFFF8C68), Color(0xFFDF45C7)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: AppColors.color091224,
+              border: Border.all(color: AppColors.color203864),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
