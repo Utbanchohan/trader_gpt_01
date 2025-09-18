@@ -33,6 +33,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             SizedBox(width: 6),
             Container(
