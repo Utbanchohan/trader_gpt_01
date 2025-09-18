@@ -686,6 +686,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                               message: chats[index].message,
                               name: name,
                               image: image,
+                              type: chats[index].type,
                             ),
                             SizedBox(
                               height: chats[index].type != "user" ? 10 : 10,
@@ -716,6 +717,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           ChatMarkdownWidget(
+
                             message: text.toString(),
                             name:
                                 widget.chatRouting == null ||
@@ -727,6 +729,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     widget.chatRouting!.image.isEmpty
                                 ? ""
                                 : widget.chatRouting!.image,
+                                type: "ai",
                           ),
                           SizedBox(height: 10),
                           Visibility(
