@@ -12,6 +12,7 @@ import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_messa
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
@@ -364,15 +365,17 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         style: TextStyle(color: AppColors.white),
                         keyboardType: TextInputType.multiline,
 
-                        maxLines: null,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Ask anything about the market",
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Ask anything about the market",
 
-                          prefixIcon: Image.asset(
-                            Assets.images.prefixIcon.path,
-                            scale: 3.9,
-                          ),
+                        prefixIcon: Image.asset(
+                          Assets.images.prefixIcon.path,
+                          scale: 3.9,
+                        ),
+
+                         
 
                           hintStyle: TextStyle(
                             color: AppColors.bluishgrey404F81,
@@ -423,33 +426,37 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             ],
                           ),
 
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(12),
-                                height: 36.h,
-                                width: 36.w,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.bubbleColor,
-                                ),
-                                child: Image.asset(
-                                  Assets.images.textfieldicon.path,
-                                ),
+                        
+
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(12),
+                              height: 36.h,
+                              width: 36.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.bubbleColor,
                               ),
-                              SizedBox(width: 6.w),
-                              Container(
-                                padding: EdgeInsets.all(12),
-                                height: 36.h,
-                                width: 36.w,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.bubbleColor,
-                                ),
-                                child: Image.asset(
-                                  Assets.images.textfieldicon4.path,
-                                ),
+                              child: Image.asset(
+                                Assets.images.textfieldicon.path,
                               ),
+                            ),
+                            SizedBox(width: 6.w),
+
+                            Container(
+                              padding: EdgeInsets.all(12),
+                              height: 36.h,
+                              width: 36.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.bubbleColor,
+                              ),
+                              child: Image.asset(
+                                Assets.images.textfieldicon4.path,
+                              ),
+                            ),
+
                               SizedBox(width: 6.w),
                               Container(
                                 height: 36,
