@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
@@ -323,69 +326,28 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     });
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
-      bottomNavigationBar: SafeArea(
-        bottom: true,
+      bottomNavigationBar: AnimatedPadding(
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         child: Container(
           color: Colors.transparent,
-          height: MediaQuery.of(context).size.height * 0.2385,
+          height: 160.h,
 
           child: Column(
             children: [
-              GestureDetector(
-                onTap: () async {
-                  if (widget.chatRouting == null ||
-                      widget.chatRouting!.companyName.isEmpty) {
-                    selectedStock = await showDialogue(
-                      questions,
-                      [],
-                      message,
-                      0,
-                    );
-                  } else {
-                    showDialogue(questions, [], message, 0);
-                  }
-                },
-                child: Center(
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.fieldTextColor),
-                      color: AppColors.bubbleColor,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Row(
-                      mainAxisSize:
-                          MainAxisSize.min, // width sirf content ke hisaab se
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MdSnsText(
-                          "Top Asking Questions",
-                          size: 16,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.white,
-                        ),
-                        SizedBox(width: 5),
-                        Icon(
-                          Icons.keyboard_arrow_up,
-                          size: 25,
-                          color: AppColors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
               Container(
-                height: 140.h,
-                margin: EdgeInsets.all(10),
-                padding: EdgeInsets.all(2),
+                height: 115.h,
+                margin: EdgeInsets.all(18),
+                padding: EdgeInsets.all(1),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(25.r),
                   gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                     colors: AppColors.gradient,
                   ),
                 ),
@@ -393,84 +355,120 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: AppColors.color0E1738,
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(25.r),
                   ),
                   child: Column(
                     children: [
-                      Expanded(
-                        child: TextField(
-                          controller: message,
-                          style: TextStyle(color: AppColors.white),
-                          keyboardType: TextInputType.multiline,
+                      TextField(
+                        controller: message,
+                        style: TextStyle(color: AppColors.white),
+                        keyboardType: TextInputType.multiline,
 
-                          maxLines: null,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Ask anything about the market",
-                            hintStyle: TextStyle(
-                              color: AppColors.bluishgrey404F81,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Ask anything about the market",
+
+                          prefixIcon: Image.asset(
+                            Assets.images.prefixIcon.path,
+                            scale: 3.9,
+                          ),
+
+                          hintStyle: TextStyle(
+                            color: AppColors.bluishgrey404F81,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ),
+
+                      SizedBox(height: 15.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
-                              Container(
-                                height: 50.h,
-                                width: 50.w,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.color091224,
-                                  border: Border.all(
-                                    color: AppColors.bluishgrey404F81,
+                              GestureDetector(
+                                onTap: () async {
+                                  if (widget.chatRouting == null ||
+                                      widget.chatRouting!.companyName.isEmpty) {
+                                    selectedStock = await showDialogue(
+                                      questions,
+                                      [],
+                                      message,
+                                      0,
+                                    );
+                                  } else {
+                                    showDialogue(questions, [], message, 0);
+                                  }
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(12),
+                                  height: 36.h,
+                                  width: 36.w,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.color091224,
+                                    border: Border.all(
+                                      color: AppColors.bluishgrey404F81,
+                                      width: 1.5,
+                                    ),
                                   ),
-                                ),
-                                child: Icon(
-                                  Icons.add,
-                                  color: AppColors.color3C4E8A,
-                                  size: 30.sp,
+                                  child: Image.asset(
+                                    Assets.images.textfieldicon3.path,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 8),
-
-                              _ActionChip(
-                                icon: Assets.images.radar2.path,
-                                label: "Deep Search",
-                                onTap: () {},
-                              ),
-                              SizedBox(width: 6),
-
-                              // Think Button
-                              _ActionChip(
-                                icon: Assets.images.lampCharge.path,
-                                label: "Think",
-                                onTap: () {},
-                              ),
                             ],
                           ),
 
-                          // Send Button
-                          Container(
-                            height: 36,
-                            width: 36,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.color046297,
-                            ),
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              icon: Icon(
-                                Icons.arrow_upward_rounded,
-                                color: AppColors.white,
-                                size: 18,
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                height: 36.h,
+                                width: 36.w,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.bubbleColor,
+                                ),
+                                child: Image.asset(
+                                  Assets.images.textfieldicon.path,
+                                ),
                               ),
-                              onPressed: () => _sendMessage(ref),
-                            ),
+                              SizedBox(width: 6.w),
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                height: 36.h,
+                                width: 36.w,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.bubbleColor,
+                                ),
+                                child: Image.asset(
+                                  Assets.images.textfieldicon4.path,
+                                ),
+                              ),
+                              SizedBox(width: 6.w),
+                              Container(
+                                height: 36,
+                                width: 36,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.color046297,
+                                ),
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  icon: Icon(
+                                    Icons.arrow_upward_rounded,
+                                    color: AppColors.white,
+                                    size: 18,
+                                  ),
+                                  onPressed: () => _sendMessage(ref),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -626,20 +624,28 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 ],
               ),
               actions: [
-                Container(
-                  width: 40.w,
-                  height: 71.h,
+                GestureDetector(
+                  onTap: () {
+                    context.pushNamed(
+                      AppRoutes.analytics.name,
+                      extra: widget.chatRouting,
+                    );
+                  },
+                  child: Container(
+                    width: 40.w,
+                    height: 71.h,
 
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(Assets.images.shapeAngle.path),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(Assets.images.shapeAngle.path),
+                      ),
                     ),
-                  ),
-                  padding: EdgeInsets.all(10),
-                  child: Image.asset(
-                    Assets.images.analytics.path,
-                    width: 25.w,
-                    height: 21.h,
+                    padding: EdgeInsets.all(10),
+                    child: Image.asset(
+                      Assets.images.analytics.path,
+                      width: 25.w,
+                      height: 21.h,
+                    ),
                   ),
                 ),
               ],
@@ -683,6 +689,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                               message: chats[index].message,
                               name: name,
                               image: image,
+                              type: chats[index].type,
                             ),
                             SizedBox(
                               height: chats[index].type != "user" ? 10 : 10,
@@ -713,6 +720,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           ChatMarkdownWidget(
+
                             message: text.toString(),
                             name:
                                 widget.chatRouting == null ||
@@ -724,6 +732,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     widget.chatRouting!.image.isEmpty
                                 ? ""
                                 : widget.chatRouting!.image,
+                                type: "ai",
                           ),
                           SizedBox(height: 10),
                           Visibility(

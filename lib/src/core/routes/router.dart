@@ -19,6 +19,7 @@ import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.da
 import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
 import 'package:trader_gpt/src/feature/sign_in/presentation/pages/sigin_in.dart';
 import 'package:trader_gpt/src/feature/splash/presentation/pages/splash.dart';
+import 'package:trader_gpt/src/feature/swip_screen/presentation/pages/swip_screen.dart';
 import 'package:trader_gpt/src/feature/verifaction/presentation/pages/verifaction.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
@@ -156,6 +157,14 @@ return AppRoutes.profilePage.path;
         name: AppRoutes.newConversation.name,
         builder: (BuildContext context, GoRouterState state) {
           return NewConversation();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.swipeScreen.path,
+        name: AppRoutes.swipeScreen.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return SwipeScreen();
         },
         routes: [],
       ),

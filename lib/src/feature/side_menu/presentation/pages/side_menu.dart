@@ -7,6 +7,8 @@ import 'package:trader_gpt/src/core/local/repository/local_storage_repository.da
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
+import 'package:trader_gpt/src/shared/widgets/confirmation_widget.dart';
+import 'package:trader_gpt/src/shared/widgets/logout_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class SideMenu extends ConsumerStatefulWidget {
@@ -24,6 +26,41 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     String token = "";
     ref.read(localDataProvider).setAccessToken(token);
     context.goNamed(AppRoutes.signInPage.name);
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return LogoutDialog(
+          onConfirm: () {
+            logout();
+          },
+          onCancel: () {
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
+  }
+
+  void showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ConfirmationDialog(
+          onConfirm: () {
+            Navigator.pop(context); // Close dialog
+            // Perform confirm action here
+            print("Confirmed!");
+          },
+          onCancel: () {
+            Navigator.pop(context); // Close dialog
+          },
+        );
+      },
+    );
   }
 
   getUser() async {
@@ -134,6 +171,12 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       context,
                       Assets.images.statusUp.path,
 
+                      "Books",
+                      AppRoutes.analytics.name,
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Assets.images.statusUp.path,
                       "Analytics",
                       "",
                     ),
@@ -142,7 +185,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       Assets.images.setting2.path,
 
                       "Settings",
-                      "",
+                      AppRoutes.swipeScreen.name,
                     ),
                   ],
                 ),
@@ -177,17 +220,16 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                           ),
                           MdSnsText(
                             "Free Plan",
-              
+
                             color: Colors.lightBlueAccent,
                             size: 12.sp,
                           ),
                         ],
                       ),
                     ),
-              
                     GestureDetector(
                       onTap: () {
-                        logout();
+                        _showLogoutDialog(context);
                       },
                       child: Icon(
                         Icons.logout,
@@ -228,12 +270,13 @@ class _SideMenuState extends ConsumerState<SideMenu> {
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
       onTap: routeName == null || routeName.isEmpty
-          ? null // disable tap if no route
+          ? null
           : () {
               setState(() {
                 selectedMenu = routeName;
               });
-              context.goNamed(routeName);
+              // context.pop();
+              context.pushNamed(routeName);
             },
     );
   }

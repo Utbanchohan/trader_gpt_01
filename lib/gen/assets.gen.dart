@@ -27,6 +27,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/Google.png
   AssetGenImage get google => const AssetGenImage('assets/images/Google.png');
 
+  /// File path: assets/images/Group 702.png
+  AssetGenImage get group702 =>
+      const AssetGenImage('assets/images/Group 702.png');
+
   /// File path: assets/images/Meta.png
   AssetGenImage get meta => const AssetGenImage('assets/images/Meta.png');
 
@@ -40,6 +44,13 @@ class $AssetsImagesGen {
   /// File path: assets/images/Regenerate.png
   AssetGenImage get regenerate =>
       const AssetGenImage('assets/images/Regenerate.png');
+
+  /// File path: assets/images/TGBT-aimation.json
+  String get tGBTAimation => 'assets/images/TGBT-aimation.json';
+
+  /// File path: assets/images/TradersGPT_Logo.png
+  AssetGenImage get tradersGPTLogo =>
+      const AssetGenImage('assets/images/TradersGPT_Logo.png');
 
   /// File path: assets/images/Vector1.png
   AssetGenImage get vector1 => const AssetGenImage('assets/images/Vector1.png');
@@ -66,6 +77,9 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/cerosil.png
   AssetGenImage get cerosil => const AssetGenImage('assets/images/cerosil.png');
+
+  /// File path: assets/images/chart.png
+  AssetGenImage get chart => const AssetGenImage('assets/images/chart.png');
 
   /// File path: assets/images/copy.png
   AssetGenImage get copy => const AssetGenImage('assets/images/copy.png');
@@ -97,6 +111,14 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/hp.png
   AssetGenImage get hp => const AssetGenImage('assets/images/hp.png');
+
+  /// File path: assets/images/information (1).png
+  AssetGenImage get information1 =>
+      const AssetGenImage('assets/images/information (1).png');
+
+  /// File path: assets/images/information.png
+  AssetGenImage get information =>
+      const AssetGenImage('assets/images/information.png');
 
   /// File path: assets/images/j&j.png
   AssetGenImage get jJ => const AssetGenImage('assets/images/j&j.png');
@@ -135,6 +157,10 @@ class $AssetsImagesGen {
   AssetGenImage get notification7 =>
       const AssetGenImage('assets/images/notification7.png');
 
+  /// File path: assets/images/prefixIcon.png
+  AssetGenImage get prefixIcon =>
+      const AssetGenImage('assets/images/prefixIcon.png');
+
   /// File path: assets/images/profile.jpg
   AssetGenImage get profile => const AssetGenImage('assets/images/profile.jpg');
 
@@ -147,10 +173,6 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/receipt.png
   AssetGenImage get receipt => const AssetGenImage('assets/images/receipt.png');
-
-  /// File path: assets/images/rotate-left (1).png
-  AssetGenImage get rotateLeft1 =>
-      const AssetGenImage('assets/images/rotate-left (1).png');
 
   /// File path: assets/images/rotate-left6.png
   AssetGenImage get rotateLeft6 =>
@@ -184,6 +206,26 @@ class $AssetsImagesGen {
   /// File path: assets/images/tesla.png
   AssetGenImage get tesla => const AssetGenImage('assets/images/tesla.png');
 
+  /// File path: assets/images/textalign-justifycenter.png
+  AssetGenImage get textalignJustifycenter =>
+      const AssetGenImage('assets/images/textalign-justifycenter.png');
+
+  /// File path: assets/images/textfieldicon.png
+  AssetGenImage get textfieldicon =>
+      const AssetGenImage('assets/images/textfieldicon.png');
+
+  /// File path: assets/images/textfieldicon2.png
+  AssetGenImage get textfieldicon2 =>
+      const AssetGenImage('assets/images/textfieldicon2.png');
+
+  /// File path: assets/images/textfieldicon3.png
+  AssetGenImage get textfieldicon3 =>
+      const AssetGenImage('assets/images/textfieldicon3.png');
+
+  /// File path: assets/images/textfieldicon4.png
+  AssetGenImage get textfieldicon4 =>
+      const AssetGenImage('assets/images/textfieldicon4.png');
+
   /// File path: assets/images/trash.png
   AssetGenImage get trash => const AssetGenImage('assets/images/trash.png');
 
@@ -196,10 +238,13 @@ class $AssetsImagesGen {
     appLogo,
     conversation,
     google,
+    group702,
     meta,
     microinteractionsPreloader03,
     nvidia,
     regenerate,
+    tGBTAimation,
+    tradersGPTLogo,
     vector1,
     visa,
     analytics,
@@ -208,6 +253,7 @@ class $AssetsImagesGen {
     book,
     camera,
     cerosil,
+    chart,
     copy,
     cpu8,
     direct,
@@ -218,6 +264,8 @@ class $AssetsImagesGen {
     edit2,
     eye,
     hp,
+    information1,
+    information,
     jJ,
     lampCharge,
     like,
@@ -229,11 +277,11 @@ class $AssetsImagesGen {
     message,
     netFilex,
     notification7,
+    prefixIcon,
     profile,
     radar2,
     receipt1,
     receipt,
-    rotateLeft1,
     rotateLeft6,
     searchNormal,
     setting2,
@@ -243,6 +291,11 @@ class $AssetsImagesGen {
     statusUp,
     stock,
     tesla,
+    textalignJustifycenter,
+    textfieldicon,
+    textfieldicon2,
+    textfieldicon3,
+    textfieldicon4,
     trash,
     window,
   ];

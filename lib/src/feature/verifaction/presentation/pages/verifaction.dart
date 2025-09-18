@@ -85,26 +85,41 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
         bottom: true,
         child: Container(
           height: 55.h,
-          margin: EdgeInsets.symmetric(horizontal: 20.w),
+          margin: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 40.h),
           child: ButtonWidget(
             isLoading: isLoading,
             onPressed: () => submitter(),
-            title: 'Submit',
+            title: 'Continue',
             borderRadius: 50.r,
             fontSize: 18,
             fontWeight: FontWeight.w500,
             textColor: AppColors.white,
-            bgColor: AppColors.color147EE8,
+            bgColor: AppColors.color0098E4,
           ),
         ),
       ),
       backgroundColor: AppColors.primaryColor,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => context.goNamed(AppRoutes.signUpPage.name),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: Padding(
+          padding: EdgeInsets.only(top: 40),
+          child: AppBar(
+            scrolledUnderElevation: 0,
+            backgroundColor: Colors.transparent,
+            leading: SizedBox(
+              height: 19.h,
+              width: 23.w,
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () => context.goNamed(AppRoutes.signUpPage.name),
+                icon: Image.asset(
+                  Assets.images.arrowBack.path,
+                  height: 19.h,
+                  width: 23.w,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
       body: Padding(
@@ -112,10 +127,10 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 24.h),
+            SizedBox(height: 40.h),
             Image.asset(Assets.images.appLogo.path, height: 41.h, width: 166.w),
 
-            SizedBox(height: 24.h),
+            SizedBox(height: 30.h),
 
             MdSnsText(
               '6-digit code',
@@ -123,7 +138,7 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
               size: 32,
               fontWeight: FontWeight.w700,
             ),
-            SizedBox(height: 25.h),
+            SizedBox(height: 12.h),
 
             MdSnsText(
               'Enter the code sent to\n${widget.email}',
@@ -146,7 +161,7 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
                   shape: PinCodeFieldShape.box,
                   borderRadius: BorderRadius.circular(14.r),
                   fieldHeight: 50.h,
-                  fieldWidth: 45.w,
+                  fieldWidth: 48.w,
                   borderWidth: 0,
                   activeColor: Colors.transparent,
                   inactiveColor: Colors.transparent,
@@ -183,6 +198,7 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
                     color: seconds == 0
                         ? AppColors.white
                         : AppColors.bluishgrey404F81,
+
                     fontWeight: FontWeight.w500,
                     size: 12,
                   ),
