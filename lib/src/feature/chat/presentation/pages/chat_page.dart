@@ -726,7 +726,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               data: (line) {
                 final text = line["buffer"] ?? "";
                 if (text.isNotEmpty) {
-                  // scrollToBottom();
+
                 }
 
                 return text.isNotEmpty
@@ -748,13 +748,15 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             type: "ai",
                           ),
                           SizedBox(height: 10),
-                          Visibility(
-                            visible: text.toString().isNotEmpty,
-                            child: MessageLikeCopyIcon(
-                              type: "ai",
-                              message: text.toString(),
-                            ),
-                          ),
+                          
+                             Container(
+                             width:  150,
+                               child: MessageLikeCopyIcon(
+                                type: "ai",
+                                message: text.toString(),
+                                                           
+                                                         ),
+                             ),
                         ],
                       )
                     : SizedBox();
