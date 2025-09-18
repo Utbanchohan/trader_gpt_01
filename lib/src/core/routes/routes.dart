@@ -35,6 +35,7 @@ enum AppRoutes {
     AppRoutes.stockScreen,
     AppRoutes.uploadImage,
     AppRoutes.sideMenu,
+    AppRoutes.analytics,
     AppRoutes.conversationStart,
     AppRoutes.newConversation,
   ];

@@ -68,7 +68,18 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.chatPage.path,
         name: AppRoutes.chatPage.name,
         builder: (BuildContext context, GoRouterState state) {
-          final chatRouting =state.extra!=null? state.extra as ChatRouting:ChatRouting(image: "", symbol: "", companyName: "", price: 0, changePercentage:0 , chatId: "", stockid: "", trendChart: FiveDayTrend(data: []));
+          final chatRouting = state.extra != null
+              ? state.extra as ChatRouting
+              : ChatRouting(
+                  image: "",
+                  symbol: "",
+                  companyName: "",
+                  price: 0,
+                  changePercentage: 0,
+                  chatId: "",
+                  stockid: "",
+                  trendChart: FiveDayTrend(data: []),
+                );
           return ChatPage(chatRouting: chatRouting);
         },
         routes: [],
@@ -143,11 +154,11 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.analytics.path,
         name: AppRoutes.analytics.name,
         builder: (BuildContext context, GoRouterState state) {
-       return AnalyticsScreen();
-           },
+          return AnalyticsScreen();
+        },
         routes: [],
       ),
- GoRoute(
+      GoRoute(
         path: AppRoutes.conversationStart.path,
         name: AppRoutes.conversationStart.name,
         builder: (BuildContext context, GoRouterState state) {
