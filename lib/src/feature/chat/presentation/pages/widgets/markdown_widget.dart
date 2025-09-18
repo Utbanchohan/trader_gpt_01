@@ -36,8 +36,8 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
           children: [
             SizedBox(width: 6),
             Container(
-              height: widget.type == "user" ? 20.h : 50.h,
-              width: widget.type == "user" ? 20.w : 90.w,
+              height:widget.name !="TDGPT" ? 20.h : 50.h,
+              width:widget.name !="TDGPT" ? 20.w : 90.w,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   // fit: BoxFit.cover,
@@ -46,7 +46,11 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                       : NetworkImage(widget.image),
                 ),
               ),
-            ),
+            )
+            ,SizedBox(width: 6),
+            Visibility(
+             visible:  widget.name !="TDGPT",
+              child: MdSnsText(widget.name,fontWeight: FontWeight.w500,size: 12,color:AppColors.white,))
           ],
         ),
         SizedBox(height: 6),

@@ -172,7 +172,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
             stockid: stock.stockId,
           ),
         );
-        socketService.dispose();
+        // socketService.dispose();
       }
     }
   }
