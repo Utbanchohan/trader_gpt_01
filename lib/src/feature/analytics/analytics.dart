@@ -238,11 +238,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             color: AppColors.black,
                             borderRadius: BorderRadius.circular(14.r),
                           ),
-                          child: Image.asset(
-                            Assets.images.tesla.path,
-                            width: 31.w,
-                            height: 31.h,
-                          ),
+                          child:
+                              selectedStock != null &&
+                                  selectedStock!.logoUrl.isNotEmpty
+                              ? Image.network(
+                                  selectedStock!.logoUrl,
+                                  width: 31.w,
+                                  height: 31.h,
+                                )
+                              : Image.asset(
+                                  Assets.images.tesla.path,
+                                  width: 31.w,
+                                  height: 31.h,
+                                ),
                         ),
                       ),
                       Positioned(

@@ -193,7 +193,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                 vertical: 0.h,
               ),
               indicator: BoxDecoration(
-                color: AppColors.color203063, // ✅ selected tab fill
+                color: AppColors.color203063,
                 borderRadius: BorderRadius.circular(20.r),
               ),
               labelColor: AppColors.white,
