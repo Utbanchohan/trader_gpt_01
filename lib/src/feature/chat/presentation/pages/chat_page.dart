@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
@@ -628,6 +629,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: chats.length,
               itemBuilder: (BuildContext context, int index) {
+                String name=chats[index].type != "user"? widget.chatRouting == null || widget.chatRouting!.symbol.isEmpty?"TDGPT":widget.chatRouting!.symbol:"Raza" ;
                 return Column(
                   children: [
                     Row(
@@ -637,25 +639,25 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           : MainAxisAlignment.start,
 
                       children: [
-                        Visibility(
-                          visible: chats[index].type == "user",
-                          child: MessageLikeCopyIcon(
+                       
+                      
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            ChatMarkdownWidget(message: chats[index].message,name: name,),
+                             SizedBox(height: chats[index].type != "user" ? 10 : 10),
+                        MessageLikeCopyIcon(
                             type: chats[index].type,
                             message: chats[index].message,
                           ),
+                     
+                          ],
                         ),
-                        SizedBox(width: chats[index].type == "user" ? 10 : 0),
-                        ChatMarkdownWidget(message: chats[index].message),
-                        SizedBox(width: chats[index].type != "user" ? 10 : 0),
-                        Visibility(
-                          visible: chats[index].type != "user",
-                          child: MessageLikeCopyIcon(
-                            type: chats[index].type,
-                            message: chats[index].message,
-                          ),
-                        ),
+                       
                       ],
                     ),
+                   
+                   
                     SizedBox(height: 20),
                   ],
                 );
@@ -671,7 +673,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        ChatMarkdownWidget(message: text.toString()),
+                        ChatMarkdownWidget(message: text.toString(),name: widget.chatRouting == null || widget.chatRouting!.symbol.isEmpty?"TDGPT":widget.chatRouting!.symbol,),
                         SizedBox(width: 10),
                         Visibility(
                           visible: text.toString().isNotEmpty,
