@@ -32,9 +32,7 @@ class _StartedPageGrideScrollState extends State<StartedPageGrideScroll> {
         ScrollLoopAutoScroll(
           delayAfterScrollInput: const Duration(seconds: 1),
           enableScrollInput: false,
-          duration: const Duration(
-            seconds: 200,
-          ), 
+          duration: const Duration(seconds: 200),
           scrollDirection: Axis.horizontal,
           gap: 0,
           reverseScroll: true,
@@ -49,8 +47,8 @@ class _StartedPageGrideScrollState extends State<StartedPageGrideScroll> {
                     top: 15.h,
                     bottom: 15.h,
                   ),
-                  height: 90.h,
-                  width: 90.w,
+                  height: 80.h,
+                  width: 80.w,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(19.r),
                     gradient: LinearGradient(
@@ -92,8 +90,8 @@ class _StartedPageGrideScrollState extends State<StartedPageGrideScroll> {
                     top: 15.h,
                     bottom: 15.h,
                   ),
-                  height: 90.h,
-                  width: 90.w,
+                  height: 80.h,
+                  width: 80.w,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(19.r),
                     gradient: LinearGradient(
