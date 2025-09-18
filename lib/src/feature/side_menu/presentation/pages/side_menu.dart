@@ -42,13 +42,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     return Drawer(
       backgroundColor: AppColors.primaryColor,
       child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Column(
+        child: Container(
+          padding: EdgeInsets.all(15.w),
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
@@ -102,57 +103,53 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   ),
                 ],
               ),
-            ),
 
-            SizedBox(height: 20.h),
+              SizedBox(height: 20.h),
 
-            // Menu Items
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  _buildMenuItem(
-                    context,
-                    Assets.images.message.path,
-                    "General",
-                    AppRoutes.chatPage.name,
-                  ),
-                  _buildMenuItem(
-                    context,
-                    Assets.images.conversation.path,
+              // Menu Items
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _buildMenuItem(
+                      context,
+                      Assets.images.message.path,
+                      "General",
+                      AppRoutes.chatPage.name,
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Assets.images.conversation.path,
 
-                    "Conversation",
-                    AppRoutes.conversationStart.name,
-                  ),
-                  _buildMenuItem(
-                    context,
-                    Assets.images.book.path,
+                      "Conversation",
+                      AppRoutes.conversationStart.name,
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Assets.images.book.path,
+                      "Books",
+                      "",
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Assets.images.statusUp.path,
 
-                    "Books",
-                    AppRoutes.profilePage.name,
-                  ),
-                  _buildMenuItem(
-                    context,
-                    Assets.images.statusUp.path,
+                      "Analytics",
+                      "",
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Assets.images.setting2.path,
 
-                    "Analytics",
-                    AppRoutes.profilePage.name,
-                  ),
-                  _buildMenuItem(
-                    context,
-                    Assets.images.setting2.path,
-
-                    "Settings",
-                    AppRoutes.profilePage.name,
-                  ),
-                ],
+                      "Settings",
+                      "",
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            // Bottom User Profile
-            Padding(
-              padding: EdgeInsets.all(16.w),
-              child: GestureDetector(
+              // Bottom User Profile
+              GestureDetector(
                 onTap: () {
                   context.pushNamed(AppRoutes.myProfileScreen.name);
                 },
@@ -180,14 +177,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                           ),
                           MdSnsText(
                             "Free Plan",
-
+              
                             color: Colors.lightBlueAccent,
                             size: 12.sp,
                           ),
                         ],
                       ),
                     ),
-
+              
                     GestureDetector(
                       onTap: () {
                         logout();
@@ -201,27 +198,26 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  /// Ab ye menu item state ke hisaab se highlight hoga
   Widget _buildMenuItem(
     BuildContext context,
     String icon,
     String title,
-    String routeName,
+    String? routeName,
   ) {
     final bool isSelected = selectedMenu == routeName;
 
     return ListTile(
+      contentPadding: EdgeInsets.zero,
       leading: Image.asset(
         icon,
         color: isSelected ? AppColors.white : AppColors.color5E646E,
-
         height: 24.h,
         width: 24.w,
       ),
@@ -231,12 +227,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
         size: 16,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
-      onTap: () {
-        setState(() {
-          selectedMenu = routeName; // update selected menu
-        });
-        context.goNamed(routeName); // navigate to route
-      },
+      onTap: routeName == null || routeName.isEmpty
+          ? null // disable tap if no route
+          : () {
+              setState(() {
+                selectedMenu = routeName;
+              });
+              context.goNamed(routeName);
+            },
     );
   }
 }
