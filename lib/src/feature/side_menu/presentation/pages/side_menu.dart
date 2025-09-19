@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +12,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboardin
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/shared/widgets/confirmation_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/logout_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/setting_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class SideMenu extends ConsumerStatefulWidget {
@@ -43,6 +46,17 @@ class _SideMenuState extends ConsumerState<SideMenu> {
           },
         );
       },
+    );
+  }
+
+  void openBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors
+          .transparent, // transparent rakhen taki rounded corners visible rahen
+      isScrollControlled:
+          true, // content scrollable ho jata hai agar zyada lamba ho
+      builder: (context) => const SettingBottomSheet(),
     );
   }
 
@@ -224,6 +238,13 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     GestureDetector(
                       onTap: () {
                         _showLogoutDialog(context);
+
+                        // showModalBottomSheet(
+                        //   context: context,
+                        //   backgroundColor: Colors.transparent,
+                        //   isScrollControlled: true,
+                        //   builder: (context) => const SettingBottomSheet(),
+                        // );
                       },
                       child: Icon(
                         Icons.logout,
