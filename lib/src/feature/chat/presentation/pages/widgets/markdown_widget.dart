@@ -35,23 +35,39 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
+            widget.name == "TDGPT"
+                ? Container(
+                    height: 50.h,
+                    width: 90.w,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(Assets.images.appLogo.path),
+                      ),
+                    ),
+                  )
+                : Container(
+                    height: 20.h,
+                    width: 20.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: widget.image.isEmpty
+                            ? AssetImage(Assets.images.appLogo.path)
+                            : NetworkImage(widget.image),
+                      ),
+                    ),
+                  ),
             SizedBox(width: 6),
-            Container(
-              height:widget.name !="TDGPT" ? 20.h : 50.h,
-              width:widget.name !="TDGPT" ? 20.w : 90.w,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  // fit: BoxFit.cover,
-                  image: widget.image.isEmpty
-                      ? AssetImage(Assets.images.appLogo.path)
-                      : NetworkImage(widget.image),
-                ),
-              ),
-            )
-            ,SizedBox(width: 6),
             Visibility(
-             visible:  widget.name !="TDGPT",
-              child: MdSnsText(widget.name,fontWeight: FontWeight.w500,size: 12,color:AppColors.white,))
+              visible: widget.name != "TDGPT",
+              child: MdSnsText(
+                widget.name,
+                fontWeight: FontWeight.w500,
+                size: 12,
+                color: AppColors.white,
+              ),
+            ),
           ],
         ),
         SizedBox(height: 6),
@@ -59,9 +75,12 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
         Container(
           width: widget.type == "user"
               ? MediaQuery.sizeOf(context).width / 1.5.w
-              : MediaQuery.sizeOf(context).width * 0.75.w,
+              : MediaQuery.sizeOf(context).width * 0.82.w,
 
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: widget.type == "user" ? 10 : 2,
+          ),
           decoration: BoxDecoration(
             color: widget.type == "user"
                 ? AppColors.bubbleColor
@@ -74,6 +93,10 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
             selectable: true,
             styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
                 .copyWith(
+                  blockquotePadding: EdgeInsets.all(0),
+                  blockquoteDecoration: BoxDecoration(
+                    color: Colors.transparent,
+                  ),
                   code: GoogleFonts.plusJakartaSans(
                     color: AppColors.white,
                     fontSize: 16,
@@ -101,6 +124,30 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                   h2: GoogleFonts.plusJakartaSans(
                     color: AppColors.white,
                     fontSize: 14,
+
+                    fontWeight: FontWeight.w600,
+                  ),
+                  h3: GoogleFonts.plusJakartaSans(
+                    color: AppColors.white,
+                    fontSize: 12,
+
+                    fontWeight: FontWeight.w600,
+                  ),
+                  h4: GoogleFonts.plusJakartaSans(
+                    color: AppColors.white,
+                    fontSize: 12,
+
+                    fontWeight: FontWeight.w600,
+                  ),
+                  h5: GoogleFonts.plusJakartaSans(
+                    color: AppColors.white,
+                    fontSize: 12,
+
+                    fontWeight: FontWeight.w600,
+                  ),
+                  h6: GoogleFonts.plusJakartaSans(
+                    color: AppColors.white,
+                    fontSize: 12,
 
                     fontWeight: FontWeight.w600,
                   ),

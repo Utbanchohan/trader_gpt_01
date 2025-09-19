@@ -167,7 +167,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                 "Conversations",
                 size: 18,
                 fontWeight: FontWeight.w700,
-
                 color: AppColors.fieldTextColor,
               ),
               SizedBox(width: 10.w),
@@ -217,7 +216,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
               labelColor: AppColors.white,
               labelStyle: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 color: AppColors.white,
               ),
               unselectedLabelStyle: GoogleFonts.plusJakartaSans(
@@ -336,7 +335,14 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : Center(child: Text("Conversation Not Found")),
+                      : Center(
+                          child: MdSnsText(
+                            "Conversation Not Found",
+                            size: 18,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.fieldTextColor,
+                          ),
+                        ),
 
                   // Second tab
                   convo != null && convo.isNotEmpty && stocks.isNotEmpty
@@ -432,14 +438,21 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : Center(child: Text("Conversation Not Found")),
+                      : Center(
+                          child: MdSnsText(
+                            "Conversation Not Found",
+                            size: 18,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.fieldTextColor,
+                          ),
+                        ),
 
                   Center(
                     child: MdSnsText(
                       "Comming Soon",
-                      size: 20,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.white,
+                      size: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.fieldTextColor,
                     ),
                   ),
 
@@ -447,9 +460,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                   Center(
                     child: MdSnsText(
                       "Comming Soon",
-                      size: 20,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.white,
+                      size: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.fieldTextColor,
                     ),
                   ),
                 ],
