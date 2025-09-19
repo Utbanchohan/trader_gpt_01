@@ -156,7 +156,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                               image: DecorationImage(
                                 image: mediaModel != null
                                     ? NetworkImage(mediaModel!.url)
-                                    : AssetImage(Assets.images.profile.path)
+                                    : AssetImage(
+                                            Assets.images.placeholderimage.path,
+                                          )
                                           as ImageProvider,
                                 fit: BoxFit.cover,
                               ),
@@ -357,7 +359,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       obscureText: !visible1,
                       onChanged: (_) => setState(() {}),
                       style: TextStyle(color: Colors.white, fontSize: 20),
-                      
+
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Password is required";

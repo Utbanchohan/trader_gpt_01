@@ -41,6 +41,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/NVIDIA .png
   AssetGenImage get nvidia => const AssetGenImage('assets/images/NVIDIA .png');
 
+  /// File path: assets/images/Placeholderimage.png
+  AssetGenImage get placeholderimage =>
+      const AssetGenImage('assets/images/Placeholderimage.png');
+
   /// File path: assets/images/Regenerate.png
   AssetGenImage get regenerate =>
       const AssetGenImage('assets/images/Regenerate.png');
@@ -281,6 +285,7 @@ class $AssetsImagesGen {
     meta,
     microinteractionsPreloader03,
     nvidia,
+    placeholderimage,
     regenerate,
     tGBTAimation,
     tradersGPTLogo,
