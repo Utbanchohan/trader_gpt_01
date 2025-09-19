@@ -88,13 +88,15 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
           margin: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 40.h),
           child: ButtonWidget(
             isLoading: isLoading,
-            onPressed: () => submitter(),
+            onPressed: () => otp.text.isNotEmpty ? submitter() : null,
             title: 'Continue',
             borderRadius: 50.r,
             fontSize: 18,
             fontWeight: FontWeight.w500,
             textColor: AppColors.white,
-            bgColor: AppColors.color0098E4,
+            bgColor: otp.text.isNotEmpty
+                ? AppColors.color0098E4
+                : AppColors.color9EAAC0,
           ),
         ),
       ),

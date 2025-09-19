@@ -14,7 +14,8 @@ enum AppRoutes {
   analytics('analytics', '/analytics'),
   myProfileScreen('myProfileScreen', '/myProfileScreen'),
   conversationStart('conversationStart', '/conversationStart'),
-  newConversation('newConversation', '/newConversation');
+  newConversation('newConversation', '/newConversation'),
+  swipeScreen('swipeScreen', '/swipeScreen');
 
   final String name;
   final String path;
@@ -38,6 +39,7 @@ enum AppRoutes {
     AppRoutes.analytics,
     AppRoutes.conversationStart,
     AppRoutes.newConversation,
+    AppRoutes.swipeScreen,
   ];
   static bool isPublicRoute(GoRouterState state) {
     final fullPath = state.fullPath;

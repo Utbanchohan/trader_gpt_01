@@ -12,6 +12,7 @@ import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_messa
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
@@ -34,6 +35,8 @@ class ChatPage extends ConsumerStatefulWidget {
 
 class _ChatPageState extends ConsumerState<ChatPage> {
   TextEditingController message = TextEditingController();
+  final ScrollController _textScrollController = ScrollController();
+
   ScrollController sc = ScrollController();
   Stock? selectedStock;
   List<ChatMessageModel> chats = [];
@@ -326,63 +329,57 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     });
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
-      bottomNavigationBar: Container(
-        color: Colors.transparent,
-        height: 160.h,
-
-        child: Column(
-          children: [
-            Container(
-              height: 115.h,
-              margin: EdgeInsets.all(18),
-              padding: EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25.r),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: AppColors.gradient,
-                ),
-              ),
-              child: Container(
-                padding: EdgeInsets.all(10),
+      bottomNavigationBar: // ScrollController for the TextField
+      AnimatedPadding(
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Container(
+          color: Colors.transparent,
+          height: 160.h,
+          child: Column(
+            children: [
+              Container(
+                height: 115.h,
+                margin: EdgeInsets.all(18),
+                padding: EdgeInsets.all(1),
                 decoration: BoxDecoration(
-                  color: AppColors.color0E1738,
                   borderRadius: BorderRadius.circular(25.r),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: AppColors.gradient,
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: message,
-                      style: TextStyle(color: AppColors.white),
-                      keyboardType: TextInputType.multiline,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppColors.color0E1738,
+                    borderRadius: BorderRadius.circular(25.r),
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: message,
+                          style: TextStyle(color: AppColors.white),
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          scrollController: _textScrollController,
 
-                      maxLines: null,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Ask anything about the market",
-                        
-                        prefixIcon: Image.asset(
-                          Assets.images.prefixIcon.path,
-                          scale: 3.9,
-                        ),
+                          onChanged: (value) {
 
-                        hintStyle: TextStyle(
-                          color: AppColors.bluishgrey404F81,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 15.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            GestureDetector(
+                            _textScrollController.jumpTo(
+                              _textScrollController.position.maxScrollExtent,
+                            );
+                          },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Ask anything about the market",
+                            prefixIcon: GestureDetector(
                               onTap: () async {
                                 if (widget.chatRouting == null ||
                                     widget.chatRouting!.companyName.isEmpty) {
@@ -396,10 +393,34 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                   showDialogue(questions, [], message, 0);
                                 }
                               },
-                              child: Container(
+                              child: Image.asset(
+                                Assets.images.prefixIcon.path,
+                                scale: 3.3.sp,
+                              ),
+                            ),
+                            prefixIconConstraints: BoxConstraints(
+                              minWidth: 0,
+                              minHeight: 0,
+                            ),
+                            hintStyle: TextStyle(
+                              color: AppColors.bluishgrey404F81,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 15.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
                                 padding: EdgeInsets.all(12),
-                                height: 36.h,
-                                width: 36.w,
+                                height: 35.h,
+                                width: 35.w,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.color091224,
@@ -412,65 +433,64 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                   Assets.images.textfieldicon3.path,
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 8),
-                          ],
-                        ),
-
-                        Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(12),
-                              height: 36.h,
-                              width: 36.w,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.bubbleColor,
-                              ),
-                              child: Image.asset(
-                                Assets.images.textfieldicon.path,
-                              ),
-                            ),
-                            SizedBox(width: 6.w),
-                            Container(
-                              padding: EdgeInsets.all(12),
-                              height: 36.h,
-                              width: 36.w,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.bubbleColor,
-                              ),
-                              child: Image.asset(
-                                Assets.images.textfieldicon4.path,
-                              ),
-                            ),
-                            SizedBox(width: 6.w),
-                            Container(
-                              height: 36,
-                              width: 36,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.color046297,
-                              ),
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                icon: Icon(
-                                  Icons.arrow_upward_rounded,
-                                  color: AppColors.white,
-                                  size: 18,
+                              SizedBox(width: 8),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                height: 36.h,
+                                width: 36.w,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.bubbleColor,
                                 ),
-                                onPressed: () => _sendMessage(ref),
+                                child: Image.asset(
+                                  Assets.images.textfieldicon.path,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                              SizedBox(width: 6.w),
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                height: 36.h,
+                                width: 36.w,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.bubbleColor,
+                                ),
+                                child: Image.asset(
+                                  Assets.images.textfieldicon4.path,
+                                ),
+                              ),
+                              SizedBox(width: 6.w),
+                              Container(
+                                height: 36,
+                                width: 36,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.color046297,
+                                ),
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  icon: Icon(
+                                    Icons.arrow_upward_rounded,
+                                    color: AppColors.white,
+                                    size: 18,
+                                  ),
+                                  onPressed: () => _sendMessage(ref),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
 
@@ -557,15 +577,19 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             color: AppColors.white,
                           ),
                           SizedBox(width: 4),
-                          MdSnsText(
-                            widget.chatRouting!.companyName
-                                .split("-")
-                                .first
-                                .trim(),
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width / 3,
+                            child: MdSnsText(
+                              " " +
+                                  widget.chatRouting!.companyName!
+                                      .split("-")
+                                      .first
+                                      .trim(),
 
-                            color: AppColors.colorB2B2B7,
-                            size: 12,
-                            fontWeight: FontWeight.w400,
+                              color: AppColors.colorB2B2B7,
+                              size: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                           Icon(
                             Icons.keyboard_arrow_down,
@@ -597,7 +621,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             size: 20,
                           ),
                           MdSnsText(
-                            " ${widget.chatRouting!.changePercentage!.toStringAsFixed(2)}%",
+                            " ${widget.chatRouting!.changePercentage.toStringAsFixed(2).replaceAll("-", "")}%",
                             color:
                                 widget.chatRouting!.changePercentage
                                     .toString()
@@ -679,6 +703,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                               message: chats[index].message,
                               name: name,
                               image: image,
+                              type: chats[index].type,
                             ),
                             SizedBox(
                               height: chats[index].type != "user" ? 10 : 10,
@@ -701,7 +726,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               data: (line) {
                 final text = line["buffer"] ?? "";
                 if (text.isNotEmpty) {
-                  // scrollToBottom();
+
                 }
 
                 return text.isNotEmpty
@@ -720,15 +745,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     widget.chatRouting!.image.isEmpty
                                 ? ""
                                 : widget.chatRouting!.image,
+                            type: "ai",
                           ),
                           SizedBox(height: 10),
-                          Visibility(
-                            visible: text.toString().isNotEmpty,
-                            child: MessageLikeCopyIcon(
-                              type: "ai",
-                              message: text.toString(),
-                            ),
-                          ),
+                          
+                             Container(
+                             width:  150,
+                               child: MessageLikeCopyIcon(
+                                type: "ai",
+                                message: text.toString(),
+                                                           
+                                                         ),
+                             ),
                         ],
                       )
                     : SizedBox();

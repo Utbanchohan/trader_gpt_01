@@ -62,6 +62,10 @@ class $AssetsImagesGen {
   AssetGenImage get analytics =>
       const AssetGenImage('assets/images/analytics.png');
 
+  /// File path: assets/images/app_icon.png
+  AssetGenImage get appIcon =>
+      const AssetGenImage('assets/images/app_icon.png');
+
   /// File path: assets/images/apple.png
   AssetGenImage get apple => const AssetGenImage('assets/images/apple.png');
 
@@ -142,6 +146,14 @@ class $AssetsImagesGen {
   AssetGenImage get lampCharge =>
       const AssetGenImage('assets/images/lamp-charge.png');
 
+  /// File path: assets/images/leftscrollicon.png
+  AssetGenImage get leftscrollicon =>
+      const AssetGenImage('assets/images/leftscrollicon.png');
+
+  /// File path: assets/images/leftsideimage.png
+  AssetGenImage get leftsideimage =>
+      const AssetGenImage('assets/images/leftsideimage.png');
+
   /// File path: assets/images/like.png
   AssetGenImage get like => const AssetGenImage('assets/images/like.png');
 
@@ -188,6 +200,14 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/receipt.png
   AssetGenImage get receipt => const AssetGenImage('assets/images/receipt.png');
+
+  /// File path: assets/images/rightscrollicon.png
+  AssetGenImage get rightscrollicon =>
+      const AssetGenImage('assets/images/rightscrollicon.png');
+
+  /// File path: assets/images/rightsideimage.png
+  AssetGenImage get rightsideimage =>
+      const AssetGenImage('assets/images/rightsideimage.png');
 
   /// File path: assets/images/rotate-left6.png
   AssetGenImage get rotateLeft6 =>
@@ -263,6 +283,7 @@ class $AssetsImagesGen {
     vector1,
     visa,
     analytics,
+    appIcon,
     apple,
     arrowBack,
     book,
@@ -287,6 +308,8 @@ class $AssetsImagesGen {
     information,
     jJ,
     lampCharge,
+    leftscrollicon,
+    leftsideimage,
     like,
     lock,
     logo,
@@ -301,6 +324,8 @@ class $AssetsImagesGen {
     radar2,
     receipt1,
     receipt,
+    rightscrollicon,
+    rightsideimage,
     rotateLeft6,
     searchNormal,
     setting2,
