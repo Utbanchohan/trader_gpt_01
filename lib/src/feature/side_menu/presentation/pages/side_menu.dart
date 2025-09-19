@@ -243,12 +243,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          backgroundColor: Colors.transparent,
-                          isScrollControlled: true,
-                          builder: (context) => const SettingBottomSheet(),
-                        );
+                        _showLogoutDialog(context);
+
+                        // showModalBottomSheet(
+                        //   context: context,
+                        //   backgroundColor: Colors.transparent,
+                        //   isScrollControlled: true,
+                        //   builder: (context) => const SettingBottomSheet(),
+                        // );
                       },
                       child: Icon(
                         Icons.logout,
