@@ -213,6 +213,10 @@ class $AssetsImagesGen {
   AssetGenImage get rotateLeft6 =>
       const AssetGenImage('assets/images/rotate-left6.png');
 
+  /// File path: assets/images/search-normal (1).png
+  AssetGenImage get searchNormal1 =>
+      const AssetGenImage('assets/images/search-normal (1).png');
+
   /// File path: assets/images/search-normal.png
   AssetGenImage get searchNormal =>
       const AssetGenImage('assets/images/search-normal.png');
@@ -327,6 +331,7 @@ class $AssetsImagesGen {
     rightscrollicon,
     rightsideimage,
     rotateLeft6,
+    searchNormal1,
     searchNormal,
     setting2,
     shapeAngle,
