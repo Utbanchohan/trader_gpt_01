@@ -371,7 +371,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           scrollController: _textScrollController,
 
                           onChanged: (value) {
-
                             _textScrollController.jumpTo(
                               _textScrollController.position.maxScrollExtent,
                             );
@@ -691,10 +690,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: chats[index].type == "user"
-                          ? MainAxisAlignment.end
-                          : MainAxisAlignment.start,
 
+                      // mainAxisAlignment: chats[index].type == "user"
+                      // ? MainAxisAlignment.end
+                      // : MainAxisAlignment.start,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -725,9 +724,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             asyncStream.when(
               data: (line) {
                 final text = line["buffer"] ?? "";
-                if (text.isNotEmpty) {
-
-                }
+                if (text.isNotEmpty) {}
 
                 return text.isNotEmpty
                     ? Column(
@@ -748,15 +745,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             type: "ai",
                           ),
                           SizedBox(height: 10),
-                          
-                             Container(
-                             width:  150,
-                               child: MessageLikeCopyIcon(
-                                type: "ai",
-                                message: text.toString(),
-                                                           
-                                                         ),
-                             ),
+
+                          Container(
+                            width: 150,
+                            child: MessageLikeCopyIcon(
+                              type: "ai",
+                              message: text.toString(),
+                            ),
+                          ),
                         ],
                       )
                     : SizedBox();
