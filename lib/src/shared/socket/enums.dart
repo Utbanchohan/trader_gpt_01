@@ -10,27 +10,15 @@ enum SocketEvents {
   reconnectFailed('reconnect_failed'),
   connectError('connect_error'),
   error('error'),
-  priceUpdate('priceupdate'),
-  getStocksData('getstocksdata'),
-  ping('ping'),
-  portfolioSummaryUpdate('portfolio-summary-update'),
-  portfolioCardUpdateUnsubscribe('portfolio-card-update-unsubscribe'),
-  portfolioHoldingsUpdate('portfolio-holdings-update'),
-  portfolioHoldingsUpdateUnsubscribe('portfolio-holdings-update-unsubscribe'),
-  portfolioSummaryUpdateUnsubscribe('portfolio-summary-update-unsubscribe'),
-  searchStockByKeyword('searchStockByKeyword'),
-  searchStockByKeywordAndMarket('searchStockByKeywordAndMarket'),
-  getPredictionsByID('getPredictionsByID'),
-  users('users'),
-  portfolioCardUpdate('portfolio-card-update'),
-  portfolioOverviewUpdate('portfolio-overview-update'),
-  portfolioOverviewUpdateUnsubscribe('portfolio-overview-update-unsubscribe'),
   markNotificationRead('MARK_NOTIFICATION_READ'),
   newNotification('newNotification'),
   notificationRead('NOTIFICATION_READ'),
   notificationCountUpdate('NOTIFICATION_COUNT_UPDATE'),
   connectErrorUpper('CONNECT_ERROR'),
-  errorUpper('ERROR');
+  errorUpper('ERROR'),
+  getpopularnasdaqstocks('getpopularnasdaqstocks'),
+  searchStockByKeyword('searchStockByKeyword'),
+  popularNasdaqStocksUpdate('popularNasdaqStocksUpdate');
 
   final String value;
   const SocketEvents(this.value);

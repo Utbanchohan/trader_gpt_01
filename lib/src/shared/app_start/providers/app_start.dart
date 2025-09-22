@@ -13,7 +13,7 @@ Future<void> appStartup(Ref ref) async {
   ref.onDispose(() {
     ref.invalidate(sharedPreferencesProvider);
   });
-    //  await ref.read(socketConnectionProvider().future);
+     await ref.read(socketConnectionProvider().future);
     // ref.read(stocksStreamProvider);
   await ref.watch(sharedPreferencesProvider.future);
   // await Firebase.initializeApp();

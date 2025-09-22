@@ -12,7 +12,6 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(context, ref) {
-    ref.read(socketRepository);
     final goRouter = ref.watch(routerConfigProvider);
 
     final buttonStyle = ButtonStyle(

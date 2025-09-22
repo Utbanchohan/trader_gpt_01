@@ -1,45 +1,54 @@
-import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/src/shared/flavours.dart';
-import 'package:trader_gpt/src/shared/socket/data/api/socket_api.dart';
-import 'package:trader_gpt/src/shared/socket/enums.dart';
-import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+
+import '../../data/api/socket_api.dart';
+import '../../enums.dart';
+import '../../model/stock_model.dart/stock_model.dart';
 
 class SocketRepository {
   final String baseUrl;
   final SocketApi service;
+  final Ref ref;
+  SocketRepository(this.service, this.baseUrl, this.ref);
 
-  SocketRepository(this.service, this.baseUrl);
-
-  // ✅ Connect socket AFTER login
-  void initConnection(String accessToken) {
-    service.connect(baseUrl, accessToken);
+  void initConnection({Map<String, dynamic>? query}) {
+    service.connect();
   }
 
-  Stream<Stock> listenToStocksPrices() {
-    return service.listen(SocketEvents.priceUpdate.value).map((data) {
-      return Stock.fromJson(jsonDecode(data));
+  void fetchStocks(Function(List<dynamic>) callback) {
+    service.emitWithAck(SocketEvents.getpopularnasdaqstocks.value, {}, (event) {
+      if (event != null && event is List) {
+        // _stockStreamController.add(data);
+        List<Stock> stocks = (event).map((e) => Stock.fromJson(e)).toList();
+        callback(stocks);
+      } else {
+        print('⚠️ Invalid stock data');
+      }
     });
   }
 
-  void getUpdatedStocks(
-    List<String> ids,
-    Function(List<Stock> stocks) callBack,
-  ) {
-    service.emitWithAck(
-      SocketEvents.getStocksData.value,
-      {
-        "stocks": ids
-            .map((e) => {'stockId': e, 'showTrendChart': true})
-            .toList(),
-      },
-      (event) {
-        List<Stock> stocks = (event as List)
-            .map((e) => Stock.fromJson(e))
-            .toList();
-        callBack(stocks);
+  void searchStocks(String keyword, Function(List<dynamic>) callback) {
+    service.emitWithAckString(
+      SocketEvents.searchStockByKeyword.value,
+      keyword,
+      (data) {
+        if (data != null && data is List) {
+          List<Stock> stocks = (data).map((e) => Stock.fromJson(e)).toList();
+          callback(stocks);
+        } else {
+          print('⚠️ Invalid search result: $data');
+        }
       },
     );
+  }
+
+  Stream<dynamic> onStockUpdate() {
+    return Stream<dynamic>.multi((controller) {
+      service.listenStockUpdate(
+        SocketEvents.popularNasdaqStocksUpdate.value,
+        (data) => controller.add(data),
+      );
+    });
   }
 
   void dispose() {
@@ -48,5 +57,9 @@ class SocketRepository {
 }
 
 final socketRepository = Provider<SocketRepository>((ref) {
-  return SocketRepository(SocketApi.instance, BaseUrl.socketurl);
+  final repo = SocketRepository(SocketApi.instance, BaseUrl.socketurl, ref);
+
+  ref.onDispose(() => repo.dispose());
+
+  return repo;
 });
