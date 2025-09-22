@@ -48,6 +48,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   String? chadId;
   User? user;
   bool dialogOpen = false;
+  String? oldResponse;
 
   @override
   void initState() {
@@ -271,6 +272,20 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           "is_workflow": false,
         };
         setState(() {
+          if(oldResponse !=null)
+          {
+             chats.add(
+            ChatMessageModel(
+              id: "temp",
+              chatId: chadId!,
+              message: oldResponse!,
+              type: "ai",
+              userId: userid,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
+          }
           chats.add(
             ChatMessageModel(
               id: "temp",
@@ -282,6 +297,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               updatedAt: DateTime.now(),
             ),
           );
+          
           startStream = true;
         });
         scrollToBottom();
@@ -321,6 +337,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       if (followupQuestions.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (!dialogOpen) {
+            oldResponse=data["buffer"];
             showDialogue(questions, followupQuestions, message, 1);
             changeDialogueStatus();
           }
