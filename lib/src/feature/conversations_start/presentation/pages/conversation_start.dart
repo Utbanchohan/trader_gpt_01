@@ -33,6 +33,9 @@ class ConversationStart extends ConsumerStatefulWidget {
 
 class _ConversationStartState extends ConsumerState<ConversationStart>
     with TickerProviderStateMixin {
+  final FocusNode searchFocus = FocusNode();
+  bool isSearching = false; // 👈 ye flag add karo
+  TextEditingController searchController = TextEditingController();
   List<ChatHistory> convo = [];
   final SocketService socketService = SocketService();
   late TabController tabController;
@@ -188,52 +191,133 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
             ],
           ),
           actions: [
-            Container(
-              margin: EdgeInsets.only(right: 20.w),
-              child: Image.asset(
-                Assets.images.searchNormal.path,
-                height: 20.h,
-                width: 20.w,
+            if (!isSearching) // 👈 Agar search mode nahi hai to search button dikhao
+              IconButton(
+                icon: Image.asset(
+                  Assets.images.searchNormal.path,
+                  height: 20.h,
+                  width: 20.w,
+                ),
+                onPressed: () {
+                  setState(() {
+                    isSearching = true;
+                  });
+                },
+              )
+            else // 👈 Agar search mode ON hai to close button dikhao
+              IconButton(
+                icon: Icon(Icons.close, color: Colors.white),
+                onPressed: () {
+                  setState(() {
+                    isSearching = false;
+                    searchController.clear();
+                  });
+                },
               ),
-            ),
           ],
         ),
         body: Column(
           children: [
-            TabBar(
-              controller: tabController,
-              dividerHeight: 0,
-              indicatorSize: TabBarIndicatorSize.tab,
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-              indicatorPadding: EdgeInsets.symmetric(
-                horizontal: 5.w,
-                vertical: 0.h,
-              ),
-              indicator: BoxDecoration(
-                color: AppColors.color203063,
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              labelColor: AppColors.white,
-              labelStyle: GoogleFonts.plusJakartaSans(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.white,
-              ),
-              unselectedLabelStyle: GoogleFonts.plusJakartaSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.color677FA4,
-              ),
-              unselectedLabelColor: AppColors.color677FA4,
-              labelPadding: EdgeInsets.zero,
-              tabs: [
-                buildCustomTab("All", 0, tabController),
-                buildCustomTab("Stocks", 1, tabController),
-                buildCustomTab("Crypto", 2, tabController),
-                buildCustomTab("ETFs", 3, tabController),
-              ],
+            // TabBar(
+            //   controller: tabController,
+            //   dividerHeight: 0,
+            //   indicatorSize: TabBarIndicatorSize.tab,
+            //   padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+            //   indicatorPadding: EdgeInsets.symmetric(
+            //     horizontal: 5.w,
+            //     vertical: 0.h,
+            //   ),
+            //   indicator: BoxDecoration(
+            //     color: AppColors.color203063,
+            //     borderRadius: BorderRadius.circular(20.r),
+            //   ),
+            //   labelColor: AppColors.white,
+            //   labelStyle: GoogleFonts.plusJakartaSans(
+            //     fontSize: 16,
+            //     fontWeight: FontWeight.w600,
+            //     color: AppColors.white,
+            //   ),
+            //   unselectedLabelStyle: GoogleFonts.plusJakartaSans(
+            //     fontSize: 14,
+            //     fontWeight: FontWeight.w400,
+            //     color: AppColors.color677FA4,
+            //   ),
+            //   unselectedLabelColor: AppColors.color677FA4,
+            //   labelPadding: EdgeInsets.zero,
+            //   tabs: [
+            //     buildCustomTab("All", 0, tabController),
+            //     buildCustomTab("Stocks", 1, tabController),
+            //     buildCustomTab("Crypto", 2, tabController),
+            //     buildCustomTab("ETFs", 3, tabController),
+            //   ],
+            // ),
+            AnimatedSwitcher(
+              duration: Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return SizeTransition(
+                  sizeFactor: animation,
+                  axisAlignment: -1.0,
+                  child: FadeTransition(opacity: animation, child: child),
+                );
+              },
+              child: !isSearching
+                  ? TabBar(
+                      controller: tabController,
+                      dividerHeight: 0,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 8.h,
+                      ),
+                      indicatorPadding: EdgeInsets.symmetric(
+                        horizontal: 5.w,
+                        vertical: 0.h,
+                      ),
+                      indicator: BoxDecoration(
+                        color: AppColors.color203063,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      labelColor: AppColors.white,
+                      labelStyle: GoogleFonts.plusJakartaSans(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.white,
+                      ),
+                      unselectedLabelStyle: GoogleFonts.plusJakartaSans(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.color677FA4,
+                      ),
+                      unselectedLabelColor: AppColors.color677FA4,
+                      labelPadding: EdgeInsets.zero,
+                      tabs: [
+                        buildCustomTab("All", 0, tabController),
+                        buildCustomTab("Stocks", 1, tabController),
+                        buildCustomTab("Crypto", 2, tabController),
+                        buildCustomTab("ETFs", 3, tabController),
+                      ],
+                    )
+                  : Container(
+                      height: 55.h,
+                      padding: EdgeInsets.only(left: 15, top: 15, right: 15),
+                      child: TextField(
+                        controller: searchController,
+                        focusNode: searchFocus, // 👈 focus preserve
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: "Search...",
+                          hintStyle: TextStyle(color: Colors.grey),
+                          // prefixIcon: Icon(Icons.search, color: Colors.grey),
+                          filled: true,
+                          fillColor: AppColors.color091224,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.r),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
             ),
-            SizedBox(height: 16.h),
 
             // Yeh Expanded me rakho
             Expanded(
