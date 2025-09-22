@@ -29,10 +29,10 @@ abstract interface class ChatApi {
     @Body() CreateChatDto createChatDto,
   );
 
-  @PATCH('chat/archive')
+  @PATCH('/chat/archive')
   Future<BaseModel<ChatHistory>> archiveChat( @Body() ArchiveChatDto archiveChatDto,);
 
-  @DELETE("chat/{chatId}")
+  @DELETE("/chat/{chatId}")
   Future<BaseModel<DeleteResponse>> deleteChat( @Path('chatId') String chatId);
 
   @GET("/message/{chatId}")

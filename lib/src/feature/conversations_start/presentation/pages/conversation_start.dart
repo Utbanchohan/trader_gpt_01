@@ -14,6 +14,7 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_mess
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/feature/conversations_start/provider/delete_provider.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -57,6 +58,45 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
     super.initState();
   }
 
+  FutureOr<void> deleteStock(String convoId) async {
+    final result = await ref
+        .read(deleteProviderProvider.notifier)
+        .delete(chatId: convoId);
+
+    if (result != null) {
+      setState(() {
+        convo.removeWhere((c) => c.id == convoId);
+        searchConvo.removeWhere((c) => c.id == convoId);
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Chat deleted successfully")),
+      );
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Failed to delete chat")));
+    }
+  }
+
+  FutureOr<void> archivedStock(String convoId, bool isArchived) async {
+    final result = await ref
+        .read(deleteProviderProvider.notifier)
+        .archive(chatId: convoId, isArchived: isArchived);
+    if (result != null) {
+      setState(() {
+        convo.removeWhere((c) => c.id == convoId);
+        searchConvo.removeWhere((c) => c.id == convoId);
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Chat Archived successfully")),
+      );
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Failed to Archived chat")));
+    }
+  }
+
   getChats() async {
     var res = await ref.read(chatRepository).chats();
     if (!res.isSuccess) return false;
@@ -88,10 +128,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
       _debounce!.cancel();
     }
 
-    _debounce = Timer(
-      const Duration(milliseconds: 300),
-      () => searchStockItem(val),
-    );
+    _debounce = Timer(Duration(milliseconds: 300), () => searchStockItem(val));
   }
 
   searchStockItem(val) {
@@ -402,7 +439,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                               },
                               child: Slidable(
                                 endActionPane: ActionPane(
-                                  motion: const ScrollMotion(),
+                                  motion: ScrollMotion(),
                                   children: [
                                     CustomSlidableAction(
                                       onPressed: (context) {},
@@ -417,7 +454,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                             height: 24.h,
                                             color: AppColors.color9EAAC0,
                                           ),
-                                          const SizedBox(height: 4),
+                                          SizedBox(height: 4),
                                           MdSnsText(
                                             'Archive',
                                             color: AppColors.color9EAAC0,
@@ -429,7 +466,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     ),
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        // Delete action
+                                        deleteStock(convo[index].id);
                                       },
                                       backgroundColor: AppColors.color091224,
                                       child: Column(
@@ -442,7 +479,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                             height: 24.h,
                                             color: AppColors.color9EAAC0,
                                           ),
-                                          const SizedBox(height: 4),
+                                          SizedBox(height: 4),
                                           MdSnsText(
                                             'Delete',
                                             color: AppColors.color9EAAC0,
@@ -501,7 +538,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                               },
                               child: Slidable(
                                 endActionPane: ActionPane(
-                                  motion: const ScrollMotion(),
+                                  motion: ScrollMotion(),
                                   children: [
                                     CustomSlidableAction(
                                       onPressed: (context) {},
@@ -516,7 +553,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                             height: 24.h,
                                             color: AppColors.color9EAAC0,
                                           ),
-                                          const SizedBox(height: 4),
+                                          SizedBox(height: 4),
                                           MdSnsText(
                                             'Archive',
                                             color: AppColors.color9EAAC0,
@@ -528,7 +565,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     ),
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        // Delete action
+                                        deleteStock(convo[index].id);
                                       },
                                       backgroundColor: AppColors.color091224,
                                       child: Column(
@@ -541,7 +578,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                             height: 24.h,
                                             color: AppColors.color9EAAC0,
                                           ),
-                                          const SizedBox(height: 4),
+                                          SizedBox(height: 4),
                                           MdSnsText(
                                             'Delete',
                                             color: AppColors.color9EAAC0,
@@ -610,7 +647,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                               },
                               child: Slidable(
                                 endActionPane: ActionPane(
-                                  motion: const ScrollMotion(),
+                                  motion: ScrollMotion(),
                                   children: [
                                     CustomSlidableAction(
                                       onPressed: (context) {},
@@ -625,7 +662,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                             height: 24.h,
                                             color: AppColors.color9EAAC0,
                                           ),
-                                          const SizedBox(height: 4),
+                                          SizedBox(height: 4),
                                           MdSnsText(
                                             'Archive',
                                             color: AppColors.color9EAAC0,
@@ -637,7 +674,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     ),
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        // Delete action
+                                        deleteStock(convo[index].id);
                                       },
                                       backgroundColor: AppColors.color091224,
                                       child: Column(
@@ -650,7 +687,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                             height: 24.h,
                                             color: AppColors.color9EAAC0,
                                           ),
-                                          const SizedBox(height: 4),
+                                          SizedBox(height: 4),
                                           MdSnsText(
                                             'Delete',
                                             color: AppColors.color9EAAC0,
