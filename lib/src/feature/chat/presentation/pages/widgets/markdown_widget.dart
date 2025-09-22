@@ -73,9 +73,11 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
         SizedBox(height: 6),
 
         Container(
-          width: widget.type == "user"
-              ? MediaQuery.sizeOf(context).width / 1.5.w
-              : MediaQuery.sizeOf(context).width * 0.80.w,
+          width:
+           widget.type == "user"
+              ? 
+              MediaQuery.sizeOf(context).width / 1.5.w
+              : MediaQuery.sizeOf(context).width / 0.7.w,
 
           padding: EdgeInsets.symmetric(
             vertical: 10,
