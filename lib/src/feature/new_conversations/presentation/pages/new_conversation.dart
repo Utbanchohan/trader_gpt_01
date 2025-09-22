@@ -258,6 +258,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               ),
             ),
           ),
+       
           search.text.isNotEmpty && searchStock.isEmpty
               ? Expanded(
                   child: Padding(
