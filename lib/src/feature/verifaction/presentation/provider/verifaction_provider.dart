@@ -47,7 +47,8 @@ class VerifactionProvider extends _$VerifactionProvider {
       }
       state = AppLoadingState();
     } catch (e) {
-      $showMessage(e.toString(), isError: true);
+      $showMessage("Invalid Code", isError: true);
+      // $showMessage(e.toString(), isError: true);
       state = AppLoadingState();
       debugPrint("errror $e");
     }
