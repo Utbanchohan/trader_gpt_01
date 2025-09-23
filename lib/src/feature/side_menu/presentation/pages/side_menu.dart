@@ -291,6 +291,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                 selectedMenu = routeName;
               });
               if (routeName == "Settings") {
+                if(ref.read(localDataProvider).getIsFirstTime())
+                {
+ref.read(localDataProvider).setIsFirstTime(false);
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
@@ -299,6 +302,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     return OnboardingBottomSheet();
                   },
                 );
+                }else{
+
+                }
               }
               // context.pop();
               context.pushNamed(routeName);

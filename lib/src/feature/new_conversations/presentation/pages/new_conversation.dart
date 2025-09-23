@@ -185,7 +185,6 @@ class _NewConversationState extends ConsumerState<NewConversation> {
 
   @override
   Widget build(BuildContext context) {
-    var res = ref.watch(stocksStreamProvider);
 
     return Scaffold(
       backgroundColor: AppColors.primaryColor,

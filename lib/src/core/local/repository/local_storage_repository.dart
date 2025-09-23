@@ -31,6 +31,7 @@ abstract interface class SharedPrefService {
 
   String get getUserId;
 
+
   Future<void> removeUserId(String userType);
 
   Future<void> saveUser(Map<String, dynamic> user) async {
