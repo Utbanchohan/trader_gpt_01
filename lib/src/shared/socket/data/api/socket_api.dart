@@ -9,29 +9,24 @@ class SocketApi {
 
   IO.Socket? socket;
 
-  void connect(String url, String accessToken, {Map<String, dynamic>? query}) {
+  void connect() {
     if (socket != null && socket!.connected) return; // Already connected
 
     socket = IO.io(
-      url,
+      'https://stage.tradersgpt.io',
       IO.OptionBuilder()
-          .setPath("/socket.io/")
           .setTransports(['websocket'])
-          .setQuery(query ?? {})
+          .enableForceNew()
           .enableReconnection()
-          .setExtraHeaders({"Authorization": "Bearer $accessToken"})
           .build(),
     );
 
     socket!.onConnect((_) {
-      print("✅ Socket connected: ${socket!.id}");
+      print('✅ Connected: ${socket!.id}');
     });
 
-    socket!.onDisconnect((_) {
-      print("❌ Socket disconnected");
-    });
-
-    socket!.connect();
+    socket!.onDisconnect((_) => print('❌ Disconnected'));
+    socket!.onError((err) => print('⚠️ Socket error: $err'));
   }
 
   void emit(String event, dynamic data) {
@@ -46,9 +41,25 @@ class SocketApi {
     socket?.emitWithAck(event, jsonEncode(body), ack: callBack);
   }
 
+  void emitWithAckString(
+    String event,
+    dynamic body,
+    Function(dynamic) callBack,
+  ) {
+    socket?.emitWithAck(event, body, ack: callBack);
+  }
+
   Stream<dynamic> listen(String event) {
     return Stream<dynamic>.multi((controller) {
       socket?.on(event, (data) => controller.add(data));
+    });
+  }
+
+  void listenStockUpdate(String event, Function(List<dynamic>) callback) {
+    socket?.on(event, (data) {
+      if (data != null && data is List) {
+        callback(data);
+      }
     });
   }
 

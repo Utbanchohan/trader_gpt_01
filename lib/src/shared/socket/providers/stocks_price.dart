@@ -1,34 +1,25 @@
-
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
+
+import '../domain/repository/repository.dart';
 import '../model/stock_model.dart/stock_model.dart';
 
 part 'stocks_price.g.dart';
-
 @Riverpod(keepAlive: true)
 class StocksStream extends _$StocksStream {
   StreamSubscription? _subscription;
   Stock? getStock(String id) {
-    return state.firstWhere((e) => e.stockId == id);
+    return id==state.stockId?state:null;
   }
 
   @override
-  List<Stock> build() {
+  Stock build() {
     final repo = ref.watch(socketRepository);
-
-    // cancel old subscription if rebuilds
     _subscription?.cancel();
-
-    // listen to the stock price stream
-    _subscription = repo.listenToStocksPrices().listen((stock) {
+    _subscription = repo.onStockPriceUpdate().listen((stock) {
       // update state with new stock
-      state = [
-        ...state.where((s) => s.stockId != stock.stockId), // remove old
-        stock, // add new
-      ];
+    state = stock;
     });
 
     // cleanup on dispose
@@ -36,67 +27,43 @@ class StocksStream extends _$StocksStream {
       _subscription?.cancel();
     });
 
-    return <Stock>[]; // initial state
-  }
-}
-
-@Riverpod(keepAlive: true)
-class StocksPrices extends _$StocksPrices {
-  List<String> stockIds = [];
-
-  Stock? getStock(String id) {
-    return state.firstWhere((e) => e.stockId == id);
-  }
-
-  void addId(String id) {
-    if (!stockIds.contains(id)) {
-      stockIds.add(id);
-    }
-  }
-
-  void addIds(List<String> ids) {
-    for (final id in ids) {
-      if (!stockIds.contains(id)) {
-        stockIds.add(id);
-      }
-    }
-  }
-
-  void removeId(String id) {
-    stockIds.remove(id);
-  }
-
-  Timer? timer;
-
-  @override
-  List<Stock> build() {
-    // Cleanup
-    ref.onDispose(() {
-      timer?.cancel();
-    });
-    onListenData();
-    return <Stock>[];
-  }
-
-  void onListenData() {
-        debugPrint("onGetData");
-("onListenData");
-    onGetData();
-    timer?.cancel();
-    timer = Timer.periodic(const Duration(seconds: 30), (time) {
-          debugPrint("onGetData");
-("time ${time.tick}");
-      onGetData();
-    });
-  }
-
-  void onGetData() {
-    debugPrint("onGetData");
-    ref.read(socketRepository).getUpdatedStocks(stockIds, (stocks) {
-      state = [
-        ...state.where((s) => !stocks.any((u) => u.name == s.name)),
-        ...stocks,
-      ];
-    });
+    return Stock(
+                avgVolume: 0,
+                change: 0,
+                changesPercentage: 0,
+                dayHigh: 0,
+                dayLow: 0,
+                earningsAnnouncement: "",
+                eps: 0,
+                exchange: "",
+                fiveDayTrend: [FiveDayTrend(data: [])],
+                marketCap: 0,
+                name: "",
+                open: 0,
+                pe: 0,
+                previousClose: 0,
+                price: 0,
+                priceAvg200: 0,
+                priceAvg50: 0,
+                sharesOutstanding: 0,
+                stockId: "",
+                symbol: "",
+                timestamp: 0,
+                volume: 0,
+                yearHigh: 0,
+                yearLow: 0,
+                logoUrl: "",
+                type: "",
+                count: 0,
+                dateHours: "",
+                ticks: 0,
+                primaryLogoUrl: "",
+                secondaryLogoUrl: "",
+                tertiaryLogoUrl: "",
+                status: "",
+                updatedFrom: "",
+                country: "",
+                exchangeSortOrder: 0,
+              ); // initial state
   }
 }

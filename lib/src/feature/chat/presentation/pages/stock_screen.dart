@@ -1,25 +1,25 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/shimmer_stock_list.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/stock_tile.dart';
-import 'package:trader_gpt/src/services/sockets/socket_service.dart';
+import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-import '../../../new_conversations/presentation/pages/widget/shimmer_widget.dart';
+import '../../../../core/local/repository/local_storage_repository.dart';
 
-class StockScreen extends StatefulWidget {
+class StockScreen extends ConsumerStatefulWidget {
   StockScreen({super.key});
 
   @override
-  State<StockScreen> createState() => _StockScreenState();
+  ConsumerState<StockScreen> createState() => _StockScreenState();
 }
 
-class _StockScreenState extends State<StockScreen> {
-  final SocketService _socketService = SocketService();
+class _StockScreenState extends ConsumerState<StockScreen> {
   final TextEditingController search = TextEditingController();
   List<Stock> _stocks = [];
   List<Stock> searchStocks = [];
@@ -31,29 +31,30 @@ class _StockScreenState extends State<StockScreen> {
   @override
   void initState() {
     super.initState();
-    _connectSocket();
+    getStocks();
     _startPolling();
-  }
-
-  void _connectSocket() {
-    _socketService.connect();
-    _socketService.onStockUpdate((data) {
-      _updateStocks(data);
-    });
   }
 
   void _startPolling() {
     _pollingTimer = Timer.periodic(Duration(milliseconds: 100), (_) {
-      _socketService.fetchStocks((data) {
+      ref.read(socketRepository).fetchStocks((data) {
         _updateStocks(data);
       });
     });
   }
 
+  getStocks() async {
+    var res = await ref.read(localDataProvider).getStocks();
+    if (res != null) {
+      for (var stock in res) {
+        _stocks.add(Stock.fromJson(stock));
+      }
+    }
+    setState(() {});
+  }
+
   void _updateStocks(List<dynamic> data) {
-    final updatedStocks = data
-        .map((item) => Stock.fromJson(Map<String, dynamic>.from(item)))
-        .toList();
+    final updatedStocks = data;
 
     setState(() {
       for (var updated in updatedStocks) {
@@ -70,7 +71,6 @@ class _StockScreenState extends State<StockScreen> {
 
   @override
   void dispose() {
-    _socketService.socket.dispose();
     _pollingTimer?.cancel();
     search.dispose();
     if (_debounce != null) {
@@ -192,9 +192,8 @@ class _StockScreenState extends State<StockScreen> {
                     },
                   ),
                 )
-              : search.text.isNotEmpty && searchStocks.isEmpty?
-              
-              Expanded(
+              : search.text.isNotEmpty && searchStocks.isEmpty
+              ? Expanded(
                   child: ListView.separated(
                     padding: EdgeInsets.zero,
                     itemCount: 4,
@@ -205,8 +204,8 @@ class _StockScreenState extends State<StockScreen> {
                       return Divider(color: AppColors.colorB3B3B3, height: 2.h);
                     },
                   ),
-                ):
-              Expanded(
+                )
+              : Expanded(
                   child: ListView.separated(
                     padding: EdgeInsets.zero,
                     itemCount: search.text.isNotEmpty && searchStocks.isNotEmpty
