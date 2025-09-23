@@ -8,6 +8,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
@@ -16,6 +17,7 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart'
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
+import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:chart_sparkline/chart_sparkline.dart';
 
@@ -37,7 +39,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
   bool isSearching = false; // 👈 ye flag add karo
   TextEditingController searchController = TextEditingController();
   List<ChatHistory> convo = [];
-  final SocketService socketService = SocketService();
   late TabController tabController;
   List<Stock> stocks = [];
   Timer? pollingTimer;
@@ -46,9 +47,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
   @override
   void initState() {
     tabController = TabController(length: 4, vsync: this);
+    getStocks();
     getChats();
-    _connectSocket();
-    _startPolling();
     // TODO: implement initState
     super.initState();
   }
@@ -73,9 +73,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
 
   @override
   void dispose() {
-    socketService.socket.dispose();
     pollingTimer?.cancel();
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -88,25 +86,19 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
     }
   }
 
-  void _connectSocket() {
-    socketService.connect();
-    socketService.onStockUpdate((data) {
-      updateStocks(data);
-    });
-  }
+ 
 
-  void _startPolling() {
-    pollingTimer = Timer.periodic(Duration(milliseconds: 100), (_) {
-      socketService.fetchStocks((data) {
-        updateStocks(data);
-      });
-    });
+  getStocks() async {
+    var res = await ref.read(localDataProvider).getStocks();
+    if (res != null) {
+      for (var stock in res) {
+        stocks.add(Stock.fromJson(stock));
+      }
+    }
   }
 
   void updateStocks(List<dynamic> data) {
-    final updatedStocks = data
-        .map((item) => Stock.fromJson(Map<String, dynamic>.from(item)))
-        .toList();
+    final updatedStocks = data;
 
     setState(() {
       for (var updated in updatedStocks) {
@@ -132,6 +124,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
 
   @override
   Widget build(BuildContext context) {
+  ref.watch(stocksStreamProvider);
+   
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -218,39 +212,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         ),
         body: Column(
           children: [
-            // TabBar(
-            //   controller: tabController,
-            //   dividerHeight: 0,
-            //   indicatorSize: TabBarIndicatorSize.tab,
-            //   padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-            //   indicatorPadding: EdgeInsets.symmetric(
-            //     horizontal: 5.w,
-            //     vertical: 0.h,
-            //   ),
-            //   indicator: BoxDecoration(
-            //     color: AppColors.color203063,
-            //     borderRadius: BorderRadius.circular(20.r),
-            //   ),
-            //   labelColor: AppColors.white,
-            //   labelStyle: GoogleFonts.plusJakartaSans(
-            //     fontSize: 16,
-            //     fontWeight: FontWeight.w600,
-            //     color: AppColors.white,
-            //   ),
-            //   unselectedLabelStyle: GoogleFonts.plusJakartaSans(
-            //     fontSize: 14,
-            //     fontWeight: FontWeight.w400,
-            //     color: AppColors.color677FA4,
-            //   ),
-            //   unselectedLabelColor: AppColors.color677FA4,
-            //   labelPadding: EdgeInsets.zero,
-            //   tabs: [
-            //     buildCustomTab("All", 0, tabController),
-            //     buildCustomTab("Stocks", 1, tabController),
-            //     buildCustomTab("Crypto", 2, tabController),
-            //     buildCustomTab("ETFs", 3, tabController),
-            //   ],
-            // ),
             AnimatedSwitcher(
               duration: Duration(milliseconds: 300),
               transitionBuilder: (child, animation) {

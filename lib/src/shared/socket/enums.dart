@@ -1,5 +1,3 @@
-
-
 enum SocketEvents {
   transport('websocket'),
   connect('connect'),
@@ -18,7 +16,9 @@ enum SocketEvents {
   errorUpper('ERROR'),
   getpopularnasdaqstocks('getpopularnasdaqstocks'),
   searchStockByKeyword('searchStockByKeyword'),
-  popularNasdaqStocksUpdate('popularNasdaqStocksUpdate');
+  priceupdate('priceupdate'),
+  popularNasdaqStocksUpdate('popularNasdaqStocksUpdate'),
+  getStockData('getstocksdata');
 
   final String value;
   const SocketEvents(this.value);

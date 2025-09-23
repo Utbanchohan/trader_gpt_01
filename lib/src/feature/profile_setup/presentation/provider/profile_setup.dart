@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/base_model/base_model.dart';
@@ -8,6 +10,7 @@ import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository
 
 import '../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../shared/custom_message.dart';
+import '../../../../shared/socket/domain/repository/repository.dart';
 import '../../../../shared/states/app_loading_state.dart';
 
 part 'profile_setup.g.dart';
@@ -51,6 +54,15 @@ class Profile extends _$Profile {
         await ref
             .read(localDataProvider)
             .saveUser(response.data!.user.toJson());
+        List<Map<String, dynamic>> stocks = [];
+        ref.read(socketRepository).fetchStocks((data) {
+          final updatedStocks = data;
+
+          for (var updated in updatedStocks) {
+            stocks.add(jsonDecode(updated));
+          }
+          ref.read(localDataProvider).saveStock(stocks);
+        });
 
         return response.data!;
       } else {

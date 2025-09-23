@@ -10,19 +10,16 @@ part 'stocks_price.g.dart';
 class StocksStream extends _$StocksStream {
   StreamSubscription? _subscription;
   Stock? getStock(String id) {
-    return state.firstWhere((e) => e.stockId == id);
+    return id==state.stockId?state:null;
   }
 
   @override
-  List<Stock> build() {
+  Stock build() {
     final repo = ref.watch(socketRepository);
     _subscription?.cancel();
-    _subscription = repo.onStockUpdate().listen((stock) {
+    _subscription = repo.onStockPriceUpdate().listen((stock) {
       // update state with new stock
-      state = [
-        ...state.where((s) => s.stockId != stock.stockId), // remove old
-        stock, // add new
-      ];
+    state = stock;
     });
 
     // cleanup on dispose
@@ -30,6 +27,43 @@ class StocksStream extends _$StocksStream {
       _subscription?.cancel();
     });
 
-    return <Stock>[]; // initial state
+    return Stock(
+                avgVolume: 0,
+                change: 0,
+                changesPercentage: 0,
+                dayHigh: 0,
+                dayLow: 0,
+                earningsAnnouncement: "",
+                eps: 0,
+                exchange: "",
+                fiveDayTrend: [FiveDayTrend(data: [])],
+                marketCap: 0,
+                name: "",
+                open: 0,
+                pe: 0,
+                previousClose: 0,
+                price: 0,
+                priceAvg200: 0,
+                priceAvg50: 0,
+                sharesOutstanding: 0,
+                stockId: "",
+                symbol: "",
+                timestamp: 0,
+                volume: 0,
+                yearHigh: 0,
+                yearLow: 0,
+                logoUrl: "",
+                type: "",
+                count: 0,
+                dateHours: "",
+                ticks: 0,
+                primaryLogoUrl: "",
+                secondaryLogoUrl: "",
+                tertiaryLogoUrl: "",
+                status: "",
+                updatedFrom: "",
+                country: "",
+                exchangeSortOrder: 0,
+              ); // initial state
   }
 }
