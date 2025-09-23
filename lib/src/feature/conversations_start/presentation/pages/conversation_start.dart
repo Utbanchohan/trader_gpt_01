@@ -11,18 +11,14 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
-import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/conversations_start/provider/delete_provider.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
-import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
-import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
 import 'package:trader_gpt/src/shared/widgets/archive_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/delete_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-import 'package:chart_sparkline/chart_sparkline.dart';
 
 import '../../../../services/sockets/socket_service.dart';
 import '../../../../shared/socket/model/stock_model.dart/stock_model.dart';
@@ -97,6 +93,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
       },
     );
   }
+
   void _showArchivedDialog(BuildContext context, Function onPressed) {
     showDialog(
       context: context,
@@ -229,7 +226,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(stocksStreamProvider);
+    final stockManagerState = ref.watch(stocksManagerProvider);
 
     return DefaultTabController(
       length: 4,
@@ -420,7 +417,18 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 search.text.isNotEmpty && searchConvo.isNotEmpty
                                 ? searchConvo[index]
                                 : convo[index];
+
                             int stockIndex = findRelatedStock(stock.symbol);
+                            final liveStock =
+                                stockManagerState[stocks[stockIndex].stockId];
+                            stocks[stockIndex] = stocks[stockIndex].copyWith(
+                              changesPercentage:liveStock!=null&& liveStock.price>0
+                                  ? liveStock.price 
+                                        -stocks[stockIndex].previousClose
+                                  : stocks[stockIndex].changesPercentage,
+                              price:
+                                  liveStock?.price ?? stocks[stockIndex].price,
+                            );
 
                             return GestureDetector(
                               onTap: () {
@@ -446,7 +454,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   children: [
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        _showArchivedDialog(context, (){
+                                        _showArchivedDialog(context, () {
                                           archivedStock(convo[index].id, true);
                                         });
                                       },
@@ -526,6 +534,16 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 ? searchConvo[index]
                                 : convo[index];
                             int stockIndex = findRelatedStock(stock.symbol);
+                           final liveStock =
+                                stockManagerState[stocks[stockIndex].stockId];
+                           stocks[stockIndex] = stocks[stockIndex].copyWith(
+                              changesPercentage:liveStock!=null&& liveStock.price>0
+                                  ? liveStock.price 
+                                        -stocks[stockIndex].previousClose
+                                  : stocks[stockIndex].changesPercentage,
+                              price:
+                                  liveStock?.price ?? stocks[stockIndex].price,
+                            );
 
                             return GestureDetector(
                               onTap: () {
@@ -551,11 +569,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   children: [
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        _showArchivedDialog(context, (){
+                                        _showArchivedDialog(context, () {
                                           archivedStock(convo[index].id, true);
-
                                         });
-
                                       },
                                       backgroundColor: AppColors.color1B254B,
                                       child: Column(
@@ -643,6 +659,16 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 ? searchConvo[index]
                                 : convo[index];
                             int stockIndex = findRelatedStock(stock.symbol);
+                             final liveStock =
+                                stockManagerState[stocks[stockIndex].stockId];
+                           stocks[stockIndex] = stocks[stockIndex].copyWith(
+                              changesPercentage:liveStock!=null&& liveStock.price>0
+                                  ? liveStock.price 
+                                        -stocks[stockIndex].previousClose
+                                  : stocks[stockIndex].changesPercentage,
+                              price:
+                                  liveStock?.price ?? stocks[stockIndex].price,
+                            );
 
                             return GestureDetector(
                               onTap: () {
@@ -668,11 +694,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   children: [
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        _showArchivedDialog(context, (){
+                                        _showArchivedDialog(context, () {
                                           archivedStock(convo[index].id, true);
-
                                         });
-
                                       },
                                       backgroundColor: AppColors.color1B254B,
                                       child: Column(

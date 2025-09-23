@@ -6,7 +6,8 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart'
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/socket/providers/stocks_price.dart';
-
+import 'package:flutter_svg/svg.dart';
+import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -42,11 +43,20 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 height: 41,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: NetworkImage(widget.stocks.logoUrl),
-                    fit: BoxFit.cover,
-                  ),
+                  // image: DecorationImage(
+                  //   image: NetworkImage(widget.stocks.logoUrl),
+                  //   fit: BoxFit.cover,
+                  // ),
                 ),
+              child:   ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: SvgPicture.network(
+          getItemImage(ImageType.stock, widget.stock.symbol),
+            fit: BoxFit.cover,
+            placeholderBuilder: (context) =>
+                SizedBox(height: 41, width: 42, child: SizedBox()),
+          ),
+        ),
               ),
 
               // Image.network(

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
@@ -12,7 +11,6 @@ import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_messa
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
-import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
@@ -20,6 +18,9 @@ import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_wid
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import '../../../../core/extensions/empty_stock.dart';
+import '../../../../core/extensions/symbol_image.dart';
+import '../../../../shared/socket/providers/stocks_price.dart';
 import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'widgets/loading_widget.dart';
 
@@ -121,44 +122,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             country: "us",
             exchangeSortOrder: 0,
           )
-        : Stock(
-            avgVolume: 0,
-            change: 0,
-            changesPercentage: 0,
-            dayHigh: 0.0,
-            dayLow: 0.0,
-            earningsAnnouncement: "",
-            eps: 0.0,
-            exchange: "",
-            fiveDayTrend: [],
-            marketCap: 0,
-            name: "",
-            open: 0,
-            pe: 0,
-            previousClose: 0.0,
-            price: 0,
-            priceAvg200: 0,
-            priceAvg50: 0,
-            sharesOutstanding: 0,
-            stockId: "",
-            symbol: "",
-            timestamp: 0,
-            volume: 0,
-            yearHigh: 0,
-            yearLow: 0.0,
-            logoUrl: "",
-            type: "",
-            count: 0,
-            dateHours: "",
-            ticks: 0,
-            primaryLogoUrl: "",
-            secondaryLogoUrl: "",
-            tertiaryLogoUrl: "",
-            status: "",
-            updatedFrom: "",
-            country: "us",
-            exchangeSortOrder: 0,
-          );
+        : emptyStock();
   }
 
   void scrollToBottom() {
@@ -272,19 +236,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           "is_workflow": false,
         };
         setState(() {
-          if(oldResponse !=null)
-          {
-             chats.add(
-            ChatMessageModel(
-              id: "temp",
-              chatId: chadId!,
-              message: oldResponse!,
-              type: "ai",
-              userId: userid,
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ),
-          );
+          if (oldResponse != null) {
+            chats.add(
+              ChatMessageModel(
+                id: "temp",
+                chatId: chadId!,
+                message: oldResponse!,
+                type: "ai",
+                userId: userid,
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              ),
+            );
           }
           chats.add(
             ChatMessageModel(
@@ -297,7 +260,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               updatedAt: DateTime.now(),
             ),
           );
-          
+
           startStream = true;
         });
         scrollToBottom();
@@ -324,6 +287,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final stockManagerState = ref.watch(stocksManagerProvider);
+
     getUser();
     final asyncStream = startStream
         ? ref.watch(sseProvider(body))
@@ -337,7 +302,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       if (followupQuestions.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (!dialogOpen) {
-            oldResponse=data["buffer"];
+            oldResponse = data["buffer"];
             showDialogue(questions, followupQuestions, message, 1);
             changeDialogueStatus();
           }
@@ -570,13 +535,21 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               ),
               title: Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      widget.chatRouting!.image!,
-                      width: 35,
-                      height: 35,
-                      fit: BoxFit.cover,
+                  SizedBox(
+                    width: 35,
+
+                    height: 35,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: SvgPicture.network(
+                        getItemImage(
+                          ImageType.stock,
+                          widget.chatRouting!.symbol,
+                        ),
+                        fit: BoxFit.cover,
+                        placeholderBuilder: (context) =>
+                            SizedBox(width: 35, height: 35, child: SizedBox()),
+                      ),
                     ),
                   ),
                   SizedBox(width: 8),
@@ -618,7 +591,19 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       Row(
                         children: [
                           Text(
-                            widget.chatRouting!.price.toString(),
+                            stockManagerState[widget.chatRouting!.stockid] !=
+                                        null &&
+                                    stockManagerState[widget
+                                                .chatRouting!
+                                                .stockid]!
+                                            .price >
+                                        0
+                                ? stockManagerState[widget
+                                          .chatRouting!
+                                          .stockid]!
+                                      .price
+                                      .toStringAsFixed(2)
+                                : widget.chatRouting!.price.toStringAsFixed(2),
                             style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                           SizedBox(width: 6),
@@ -637,7 +622,15 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             size: 20,
                           ),
                           MdSnsText(
-                            " ${widget.chatRouting!.changePercentage.toStringAsFixed(2).replaceAll("-", "")}%",
+                            stockManagerState[widget.chatRouting!.stockid] !=
+                                        null &&
+                                    stockManagerState[widget
+                                                .chatRouting!
+                                                .stockid]!
+                                            .price >
+                                        0
+                                ? " ${(stockManagerState[widget.chatRouting!.stockid]!.price - widget.chatRouting!.price).toStringAsFixed(2).replaceAll("-", "")}%"
+                                : " ${widget.chatRouting!.changePercentage.toStringAsFixed(2).replaceAll("-", "")}%",
                             color:
                                 widget.chatRouting!.changePercentage
                                     .toString()
