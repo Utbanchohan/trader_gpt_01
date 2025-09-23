@@ -233,6 +233,10 @@ class $AssetsImagesGen {
   AssetGenImage get shapeAngle =>
       const AssetGenImage('assets/images/shapeAngle.png');
 
+  /// File path: assets/images/shapeRightSide.png
+  AssetGenImage get shapeRightSide =>
+      const AssetGenImage('assets/images/shapeRightSide.png');
+
   /// File path: assets/images/sms.png
   AssetGenImage get sms => const AssetGenImage('assets/images/sms.png');
 
@@ -340,6 +344,7 @@ class $AssetsImagesGen {
     searchNormal,
     setting2,
     shapeAngle,
+    shapeRightSide,
     sms,
     splashScreen,
     statusUp,
