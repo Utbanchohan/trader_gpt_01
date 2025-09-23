@@ -19,6 +19,8 @@ import 'package:trader_gpt/src/feature/conversations_start/provider/delete_provi
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
+import 'package:trader_gpt/src/shared/widgets/archive_widget.dart';
+import 'package:trader_gpt/src/shared/widgets/delete_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:chart_sparkline/chart_sparkline.dart';
 
@@ -77,6 +79,39 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         context,
       ).showSnackBar(const SnackBar(content: Text("Failed to delete chat")));
     }
+  }
+
+  void _showDeleteDialog(BuildContext context, Function onPressed) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return DeleteWidget(
+          onConfirm: () {
+            onPressed();
+          },
+          onCancel: () {
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
+  }
+  void _showArchivedDialog(BuildContext context, Function onPressed) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return ArchiveWidget(
+          onConfirm: () {
+            onPressed();
+          },
+          onCancel: () {
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
   }
 
   FutureOr<void> archivedStock(String convoId, bool isArchived) async {
@@ -158,8 +193,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
     }
   }
 
- 
-
   getStocks() async {
     var res = await ref.read(localDataProvider).getStocks();
     if (res != null) {
@@ -196,8 +229,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
 
   @override
   Widget build(BuildContext context) {
-  ref.watch(stocksStreamProvider);
-   
+    ref.watch(stocksStreamProvider);
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -412,7 +445,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   motion: ScrollMotion(),
                                   children: [
                                     CustomSlidableAction(
-                                      onPressed: (context) {},
+                                      onPressed: (context) {
+                                        _showArchivedDialog(context, (){
+                                          archivedStock(convo[index].id, true);
+                                        });
+                                      },
                                       backgroundColor: AppColors.color1B254B,
                                       child: Column(
                                         mainAxisAlignment:
@@ -436,7 +473,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     ),
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        deleteStock(convo[index].id);
+                                        _showDeleteDialog(context, () {
+                                          deleteStock(convo[index].id);
+                                        });
                                       },
                                       backgroundColor: AppColors.color091224,
                                       child: Column(
@@ -511,7 +550,13 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   motion: ScrollMotion(),
                                   children: [
                                     CustomSlidableAction(
-                                      onPressed: (context) {},
+                                      onPressed: (context) {
+                                        _showArchivedDialog(context, (){
+                                          archivedStock(convo[index].id, true);
+
+                                        });
+
+                                      },
                                       backgroundColor: AppColors.color1B254B,
                                       child: Column(
                                         mainAxisAlignment:
@@ -535,7 +580,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     ),
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        deleteStock(convo[index].id);
+                                        _showDeleteDialog(context, () {
+                                          deleteStock(convo[index].id);
+                                        });
                                       },
                                       backgroundColor: AppColors.color091224,
                                       child: Column(
@@ -620,7 +667,13 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   motion: ScrollMotion(),
                                   children: [
                                     CustomSlidableAction(
-                                      onPressed: (context) {},
+                                      onPressed: (context) {
+                                        _showArchivedDialog(context, (){
+                                          archivedStock(convo[index].id, true);
+
+                                        });
+
+                                      },
                                       backgroundColor: AppColors.color1B254B,
                                       child: Column(
                                         mainAxisAlignment:
@@ -644,7 +697,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     ),
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        deleteStock(convo[index].id);
+                                        _showDeleteDialog(context, () {
+                                          deleteStock(convo[index].id);
+                                        });
                                       },
                                       backgroundColor: AppColors.color091224,
                                       child: Column(
