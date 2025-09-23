@@ -51,18 +51,20 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     getStocks();
   }
 
-  void _startPollingSearch(val) {
+  void _startPollingSearch(val) async{
     if (val.isEmpty) {
       setState(() {
         searchStock = [];
+        _debounce!.cancel();
       });
       return;
     }
 
     _debounce = Timer(const Duration(milliseconds: 400), () {
-      searchStock = [];
+      print("$val searching value");
 
-      ref.read(socketRepository).searchStocks(val, (data) {
+     ref.read(socketRepository).searchStocks(val, (data) {
+            searchStock = [];
         updateStocksSearch(data);
       });
     });
@@ -97,6 +99,11 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           }
         }
       }
+        ref
+            .read(stocksManagerProvider.notifier)
+            .watchStocks(
+              searchStock
+            );
       loading = false;
     });
   }

@@ -435,16 +435,16 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 context.pushNamed(
                                   AppRoutes.chatPage.name,
                                   extra: ChatRouting(
-                                    chatId: stock.id,
-                                    symbol: stocks[stockIndex].symbol,
+                                    chatId: convo[index].id,
+                                    symbol: convo[index].symbol,
                                     image: stocks[stockIndex].logoUrl,
-                                    companyName: stocks[stockIndex].name,
+                                    companyName:convo[index].companyName,
                                     price: stocks[stockIndex].price,
                                     changePercentage:
                                         stocks[stockIndex].changesPercentage,
                                     trendChart:
                                         stocks[stockIndex].fiveDayTrend[0],
-                                    stockid: stocks[stockIndex].stockId,
+                                    stockid: convo[index].stockId,
                                   ),
                                 );
                               },
@@ -550,16 +550,16 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 context.pushNamed(
                                   AppRoutes.chatPage.name,
                                   extra: ChatRouting(
-                                    chatId: stock.id,
-                                    symbol: stocks[stockIndex].symbol,
+                                    chatId: convo[index].id,
+                                    symbol: convo[index].symbol,
                                     image: stocks[stockIndex].logoUrl,
-                                    companyName: stocks[stockIndex].name,
+                                    companyName:convo[index].companyName,
                                     price: stocks[stockIndex].price,
                                     changePercentage:
                                         stocks[stockIndex].changesPercentage,
                                     trendChart:
                                         stocks[stockIndex].fiveDayTrend[0],
-                                    stockid: stocks[stockIndex].stockId,
+                                    stockid: convo[index].stockId,
                                   ),
                                 );
                               },
@@ -676,15 +676,15 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   AppRoutes.chatPage.name,
                                   extra: ChatRouting(
                                     chatId: convo[index].id,
-                                    symbol: stocks[stockIndex].symbol,
+                                    symbol: convo[index].symbol,
                                     image: stocks[stockIndex].logoUrl,
-                                    companyName: stocks[stockIndex].name,
+                                    companyName:convo[index].companyName,
                                     price: stocks[stockIndex].price,
                                     changePercentage:
                                         stocks[stockIndex].changesPercentage,
                                     trendChart:
                                         stocks[stockIndex].fiveDayTrend[0],
-                                    stockid: stocks[stockIndex].stockId,
+                                    stockid: convo[index].stockId,
                                   ),
                                 );
                               },
