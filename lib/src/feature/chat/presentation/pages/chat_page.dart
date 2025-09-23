@@ -674,8 +674,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               ],
             ),
       body: SingleChildScrollView(
-        controller: sc,
-        physics: const AlwaysScrollableScrollPhysics(),
+        // controller: sc,
+        physics: AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
@@ -709,10 +709,19 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             ChatMarkdownWidget(
+                             key: ValueKey(chats[index].id),
                               message: chats[index].message,
                               name: name,
                               image: image,
                               type: chats[index].type,
+                              display:
+                                  chats[index].displayable != null &&
+                                      chats[index]
+                                          .displayable!
+                                          .Display
+                                          .isNotEmpty
+                                  ? chats[index].displayable!.Display
+                                  : [],
                             ),
                             SizedBox(
                               height: chats[index].type != "user" ? 10 : 10,
@@ -741,6 +750,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           ChatMarkdownWidget(
+                          key: ValueKey(463672774785),
                             message: text.toString(),
                             name:
                                 widget.chatRouting == null ||
@@ -753,6 +763,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                 ? ""
                                 : widget.chatRouting!.image,
                             type: "ai",
+                            display: [],
                           ),
                           SizedBox(height: 10),
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +8,16 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../../core/theme/app_colors.dart';
+import '../../../domain/model/chat_response/chat_message_model.dart';
+import 'chart_widget.dart';
+
+
+class ModelOfAxis{
+  final List<String> xAxis;
+  final List<double> yAxis;
+
+const  ModelOfAxis({required this.xAxis,required this.yAxis});
+}
 
 // ignore: must_be_immutable
 class ChatMarkdownWidget extends StatefulWidget {
@@ -13,6 +25,7 @@ class ChatMarkdownWidget extends StatefulWidget {
   String name;
   String image;
   String type;
+  List<String> display;
 
   ChatMarkdownWidget({
     super.key,
@@ -20,12 +33,62 @@ class ChatMarkdownWidget extends StatefulWidget {
     required this.image,
     required this.message,
     required this.type,
+    required this.display,
   });
   @override
   State<ChatMarkdownWidget> createState() => _ChatMarkdownWidgetState();
 }
 
 class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
+  List<dynamic> xAxis = [];
+  List<dynamic> yAxis = [];
+
+  List<String> addNewxAxis = [];
+  List<double> addNewyAxis = [];
+
+ModelOfAxis changeDisplayAble(List<String> display) {
+    if (display.isNotEmpty) {
+      final rawDisplay = display;
+      final displayList = rawDisplay.map((e) {
+        final decoded = jsonDecode(e); // String ko Map me convert
+        return DisplayData.fromJson(decoded);
+      }).toList();
+
+      // Ab tum easily access kar sakte ho:
+      for (final display in displayList) {
+        // print("Chart Type: ${display.chartType}");
+        // print("X Axis Title: ${display.xAxis?.xTitle}");
+        // print("Y Axis Title: ${display.yAxis?.yTitle}");
+        // print("X Axis Data: ${display.xAxis?.data}");
+        // print("Y Axis Data: ${display.data}");
+
+        xAxis.add(display.xAxis?.data);
+        yAxis.add(display.data);
+      }
+      if (xAxis[0] != null) {
+        for (var axis in xAxis[0]) {
+          addNewxAxis.add(axis);
+        }
+      }
+      if (yAxis[0] != null) {
+        for (var axis in yAxis[0]) {
+          addNewyAxis.add(axis);
+        }
+      }
+      return ModelOfAxis(yAxis: addNewyAxis,xAxis: addNewxAxis);
+    }else{
+       return  ModelOfAxis(yAxis: [],xAxis: []);
+    }
+    
+  }
+
+  @override
+  void initState() {
+    // changeDisplayAble(widget.display);
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -87,77 +150,94 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
             borderRadius: BorderRadius.circular(16),
           ),
           // child: Flexible(
-          child: MarkdownBody(
-            data: widget.message,
-            selectable: true,
-            styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                .copyWith(
-                  blockquotePadding: EdgeInsets.all(0),
-                  blockquoteDecoration: BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  code: GoogleFonts.plusJakartaSans(
-                    color: AppColors.white,
-                    fontSize: 16,
+          child: Column(
+            children: [
+              widget.type != "user"
+                  ?changeDisplayAble(widget.display).xAxis
+                  .isNotEmpty && changeDisplayAble(widget.display).yAxis.isNotEmpty
+                        ? ChartContainer(
+                          key: UniqueKey()
+                          ,
+                            data: changeDisplayAble(widget.display).yAxis,
+                            categories: changeDisplayAble(widget.display).xAxis,
+                          )
+                        : SizedBox()
+                  : SizedBox(),
 
-                    fontWeight: FontWeight.w600,
-                  ),
-                  tableBody: GoogleFonts.plusJakartaSans(
-                    color: AppColors.white,
-                    fontSize: 14,
+              SizedBox(height: widget.type != "user" ? 10 : 0),
+              MarkdownBody(
+                data: widget.message,
+                selectable: true,
+                styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                    .copyWith(
+                      blockquotePadding: EdgeInsets.all(0),
+                      blockquoteDecoration: BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                      code: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
+                        fontSize: 16,
 
-                    fontWeight: FontWeight.w400,
-                  ),
-                  p: GoogleFonts.plusJakartaSans(
-                    color: AppColors.white,
-                    fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      tableBody: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
+                        fontSize: 14,
 
-                    fontWeight: FontWeight.w400,
-                  ),
-                  h1: GoogleFonts.plusJakartaSans(
-                    color: AppColors.white,
-                    fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      p: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
+                        fontSize: 14,
 
-                    fontWeight: FontWeight.w600,
-                  ),
-                  h2: GoogleFonts.plusJakartaSans(
-                    color: AppColors.white,
-                    fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      h1: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
+                        fontSize: 16,
 
-                    fontWeight: FontWeight.w600,
-                  ),
-                  h3: GoogleFonts.plusJakartaSans(
-                    color: AppColors.white,
-                    fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      h2: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
+                        fontSize: 14,
 
-                    fontWeight: FontWeight.w600,
-                  ),
-                  h4: GoogleFonts.plusJakartaSans(
-                    color: AppColors.white,
-                    fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      h3: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
+                        fontSize: 12,
 
-                    fontWeight: FontWeight.w600,
-                  ),
-                  h5: GoogleFonts.plusJakartaSans(
-                    color: AppColors.white,
-                    fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      h4: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
+                        fontSize: 12,
 
-                    fontWeight: FontWeight.w600,
-                  ),
-                  h6: GoogleFonts.plusJakartaSans(
-                    color: AppColors.white,
-                    fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      h5: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
+                        fontSize: 12,
 
-                    fontWeight: FontWeight.w600,
-                  ),
+                        fontWeight: FontWeight.w600,
+                      ),
+                      h6: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
+                        fontSize: 12,
 
-                  blockquote: const TextStyle(color: AppColors.white),
-                ),
-            onTapLink: (text, href, title) {
-              if (href != null) {
-                // launchUrl(Uri.parse(href)); // needs url_launcher
-              }
-            },
+                        fontWeight: FontWeight.w600,
+                      ),
+
+                      blockquote: const TextStyle(color: AppColors.white),
+                    ),
+                onTapLink: (text, href, title) {
+                  if (href != null) {
+                    // launchUrl(Uri.parse(href)); // needs url_launcher
+                  }
+                },
+              ),
+            ],
           ),
         ),
       ],
