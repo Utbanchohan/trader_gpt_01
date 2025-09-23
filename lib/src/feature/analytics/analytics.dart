@@ -305,8 +305,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                               categories[index],
 
                               color: AppColors.white,
-                              size: 14.sp,
-                              fontWeight: FontWeight.w400,
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ],
                         ),
@@ -376,16 +376,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       children: [
                         MdSnsText(
                           "#${selectedStock!.symbol}",
-                          fontWeight: FontWeight.w700,
-                          size: 16,
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h1,
+
                           color: AppColors.white,
                         ),
                         const SizedBox(width: 4),
                         MdSnsText(
                           selectedStock!.name.split("-").first.trim(),
                           color: AppColors.colorB2B2B7,
-                          size: 12,
-                          fontWeight: FontWeight.w400,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
                         ),
                         Icon(
                           Icons.keyboard_arrow_down,
@@ -404,8 +405,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   .contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.white,
-                          size: 12,
-                          fontWeight: FontWeight.w400,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
                         ),
                         const SizedBox(width: 6),
                         Icon(
@@ -430,8 +431,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   .contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
-                          size: 12,
-                          fontWeight: FontWeight.w400,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
                         ),
                       ],
                     ),
@@ -460,9 +461,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      MdSnsText(
                         "Performance Overview",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        color: AppColors.white,
+                        variant: TextVariant.h2,
+                        fontWeight: TextFontWeightVariant.h4,
                       ),
                       Row(
                         children: [
@@ -500,8 +503,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 children: [
                   MdSnsText(
                     "Price Comparison",
-                    size: 14,
-                    fontWeight: FontWeight.w400,
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h4,
+
                     color: AppColors.fieldTextColor,
                   ),
                   SizedBox(height: 16.h),
@@ -528,7 +532,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                               getTitlesWidget: (value, meta) => MdSnsText(
                                 value.toInt().toString(),
                                 color: AppColors.white,
-                                size: 10,
+
+                                variant: TextVariant.h5,
                               ),
                             ),
                           ),
@@ -539,7 +544,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                               getTitlesWidget: (value, meta) => MdSnsText(
                                 value.toInt().toString(),
                                 color: AppColors.white,
-                                size: 10,
+                                variant: TextVariant.h5,
                               ),
                             ),
                           ),
@@ -650,9 +655,6 @@ Widget _chip(String label, {bool isSelected = false}) {
       color: isSelected ? Colors.blueAccent : const Color(0xFF142233),
       borderRadius: BorderRadius.circular(20),
     ),
-    child: Text(
-      label,
-      style: TextStyle(color: Colors.white, fontSize: 14.sp),
-    ),
+    child: MdSnsText(label, color: AppColors.white, variant: TextVariant.h3),
   );
 }

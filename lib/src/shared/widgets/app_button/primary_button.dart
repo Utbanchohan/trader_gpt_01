@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/loading_widget.dart';
@@ -46,22 +45,22 @@ class AppButton extends StatelessWidget {
         backgroundColor: color,
       ),
       onPressed: isLoading ? () {} : onPressed,
-      child:
-          isLoading
-              ? LoadingWidget(height: 20, width: 20, color: textColor)
-              : Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  MdSnsText(
-                    size: fontSize,
-                    title,
-                    fontWeight: FontWeight.w700,
-                    color: textColor,
-                  ),
-                  if (icon != null) ...[const SizedBox(width: 12), icon!],
-                ],
-              ),
+      child: isLoading
+          ? LoadingWidget(height: 20, width: 20, color: textColor)
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MdSnsText(
+                  title,
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h1,
+
+                  color: textColor,
+                ),
+                if (icon != null) ...[const SizedBox(width: 12), icon!],
+              ],
+            ),
     );
   }
 }
@@ -123,22 +122,22 @@ class AppBorderButton extends StatelessWidget {
         backgroundColor: color,
       ),
       onPressed: isLoading ? () {} : onPressed,
-      child:
-          isLoading
-              ? LoadingWidget(height: 20, width: 20, color: textColor)
-              : Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  MdSnsText(
-                    size: fontSize,
-                    title,
-                    fontWeight: fontWeight,
-                    color: textColor,
-                  ),
-                  if (icon != null) ...[const SizedBox(width: 6), icon!],
-                ],
-              ),
+      child: isLoading
+          ? LoadingWidget(height: 20, width: 20, color: textColor)
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MdSnsText(
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h3,
+
+                  title,
+                  color: textColor,
+                ),
+                if (icon != null) ...[const SizedBox(width: 6), icon!],
+              ],
+            ),
     );
   }
 }
@@ -194,9 +193,11 @@ class AppIconButton extends StatelessWidget {
             if (icon != null && leftIcon == null) ...[const SizedBox(width: 6)],
 
             MdSnsText(
-              size: fontSize,
+              variant: TextVariant.h2,
+              fontWeight: TextFontWeightVariant.h3,
+
               title,
-              fontWeight: fontWeight,
+
               color: textColor,
             ),
             if (icon == null && leftIcon != null) ...[SizedBox(width: 8)],

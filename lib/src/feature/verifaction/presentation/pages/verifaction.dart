@@ -137,16 +137,16 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
             MdSnsText(
               '6-digit code',
               color: AppColors.white,
-              size: 32,
-              fontWeight: FontWeight.w700,
+              variant: TextVariant.h6,
+              fontWeight: TextFontWeightVariant.h1,
             ),
             SizedBox(height: 12.h),
 
             MdSnsText(
               'Enter the code sent to\n${widget.email}',
               color: AppColors.white,
-              fontWeight: FontWeight.w400,
-              size: 16,
+              variant: TextVariant.h2,
+              fontWeight: TextFontWeightVariant.h4,
             ),
             SizedBox(height: 30.h),
 
@@ -200,9 +200,8 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
                     color: seconds == 0
                         ? AppColors.white
                         : AppColors.bluishgrey404F81,
-
-                    fontWeight: FontWeight.w500,
-                    size: 12,
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h3,
                   ),
                 ),
                 MdSnsText(
@@ -210,8 +209,8 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
                   color: seconds == 0
                       ? AppColors.bluishgrey404F81
                       : AppColors.white,
-                  size: 12,
-                  fontWeight: FontWeight.w400,
+                  variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h3,
                 ),
               ],
             ),

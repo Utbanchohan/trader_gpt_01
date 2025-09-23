@@ -88,8 +88,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
                           ? userModel!.name
                           : "N/A",
                       color: AppColors.white,
-                      size: 32,
-                      fontWeight: FontWeight.bold,
+                      variant: TextVariant.h6,
+                      fontWeight: TextFontWeightVariant.h1,
                     ),
 
                     MdSnsText(
@@ -99,8 +99,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
 
                       // "Burakdeniz@gmail.com",
                       color: AppColors.colorB2B2B7,
-                      size: 16,
-                      fontWeight: FontWeight.w400,
+                      variant: TextVariant.h2,
+                      fontWeight: TextFontWeightVariant.h4,
                     ),
                   ],
                 ),
@@ -111,8 +111,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
               MdSnsText(
                 "My Profile",
                 color: AppColors.colorB2B2B7,
-                size: 16,
-                fontWeight: FontWeight.w400,
+                variant: TextVariant.h2,
+                fontWeight: TextFontWeightVariant.h4,
               ),
               const SizedBox(height: 15),
 
@@ -144,8 +144,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
               MdSnsText(
                 "Settings",
                 color: AppColors.colorB2B2B7,
-                size: 16,
-                fontWeight: FontWeight.w400,
+                variant: TextVariant.h2,
+                fontWeight: TextFontWeightVariant.h4,
               ),
 
               SizedBox(height: 15),
@@ -215,8 +215,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
         title: MdSnsText(
           title,
           color: AppColors.white,
-          size: 16,
-          fontWeight: FontWeight.w400,
+          variant: TextVariant.h2,
+          fontWeight: TextFontWeightVariant.h4,
         ),
         trailing: Image.asset(
           Assets.images.vector1.path,
@@ -248,9 +248,11 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
           height: 18,
           width: 18,
         ),
-        title: Text(
+
+        title: MdSnsText(
           title,
-          style: const TextStyle(color: AppColors.white, fontSize: 16),
+          variant: TextVariant.h2,
+          color: AppColors.white,
         ),
         trailing: CustomToggleSwitch(value: value, onChanged: onChanged),
       ),

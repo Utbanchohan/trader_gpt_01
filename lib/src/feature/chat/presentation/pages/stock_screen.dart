@@ -124,8 +124,8 @@ class _StockScreenState extends State<StockScreen> {
         children: [
           MdSnsText(
             "Select Symbol",
-            size: 16,
-            fontWeight: FontWeight.w400,
+            variant: TextVariant.h2,
+            fontWeight: TextFontWeightVariant.h4,
             color: AppColors.white,
           ),
           SizedBox(height: 10.h),
@@ -192,9 +192,8 @@ class _StockScreenState extends State<StockScreen> {
                     },
                   ),
                 )
-              : search.text.isNotEmpty && searchStocks.isEmpty?
-              
-              Expanded(
+              : search.text.isNotEmpty && searchStocks.isEmpty
+              ? Expanded(
                   child: ListView.separated(
                     padding: EdgeInsets.zero,
                     itemCount: 4,
@@ -205,8 +204,8 @@ class _StockScreenState extends State<StockScreen> {
                       return Divider(color: AppColors.colorB3B3B3, height: 2.h);
                     },
                   ),
-                ):
-              Expanded(
+                )
+              : Expanded(
                   child: ListView.separated(
                     padding: EdgeInsets.zero,
                     itemCount: search.text.isNotEmpty && searchStocks.isNotEmpty

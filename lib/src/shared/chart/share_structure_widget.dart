@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class ShareStructureCard extends StatelessWidget {
   ShareStructureCard({super.key});
@@ -44,13 +45,12 @@ class ShareStructureCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
+                    MdSnsText(
                       'Share Structure',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
+                      variant: TextVariant.h7,
+                      fontWeight: TextFontWeightVariant.h4,
+
+                      color: AppColors.white,
                     ),
                     SizedBox(width: 10.w),
                     Icon(
@@ -61,9 +61,11 @@ class ShareStructureCard extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 6),
-                Text(
+                MdSnsText(
                   'Data delayed by 15 minutes',
-                  style: TextStyle(fontSize: 12, color: Color(0xFF9AA6B2)),
+                  variant: TextVariant.h4,
+
+                  color: Color(0xFF9AA6B2),
                 ),
               ],
             ),
@@ -88,23 +90,19 @@ class ShareStructureCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(
+                      child: MdSnsText(
                         item['label']!,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xFFBFCBD6),
-                        ),
+                        variant: TextVariant.h2,
+                        color: Color(0xFF9AA6B2),
                       ),
                     ),
-                    Text(
+                    MdSnsText(
                       item['value']!,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: valueIsHighlighted
-                            ? Color(0xFF25A0E3)
-                            : Colors.white,
-                      ),
+                      variant: TextVariant.h2,
+                      fontWeight: TextFontWeightVariant.h1,
+                      color: valueIsHighlighted
+                          ? Color(0xFF25A0E3)
+                          : Colors.white,
                     ),
                   ],
                 ),

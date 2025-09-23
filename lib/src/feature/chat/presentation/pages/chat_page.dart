@@ -570,9 +570,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         children: [
                           MdSnsText(
                             "#${widget.chatRouting!.symbol}",
+                            variant: TextVariant.h2,
+                            fontWeight: TextFontWeightVariant.h1,
 
-                            fontWeight: FontWeight.w700,
-                            size: 16,
                             color: AppColors.white,
                           ),
                           SizedBox(width: 4),
@@ -586,8 +586,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                       .trim(),
 
                               color: AppColors.colorB2B2B7,
-                              size: 12,
-                              fontWeight: FontWeight.w400,
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ),
                           Icon(
@@ -600,9 +600,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       ),
                       Row(
                         children: [
-                          Text(
+                          MdSnsText(
                             widget.chatRouting!.price.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 14),
+                            variant: TextVariant.h3,
+                            color: AppColors.white,
                           ),
                           SizedBox(width: 6),
                           Icon(
@@ -627,8 +628,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     .contains("-")
                                 ? AppColors.redFF3B3B
                                 : AppColors.color06D54E,
-                            size: 12,
-                            fontWeight: FontWeight.w400,
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
                           ),
                         ],
                       ),
@@ -804,9 +805,10 @@ class _ActionChip extends StatelessWidget {
             SizedBox(width: 4.w),
             MdSnsText(
               label,
-              size: 16,
+              variant: TextVariant.h2,
+              fontWeight: TextFontWeightVariant.h4,
+
               color: AppColors.color3C4E8A,
-              fontWeight: FontWeight.w400,
             ),
           ],
         ),

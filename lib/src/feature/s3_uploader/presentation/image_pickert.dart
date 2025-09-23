@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:trader_gpt/main.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/s3_uploader/providers/upload_provider.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class UploadImageScreen extends ConsumerWidget {
   UploadImageScreen({super.key});
@@ -70,16 +71,14 @@ class UploadImageScreen extends ConsumerWidget {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.photo_library, color: Colors.white),
-                SizedBox(width: 10),
-                Text(
+              children: [
+                const Icon(Icons.photo_library, color: Colors.white),
+                const SizedBox(width: 10),
+                MdSnsText(
                   "Pick from Gallery",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h2,
+                  color: AppColors.white,
                 ),
               ],
             ),
@@ -116,16 +115,15 @@ class UploadImageScreen extends ConsumerWidget {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.camera_alt, color: Colors.white),
-                SizedBox(width: 10),
-                Text(
+              children: [
+                const Icon(Icons.camera_alt, color: Colors.white),
+                const SizedBox(width: 10),
+
+                MdSnsText(
                   "Pick from Camera",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  color: AppColors.white,
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h2,
                 ),
               ],
             ),
@@ -151,8 +149,8 @@ void _showPermissionDialog(BuildContext context, {required bool isCamera}) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text('Permission required'),
-      content: Text(
+      title: MdSnsText('Permission required'),
+      content: MdSnsText(
         'Please enable ${isCamera ? 'camera' : 'photo'} access in the app settings to use this feature.',
       ),
       actions: [
@@ -160,14 +158,14 @@ void _showPermissionDialog(BuildContext context, {required bool isCamera}) {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('Cancel'),
+          child: MdSnsText('Cancel'),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
             openAppSettings();
           },
-          child: Text('Open Settings'),
+          child: MdSnsText('Open Settings'),
         ),
       ],
     ),

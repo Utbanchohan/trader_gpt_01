@@ -54,8 +54,8 @@ class ConversationTile extends StatelessWidget {
                     ? stock.lastMessage!.createdAt.millisecondsSinceEpoch
                           .timeAgoFromMilliseconds()
                     : "",
-                size: 10,
-                fontWeight: FontWeight.w400,
+                variant: TextVariant.h5,
+                fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.color677FA4,
               ),
             ],
@@ -66,9 +66,9 @@ class ConversationTile extends StatelessWidget {
             children: [
               MdSnsText(
                 stock.symbol,
-                size: 16,
+                variant: TextVariant.h2,
+                fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
-                fontWeight: FontWeight.w700,
               ),
               SizedBox(height: 2.h),
               SizedBox(
@@ -78,8 +78,9 @@ class ConversationTile extends StatelessWidget {
                       ? stock.companyName.split("-").first.trim()
                       : "",
                   color: AppColors.color677FA4,
-                  fontWeight: FontWeight.w400,
-                  size: 14,
+                  variant: TextVariant.h3,
+                  fontWeight: TextFontWeightVariant.h4,
+
                   maxLines: 1,
                   textOverflow: TextOverflow.ellipsis,
                 ),
@@ -92,8 +93,8 @@ class ConversationTile extends StatelessWidget {
                   stock.lastMessage != null ? stock.lastMessage!.message : "",
                   maxLines: 1,
                   color: AppColors.color677FA4,
-                  fontWeight: FontWeight.w400,
-                  size: 12,
+                  variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h4,
                 ),
               ),
             ],
@@ -103,9 +104,9 @@ class ConversationTile extends StatelessWidget {
             children: [
               MdSnsText(
                 "\$${stocks.price.toStringAsFixed(2)}",
-                size: 16,
+                variant: TextVariant.h2,
+                fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
-                fontWeight: FontWeight.w700,
               ),
               Row(
                 children: [
@@ -119,8 +120,8 @@ class ConversationTile extends StatelessWidget {
                     color: stocks.changesPercentage < 0
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,
-                    size: 12,
-                    fontWeight: FontWeight.w400,
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
                   ),
                 ],
               ),
