@@ -182,7 +182,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                   if (_emailRegex.hasMatch(value.trim())) {
                     return null;
                   } else {
-                    return "Please enter a valid email/phone";
+                    return "Please enter a valid email";
                   }
                 },
                 decoration: InputDecoration(

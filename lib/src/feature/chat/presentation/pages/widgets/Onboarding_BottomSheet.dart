@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -133,7 +135,10 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
           Padding(
             padding: EdgeInsets.only(bottom: 24.h),
             child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: ()
+              {
+                context.pushNamed(AppRoutes.swipeScreen.name);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.color0098E4,
                 padding: EdgeInsets.symmetric(

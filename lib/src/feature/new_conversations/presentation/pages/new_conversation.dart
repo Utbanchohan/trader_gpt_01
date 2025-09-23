@@ -233,7 +233,6 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                 fillColor: AppColors.color091224,
                 suffixIcon: InkWell(
                   onTap: () {
-                    // debounceSearch(search.text);
                     _startPollingSearch(search.text);
                   },
                   child: Icon(Icons.search, color: Colors.white54),
@@ -249,6 +248,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               ),
             ),
           ),
+
           search.text.isNotEmpty && searchStock.isEmpty
               ? Expanded(
                   child: Padding(
