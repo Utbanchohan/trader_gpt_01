@@ -20,6 +20,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_wid
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import 'package:trader_gpt/utils/constant.dart';
 import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'widgets/loading_widget.dart';
 
@@ -685,58 +686,119 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: chats.length,
-              itemBuilder: (BuildContext context, int index) {
-                String name = chats[index].type != "user"
-                    ? widget.chatRouting == null ||
-                              widget.chatRouting!.symbol.isEmpty
-                          ? "TDGPT"
-                          : widget.chatRouting!.symbol
-                    : user!.name;
-                String image = chats[index].type != "user"
-                    ? widget.chatRouting == null ||
-                              widget.chatRouting!.image.isEmpty
-                          ? ""
-                          : widget.chatRouting!.image
-                    : user!.imgUrl;
-                return Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+            chats.isNotEmpty
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: chats.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String name = chats[index].type != "user"
+                          ? widget.chatRouting == null ||
+                                    widget.chatRouting!.symbol.isEmpty
+                                ? "TDGPT"
+                                : widget.chatRouting!.symbol
+                          : user!.name;
+                      String image = chats[index].type != "user"
+                          ? widget.chatRouting == null ||
+                                    widget.chatRouting!.image.isEmpty
+                                ? ""
+                                : widget.chatRouting!.image
+                          : user!.imgUrl;
+                      return Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
 
-                      // mainAxisAlignment: chats[index].type == "user"
-                      // ? MainAxisAlignment.end
-                      // : MainAxisAlignment.start,
+                            // mainAxisAlignment: chats[index].type == "user"
+                            // ? MainAxisAlignment.end
+                            // : MainAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  ChatMarkdownWidget(
+                                    message: chats[index].message,
+                                    name: name,
+                                    image: image,
+                                    type: chats[index].type,
+                                  ),
+                                  SizedBox(
+                                    height: chats[index].type != "user"
+                                        ? 10
+                                        : 10,
+                                  ),
+                                  MessageLikeCopyIcon(
+                                    type: chats[index].type,
+                                    message: chats[index].message,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(height: 20),
+                        ],
+                      );
+                    },
+                  )
+                : Container(
+                    height: MediaQuery.sizeOf(context).height * 0.6.h,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            ChatMarkdownWidget(
-                              message: chats[index].message,
-                              name: name,
-                              image: image,
-                              type: chats[index].type,
-                            ),
-                            SizedBox(
-                              height: chats[index].type != "user" ? 10 : 10,
-                            ),
-                            MessageLikeCopyIcon(
-                              type: chats[index].type,
-                              message: chats[index].message,
-                            ),
-                          ],
+                        Image.asset(
+                          Assets.images.tGPTBrandMark.path,
+                          height: 82.h,
+                          width: 82.w,
                         ),
+                        SizedBox(height: 17.h),
+                        MdSnsText(
+                          "Welcome to TradersGPT",
+                          color: AppColors.white,
+                          variant: TextVariant.h6,
+                          fontWeight: TextFontWeightVariant.h7,
+                        ),
+                        SizedBox(height: 25.h),
+                        MdSnsText(
+                          textAlign: TextAlign.center,
+                          "Discover anything about the markets, by just asking the intelligent Agent.",
+                          color: AppColors.white,
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        widget.chatRouting == null ||
+                                widget.chatRouting!.companyName.isEmpty
+                            ? SizedBox()
+                            : Container(
+                                margin: EdgeInsets.only(top: 20),
+                                padding: EdgeInsets.all(10),
+                                height: 55.h,
+                                width: MediaQuery.sizeOf(context).width.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15.r),
+                                  color: AppColors.color01B254B,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      Assets.images.prefixIcon.path,
+                                      height: 36.h,
+                                      width: 36.w,
+                                    ),
+                                    AppSpacing.w10,
+                                    MdSnsText(
+                                      "Provide a company overview for TSLA",
+                                      variant: TextVariant.h3,
+                                      fontWeight: TextFontWeightVariant.h4,
+                                      color: AppColors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
                       ],
                     ),
-
-                    SizedBox(height: 20),
-                  ],
-                );
-              },
-            ),
+                  ),
             asyncStream.when(
               data: (line) {
                 final text = line["buffer"] ?? "";
@@ -779,51 +841,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                 children: [LoadingWidgetMarkdown()],
               ),
               error: (err, _) => Center(child: Text("Error: $err")),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ActionChip extends StatelessWidget {
-  final String icon;
-  final String label;
-  final VoidCallback onTap;
-
-  const _ActionChip({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          color: AppColors.color091224,
-          border: Border.all(color: AppColors.bluishgrey404F81),
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Row(
-          children: [
-            Image.asset(
-              icon,
-              width: 14.w,
-              height: 14.h,
-              color: AppColors.color3C4E8A,
-            ),
-            SizedBox(width: 4.w),
-            MdSnsText(
-              label,
-              variant: TextVariant.h2,
-
-              color: AppColors.color3C4E8A,
-              fontWeight: TextFontWeightVariant.h4,
             ),
           ],
         ),

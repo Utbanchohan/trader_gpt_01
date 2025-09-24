@@ -173,7 +173,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       context,
                       Assets.images.conversation.path,
                       "Conversation",
-                      AppRoutes.conversationStart.name,
+                      // AppRoutes.conversationStart.name,
+                      AppRoutes.swipeScreen.name,
+
                     ),
                     _buildMenuItem(
                       context,
@@ -191,10 +193,8 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     _buildMenuItem(
                       context,
                       Assets.images.setting2.path,
-
                       "Settings",
-                      "Settings",
-                    ),
+""                    ),
                   ],
                 ),
               ),
@@ -290,26 +290,18 @@ class _SideMenuState extends ConsumerState<SideMenu> {
       onTap: routeName == null || routeName.isEmpty
           ? null
           : () {
-              setState(() {
-                selectedMenu = routeName;
-              });
-              if (routeName == "Settings") {
-                if(ref.read(localDataProvider).getIsFirstTime())
-                {
-ref.read(localDataProvider).setIsFirstTime(false);
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: AppColors.shadowColor,
-                  builder: (context) {
-                    return OnboardingBottomSheet();
-                  },
-                );
-                }else{
-
-                }
-              }
-              // context.pop();
+              // if (routeName == "Setting") {
+              //   context.pop();
+              //   showModalBottomSheet(
+              //     context: context,
+              //     isScrollControlled: true,
+              //     backgroundColor: AppColors.shadowColor,
+              //     builder: (context) {
+              //       return OnboardingBottomSheet();
+              //     },
+              //   );
+              // }
+              context.pop();
               context.pushNamed(routeName);
             },
     );

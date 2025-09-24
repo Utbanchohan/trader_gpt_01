@@ -35,13 +35,12 @@ final routerConfigProvider = Provider((ref) {
       bool isPublic = AppRoutes.isPublicRoute(state);
       bool isLogin =
           (ref.watch(localDataProvider).accessToken ?? "").isNotEmpty;
-          bool profileComplete=(ref.watch(localDataProvider).getUserName ??"").isNotEmpty;
+      bool profileComplete =
+          (ref.watch(localDataProvider).getUserName ?? "").isNotEmpty;
 
-          if(isLogin && !profileComplete && !isPublic)
-          {
-return AppRoutes.profilePage.path;
-          }
-      else if (isLogin && !isPublic) {
+      if (isLogin && !profileComplete && !isPublic) {
+        return AppRoutes.profilePage.path;
+      } else if (isLogin && !isPublic) {
         return null;
       } else if (!isLogin && isPublic) {
         state.fullPath;
@@ -75,7 +74,19 @@ return AppRoutes.profilePage.path;
         path: AppRoutes.chatPage.path,
         name: AppRoutes.chatPage.name,
         builder: (BuildContext context, GoRouterState state) {
-          final chatRouting =state.extra!=null? state.extra as ChatRouting:ChatRouting(image: "", symbol: "", companyName: "", price: 0, changePercentage:0 , chatId: "", stockid: "", trendChart: FiveDayTrend(data: []));
+          final chatRouting = state.extra != null
+              ? state.extra as ChatRouting
+              : ChatRouting(
+                  image: "",
+                  symbol: "",
+                  companyName: "",
+                  price: 0,
+                  changePercentage: 0,
+                  chatId: "",
+                  stockid: "",
+                  trendChart: FiveDayTrend(data: []),
+                );
+
           return ChatPage(chatRouting: chatRouting);
         },
         routes: [],
@@ -165,7 +176,20 @@ return AppRoutes.profilePage.path;
         path: AppRoutes.swipeScreen.path,
         name: AppRoutes.swipeScreen.name,
         builder: (BuildContext context, GoRouterState state) {
-          return SwipeScreen();
+          final chatRouting = state.extra != null
+              ? state.extra as ChatRouting
+              : ChatRouting(
+                  image: "",
+                  symbol: "",
+                  companyName: "",
+                  price: 0,
+                  changePercentage: 0,
+                  chatId: "",
+                  stockid: "",
+                  trendChart: FiveDayTrend(data: []),
+                );
+
+          return SwipeScreen(chatRouting: chatRouting);
         },
         routes: [],
       ),
@@ -173,7 +197,20 @@ return AppRoutes.profilePage.path;
         path: AppRoutes.chatConversation.path,
         name: AppRoutes.chatConversation.name,
         builder: (BuildContext context, GoRouterState state) {
-          return ChatConversation();
+          final chatRouting = state.extra != null
+              ? state.extra as ChatRouting
+              : ChatRouting(
+                  image: "",
+                  symbol: "",
+                  companyName: "",
+                  price: 0,
+                  changePercentage: 0,
+                  chatId: "",
+                  stockid: "",
+                  trendChart: FiveDayTrend(data: []),
+                );
+
+          return ChatConversation(chatRouting: chatRouting);
         },
         routes: [],
       ),

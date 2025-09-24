@@ -444,7 +444,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             itemBuilder: (context) => [
                               PopupMenuItem(
                                 enabled: false,
-                                child: _buildSwitchTile(
+                                child: SettingsCard(
                                   icon: Icons.public,
                                   title: "Web Mode",
                                   value: webMode,
@@ -455,7 +455,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                               PopupMenuDivider(color: AppColors.white.withOpacity(0.3)),
                               PopupMenuItem(
                                 enabled: false,
-                                child: _buildSwitchTile(
+                                child: SettingsCard(
                                   icon: Icons.assignment,
                                   title: "Report",
                                   value: report,
@@ -466,7 +466,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                               PopupMenuDivider(color: AppColors.white.withOpacity(0.3)),
                               PopupMenuItem(
                                 enabled: false,
-                                child: _buildSwitchTile(
+                                child: SettingsCard(
                                   icon: Icons.analytics,
                                   title: "Deep Analysis",
                                   value: deepAnalysis,
@@ -829,41 +829,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     );
   }
 
-Widget _buildSwitchTile({
-  required IconData icon,
-  required String title,
-  required bool value,
-  required Function(bool) onChanged,
-}) {
-  return ListTile(
-    contentPadding: EdgeInsets.all(0),
-    leading: Icon(icon, color: Colors.white),
-    title: Text(
-      title,
-      style: const TextStyle(color: Colors.white, fontSize: 16),
-    ),
-    trailing: Transform.scale(
-      scale: 0.8,
-      child: StatefulBuilder(
-        builder: (context, setStatePopup) {
-          return Switch(
-            value: value,
-            onChanged: (val) {
-              // local update (popup ke andar)
-              setStatePopup(() {});
-
-              // parent state update
-              onChanged(val);
-            },
-            activeColor: Colors.lightBlueAccent,
-            activeTrackColor: Colors.black,
-            inactiveThumbColor: Colors.grey,
-            inactiveTrackColor: Colors.white24,
-          );
-        },
-      ),
-    ),
-  );
-}
 
 }
+
+

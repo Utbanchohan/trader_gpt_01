@@ -536,7 +536,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             return GestureDetector(
                               onTap: () {
                                 context.pushNamed(
-                                  AppRoutes.chatPage.name,
+                                  AppRoutes.swipeScreen.name,
                                   extra: ChatRouting(
                                     chatId: stock.id,
                                     symbol: stocks[stockIndex].symbol,
