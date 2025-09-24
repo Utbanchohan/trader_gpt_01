@@ -587,8 +587,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                           MdSnsText(
                             "#${widget.chatRouting!.symbol}",
 
-                            fontWeight: FontWeight.w700,
-                            size: 16,
+                            fontWeight: TextFontWeightVariant.h7,
+                            variant: TextVariant.h2,
                             color: AppColors.white,
                           ),
                           SizedBox(width: 4),
@@ -602,8 +602,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                       .trim(),
 
                               color: AppColors.colorB2B2B7,
-                              size: 12,
-                              fontWeight: FontWeight.w400,
+                              fontWeight: TextFontWeightVariant.h4,
+                              variant: TextVariant.h4,
                             ),
                           ),
                           Icon(
@@ -643,8 +643,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                     .contains("-")
                                 ? AppColors.redFF3B3B
                                 : AppColors.color06D54E,
-                            size: 12,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: TextFontWeightVariant.h4,
+                            variant: TextVariant.h4,
                           ),
                         ],
                       ),
@@ -820,9 +820,10 @@ class _ActionChip extends StatelessWidget {
             SizedBox(width: 4.w),
             MdSnsText(
               label,
-              size: 16,
+              variant: TextVariant.h2,
+
               color: AppColors.color3C4E8A,
-              fontWeight: FontWeight.w400,
+              fontWeight: TextFontWeightVariant.h4,
             ),
           ],
         ),

@@ -12,10 +12,9 @@ class DeleteWidget extends StatelessWidget {
     required this.onConfirm,
     required this.onCancel,
   }) : super(key: key);
- 
+
   @override
   Widget build(BuildContext context) {
-    
     return Dialog(
       backgroundColor: Color(0xFF0B1433), // Dark navy background
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -35,18 +34,18 @@ class DeleteWidget extends StatelessWidget {
             MdSnsText(
               "Delete",
               textAlign: TextAlign.center,
-              fontWeight: FontWeight.w600,
               color: Color(0xffffffff),
-              size: 18,
+              fontWeight: TextFontWeightVariant.h2,
+              variant: TextVariant.h1,
             ),
             SizedBox(height: 20),
 
             MdSnsText(
               "Are you sure you want to Delete?",
               textAlign: TextAlign.center,
-              fontWeight: FontWeight.w400,
               color: Color(0xFFB2B2B7),
-              size: 16,
+              fontWeight: TextFontWeightVariant.h4,
+              variant: TextVariant.h2,
             ),
             const SizedBox(height: 20),
 
@@ -74,9 +73,9 @@ class DeleteWidget extends StatelessWidget {
                     child: MdSnsText(
                       "No",
                       textAlign: TextAlign.center,
-                      fontWeight: FontWeight.w400,
                       color: const Color(0xffffffff),
-                      size: 14, // 👈 Text size smaller
+                      fontWeight: TextFontWeightVariant.h4,
+                      variant: TextVariant.h3,
                     ),
                   ),
                 ),
@@ -106,9 +105,9 @@ class DeleteWidget extends StatelessWidget {
                     child: MdSnsText(
                       "Yes",
                       textAlign: TextAlign.center,
-                      fontWeight: FontWeight.w400,
                       color: const Color(0xffffffff),
-                      size: 14, // 👈 Text size smaller
+                      fontWeight: TextFontWeightVariant.h4,
+                      variant: TextVariant.h3,
                     ),
                   ),
                 ),

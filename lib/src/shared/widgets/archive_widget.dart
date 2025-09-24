@@ -34,18 +34,19 @@ class ArchiveWidget extends StatelessWidget {
             MdSnsText(
               "Archive",
               textAlign: TextAlign.center,
-              fontWeight: FontWeight.w600,
               color: Color(0xffffffff),
-              size: 18,
+              fontWeight: TextFontWeightVariant.h2,
+              variant: TextVariant.h1,
             ),
             SizedBox(height: 20),
 
             MdSnsText(
               "Are you sure you want to Archive?",
               textAlign: TextAlign.center,
-              fontWeight: FontWeight.w400,
+              fontWeight: TextFontWeightVariant.h4,
+
               color: Color(0xFFB2B2B7),
-              size: 16,
+              variant: TextVariant.h2,
             ),
             const SizedBox(height: 20),
 
@@ -73,9 +74,10 @@ class ArchiveWidget extends StatelessWidget {
                     child: MdSnsText(
                       "No",
                       textAlign: TextAlign.center,
-                      fontWeight: FontWeight.w400,
+
                       color: const Color(0xffffffff),
-                      size: 14, // 👈 Text size smaller
+                      fontWeight: TextFontWeightVariant.h4,
+                      variant: TextVariant.h3,
                     ),
                   ),
                 ),
@@ -105,9 +107,9 @@ class ArchiveWidget extends StatelessWidget {
                     child: MdSnsText(
                       "Yes",
                       textAlign: TextAlign.center,
-                      fontWeight: FontWeight.w400,
                       color: const Color(0xffffffff),
-                      size: 14, // 👈 Text size smaller
+                      fontWeight: TextFontWeightVariant.h4,
+                      variant: TextVariant.h3,
                     ),
                   ),
                 ),
