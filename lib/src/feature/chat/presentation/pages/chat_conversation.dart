@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
@@ -21,6 +23,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_wid
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import '../../../../core/extensions/symbol_image.dart';
 import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'widgets/loading_widget.dart';
 
@@ -111,44 +114,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
             country: "us",
             exchangeSortOrder: 0,
           )
-        : Stock(
-            avgVolume: 0,
-            change: 0,
-            changesPercentage: 0,
-            dayHigh: 0.0,
-            dayLow: 0.0,
-            earningsAnnouncement: "",
-            eps: 0.0,
-            exchange: "",
-            fiveDayTrend: [],
-            marketCap: 0,
-            name: "",
-            open: 0,
-            pe: 0,
-            previousClose: 0.0,
-            price: 0,
-            priceAvg200: 0,
-            priceAvg50: 0,
-            sharesOutstanding: 0,
-            stockId: "",
-            symbol: "",
-            timestamp: 0,
-            volume: 0,
-            yearHigh: 0,
-            yearLow: 0.0,
-            logoUrl: "",
-            type: "",
-            count: 0,
-            dateHours: "",
-            ticks: 0,
-            primaryLogoUrl: "",
-            secondaryLogoUrl: "",
-            tertiaryLogoUrl: "",
-            status: "",
-            updatedFrom: "",
-            country: "us",
-            exchangeSortOrder: 0,
-          );
+        : emptyStock();
   }
 
   void scrollToBottom() {
@@ -557,13 +523,21 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
               ),
               title: Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      widget.chatRouting!.image!,
-                      width: 35,
-                      height: 35,
-                      fit: BoxFit.cover,
+                  SizedBox(
+                    width: 35,
+
+                    height: 35,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: SvgPicture.network(
+                        getItemImage(
+                          ImageType.stock,
+                          widget.chatRouting!.symbol,
+                        ),
+                        fit: BoxFit.cover,
+                        placeholderBuilder: (context) =>
+                            SizedBox(width: 35, height: 35, child: SizedBox()),
+                      ),
                     ),
                   ),
                   SizedBox(width: 8),
