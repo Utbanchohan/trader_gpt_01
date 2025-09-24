@@ -2,7 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
+// import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -228,13 +228,14 @@ class ImagePickerHandler {
     final dir = await path_provider.getTemporaryDirectory();
     final targetPath = '${dir.absolute.path}/.jpg';
 
-    final result = await FlutterImageCompress.compressAndGetFile(
-      croppedFile.path,
-      targetPath,
-      minHeight: 1080,
-      minWidth: 1080,
-      quality: 50,
-    );
+    final result = null;
+    // = await FlutterImageCompress.compressAndGetFile(
+    //   croppedFile.path,
+    //   targetPath,
+    //   minHeight: 1080,
+    //   minWidth: 1080,
+    //   quality: 50,
+    // );
 
     if (result == null) {
       return null;
