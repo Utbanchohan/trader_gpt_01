@@ -7,6 +7,7 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_mess
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/conversation/conversation_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/random_question/random_question_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_flow.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 
 import '../../data/dto/archive_chat_dto/archive_chat_dto.dart';
@@ -53,6 +54,7 @@ import '../model/delete_model/delete_model.dart';
   Future<BaseModel<ChatHistory>> archiveChat(ArchiveChatDto archiveChatDto) async {
     return await ChatApi(client).archiveChat(archiveChatDto);
   }
+
   
   
   
@@ -62,6 +64,11 @@ import '../model/delete_model/delete_model.dart';
   @override
   Future<dynamic> streamApi(TaskRequestDto taskRequestDto) async {
     return await UserAskStreamApi(client).askStream(taskRequestDto);
+  } 
+
+    @override
+  Future<WorkflowsData> getWorkFlows() async {
+    return await UserAskStreamApi(client).workFlows();
   }
  
 }

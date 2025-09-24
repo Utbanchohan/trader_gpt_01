@@ -8,6 +8,7 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_mess
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/conversation/conversation_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/random_question/random_question_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_flow.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_api_repository.dart';
 
 import '../../../../core/api_client/client.dart';
@@ -21,6 +22,7 @@ abstract interface class ChatRepository {
   Future<BaseModel<ChatHistory>> createNewChat(CreateChatDto createChatDto);
   Future<BaseModel<ChatHistory>> archiveChat(ArchiveChatDto archiveChat);
   Future<BaseModel<DeleteResponse>> deleteChat(String chadId);
+  Future<WorkflowsData> getWorkFlows();
 
   Future<dynamic> streamApi(TaskRequestDto taskRequestDto);
 }

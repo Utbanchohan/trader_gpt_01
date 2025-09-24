@@ -11,12 +11,14 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_flow.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/setting_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/provider/work_flow_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
@@ -54,6 +56,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   bool webMode = true;
   bool report = true;
   bool deepAnalysis = true;
+  List<Workflow> workflows = [];
   @override
   void initState() {
     getChatsId();
@@ -61,23 +64,96 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     getRandomQuestions(
       selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
     );
+    getWorkFlows();
+
     super.initState();
   }
 
-  void openBottomSheet(BuildContext context) async {
+  getWorkFlows() async {
+    var res = await ref.read(workFlowProviderProvider.notifier).getWorksFlows();
+    if (res.workflows.isNotEmpty) {
+      workflows.addAll(res.workflows);
+    }
+  }
+
+  void questionDialog(BuildContext context) async {
     await showDialog(
       context: context,
-      barrierDismissible: true, // bahar tap karne se band ho jaye
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          alignment: Alignment.bottomCenter, // center overlay
-          backgroundColor: Colors.transparent, // transparent bg
-          insetPadding: EdgeInsets.all(16), // thoda margin
+          alignment: Alignment.bottomCenter,
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.all(16),
           contentPadding: EdgeInsets.zero,
-          content: SettingBottomSheet(
-            title: '',
-            description: '',
-          ), // aapka widget
+          content: Container(
+            padding: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: AppColors.gradient,
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.color091224,
+                borderRadius: BorderRadius.all(Radius.circular(25)),
+              ),
+              padding: EdgeInsets.all(15.0),
+              child: Container(
+                height: 400.h,
+                width: MediaQuery.sizeOf(context).width,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: workflows.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        String description = workflows[index].description;
+
+                        message.text = description;
+
+                        message.selection = TextSelection.fromPosition(
+                          TextPosition(offset: message.text.length),
+                        );
+
+                        Navigator.pop(context);
+                      },
+
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 12),
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppColors.color1B254B,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MdSnsText(
+                              "/" + workflows[index].name,
+                              color: AppColors.white,
+                              variant: TextVariant.h2,
+                              fontWeight: TextFontWeightVariant.h4,
+                            ),
+                            SizedBox(height: 8),
+                            MdSnsText(
+                              workflows[index].description,
+                              color: AppColors.color9EAAC0,
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
         );
       },
     );
@@ -414,7 +490,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             );
 
                             if (value.endsWith("/")) {
-                              openBottomSheet(context);
+                              questionDialog(context);
                             }
                           },
                           decoration: InputDecoration(
