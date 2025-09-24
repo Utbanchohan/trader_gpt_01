@@ -120,28 +120,28 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 40.h),
-
+        
             Image.asset(Assets.images.appLogo.path, height: 41.h, width: 166.w),
             SizedBox(height: 30.h),
-
+        
             MdSnsText(
               "Let’s get started",
               color: AppColors.white,
               variant: TextVariant.h6,
               fontWeight: TextFontWeightVariant.h1,
             ),
-
+        
             SizedBox(height: 12.h),
-
+        
             MdSnsText(
               "Enter your email address. we will send you\nthe confirmation code there",
               color: AppColors.white,
               variant: TextVariant.h2,
               fontWeight: TextFontWeightVariant.h4,
             ),
-
+        
             SizedBox(height: 30.h),
-
+        
             // Email Field Label
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -157,9 +157,9 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                 ),
               ],
             ),
-
+        
             SizedBox(height: 11.h),
-
+        
             // Email Field
             Form(
               key: formKey,
@@ -170,7 +170,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
-
+        
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
@@ -183,7 +183,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                   if (_emailRegex.hasMatch(value.trim())) {
                     return null;
                   } else {
-                    return "Please enter a valid email/phone";
+                    return "Please enter a valid email";
                   }
                 },
                 decoration: InputDecoration(
@@ -195,7 +195,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),
-
+        
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 14.w,
                     vertical: 10.h,

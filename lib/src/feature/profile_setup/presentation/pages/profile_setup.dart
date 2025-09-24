@@ -74,7 +74,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
         }
       }
     } else {
-      $showMessage("Confirm Password should be same as Password ");
+      $showMessage("Confirm Password should be same as create Password ");
     }
   }
 
@@ -156,7 +156,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                               image: DecorationImage(
                                 image: mediaModel != null
                                     ? NetworkImage(mediaModel!.url)
-                                    : AssetImage(Assets.images.profile.path)
+                                    : AssetImage(
+                                            Assets.images.placeholderimage.path,
+                                          )
                                           as ImageProvider,
                                 fit: BoxFit.cover,
                               ),
@@ -304,7 +306,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         if (_emailRegex.hasMatch(value.trim())) {
                           return null;
                         } else {
-                          return "Please enter a valid email/phone";
+                          return "Please enter a valid email";
                         }
                       },
                       textInputAction: TextInputAction.next,

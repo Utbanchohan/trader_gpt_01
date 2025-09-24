@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';
+import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
 import '../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../shared/custom_message.dart';
@@ -38,12 +42,26 @@ class Login extends _$Login {
           await ref
               .read(localDataProvider)
               .saveUserId(response.data?.user?.id ?? '');
-  await ref
+          await ref
               .read(localDataProvider)
               .saveUserName(response.data?.user?.name ?? '');
           await ref
               .read(localDataProvider)
               .saveUser(response.data!.user.toJson());
+          List<Map<String, dynamic>> stocks = [];
+
+          ref.read(socketRepository).fetchStocks((data) {
+            final updatedStocks = data;
+
+
+            for (var updated in updatedStocks) {
+
+              Stock stockItem=updated;
+              
+              stocks.add(stockItem.toJson());
+            }
+            ref.read(localDataProvider).saveStock(stocks);
+          });
 
           state = AppLoadingState();
           return response.data!;

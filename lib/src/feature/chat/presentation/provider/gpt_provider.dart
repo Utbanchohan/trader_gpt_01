@@ -146,7 +146,7 @@
 //               final chunk = event["chunk"] ?? "";
 //               final prev = updated[aiIndex].message ?? "";
 //               updated[aiIndex] = updated[aiIndex].copyWith(
-//                 message: prev + chunk,
+//                 message: prev + chunk,Report
 //               );
 //               break;
 //             case "followup":

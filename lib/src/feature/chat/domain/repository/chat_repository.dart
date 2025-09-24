@@ -18,10 +18,9 @@ abstract interface class ChatRepository {
   Future<RandomQuestionModel> randomQuestions(String symbol);
   Future<BaseModel<ChatHistoryResponse>> chats();
   Future<BaseModel<Conversation>> getMessages(String chatId, int page);
-    Future<BaseModel<ChatHistory>> createNewChat(CreateChatDto createChatDto);
-        Future<BaseModel<ChatHistory>> archiveChat(ArchiveChatDto archiveChat);
-            Future<BaseModel<DeleteResponse>> deleteChat(String chadId);
-
+  Future<BaseModel<ChatHistory>> createNewChat(CreateChatDto createChatDto);
+  Future<BaseModel<ChatHistory>> archiveChat(ArchiveChatDto archiveChat);
+  Future<BaseModel<DeleteResponse>> deleteChat(String chadId);
 
   Future<dynamic> streamApi(TaskRequestDto taskRequestDto);
 }

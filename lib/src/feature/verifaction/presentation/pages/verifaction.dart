@@ -27,7 +27,7 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
   TextEditingController otp = TextEditingController();
   int seconds = 30; // ⏳ timer start from 30
   Timer? _timer;
-
+  bool isResending = false;
   @override
   void initState() {
     super.initState();
@@ -44,6 +44,12 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
         });
       } else {
         t.cancel();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Code expired, please request again."),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     });
   }
@@ -189,21 +195,29 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: seconds == 0
-                      ? () {
-                          resendCode();
+                  onTap: (seconds == 0 && !isResending)
+                      ? () async {
+                          setState(() {
+                            isResending = true;
+                          });
+
+                          await resendCode();
+
+                          setState(() {
+                            isResending = false;
+                          });
                         }
                       : null,
-
                   child: MdSnsText(
                     'Resend code',
-                    color: seconds == 0
+                    color: (seconds == 0 && !isResending)
                         ? AppColors.white
                         : AppColors.bluishgrey404F81,
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h3,
                   ),
                 ),
+
                 MdSnsText(
                   '00:${seconds.toString().padLeft(2, '0')}',
                   color: seconds == 0

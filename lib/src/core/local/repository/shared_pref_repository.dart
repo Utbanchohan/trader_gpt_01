@@ -13,6 +13,8 @@ class SharedPreferencesService implements SharedPrefService {
   final login = 'login';
   final _userKey = 'user';
   final userNameKey="user-name";
+  final stocksKey="stocks";
+
 
   @override
   String? get accessToken => sharedPreferences.getString(_tokenKey);
@@ -20,6 +22,12 @@ class SharedPreferencesService implements SharedPrefService {
 
   @override
    String? get getUserName => sharedPreferences.getString(userNameKey);
+
+  
+
+
+
+
 
 
   @override
@@ -90,4 +98,26 @@ class SharedPreferencesService implements SharedPrefService {
     }
     return null;
   }
+
+  @override
+  Future<void>  saveStock(List<Map<String, dynamic>> stock) {
+    String stockJson = jsonEncode(stock);
+    return sharedPreferences.setString(stocksKey, stockJson);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>?> getStocks() async {
+    String? userJson = sharedPreferences.getString(stocksKey);
+    if (userJson != null) {
+    final decoded = jsonDecode(userJson);
+    if (decoded is List) {
+      return decoded.map<Map<String, dynamic>>(
+        (e) => Map<String, dynamic>.from(e as Map),
+      ).toList();
+    }
+       return null;
+    }
+    return null;
+  }
+  
 }

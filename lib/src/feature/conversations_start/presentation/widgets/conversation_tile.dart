@@ -1,14 +1,16 @@
 import 'package:chart_sparkline/chart_sparkline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/socket/providers/stocks_price.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-class ConversationTile extends StatelessWidget {
+class ConversationTile extends ConsumerStatefulWidget {
   final Stock stocks;
   final ChatHistory stock;
   const ConversationTile({
@@ -17,6 +19,11 @@ class ConversationTile extends StatelessWidget {
     required this.stock,
   });
 
+  @override
+  ConsumerState<ConversationTile> createState() => _ConversationTileState();
+}
+
+class _ConversationTileState extends ConsumerState<ConversationTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,7 +43,7 @@ class ConversationTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    image: NetworkImage(stocks.logoUrl),
+                    image: NetworkImage(widget.stocks.logoUrl),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -50,8 +57,8 @@ class ConversationTile extends StatelessWidget {
               // ),
               SizedBox(height: 5.h),
               MdSnsText(
-                stock.lastMessage != null
-                    ? stock.lastMessage!.createdAt.millisecondsSinceEpoch
+                widget.stock.lastMessage != null
+                    ? widget.stock.lastMessage!.createdAt.millisecondsSinceEpoch
                           .timeAgoFromMilliseconds()
                     : "",
                 variant: TextVariant.h5,
@@ -65,7 +72,7 @@ class ConversationTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               MdSnsText(
-                stock.symbol,
+                widget.stocks.symbol,
                 variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
@@ -74,8 +81,8 @@ class ConversationTile extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.sizeOf(context).width / 2,
                 child: MdSnsText(
-                  stock.companyName.isNotEmpty
-                      ? stock.companyName.split("-").first.trim()
+                  widget.stock.companyName.isNotEmpty
+                      ? widget.stock.companyName.split("-").first.trim()
                       : "",
                   color: AppColors.color677FA4,
                   variant: TextVariant.h3,
@@ -90,7 +97,7 @@ class ConversationTile extends StatelessWidget {
                 width: MediaQuery.sizeOf(context).width * 0.5,
                 child: MdSnsText(
                   textOverflow: TextOverflow.ellipsis,
-                  stock.lastMessage != null ? stock.lastMessage!.message : "",
+                  widget.stock.lastMessage != null ? widget.stock.lastMessage!.message : "",
                   maxLines: 1,
                   color: AppColors.color677FA4,
                   variant: TextVariant.h4,
@@ -103,21 +110,23 @@ class ConversationTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               MdSnsText(
-                "\$${stocks.price.toStringAsFixed(2)}",
+                "\$${widget.stocks.price.toStringAsFixed(2)}",
                 variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
               ),
               Row(
                 children: [
-                  stocks.changesPercentage < 0
+                  widget.stocks.changesPercentage < 0
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                    stocks.changesPercentage
+                                  ref.watch(stocksStreamProvider)==widget.stocks ?
+                ref.watch(stocksStreamProvider).changesPercentage.toStringAsFixed(2).replaceAll("-", ""):
+                    widget.stocks.changesPercentage
                         .toStringAsFixed(2)
                         .replaceAll("-", ""),
-                    color: stocks.changesPercentage < 0
+                    color: widget.stocks.changesPercentage < 0
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,
                     variant: TextVariant.h4,
@@ -129,9 +138,14 @@ class ConversationTile extends StatelessWidget {
                 width: 86.w,
                 height: 15.h,
                 child: Sparkline(
-                  data: stocks.fiveDayTrend[0].data,
+                  data: 
+                   ref.watch(stocksStreamProvider)==widget.stocks
+             ?   ref.watch(stocksStreamProvider).fiveDayTrend[0].data!:
+                   
+                  
+                  widget.stocks.fiveDayTrend[0].data!,
                   lineWidth: 2.0,
-                  lineColor: stocks.changesPercentage < 0
+                  lineColor: widget.stocks.changesPercentage < 0
                       ? AppColors.redFF3B3B
                       : AppColors.color06D54E,
                   pointsMode: PointsMode.none,
