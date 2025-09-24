@@ -739,8 +739,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                       message.selection = TextSelection.fromPosition(
                         TextPosition(offset: message.text.length),
                       );
-
-               
                     },
                   ),
             asyncStream.when(
