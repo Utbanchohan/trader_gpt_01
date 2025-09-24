@@ -190,6 +190,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
           ),
           // child: Flexible(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // widget.type != "user"
               //     ? model != null &&
