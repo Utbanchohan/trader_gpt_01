@@ -49,16 +49,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     );
   }
 
-  void openBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors
-          .transparent, // transparent rakhen taki rounded corners visible rahen
-      isScrollControlled:
-          true, // content scrollable ho jata hai agar zyada lamba ho
-      builder: (context) => const SettingBottomSheet(),
-    );
-  }
 
   void showConfirmationDialog(BuildContext context) {
     showDialog(
@@ -127,14 +117,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                             MdSnsText(
                               "Free Trial",
                               color: AppColors.white,
-                              fontWeight: FontWeight.w400,
-                              size: 16,
+                              variant: TextVariant.h2,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                             MdSnsText(
                               "6 days left",
                               color: AppColors.color9EAAC0,
-                              fontWeight: FontWeight.w400,
-                              size: 16,
+                              variant: TextVariant.h2,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ],
                         ),
@@ -173,7 +163,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       context,
                       Assets.images.conversation.path,
                       "Conversation",
-                      AppRoutes.conversationStart.name,
+                      // AppRoutes.conversationStart.name,
+                      AppRoutes.swipeScreen.name,
+
                     ),
                     _buildMenuItem(
                       context,
@@ -191,10 +183,8 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     _buildMenuItem(
                       context,
                       Assets.images.setting2.path,
-
                       "Settings",
-                      "Settings",
-                    ),
+""                    ),
                   ],
                 ),
               ),
@@ -222,15 +212,16 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                             userModel != null && userModel!.name.isNotEmpty
                                 ? userModel!.name
                                 : "N/A",
+
                             color: AppColors.white,
-                            fontWeight: FontWeight.w600,
-                            size: 14,
+                            variant: TextVariant.h3,
+                            fontWeight: TextFontWeightVariant.h2,
                           ),
                           MdSnsText(
                             "Free Plan",
 
                             color: Colors.lightBlueAccent,
-                            size: 12.sp,
+                            variant: TextVariant.h4,
                           ),
                         ],
                       ),
@@ -281,32 +272,26 @@ class _SideMenuState extends ConsumerState<SideMenu> {
       title: MdSnsText(
         title,
         color: isSelected ? AppColors.white : AppColors.color5E646E,
-        size: 16,
-        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        variant: TextVariant.h2,
+        fontWeight: isSelected
+            ? TextFontWeightVariant.h1
+            : TextFontWeightVariant.h4,
       ),
       onTap: routeName == null || routeName.isEmpty
           ? null
           : () {
-              setState(() {
-                selectedMenu = routeName;
-              });
-              if (routeName == "Settings") {
-                if(ref.read(localDataProvider).getIsFirstTime())
-                {
-ref.read(localDataProvider).setIsFirstTime(false);
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: AppColors.shadowColor,
-                  builder: (context) {
-                    return OnboardingBottomSheet();
-                  },
-                );
-                }else{
-
-                }
-              }
-              // context.pop();
+              // if (routeName == "Setting") {
+              //   context.pop();
+              //   showModalBottomSheet(
+              //     context: context,
+              //     isScrollControlled: true,
+              //     backgroundColor: AppColors.shadowColor,
+              //     builder: (context) {
+              //       return OnboardingBottomSheet();
+              //     },
+              //   );
+              // }
+              context.pop();
               context.pushNamed(routeName);
             },
     );

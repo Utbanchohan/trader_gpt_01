@@ -2,7 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
+// import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -47,18 +47,17 @@ class ImagePickerHandler {
                           GestureDetector(
                             onTap: () async {
                               bool result = await requestStoragePermission(
-                                  isCamera: true);
-                              
+                                isCamera: true,
+                              );
+
                               if (result) {
-                              Navigator.of(context).pop();
-                              imgFromCamera(context).then((value) {
-                                if (value != null) onGetImage(File(value.path));
-                              });
+                                Navigator.of(context).pop();
+                                imgFromCamera(context).then((value) {
+                                  if (value != null)
+                                    onGetImage(File(value.path));
+                                });
                               } else {
-                                _showPermissionDialog(
-                                  context,
-                                  isCamera: true,
-                                );
+                                _showPermissionDialog(context, isCamera: true);
                               }
                             },
                             child: Container(
@@ -70,8 +69,9 @@ class ImagePickerHandler {
                               child: Center(
                                 child: MdSnsText(
                                   'Take photo',
-                                  size: 18,
-                                  fontWeight: FontWeight.w400,
+                                  variant: TextVariant.h1,
+                                  fontWeight: TextFontWeightVariant.h4,
+
                                   color: Colors.blue,
                                 ),
                               ),
@@ -109,8 +109,9 @@ class ImagePickerHandler {
                               child: Center(
                                 child: MdSnsText(
                                   'Gallery photo',
-                                  size: 18,
-                                  fontWeight: FontWeight.w400,
+                                  variant: TextVariant.h1,
+                                  fontWeight: TextFontWeightVariant.h4,
+
                                   color: Colors.blue,
                                 ),
                               ),
@@ -134,9 +135,8 @@ class ImagePickerHandler {
                       child: Center(
                         child: MdSnsText(
                           'Cancel',
-                          size: 18,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.red,
+                          variant: TextVariant.h1,
+                          fontWeight: TextFontWeightVariant.h4,
                         ),
                       ),
                     ),
@@ -228,13 +228,14 @@ class ImagePickerHandler {
     final dir = await path_provider.getTemporaryDirectory();
     final targetPath = '${dir.absolute.path}/.jpg';
 
-    final result = await FlutterImageCompress.compressAndGetFile(
-      croppedFile.path,
-      targetPath,
-      minHeight: 1080,
-      minWidth: 1080,
-      quality: 50,
-    );
+    final result = null;
+    // = await FlutterImageCompress.compressAndGetFile(
+    //   croppedFile.path,
+    //   targetPath,
+    //   minHeight: 1080,
+    //   minWidth: 1080,
+    //   quality: 50,
+    // );
 
     if (result == null) {
       return null;
@@ -244,10 +245,9 @@ class ImagePickerHandler {
   }
 
   Future<bool> requestStoragePermission({bool isCamera = false}) async {
-    PermissionStatus status =
-        isCamera
-            ? await Permission.camera.request()
-            : await Permission.photos.request();
+    PermissionStatus status = isCamera
+        ? await Permission.camera.request()
+        : await Permission.photos.request();
     if (status.isDenied || status.isPermanentlyDenied) {
       return false;
     }
@@ -258,28 +258,27 @@ class ImagePickerHandler {
   void _showPermissionDialog(BuildContext context, {required bool isCamera}) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text('Permission required'),
-            content: Text(
-              'Please enable ${isCamera ? 'camera' : 'photo'} access in the app settings to use this feature.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  openAppSettings();
-                },
-                child: Text('Open Settings'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: MdSnsText('Permission required'),
+        content: MdSnsText(
+          'Please enable ${isCamera ? 'camera' : 'photo'} access in the app settings to use this feature.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: MdSnsText('Cancel'),
           ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              openAppSettings();
+            },
+            child: MdSnsText('Open Settings'),
+          ),
+        ],
+      ),
     );
   }
 

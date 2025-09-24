@@ -6,7 +6,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-class AskingPopupWidget extends StatefulWidget    {
+class AskingPopupWidget extends StatefulWidget {
   final List<String> questions;
   final List<String> relatedQuestion;
   final TextEditingController controller;
@@ -29,17 +29,15 @@ class AskingPopupWidget extends StatefulWidget    {
   State<AskingPopupWidget> createState() => _AskingPopupWidgetState();
 }
 
-class _AskingPopupWidgetState extends State<AskingPopupWidget>    with TickerProviderStateMixin {
-
-
-
+class _AskingPopupWidgetState extends State<AskingPopupWidget>
+    with TickerProviderStateMixin {
   @override
   void initState() {
-       tabController = TabController(length: 2, vsync: this);
-       tabController.animateTo(widget.index);
-    // TODO: implement initState
+    tabController = TabController(length: 2, vsync: this);
+    tabController.animateTo(widget.index);
     super.initState();
   }
+
   late TabController tabController;
 
   @override
@@ -85,9 +83,11 @@ class _AskingPopupWidgetState extends State<AskingPopupWidget>    with TickerPro
               child: TabBarView(
                 controller: tabController,
                 children: [
-                  _buildQuestionList(context, widget.questions,
-                  widget.showSheet??true
-                   ),
+                  _buildQuestionList(
+                    context,
+                    widget.questions,
+                    widget.showSheet ?? true,
+                  ),
                   _buildQuestionList(context, widget.relatedQuestion, false),
                 ],
               ),
@@ -117,7 +117,7 @@ class _AskingPopupWidgetState extends State<AskingPopupWidget>    with TickerPro
               Navigator.of(context).pop();
             }
             if (selectStock) {
-             widget.selectedStock = await showDialog<Stock>(
+              widget.selectedStock = await showDialog<Stock>(
                 context: context,
                 barrierDismissible: true,
                 builder: (BuildContext context) {
@@ -189,11 +189,13 @@ class _AskingPopupWidgetState extends State<AskingPopupWidget>    with TickerPro
           children: [
             MdSnsText(
               'Close',
-              size: 16,
-              fontWeight: FontWeight.w400,
+              variant: TextVariant.h2,
+              fontWeight: TextFontWeightVariant.h4,
+
               color: AppColors.white,
             ),
-            const SizedBox(width: 8),
+
+            SizedBox(width: 8),
             const Icon(Icons.close, color: Colors.white, size: 20),
           ],
         ),
@@ -204,23 +206,20 @@ class _AskingPopupWidgetState extends State<AskingPopupWidget>    with TickerPro
 
 Widget buildQuestionChip(String text) {
   return Align(
-  alignment: Alignment.centerLeft, 
-  child: Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-    
-    decoration: BoxDecoration(
-      color: AppColors.bubbleColor,
-      borderRadius: BorderRadius.circular(32.r),
-    ),
-    child: Text(
-      text,
-      style: TextStyle(
+    alignment: Alignment.centerLeft,
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+
+      decoration: BoxDecoration(
+        color: AppColors.bubbleColor,
+        borderRadius: BorderRadius.circular(32.r),
+      ),
+      child: MdSnsText(
+        text,
+        variant: TextVariant.h2,
+        fontWeight: TextFontWeightVariant.h4,
         color: AppColors.white,
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
       ),
     ),
-  ),
-);
-
+  );
 }

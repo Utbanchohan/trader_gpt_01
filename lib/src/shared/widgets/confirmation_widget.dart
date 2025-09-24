@@ -33,9 +33,11 @@ class ConfirmationDialog extends StatelessWidget {
             MdSnsText(
               "Confirmation",
               textAlign: TextAlign.center,
-              fontWeight: FontWeight.w600,
+              variant: TextVariant.h1,
+              fontWeight: TextFontWeightVariant.h2,
               color: Color(0xffffffff),
-              size: 18,
+
+              // size: 18,
             ),
             SizedBox(height: 20),
 
@@ -43,7 +45,9 @@ class ConfirmationDialog extends StatelessWidget {
             MdSnsText(
               "Are you sure you want to archive?",
               textAlign: TextAlign.center,
-              fontWeight: FontWeight.w400,
+              variant: TextVariant.h4,
+              fontWeight: TextFontWeightVariant.h4,
+
               color: Color(0xFFB2B2B7),
             ),
             const SizedBox(height: 20),
@@ -65,9 +69,9 @@ class ConfirmationDialog extends StatelessWidget {
                   child: MdSnsText(
                     "No",
                     textAlign: TextAlign.center,
-                    fontWeight: FontWeight.w400,
+                    variant: TextVariant.h2,
+                    fontWeight: TextFontWeightVariant.h4,
                     color: Color(0xffffffff),
-                    size: 16,
                   ),
                 ),
                 const SizedBox(width: 15),
@@ -84,10 +88,11 @@ class ConfirmationDialog extends StatelessWidget {
                   onPressed: onConfirm,
                   child: MdSnsText(
                     "Yes",
+                    variant: TextVariant.h2,
+                    fontWeight: TextFontWeightVariant.h4,
                     textAlign: TextAlign.center,
-                    fontWeight: FontWeight.w400,
+
                     color: Color(0xffffffff),
-                    size: 16,
                   ),
                 ),
               ],

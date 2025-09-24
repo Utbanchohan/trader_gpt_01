@@ -130,15 +130,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       MdSnsText(
                         'Your Profile',
                         color: AppColors.white,
-                        size: 32,
-                        fontWeight: FontWeight.w700,
+                        variant: TextVariant.h6,
+                        fontWeight: TextFontWeightVariant.h1,
                       ),
                       SizedBox(height: 4.h),
                       MdSnsText(
                         'Setup your tradersgpt profile',
                         color: AppColors.white,
-                        size: 16,
-                        fontWeight: FontWeight.w400,
+                        variant: TextVariant.h2,
+                        fontWeight: TextFontWeightVariant.h4,
                       ),
                     ],
                   ),
@@ -166,7 +166,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                           );
                         },
                         loading: () => CircularProgressIndicator(),
-                        error: (e, st) => Text("Error: $e"),
+                        error: (e, st) => MdSnsText("Error: $e"),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -221,9 +221,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         SizedBox(width: 5.w),
                         MdSnsText(
                           "Full Name",
-                          size: 12,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+
                           color: AppColors.white,
-                          fontWeight: FontWeight.w400,
                         ),
                       ],
                     ),
@@ -279,9 +280,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         SizedBox(width: 5.w),
                         MdSnsText(
                           "Email Address",
-                          size: 12,
+
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
                           color: AppColors.white,
-                          fontWeight: FontWeight.w400,
                         ),
                       ],
                     ),
@@ -347,9 +349,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         SizedBox(width: 5.w),
                         MdSnsText(
                           "Create a password",
-                          size: 12,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
                           color: AppColors.white,
-                          fontWeight: FontWeight.w400,
                         ),
                       ],
                     ),
@@ -432,9 +434,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         SizedBox(width: 5.w),
                         MdSnsText(
                           "Confirm Password",
-                          size: 12,
                           color: AppColors.white,
-                          fontWeight: FontWeight.w400,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
                         ),
                       ],
                     ),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
-import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
-import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class LogoutDialog extends StatelessWidget {
@@ -14,10 +12,9 @@ class LogoutDialog extends StatelessWidget {
     required this.onConfirm,
     required this.onCancel,
   }) : super(key: key);
- 
+
   @override
   Widget build(BuildContext context) {
-    
     return Dialog(
       backgroundColor: Color(0xFF0B1433), // Dark navy background
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -37,18 +34,18 @@ class LogoutDialog extends StatelessWidget {
             MdSnsText(
               "Logout",
               textAlign: TextAlign.center,
-              fontWeight: FontWeight.w600,
+              variant: TextVariant.h1,
+              fontWeight: TextFontWeightVariant.h2,
               color: Color(0xffffffff),
-              size: 18,
             ),
             SizedBox(height: 20),
 
             MdSnsText(
               "Are you sure you want to Logout?",
               textAlign: TextAlign.center,
-              fontWeight: FontWeight.w400,
+              variant: TextVariant.h2,
+              fontWeight: TextFontWeightVariant.h4,
               color: Color(0xFFB2B2B7),
-              size: 16,
             ),
             const SizedBox(height: 20),
 
@@ -76,9 +73,9 @@ class LogoutDialog extends StatelessWidget {
                     child: MdSnsText(
                       "No",
                       textAlign: TextAlign.center,
-                      fontWeight: FontWeight.w400,
+                      variant: TextVariant.h3,
+                      fontWeight: TextFontWeightVariant.h4,
                       color: const Color(0xffffffff),
-                      size: 14, // 👈 Text size smaller
                     ),
                   ),
                 ),
@@ -108,9 +105,9 @@ class LogoutDialog extends StatelessWidget {
                     child: MdSnsText(
                       "Yes",
                       textAlign: TextAlign.center,
-                      fontWeight: FontWeight.w400,
+                      variant: TextVariant.h3,
+                      fontWeight: TextFontWeightVariant.h4,
                       color: const Color(0xffffffff),
-                      size: 14, // 👈 Text size smaller
                     ),
                   ),
                 ),

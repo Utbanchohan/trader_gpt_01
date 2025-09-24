@@ -9,9 +9,7 @@ part of 'user_ask_stream.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
 
 class _UserAskStreamApi implements UserAskStreamApi {
-  _UserAskStreamApi(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'http://dev.tradersgpt.io/tgpt-python/api/';
-  }
+  _UserAskStreamApi(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -44,6 +42,33 @@ class _UserAskStreamApi implements UserAskStreamApi {
     final _value = _result.data;
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
+  }
+
+  @override
+  Future<WorkflowsData> workFlows() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<WorkflowsData>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'get-workflows',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late WorkflowsData _value;
+    try {
+      _value = WorkflowsData.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

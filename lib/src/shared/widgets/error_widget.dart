@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -12,7 +11,12 @@ class CustomErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: MdSnsText(message, color: AppColors.colorFAFAFC, fontWeight: FontWeight.w500, size: 16),
+      child: MdSnsText(
+        message,
+        color: AppColors.colorFAFAFC,
+        variant: TextVariant.h2,
+        fontWeight: TextFontWeightVariant.h3,
+      ),
     );
   }
 }

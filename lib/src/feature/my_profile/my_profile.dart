@@ -5,6 +5,7 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
+import 'package:trader_gpt/src/shared/widgets/memory_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class MyProfileScreen extends ConsumerStatefulWidget {
@@ -88,8 +89,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
                           ? userModel!.name
                           : "N/A",
                       color: AppColors.white,
-                      size: 32,
-                      fontWeight: FontWeight.bold,
+                      variant: TextVariant.h6,
+                      fontWeight: TextFontWeightVariant.h1,
                     ),
 
                     MdSnsText(
@@ -99,8 +100,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
 
                       // "Burakdeniz@gmail.com",
                       color: AppColors.colorB2B2B7,
-                      size: 16,
-                      fontWeight: FontWeight.w400,
+                      variant: TextVariant.h2,
+                      fontWeight: TextFontWeightVariant.h4,
                     ),
                   ],
                 ),
@@ -111,8 +112,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
               MdSnsText(
                 "My Profile",
                 color: AppColors.colorB2B2B7,
-                size: 16,
-                fontWeight: FontWeight.w400,
+                variant: TextVariant.h2,
+                fontWeight: TextFontWeightVariant.h4,
               ),
               const SizedBox(height: 15),
 
@@ -144,8 +145,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
               MdSnsText(
                 "Settings",
                 color: AppColors.colorB2B2B7,
-                size: 16,
-                fontWeight: FontWeight.w400,
+                variant: TextVariant.h2,
+                fontWeight: TextFontWeightVariant.h4,
               ),
 
               SizedBox(height: 15),
@@ -177,7 +178,27 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
               _buildProfileItem(
                 asset: Assets.images.cpu8.path,
                 title: "Memory",
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true, // Tap outside to close
+                    // barrierColor: Colors.black.withOpacity(0.5), // Dark overlay
+                    builder: (context) {
+                      return Container(
+                        margin: EdgeInsets.only(left: 13, right: 13),
+                        child: MemoryWidgets(
+                          onClear: () {
+                            debugPrint("Memory Cleared!");
+                            Navigator.pop(context); // Popup close kare
+                          },
+                          onClose: () {
+                            Navigator.pop(context); // Sirf close kare
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
               _buildProfileItem(
                 asset: Assets.images.driver9.path,
@@ -215,8 +236,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
         title: MdSnsText(
           title,
           color: AppColors.white,
-          size: 16,
-          fontWeight: FontWeight.w400,
+          variant: TextVariant.h2,
+          fontWeight: TextFontWeightVariant.h4,
         ),
         trailing: Image.asset(
           Assets.images.vector1.path,
@@ -248,9 +269,11 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
           height: 18,
           width: 18,
         ),
-        title: Text(
+
+        title: MdSnsText(
           title,
-          style: const TextStyle(color: AppColors.white, fontSize: 16),
+          variant: TextVariant.h2,
+          color: AppColors.white,
         ),
         trailing: CustomToggleSwitch(value: value, onChanged: onChanged),
       ),

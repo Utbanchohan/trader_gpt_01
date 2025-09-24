@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class CustomLineChart extends StatelessWidget {
   const CustomLineChart({super.key});
@@ -13,9 +14,7 @@ class CustomLineChart extends StatelessWidget {
       height: 260,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColors.colorB3B3B3
-        ),
+        border: Border.all(color: AppColors.colorB3B3B3),
         color: AppColors.color091224,
         borderRadius: BorderRadius.circular(16),
       ),
@@ -48,9 +47,11 @@ class CustomLineChart extends StatelessWidget {
                 getTitlesWidget: (value, meta) {
                   return Align(
                     alignment: Alignment.centerRight, // 👈 text right align
-                    child: Text(
+                    child: MdSnsText(
                       value.toInt().toString(),
-                      style: TextStyle(color: Colors.white, fontSize: 10.sp),
+                      variant: TextVariant.h5,
+                      fontWeight: TextFontWeightVariant.h4,
+                      color: AppColors.white,
                     ),
                   );
                 },
@@ -65,37 +66,19 @@ class CustomLineChart extends StatelessWidget {
                 getTitlesWidget: (value, meta) {
                   switch (value.toInt()) {
                     case 0:
-                      return const Text(
-                        "6:00",
-                        style: TextStyle(color: Colors.white),
-                      );
+                      return MdSnsText("6:00", color: AppColors.white);
                     case 1:
-                      return const Text(
-                        "10:00",
-                        style: TextStyle(color: Colors.white),
-                      );
+                      return MdSnsText("10:00", color: AppColors.white);
                     case 2:
-                      return const Text(
-                        "14:00",
-                        style: TextStyle(color: Colors.white),
-                      );
+                      return MdSnsText("14:00", color: AppColors.white);
                     case 3:
-                      return const Text(
-                        "18:00",
-                        style: TextStyle(color: Colors.white),
-                      );
+                      return MdSnsText("18:00", color: AppColors.white);
                     case 4:
-                      return const Text(
-                        "22:00",
-                        style: TextStyle(color: Colors.white),
-                      );
+                      return MdSnsText("22:00", color: AppColors.white);
                     case 5:
-                      return const Text(
-                        "2:00",
-                        style: TextStyle(color: Colors.white),
-                      );
+                      return MdSnsText("2:00", color: AppColors.white);
                   }
-                  return const Text("");
+                  return MdSnsText("");
                 },
               ),
             ),
@@ -108,37 +91,44 @@ class CustomLineChart extends StatelessWidget {
                 getTitlesWidget: (value, meta) {
                   switch (value.toInt()) {
                     case 0:
-                      return const Text(
+                      return MdSnsText(
                         "6:00",
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                        color: AppColors.white,
+                        variant: TextVariant.h4,
                       );
+
                     case 1:
-                      return const Text(
+                      return MdSnsText(
                         "10:00",
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                        color: AppColors.white,
+                        variant: TextVariant.h4,
                       );
                     case 2:
-                      return const Text(
+                      return MdSnsText(
                         "14:00",
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                        color: AppColors.white,
+                        variant: TextVariant.h4,
                       );
                     case 3:
-                      return const Text(
+                      return MdSnsText(
                         "18:00",
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                        color: AppColors.white,
+                        variant: TextVariant.h4,
                       );
                     case 4:
-                      return const Text(
+                      return MdSnsText(
                         "22:00",
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                        color: AppColors.white,
+                        variant: TextVariant.h4,
                       );
                     case 5:
-                      return const Text(
+                      return MdSnsText(
                         "2:00",
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                        color: AppColors.white,
+                        variant: TextVariant.h4,
                       );
                   }
-                  return const Text("");
+                  return MdSnsText("");
                 },
               ),
             ),

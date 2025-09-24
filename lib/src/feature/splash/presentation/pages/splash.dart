@@ -12,7 +12,8 @@ class Splash extends ConsumerStatefulWidget {
   ConsumerState<Splash> createState() => _SplashState();
 }
 
-class _SplashState extends ConsumerState<Splash> with SingleTickerProviderStateMixin {
+class _SplashState extends ConsumerState<Splash>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
@@ -47,7 +48,6 @@ class _SplashState extends ConsumerState<Splash> with SingleTickerProviderStateM
           fit: BoxFit.cover,
           controller: _controller,
           onLoaded: (composition) {
-            // Animation duration set karo aur start karo
             _controller
               ..duration = composition.duration
               ..forward();

@@ -43,4 +43,6 @@ abstract interface class ChatApi {
 
   @GET('/popular-questions/random?symbol={symbol}')
   Future<RandomQuestionModel> randomQuestion(@Path('symbol') String symbol);
+
+
 }

@@ -47,8 +47,9 @@ class StockWidget extends StatelessWidget {
 
               MdSnsText(
                 "3 Days ago",
-                size: 10,
-                fontWeight: FontWeight.w400,
+                variant: TextVariant.h5,
+                fontWeight: TextFontWeightVariant.h4,
+
                 color: AppColors.color677FA4,
               ),
             ],
@@ -63,23 +64,23 @@ class StockWidget extends StatelessWidget {
                   symbol,
 
                   color: AppColors.white,
-                  size: 18,
-                  fontWeight: FontWeight.w600,
+                  variant: TextVariant.h1,
+                  fontWeight: TextFontWeightVariant.h2,
                 ),
                 SizedBox(width: 5),
                 MdSnsText(
                   company,
                   color: AppColors.color677FA4,
-                  size: 12,
-                  fontWeight: FontWeight.w300,
+                  variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h6,
                 ),
 
                 SizedBox(height: 10),
                 MdSnsText(
                   description,
                   color: AppColors.color677FA4,
-                  size: 12,
-                  fontWeight: FontWeight.w300,
+                  variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h6,
                 ),
               ],
             ),
@@ -92,16 +93,16 @@ class StockWidget extends StatelessWidget {
                 "\$${price}",
 
                 color: AppColors.white,
-                size: 18,
-                fontWeight: FontWeight.w600,
+                variant: TextVariant.h1,
+                fontWeight: TextFontWeightVariant.h2,
               ),
               SizedBox(height: 8),
 
               MdSnsText(
                 "+${change} (${percent})",
                 color: AppColors.color00FF55,
-                size: 10,
-                fontWeight: FontWeight.w400,
+                variant: TextVariant.h5,
+                fontWeight: TextFontWeightVariant.h4,
               ),
               SizedBox(height: 8),
               Image.asset(
@@ -112,7 +113,7 @@ class StockWidget extends StatelessWidget {
               ),
             ],
           ),
-              SizedBox(width: 25),
+          SizedBox(width: 25),
 
           Icon(Icons.more_vert, color: Colors.white54, size: 20),
         ],

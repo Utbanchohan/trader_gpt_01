@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trader_gpt/src/feature/s3_uploader/providers/upload_provider.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class UploadImageScreen extends ConsumerWidget {
   UploadImageScreen({super.key});
@@ -25,7 +26,7 @@ class UploadImageScreen extends ConsumerWidget {
     final state = ref.watch(uploadNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Upload Image")),
+      appBar: AppBar(title: MdSnsText("Upload Image")),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -33,14 +34,14 @@ class UploadImageScreen extends ConsumerWidget {
             state.when(
               data: (media) => media != null
                   ? Image.network(media.url, height: 200)
-                  : const Text("No image uploaded"),
+                  : MdSnsText("No image uploaded"),
               loading: () => const CircularProgressIndicator(),
-              error: (e, st) => Text("Error: $e"),
+              error: (e, st) => MdSnsText("Error: $e"),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => pickAndUpload(ref),
-              child: const Text("Pick & Upload Image"),
+              child: MdSnsText("Pick & Upload Image"),
             ),
           ],
         ),

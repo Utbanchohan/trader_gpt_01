@@ -1,9 +1,8 @@
-
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../core/theme/app_colors.dart';
 
@@ -45,13 +44,12 @@ $showLoading(BuildContext context, {String message = "Processing..."}) {
             children: [
               CircularProgressIndicator.adaptive(),
               SizedBox(height: 16),
-              Text(
+
+              MdSnsText(
                 message,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: Colors.black,
-        ),
+                variant: TextVariant.h3,
+                fontWeight: TextFontWeightVariant.h3,
+                color: AppColors.black,
               ),
             ],
           ),

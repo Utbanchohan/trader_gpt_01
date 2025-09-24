@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -77,8 +76,9 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                   },
                   child: MdSnsText(
                     "Already have an account? Sign in",
-                    size: 14,
-                    fontWeight: FontWeight.w400,
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h4,
+
                     color: AppColors.white,
                   ),
                 ),
@@ -127,8 +127,8 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
             MdSnsText(
               "Let’s get started",
               color: AppColors.white,
-              size: 32,
-              fontWeight: FontWeight.w700,
+              variant: TextVariant.h6,
+              fontWeight: TextFontWeightVariant.h1,
             ),
         
             SizedBox(height: 12.h),
@@ -136,8 +136,8 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
             MdSnsText(
               "Enter your email address. we will send you\nthe confirmation code there",
               color: AppColors.white,
-              size: 16,
-              fontWeight: FontWeight.w400,
+              variant: TextVariant.h2,
+              fontWeight: TextFontWeightVariant.h4,
             ),
         
             SizedBox(height: 30.h),
@@ -150,8 +150,9 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                 SizedBox(width: 5.w),
                 MdSnsText(
                   "Email Address",
-                  size: 12,
-                  fontWeight: FontWeight.w400,
+                  variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h4,
+
                   color: AppColors.white,
                 ),
               ],

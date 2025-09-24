@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../../../gen/assets.gen.dart';
 import '../../../../../core/theme/app_colors.dart';
@@ -10,29 +10,28 @@ class LoadingWidgetMarkdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-                    width: MediaQuery.sizeOf(context).width / 1.4,
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppColors.bubbleColor,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        MdSnsText(
-                          "Thinking",
-                          color: AppColors.white,
-                          size: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        Image.asset(
-                          Assets.images.microinteractionsPreloader03.path,
-                          height: 40,
-                          width: 40,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  );
+      width: MediaQuery.sizeOf(context).width / 1.4,
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.bubbleColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          MdSnsText(
+            "Thinking",
+            color: AppColors.white,
+            variant: TextVariant.h3,
+            fontWeight: TextFontWeightVariant.h1,
+          ),
+          Image.asset(
+            Assets.images.microinteractionsPreloader03.path,
+            height: 40,
+            width: 40,
+            color: Colors.white,
+          ),
+        ],
+      ),
+    );
   }
 }
- 

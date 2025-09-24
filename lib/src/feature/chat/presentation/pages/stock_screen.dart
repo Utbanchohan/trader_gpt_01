@@ -124,8 +124,8 @@ class _StockScreenState extends ConsumerState<StockScreen> {
         children: [
           MdSnsText(
             "Select Symbol",
-            size: 16,
-            fontWeight: FontWeight.w400,
+            variant: TextVariant.h2,
+            fontWeight: TextFontWeightVariant.h4,
             color: AppColors.white,
           ),
           SizedBox(height: 10.h),

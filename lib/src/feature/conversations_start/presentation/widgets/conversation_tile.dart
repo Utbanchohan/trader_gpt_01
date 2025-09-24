@@ -71,8 +71,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                     ? widget.stock.lastMessage!.createdAt.millisecondsSinceEpoch
                           .timeAgoFromMilliseconds()
                     : "",
-                size: 10,
-                fontWeight: FontWeight.w400,
+                variant: TextVariant.h5,
+                fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.color677FA4,
               ),
             ],
@@ -82,10 +82,10 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               MdSnsText(
-                widget.stock.symbol,
-                size: 16,
+                widget.stocks.symbol,
+                variant: TextVariant.h2,
+                fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
-                fontWeight: FontWeight.w700,
               ),
               SizedBox(height: 2.h),
               SizedBox(
@@ -95,8 +95,9 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? widget.stock.companyName.split("-").first.trim()
                       : "",
                   color: AppColors.color677FA4,
-                  fontWeight: FontWeight.w400,
-                  size: 14,
+                  variant: TextVariant.h3,
+                  fontWeight: TextFontWeightVariant.h4,
+
                   maxLines: 1,
                   textOverflow: TextOverflow.ellipsis,
                 ),
@@ -109,8 +110,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                   widget.stock.lastMessage != null ? widget.stock.lastMessage!.message : "",
                   maxLines: 1,
                   color: AppColors.color677FA4,
-                  fontWeight: FontWeight.w400,
-                  size: 12,
+                  variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h4,
                 ),
               ),
             ],
@@ -119,12 +120,10 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               MdSnsText(
-
-                ref.watch(stocksStreamProvider)==widget.stocks?
-                "\$${ref.watch(stocksStreamProvider).price.toStringAsFixed(2)}":widget.stocks.price.toStringAsFixed(2),
-                size: 16,
+                "\$${widget.stocks.price.toStringAsFixed(2)}",
+                variant: TextVariant.h2,
+                fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
-                fontWeight: FontWeight.w700,
               ),
               Row(
                 children: [
@@ -140,8 +139,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                     color: widget.stocks.changesPercentage < 0
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,
-                    size: 12,
-                    fontWeight: FontWeight.w400,
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
                   ),
                 ],
               ),

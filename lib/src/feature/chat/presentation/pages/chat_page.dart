@@ -10,13 +10,17 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_flow.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/setting_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/provider/work_flow_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/setting_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../../core/extensions/empty_stock.dart';
 import '../../../../core/extensions/symbol_image.dart';
@@ -50,7 +54,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   User? user;
   bool dialogOpen = false;
   String? oldResponse;
-
+  bool webMode = true;
+  bool report = true;
+  bool deepAnalysis = true;
+  List<Workflow> workflows = [];
   @override
   void initState() {
     getChatsId();
@@ -58,7 +65,99 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     getRandomQuestions(
       selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
     );
+    getWorkFlows();
+
     super.initState();
+  }
+
+  getWorkFlows() async {
+    var res = await ref.read(workFlowProviderProvider.notifier).getWorksFlows();
+    if (res.workflows.isNotEmpty) {
+      workflows.addAll(res.workflows);
+    }
+  }
+
+  void questionDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          alignment: Alignment.bottomCenter,
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.all(16),
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            padding: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: AppColors.gradient,
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.color091224,
+                borderRadius: BorderRadius.all(Radius.circular(25)),
+              ),
+              padding: EdgeInsets.all(15.0),
+              child: Container(
+                height: 400.h,
+                width: MediaQuery.sizeOf(context).width,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: workflows.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        String description = workflows[index].description;
+
+                        message.text = description;
+
+                        message.selection = TextSelection.fromPosition(
+                          TextPosition(offset: message.text.length),
+                        );
+
+                        Navigator.pop(context);
+                      },
+
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 12),
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppColors.color1B254B,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MdSnsText(
+                              "/" + workflows[index].name,
+                              color: AppColors.white,
+                              variant: TextVariant.h2,
+                              fontWeight: TextFontWeightVariant.h4,
+                            ),
+                            SizedBox(height: 8),
+                            MdSnsText(
+                              workflows[index].description,
+                              color: AppColors.color9EAAC0,
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   getChatsId() async {
@@ -351,11 +450,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           scrollController: _textScrollController,
-
                           onChanged: (value) {
                             _textScrollController.jumpTo(
                               _textScrollController.position.maxScrollExtent,
                             );
+
+                            if (value.endsWith("/")) {
+                              questionDialog(context);
+                            }
                           },
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -396,27 +498,70 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(12),
-                                height: 35.h,
-                                width: 35.w,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.color091224,
-                                  border: Border.all(
-                                    color: AppColors.bluishgrey404F81,
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: Image.asset(
-                                  Assets.images.textfieldicon3.path,
+                          PopupMenuButton<String>(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            color: AppColors.bubbleColor,
+                            onSelected: (value) {
+                              print("Selected: $value");
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                enabled: false,
+                                child: SettingsCard(
+                                  icon: Icons.public,
+                                  title: "Web Mode",
+                                  value: webMode,
+                                  onChanged: (val) =>
+                                      setState(() => webMode = val),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              PopupMenuDivider(
+                                color: AppColors.white.withOpacity(0.3),
+                              ),
+                              PopupMenuItem(
+                                enabled: false,
+                                child: SettingsCard(
+                                  icon: Icons.assignment,
+                                  title: "Report",
+                                  value: report,
+                                  onChanged: (val) =>
+                                      setState(() => report = val),
+                                ),
+                              ),
+                              PopupMenuDivider(
+                                color: AppColors.white.withOpacity(0.3),
+                              ),
+                              PopupMenuItem(
+                                enabled: false,
+                                child: SettingsCard(
+                                  icon: Icons.analytics,
+                                  title: "Deep Analysis",
+                                  value: deepAnalysis,
+                                  onChanged: (val) =>
+                                      setState(() => deepAnalysis = val),
+                                ),
+                              ),
                             ],
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              height: 35.h,
+                              width: 35.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.color091224,
+                                border: Border.all(
+                                  color: AppColors.bluishgrey404F81,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Image.asset(
+                                Assets.images.textfieldicon3.path,
+                              ),
+                            ),
                           ),
+
                           Row(
                             children: [
                               Container(
@@ -560,9 +705,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         children: [
                           MdSnsText(
                             "#${widget.chatRouting!.symbol}",
+                            variant: TextVariant.h2,
+                            fontWeight: TextFontWeightVariant.h1,
 
-                            fontWeight: FontWeight.w700,
-                            size: 16,
                             color: AppColors.white,
                           ),
                           SizedBox(width: 4),
@@ -576,8 +721,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                       .trim(),
 
                               color: AppColors.colorB2B2B7,
-                              size: 12,
-                              fontWeight: FontWeight.w400,
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ),
                           Icon(
@@ -590,7 +735,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       ),
                       Row(
                         children: [
-                          Text(
+                          MdSnsText(
                             stockManagerState[widget.chatRouting!.stockid] !=
                                         null &&
                                     stockManagerState[widget
@@ -604,7 +749,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                       .price
                                       .toStringAsFixed(2)
                                 : widget.chatRouting!.price.toStringAsFixed(2),
-                            style: TextStyle(color: Colors.white, fontSize: 14),
+                            color: AppColors.white,
+                            variant: TextVariant.h3,
                           ),
                           SizedBox(width: 6),
                           Icon(
@@ -637,8 +783,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     .contains("-")
                                 ? AppColors.redFF3B3B
                                 : AppColors.color06D54E,
-                            size: 12,
-                            fontWeight: FontWeight.w400,
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
                           ),
                         ],
                       ),
@@ -709,7 +855,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             ChatMarkdownWidget(
-                             key: ValueKey(chats[index].id),
+                              key: ValueKey(chats[index].id),
                               message: chats[index].message,
                               name: name,
                               image: image,
@@ -750,7 +896,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           ChatMarkdownWidget(
-                          key: ValueKey(463672774785),
+                            key: ValueKey(463672774785),
                             message: text.toString(),
                             name:
                                 widget.chatRouting == null ||
@@ -784,50 +930,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 children: [LoadingWidgetMarkdown()],
               ),
               error: (err, _) => Center(child: Text("Error: $err")),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ActionChip extends StatelessWidget {
-  final String icon;
-  final String label;
-  final VoidCallback onTap;
-
-  const _ActionChip({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          color: AppColors.color091224,
-          border: Border.all(color: AppColors.bluishgrey404F81),
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Row(
-          children: [
-            Image.asset(
-              icon,
-              width: 14.w,
-              height: 14.h,
-              color: AppColors.color3C4E8A,
-            ),
-            SizedBox(width: 4.w),
-            MdSnsText(
-              label,
-              size: 16,
-              color: AppColors.color3C4E8A,
-              fontWeight: FontWeight.w400,
             ),
           ],
         ),

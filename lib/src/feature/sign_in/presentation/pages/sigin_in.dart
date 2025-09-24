@@ -58,8 +58,9 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
               children: [
                 MdSnsText(
                   "Sign in to",
-                  size: 32,
-                  fontWeight: FontWeight.w700,
+                  variant: TextVariant.h6,
+                  fontWeight: TextFontWeightVariant.h1,
+
                   color: AppColors.white,
                 ),
                 // SizedBox(height: 5.h),
@@ -72,8 +73,9 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                 SizedBox(height: 20.h),
                 MdSnsText(
                   "Ready to start where you left of?",
-                  size: 16,
-                  fontWeight: FontWeight.w400,
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h4,
+
                   color: AppColors.white,
                 ),
                 SizedBox(height: 40.h),
@@ -96,8 +98,9 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                           SizedBox(width: 5.w),
                           MdSnsText(
                             "Email Address",
-                            size: 12,
-                            fontWeight: FontWeight.w400,
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
+
                             color: AppColors.white,
                           ),
                         ],
@@ -109,6 +112,7 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                         controller: email,
                         style: TextStyle(
                           color: Colors.white,
+
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -154,8 +158,9 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                           SizedBox(width: 5.w),
                           MdSnsText(
                             "Password",
-                            size: 12,
-                            fontWeight: FontWeight.w400,
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
+
                             color: AppColors.white,
                           ),
                         ],
@@ -218,8 +223,8 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                   alignment: Alignment.centerRight,
                   child: MdSnsText(
                     "Forgot password?",
-                    size: 12,
-                    fontWeight: FontWeight.w400,
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
                   ),
                 ),
@@ -252,8 +257,8 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: MdSnsText(
                         "Or",
-                        size: 12,
-                        fontWeight: FontWeight.w400,
+                        variant: TextVariant.h4,
+                        fontWeight: TextFontWeightVariant.h4,
                         color: AppColors.white,
                       ),
                     ),
@@ -287,8 +292,9 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                             SizedBox(width: 10.w),
                             MdSnsText(
                               "Google",
-                              size: 18,
-                              fontWeight: FontWeight.w600,
+                              variant: TextVariant.h1,
+                              fontWeight: TextFontWeightVariant.h2,
+
                               color: AppColors.color274E87,
                             ),
                           ],
@@ -317,8 +323,10 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                             SizedBox(width: 10.w),
                             MdSnsText(
                               "Apple",
-                              size: 18,
-                              fontWeight: FontWeight.w600,
+
+                              variant: TextVariant.h1,
+                              fontWeight: TextFontWeightVariant.h2,
+
                               color: AppColors.color274E87,
                             ),
                           ],
@@ -337,13 +345,11 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                     onPressed: () {
                       context.goNamed(AppRoutes.signUpPage.name);
                     },
-                    child: Text(
+                    child: MdSnsText(
                       "Don’t have an account? Sign up",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                      ),
+                      color: AppColors.white,
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h4,
                     ),
                   ),
                 ),
