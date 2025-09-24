@@ -20,6 +20,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/setting_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'widgets/loading_widget.dart';
@@ -61,6 +62,25 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
     );
     super.initState();
+  }
+
+  void openBottomSheet(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // bahar tap karne se band ho jaye
+      builder: (BuildContext context) {
+        return AlertDialog(
+          alignment: Alignment.bottomCenter, // center overlay
+          backgroundColor: Colors.transparent, // transparent bg
+          insetPadding: EdgeInsets.all(16), // thoda margin
+          contentPadding: EdgeInsets.zero,
+          content: SettingBottomSheet(
+            title: '',
+            description: '',
+          ), // aapka widget
+        );
+      },
+    );
   }
 
   getChatsId() async {
@@ -388,11 +408,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           scrollController: _textScrollController,
-
                           onChanged: (value) {
                             _textScrollController.jumpTo(
                               _textScrollController.position.maxScrollExtent,
                             );
+
+                            if (value.endsWith("/")) {
+                              openBottomSheet(context);
+                            }
                           },
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -452,7 +475,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                       setState(() => webMode = val),
                                 ),
                               ),
-                              PopupMenuDivider(color: AppColors.white.withOpacity(0.3)),
+                              PopupMenuDivider(
+                                color: AppColors.white.withOpacity(0.3),
+                              ),
                               PopupMenuItem(
                                 enabled: false,
                                 child: SettingsCard(
@@ -463,7 +488,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                       setState(() => report = val),
                                 ),
                               ),
-                              PopupMenuDivider(color: AppColors.white.withOpacity(0.3)),
+                              PopupMenuDivider(
+                                color: AppColors.white.withOpacity(0.3),
+                              ),
                               PopupMenuItem(
                                 enabled: false,
                                 child: SettingsCard(
@@ -828,8 +855,4 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       ),
     );
   }
-
-
 }
-
-

@@ -49,16 +49,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     );
   }
 
-  void openBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors
-          .transparent, // transparent rakhen taki rounded corners visible rahen
-      isScrollControlled:
-          true, // content scrollable ho jata hai agar zyada lamba ho
-      builder: (context) => const SettingBottomSheet(),
-    );
-  }
 
   void showConfirmationDialog(BuildContext context) {
     showDialog(
