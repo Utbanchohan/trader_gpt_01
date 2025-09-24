@@ -97,6 +97,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
       },
     );
   }
+
   void _showArchivedDialog(BuildContext context, Function onPressed) {
     showDialog(
       context: context,
@@ -448,7 +449,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   children: [
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        _showArchivedDialog(context, (){
+                                        _showArchivedDialog(context, () {
                                           archivedStock(convo[index].id, true);
                                         });
                                       },
@@ -556,11 +557,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   children: [
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        _showArchivedDialog(context, (){
+                                        _showArchivedDialog(context, () {
                                           archivedStock(convo[index].id, true);
-
                                         });
-
                                       },
                                       backgroundColor: AppColors.color1B254B,
                                       child: Column(
@@ -577,8 +576,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                           MdSnsText(
                                             'Archive',
                                             color: AppColors.color9EAAC0,
-                                            fontWeight: FontWeight.w400,
-                                            size: 12,
+                                            fontWeight:
+                                                TextFontWeightVariant.h4,
+                                            variant: TextVariant.h4,
                                           ),
                                         ],
                                       ),
@@ -604,8 +604,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                           MdSnsText(
                                             'Delete',
                                             color: AppColors.color9EAAC0,
-                                            fontWeight: FontWeight.w400,
-                                            size: 12,
+                                            fontWeight:
+                                                TextFontWeightVariant.h4,
+                                            variant: TextVariant.h4,
                                           ),
                                         ],
                                       ),
@@ -674,11 +675,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   children: [
                                     CustomSlidableAction(
                                       onPressed: (context) {
-                                        _showArchivedDialog(context, (){
+                                        _showArchivedDialog(context, () {
                                           archivedStock(convo[index].id, true);
-
                                         });
-
                                       },
                                       backgroundColor: AppColors.color1B254B,
                                       child: Column(
