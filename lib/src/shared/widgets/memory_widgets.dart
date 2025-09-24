@@ -45,11 +45,10 @@ class MemoryWidgets extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: onClear,
-                  child: Image.asset(
-                    Assets.images.add.path,
-                    height: 12,
-                    width: 12,
-                  ),
+                  child: Icon(
+                    Icons.close,
+                    size: 15.w,
+                  )
                 ),
               ],
             ),
@@ -60,7 +59,7 @@ class MemoryWidgets extends StatelessWidget {
                 return Padding(
                   padding: EdgeInsets.only(bottom: 10),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     decoration: BoxDecoration(
                       color: AppColors.color091224,
                       borderRadius: BorderRadius.circular(30),
