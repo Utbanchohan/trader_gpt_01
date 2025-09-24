@@ -13,6 +13,7 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_mess
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_flow.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
@@ -20,9 +21,9 @@ import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/setting_w
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/work_flow_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/widget/gradient_dialog.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
-import 'package:trader_gpt/src/shared/widgets/setting_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'widgets/loading_widget.dart';
@@ -39,6 +40,7 @@ class ChatPage extends ConsumerStatefulWidget {
 
 class _ChatPageState extends ConsumerState<ChatPage> {
   TextEditingController message = TextEditingController();
+  TextEditingController limit = TextEditingController();
   final ScrollController _textScrollController = ScrollController();
 
   ScrollController sc = ScrollController();
@@ -57,6 +59,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   bool report = true;
   bool deepAnalysis = true;
   List<Workflow> workflows = [];
+  bool isWorkFlow = false;
+  bool isWorkSymbol = false;
+
   @override
   void initState() {
     getChatsId();
@@ -81,37 +86,27 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          alignment: Alignment.bottomCenter,
-          backgroundColor: Colors.transparent,
-          insetPadding: EdgeInsets.all(16),
-          contentPadding: EdgeInsets.zero,
-          content: Container(
-            padding: EdgeInsets.all(1),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: AppColors.gradient,
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.color091224,
-                borderRadius: BorderRadius.all(Radius.circular(25)),
-              ),
-              padding: EdgeInsets.all(15.0),
-              child: Container(
-                height: 400.h,
-                width: MediaQuery.sizeOf(context).width,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: workflows.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        String description = workflows[index].description;
+        return GradientDialog(
+          child: SizedBox(
+            height: 400.h,
+            width: MediaQuery.sizeOf(context).width,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: workflows.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      isWorkFlow = true;
+                    });
+                    if (widget.chatRouting == null ||
+                        widget.chatRouting!.symbol.isEmpty) {
+                      if (workflows[index].parameters!.length > 0 &&
+                          workflows[index].parameters![0].name == "symbol") {
+                        setState(() {
+                          isWorkSymbol = true;
+                        });
+                        String description = workflows[index].displayName;
 
                         message.text = description;
 
@@ -120,38 +115,76 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         );
 
                         Navigator.pop(context);
-                      },
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        }
+                        selectedStock = await showDialog<Stock>(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (BuildContext context) {
+                            return GradientDialog(child: StockScreen());
+                          },
+                        );
+                      } else if (workflows[index].parameters!.length > 0 &&
+                          workflows[index].parameters![0].name == "limit") {
+                      } else {
+                        String description = workflows[index].displayName;
 
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 12),
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: AppColors.color1B254B,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MdSnsText(
-                              "/" + workflows[index].name,
-                              color: AppColors.white,
-                              variant: TextVariant.h2,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                            SizedBox(height: 8),
-                            MdSnsText(
-                              workflows[index].description,
-                              color: AppColors.color9EAAC0,
-                              variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                        message.text = description;
+
+                        message.selection = TextSelection.fromPosition(
+                          TextPosition(offset: message.text.length),
+                        );
+
+                        Navigator.pop(context);
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    } else {
+                      String description = workflows[index].displayName;
+
+                      message.text = description;
+
+                      message.selection = TextSelection.fromPosition(
+                        TextPosition(offset: message.text.length),
+                      );
+
+                      Navigator.pop(context);
+                      if (Navigator.of(context).canPop()) {
+                        Navigator.of(context).pop();
+                      }
+                    }
                   },
-                ),
-              ),
+
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 12),
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.color1B254B,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        MdSnsText(
+                          "/" + workflows[index].displayName,
+                          color: AppColors.white,
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        SizedBox(height: 8),
+                        MdSnsText(
+                          workflows[index].description,
+                          color: AppColors.color9EAAC0,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         );
@@ -454,11 +487,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         ),
         child: Container(
           color: Colors.transparent,
-          height: 160.h,
+          height: isWorkSymbol == true ? 190.h : 160.h,
           child: Column(
             children: [
               Container(
-                height: 115.h,
+                height: isWorkSymbol == true ? 145.h : 115.h,
                 margin: EdgeInsets.all(18),
                 padding: EdgeInsets.all(1),
                 decoration: BoxDecoration(
@@ -476,6 +509,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     borderRadius: BorderRadius.circular(25.r),
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: TextField(
@@ -519,6 +553,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                               minWidth: 0,
                               minHeight: 0,
                             ),
+
+                            suffixIcon: isWorkFlow == true
+                                ? IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () {
+                                      isWorkSymbol = false;
+                                      isWorkFlow = false;
+                                      message.clear();
+                                    },
+                                  )
+                                : null,
+
                             hintStyle: TextStyle(
                               color: AppColors.bluishgrey404F81,
                               fontSize: 16,
@@ -529,6 +575,53 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       ),
 
                       SizedBox(height: 15.h),
+
+                      // Container(
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(10.r),
+                      //     color: AppColors.bubbleColor,
+                      //   ),
+                      //   height: 30.h,
+                      //   width: 140.w,
+
+                      //   child: TextField(
+                      //     controller: limit,
+                      //     style: TextStyle(color: AppColors.white),
+                      //     keyboardType: TextInputType.multiline,
+                      //     maxLines: null,
+                      //     scrollController: _textScrollController,
+                      //     decoration: InputDecoration(
+                      //       border: InputBorder.none,
+                      //       hintText: "",
+                      //       prefixIconConstraints: BoxConstraints(
+                      //         minWidth: 0,
+                      //         minHeight: 0,
+                      //       ),
+                      //       hintStyle: TextStyle(
+                      //         color: AppColors.bluishgrey404F81,
+                      //         fontSize: 16,
+                      //         fontWeight: FontWeight.w400,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      isWorkSymbol == true
+                          ? Container(
+                              padding: EdgeInsets.all(5.w),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.r),
+                                border: Border.all(color: AppColors.redFF3B3B),
+                              ),
+                              child: MdSnsText(
+                                "Symbol | ${selectedStock!.symbol}",
+                                variant: TextVariant.h2,
+                                fontWeight: TextFontWeightVariant.h4,
+                                color: AppColors.fieldTextColor,
+                              ),
+                            )
+                          : SizedBox(),
+                      SizedBox(height: 15.h),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

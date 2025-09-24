@@ -15,6 +15,7 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/welcome_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
@@ -55,9 +56,10 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   void initState() {
     getChatsId();
     selectedStock = _mapChatRoutingToStock(widget.chatRouting);
-    getRandomQuestions(
-      selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
-    );
+    if (selectedStock!.symbol.isNotEmpty) {
+      getRandomQuestions(selectedStock!.symbol);
+    }
+
     super.initState();
   }
 
@@ -66,19 +68,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
     if (widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty) {
       chadId = widget.chatRouting!.chatId;
       getchats(chadId ?? "");
-    } else {
-      var res = await ref.read(chatRepository).chats();
-      if (res.isSuccess) {
-        for (int i = 0; i < res.data!.results.length; i++) {
-          if (res.data!.results[i].symbol.toLowerCase() == "tdgpt") {
-            chadId = res.data!.results[i].id;
-            getchats(chadId ?? "");
-            break;
-          }
-        }
-      } else {
-        getchats(chadId ?? "");
-      }
     }
   }
 
@@ -191,9 +180,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         } else {
           if (widget.chatRouting != null ||
               widget.chatRouting!.symbol.isNotEmpty) {
-            questions.add(
-              ij.replaceAll('[SYMBOL]', widget.chatRouting!.symbol),
-            );
+            questions.add(ij);
           } else {
             questions.add(ij);
           }
@@ -742,63 +729,19 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                       );
                     },
                   )
-                : Container(
-                    height: MediaQuery.sizeOf(context).height * 0.6.h,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          Assets.images.tGPTBrandMark.path,
-                          height: 82.h,
-                          width: 82.w,
-                        ),
-                        SizedBox(height: 17.h),
-                        MdSnsText(
-                          "Welcome to TradersGPT",
-                          color: AppColors.white,
-                          variant: TextVariant.h6,
-                          fontWeight: TextFontWeightVariant.h7,
-                        ),
-                        SizedBox(height: 25.h),
-                        MdSnsText(
-                          textAlign: TextAlign.center,
-                          "Discover anything about the markets, by just asking the intelligent Agent.",
-                          color: AppColors.white,
-                          variant: TextVariant.h2,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                        widget.chatRouting == null ||
-                                widget.chatRouting!.companyName.isEmpty
-                            ? SizedBox()
-                            : Container(
-                                margin: EdgeInsets.only(top: 20),
-                                padding: EdgeInsets.all(10),
-                                height: 55.h,
-                                width: MediaQuery.sizeOf(context).width.w,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15.r),
-                                  color: AppColors.color01B254B,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      Assets.images.prefixIcon.path,
-                                      height: 36.h,
-                                      width: 36.w,
-                                    ),
-                                    AppSpacing.w10,
-                                    MdSnsText(
-                                      "Provide a company overview for TSLA",
-                                      variant: TextVariant.h3,
-                                      fontWeight: TextFontWeightVariant.h4,
-                                      color: AppColors.white,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                      ],
-                    ),
+                : WelcomeWidget(
+                    showCompanyBox:
+                        widget.chatRouting != null &&
+                        widget.chatRouting!.companyName.isNotEmpty,
+                    questions: questions,
+                    onQuestionTap: (selectedQuestion) {
+                      message.text = selectedQuestion;
+                      message.selection = TextSelection.fromPosition(
+                        TextPosition(offset: message.text.length),
+                      );
+
+               
+                    },
                   ),
             asyncStream.when(
               data: (line) {
