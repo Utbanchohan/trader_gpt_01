@@ -5,6 +5,7 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
+import 'package:trader_gpt/src/shared/widgets/memory_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class MyProfileScreen extends ConsumerStatefulWidget {
@@ -177,7 +178,27 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
               _buildProfileItem(
                 asset: Assets.images.cpu8.path,
                 title: "Memory",
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true, // Tap outside to close
+                    // barrierColor: Colors.black.withOpacity(0.5), // Dark overlay
+                    builder: (context) {
+                      return Container(
+                        margin: EdgeInsets.only(left: 13, right: 13),
+                        child: MemoryWidgets(
+                          onClear: () {
+                            debugPrint("Memory Cleared!");
+                            Navigator.pop(context); // Popup close kare
+                          },
+                          onClose: () {
+                            Navigator.pop(context); // Sirf close kare
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
               _buildProfileItem(
                 asset: Assets.images.driver9.path,
