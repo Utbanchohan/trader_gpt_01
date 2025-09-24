@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../../../../core/extensions/symbol_image.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/model/chat_response/chat_message_model.dart';
 import 'chart_widget.dart';
@@ -42,46 +44,66 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
   List<dynamic> xAxis = [];
   List<dynamic> yAxis = [];
 
-  List<String> addNewxAxis = [];
-  List<double> addNewyAxis = [];
+  ModelOfAxis? model;
 
   ModelOfAxis changeDisplayAble(List<String> display) {
-    if (display.isNotEmpty) {
-      final rawDisplay = display;
-      final displayList = rawDisplay.map((e) {
-        final decoded = jsonDecode(e); // String ko Map me convert
-        return DisplayData.fromJson(decoded);
-      }).toList();
+    if (display.isEmpty) return ModelOfAxis(yAxis: [], xAxis: []);
 
-      // Ab tum easily access kar sakte ho:
-      for (final display in displayList) {
-        // print("Chart Type: ${display.chartType}");
-        // print("X Axis Title: ${display.xAxis?.xTitle}");
-        // print("Y Axis Title: ${display.yAxis?.yTitle}");
-        // print("X Axis Data: ${display.xAxis?.data}");
-        // print("Y Axis Data: ${display.data}");
+    final addNewxAxis = <String>[];
+    final addNewyAxis = <double>[];
 
-        xAxis.add(display.xAxis?.data);
-        yAxis.add(display.data);
+    for (final e in display) {
+      final decoded = jsonDecode(e) as Map<String, dynamic>;
+      final data = DisplayData.fromJson(decoded);
+
+      if (data.xAxis?.data != null) {
+        addNewxAxis.addAll((data.xAxis?.data ?? []).map((e) => e.toString()));
       }
-      if (xAxis[0] != null) {
-        for (var axis in xAxis[0]) {
-          addNewxAxis.add(axis);
-        }
+
+      if (data.data != null) {
+        addNewyAxis.addAll((data.data ?? []).map((e) => (e as num).toDouble()));
       }
-      if (yAxis[0] != null) {
-        for (var axis in yAxis[0]) {
-          addNewyAxis.add(axis);
-        }
-      }
-      return ModelOfAxis(yAxis: addNewyAxis, xAxis: addNewxAxis);
-    } else {
-      return ModelOfAxis(yAxis: [], xAxis: []);
     }
+
+    return ModelOfAxis(yAxis: addNewyAxis, xAxis: addNewxAxis);
+    // if (display.isNotEmpty) {
+    //   final rawDisplay = display;
+    //   final displayList = rawDisplay.map((e) {
+    //     final decoded = jsonDecode(e); // String ko Map me convert
+    //     return DisplayData.fromJson(decoded);
+    //   }).toList();
+
+    //   // Ab tum easily access kar sakte ho:
+    //   for (final display in displayList) {
+    //     // print("Chart Type: ${display.chartType}");
+    //     // print("X Axis Title: ${display.xAxis?.xTitle}");
+    //     // print("Y Axis Title: ${display.yAxis?.yTitle}");
+    //     // print("X Axis Data: ${display.xAxis?.data}");
+    //     // print("Y Axis Data: ${display.data}");
+
+    //     xAxis.add(display.xAxis?.data);
+    //     yAxis.add(display.data);
+    //   }
+    //   if (xAxis[0] != null) {
+    //     for (var axis in xAxis[0]) {
+    //       addNewxAxis.add(axis);
+    //     }
+    //   }
+    //   if (yAxis[0] != null) {
+    //     for (var axis in yAxis[0]) {
+    //       addNewyAxis.add(axis);
+    //     }
+    //   }
+    //   return ModelOfAxis(yAxis: addNewyAxis, xAxis: addNewxAxis);
+    // } else {
+    //   return ModelOfAxis(yAxis: [], xAxis: []);
+    // }
   }
 
   @override
   void initState() {
+    model = changeDisplayAble(widget.display);
+
     // changeDisplayAble(widget.display);
     // TODO: implement initState
     super.initState();
@@ -106,7 +128,8 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                       ),
                     ),
                   )
-                : Container(
+                : widget.type == "user"
+                ? Container(
                     height: 20.h,
                     width: 20.w,
                     decoration: BoxDecoration(
@@ -116,6 +139,23 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                         image: widget.image.isEmpty
                             ? AssetImage(Assets.images.placeholderimage.path)
                             : NetworkImage(widget.image),
+                      ),
+                    ),
+                  )
+                : Container(
+                    height: 20.h,
+                    width: 20.w,
+                    decoration: BoxDecoration(shape: BoxShape.circle),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(300),
+                      child: SvgPicture.network(
+                        getItemImage(ImageType.stock, widget.name),
+                        fit: BoxFit.cover,
+                        placeholderBuilder: (context) => SizedBox(
+                          height: 20.h,
+                          width: 20.w,
+                          child: SizedBox(),
+                        ),
                       ),
                     ),
                   ),
@@ -151,17 +191,17 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
           // child: Flexible(
           child: Column(
             children: [
-              widget.type != "user"
-                  ? changeDisplayAble(widget.display).xAxis.isNotEmpty &&
-                            changeDisplayAble(widget.display).yAxis.isNotEmpty
-                        ? ChartContainer(
-                            key: UniqueKey(),
-                            data: changeDisplayAble(widget.display).yAxis,
-                            categories: changeDisplayAble(widget.display).xAxis,
-                          )
-                        : SizedBox()
-                  : SizedBox(),
-
+              // widget.type != "user"
+              //     ? model != null &&
+              //               model!.xAxis.isNotEmpty &&
+              //               model!.yAxis.isNotEmpty
+              //           ? ChartContainer(
+              //               key: UniqueKey(),
+              //               data: model!.yAxis,
+              //               categories: model!.xAxis,
+              //             )
+              //           : SizedBox()
+              //     : SizedBox(),
               SizedBox(height: widget.type != "user" ? 10 : 0),
               MarkdownBody(
                 data: widget.message,

@@ -51,7 +51,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     getStocks();
   }
 
-  void _startPollingSearch(val) async{
+  void _startPollingSearch(val) async {
     if (val.isEmpty) {
       setState(() {
         searchStock = [];
@@ -63,8 +63,8 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     _debounce = Timer(const Duration(milliseconds: 400), () {
       print("$val searching value");
 
-     ref.read(socketRepository).searchStocks(val, (data) {
-            searchStock = [];
+      ref.read(socketRepository).searchStocks(val, (data) {
+        searchStock = [];
         updateStocksSearch(data);
       });
     });
@@ -99,30 +99,9 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           }
         }
       }
-        ref
-            .read(stocksManagerProvider.notifier)
-            .watchStocks(
-              searchStock
-            );
+      ref.read(stocksManagerProvider.notifier).watchStocks(searchStock);
       loading = false;
     });
-  }
-
-  void updateStocks(List<dynamic> data) {
-    final updatedStocks = data;
-    if (mounted) {
-      setState(() {
-        for (var updated in updatedStocks) {
-          final index = stocks.indexWhere((s) => s.symbol == updated!.symbol);
-          if (index >= 0) {
-            stocks[index] = updated!;
-          } else {
-            stocks.add(updated!);
-          }
-        }
-        loading = false;
-      });
-    }
   }
 
   createChat(Stock stock) async {
@@ -416,31 +395,29 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
           Row(
             children: [
               // widget.image.isNotEmpty
-              //     ? 
-                  
-                  Container(
-                      width: 26.w,
-                      height: 26.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        // image: DecorationImage(
-                        //   fit: BoxFit.cover,
+              //     ?
+              Container(
+                width: 26.w,
+                height: 26.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  // image: DecorationImage(
+                  //   fit: BoxFit.cover,
 
-                        //   image: NetworkImage(widget.image),
-                        // ),
-                      ),
-                      child:     ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: SvgPicture.network(
-                      getItemImage(ImageType.stock, widget.image),
-                      fit: BoxFit.cover,
-                      placeholderBuilder: (context) =>
-                          SizedBox(         width: 26.w,
-                      height: 26.h,child: SizedBox()),
-                    ),
+                  //   image: NetworkImage(widget.image),
+                  // ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: SvgPicture.network(
+                    getItemImage(ImageType.stock, widget.image),
+                    fit: BoxFit.cover,
+                    placeholderBuilder: (context) =>
+                        SizedBox(width: 26.w, height: 26.h, child: SizedBox()),
                   ),
-                    ),
-                  // : shimmerBox(width: 26.w, height: 26.h),
+                ),
+              ),
+              // : shimmerBox(width: 26.w, height: 26.h),
               SizedBox(width: 7.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

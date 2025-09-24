@@ -49,7 +49,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     );
   }
 
-
   void showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -163,9 +162,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       context,
                       Assets.images.conversation.path,
                       "Conversation",
-                      // AppRoutes.conversationStart.name,
-                      AppRoutes.swipeScreen.name,
+                      AppRoutes.conversationStart.name,
 
+                      // AppRoutes.swipeScreen.name,
                     ),
                     _buildMenuItem(
                       context,
@@ -184,7 +183,8 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       context,
                       Assets.images.setting2.path,
                       "Settings",
-""                    ),
+                      "",
+                    ),
                   ],
                 ),
               ),

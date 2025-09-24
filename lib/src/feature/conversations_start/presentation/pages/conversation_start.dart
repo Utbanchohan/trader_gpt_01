@@ -424,9 +424,10 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             final liveStock =
                                 stockManagerState[stocks[stockIndex].stockId];
                             stocks[stockIndex] = stocks[stockIndex].copyWith(
-                              changesPercentage:liveStock!=null&& liveStock.price>0
-                                  ? liveStock.price 
-                                        -stocks[stockIndex].previousClose
+                              changesPercentage:
+                                  liveStock != null && liveStock.price > 0
+                                  ? liveStock.price -
+                                        stocks[stockIndex].previousClose
                                   : stocks[stockIndex].changesPercentage,
                               price:
                                   liveStock?.price ?? stocks[stockIndex].price,
@@ -440,7 +441,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     chatId: convo[index].id,
                                     symbol: convo[index].symbol,
                                     image: stocks[stockIndex].logoUrl,
-                                    companyName:convo[index].companyName,
+                                    companyName: convo[index].companyName,
                                     price: stocks[stockIndex].price,
                                     changePercentage:
                                         stocks[stockIndex].changesPercentage,
@@ -539,12 +540,13 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 ? searchConvo[index]
                                 : convo[index];
                             int stockIndex = findRelatedStock(stock.symbol);
-                           final liveStock =
+                            final liveStock =
                                 stockManagerState[stocks[stockIndex].stockId];
-                           stocks[stockIndex] = stocks[stockIndex].copyWith(
-                              changesPercentage:liveStock!=null&& liveStock.price>0
-                                  ? liveStock.price 
-                                        -stocks[stockIndex].previousClose
+                            stocks[stockIndex] = stocks[stockIndex].copyWith(
+                              changesPercentage:
+                                  liveStock != null && liveStock.price > 0
+                                  ? liveStock.price -
+                                        stocks[stockIndex].previousClose
                                   : stocks[stockIndex].changesPercentage,
                               price:
                                   liveStock?.price ?? stocks[stockIndex].price,
@@ -553,12 +555,12 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             return GestureDetector(
                               onTap: () {
                                 context.pushNamed(
-                                  AppRoutes.swipeScreen.name,
+                                  AppRoutes.chatPage.name,
                                   extra: ChatRouting(
                                     chatId: convo[index].id,
                                     symbol: convo[index].symbol,
                                     image: stocks[stockIndex].logoUrl,
-                                    companyName:convo[index].companyName,
+                                    companyName: convo[index].companyName,
                                     price: stocks[stockIndex].price,
                                     changePercentage:
                                         stocks[stockIndex].changesPercentage,
@@ -667,12 +669,13 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 ? searchConvo[index]
                                 : convo[index];
                             int stockIndex = findRelatedStock(stock.symbol);
-                             final liveStock =
+                            final liveStock =
                                 stockManagerState[stocks[stockIndex].stockId];
-                           stocks[stockIndex] = stocks[stockIndex].copyWith(
-                              changesPercentage:liveStock!=null&& liveStock.price>0
-                                  ? liveStock.price 
-                                        -stocks[stockIndex].previousClose
+                            stocks[stockIndex] = stocks[stockIndex].copyWith(
+                              changesPercentage:
+                                  liveStock != null && liveStock.price > 0
+                                  ? liveStock.price -
+                                        stocks[stockIndex].previousClose
                                   : stocks[stockIndex].changesPercentage,
                               price:
                                   liveStock?.price ?? stocks[stockIndex].price,
@@ -686,7 +689,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     chatId: convo[index].id,
                                     symbol: convo[index].symbol,
                                     image: stocks[stockIndex].logoUrl,
-                                    companyName:convo[index].companyName,
+                                    companyName: convo[index].companyName,
                                     price: stocks[stockIndex].price,
                                     changePercentage:
                                         stocks[stockIndex].changesPercentage,
