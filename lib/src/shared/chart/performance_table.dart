@@ -63,16 +63,18 @@ class PerformanceTable extends StatelessWidget {
           children: [
             MdSnsText(
               text,
-              size: 12,
-              fontWeight: FontWeight.w700,
+              variant: TextVariant.h4,
+              fontWeight: TextFontWeightVariant.h1,
+
               color: AppColors.white,
             ),
             if (subtitle.isNotEmpty)
               MdSnsText(
                 subtitle,
                 textAlign: TextAlign.center,
-                size: 10,
-                fontWeight: FontWeight.w400,
+                variant: TextVariant.h5,
+                fontWeight: TextFontWeightVariant.h4,
+
                 color: AppColors.fieldTextColor,
               ),
           ],
@@ -87,10 +89,10 @@ class PerformanceTable extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 6),
         alignment: Alignment.center,
-        child: Text(
+        child: MdSnsText(
           text,
+          color: AppColors.white,
           textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.white),
         ),
       ),
     );

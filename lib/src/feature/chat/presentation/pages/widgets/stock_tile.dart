@@ -8,70 +8,64 @@ import '../../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
 class StockTile extends StatelessWidget {
   final Stock stock;
   final double change;
-  const StockTile({super.key,required this.stock,required this.change});
+  const StockTile({super.key, required this.stock, required this.change});
 
   @override
   Widget build(BuildContext context) {
-      Color getChangeColor(double? change) {
-    if (change == null) return Colors.black;
-    return change < 0 ? Colors.red : Colors.green;
-  }
+    Color getChangeColor(double? change) {
+      if (change == null) return Colors.black;
+      return change < 0 ? Colors.red : Colors.green;
+    }
+
     return ListTile(
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 5,
-                            ),
-                            leading: stock.logoUrl.isNotEmpty
-                                ? Image.network(
-                                    stock.logoUrl,
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.cover,
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            Icon(Icons.broken_image, size: 40),
-                                  )
-                                : Icon(Icons.safety_check, size: 40),
-                            title: MdSnsText(
-                              "#" + stock.symbol,
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      leading: stock.logoUrl.isNotEmpty
+          ? Image.network(
+              stock.logoUrl,
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  Icon(Icons.broken_image, size: 40),
+            )
+          : Icon(Icons.safety_check, size: 40),
+      title: MdSnsText(
+        "#" + stock.symbol,
 
-                              color: AppColors.white,
+        color: AppColors.white,
 
-                              size: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            subtitle: MdSnsText(
-                              stock.name.isNotEmpty
-                                  ? stock.name.split("-").first.trim()
-                                  : "",
-                              size: 12,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.color677FA4,
-                            ),
+        variant: TextVariant.h3,
+        fontWeight: TextFontWeightVariant.h4,
+      ),
+      subtitle: MdSnsText(
+        stock.name.isNotEmpty ? stock.name.split("-").first.trim() : "",
+        variant: TextVariant.h4,
+        fontWeight: TextFontWeightVariant.h4,
 
-                            trailing: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                MdSnsText(
-                                  '\$${stock.price.toStringAsFixed(2) }',
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.w400,
-                                  size: 14,
-                                ),
-                                SizedBox(height: 4),
-                                MdSnsText(
-                                  '${change >= 0 ? '+' : ''}${change.toStringAsFixed(2)}%',
+        color: AppColors.color677FA4,
+      ),
 
-                                  color: getChangeColor(change),
-                                  fontWeight: FontWeight.w400,
-                                  size: 12,
-                                ),
-                              ],
-                            ),
-                          );
-                        
-                        
-                        
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          MdSnsText(
+            '\$${stock.price.toStringAsFixed(2)}',
+            color: AppColors.white,
+
+            variant: TextVariant.h3,
+            fontWeight: TextFontWeightVariant.h4,
+          ),
+          SizedBox(height: 4),
+          MdSnsText(
+            '${change >= 0 ? '+' : ''}${change.toStringAsFixed(2)}%',
+
+            color: getChangeColor(change),
+            variant: TextVariant.h4,
+            fontWeight: TextFontWeightVariant.h4,
+          ),
+        ],
+      ),
+    );
   }
 }

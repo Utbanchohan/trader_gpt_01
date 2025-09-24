@@ -127,14 +127,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                             MdSnsText(
                               "Free Trial",
                               color: AppColors.white,
-                              fontWeight: FontWeight.w400,
-                              size: 16,
+                              variant: TextVariant.h2,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                             MdSnsText(
                               "6 days left",
                               color: AppColors.color9EAAC0,
-                              fontWeight: FontWeight.w400,
-                              size: 16,
+                              variant: TextVariant.h2,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ],
                         ),
@@ -222,15 +222,16 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                             userModel != null && userModel!.name.isNotEmpty
                                 ? userModel!.name
                                 : "N/A",
+
                             color: AppColors.white,
-                            fontWeight: FontWeight.w600,
-                            size: 14,
+                            variant: TextVariant.h3,
+                            fontWeight: TextFontWeightVariant.h2,
                           ),
                           MdSnsText(
                             "Free Plan",
 
                             color: Colors.lightBlueAccent,
-                            size: 12.sp,
+                            variant: TextVariant.h4,
                           ),
                         ],
                       ),
@@ -281,8 +282,10 @@ class _SideMenuState extends ConsumerState<SideMenu> {
       title: MdSnsText(
         title,
         color: isSelected ? AppColors.white : AppColors.color5E646E,
-        size: 16,
-        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        variant: TextVariant.h2,
+        fontWeight: isSelected
+            ? TextFontWeightVariant.h1
+            : TextFontWeightVariant.h4,
       ),
       onTap: routeName == null || routeName.isEmpty
           ? null

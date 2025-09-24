@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class RevenueAnalysisChart extends StatefulWidget {
-   RevenueAnalysisChart({super.key});
+  RevenueAnalysisChart({super.key});
 
   @override
   State<RevenueAnalysisChart> createState() => _RevenueAnalysisChartState();
@@ -31,9 +32,9 @@ class _RevenueAnalysisChartState extends State<RevenueAnalysisChart> {
     }
 
     return Container(
-      padding:  EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color:  Color(0xFF0D1428), // Background
+        color: Color(0xFF0D1428), // Background
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -43,9 +44,10 @@ class _RevenueAnalysisChartState extends State<RevenueAnalysisChart> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text(
+              MdSnsText(
                 "Revenue Analysis (2020–2025)",
-                style: TextStyle(color: Colors.white70, fontSize: 16),
+                color: AppColors.color0xB3FFFFFF,
+                variant: TextVariant.h2,
               ),
               Row(
                 children: [
@@ -66,21 +68,21 @@ class _RevenueAnalysisChartState extends State<RevenueAnalysisChart> {
               ),
             ],
           ),
-           SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // 🔹 Toggle Tabs
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _tabButton("Revenue"),
-               SizedBox(width: 12),
+              SizedBox(width: 12),
               _tabButton("Net Income"),
-               SizedBox(width: 12),
+              SizedBox(width: 12),
               _tabButton("EPS"),
             ],
           ),
 
-           SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // 🔹 Bar Chart
           SizedBox(
@@ -106,14 +108,12 @@ class _RevenueAnalysisChartState extends State<RevenueAnalysisChart> {
                       getTitlesWidget: (value, meta) {
                         int index = value.toInt();
                         if (index < 0 || index >= years.length) {
-                          return  SizedBox.shrink();
+                          return SizedBox.shrink();
                         }
-                        return Text(
+                        return MdSnsText(
                           years[index].toString(),
-                          style:  TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
+                          color: AppColors.white,
+                          variant: TextVariant.h4,
                         );
                       },
                     ),
@@ -131,8 +131,8 @@ class _RevenueAnalysisChartState extends State<RevenueAnalysisChart> {
                         width: 30,
                         borderRadius: BorderRadius.circular(10),
                         color: index.isEven
-                            ?  Color(0xFF1976D2)
-                            :  Color(0xFF03A9F4),
+                            ? Color(0xFF1976D2)
+                            : Color(0xFF03A9F4),
                       ),
                     ],
                   );
@@ -151,17 +151,19 @@ class _RevenueAnalysisChartState extends State<RevenueAnalysisChart> {
     return GestureDetector(
       onTap: () => setState(() => selectedTab = text),
       child: Container(
-        padding:  EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ?  Color(0xFF1C2245) : Colors.transparent,
+          color: isSelected ? Color(0xFF1C2245) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(
+        child: MdSnsText(
           text,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
+          variant: TextVariant.h5,
+          fontWeight: isSelected
+              ? TextFontWeightVariant.h1
+              : TextFontWeightVariant.h4,
+
+          color: AppColors.white,
         ),
       ),
     );

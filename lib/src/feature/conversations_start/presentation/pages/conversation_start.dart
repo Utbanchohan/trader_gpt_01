@@ -267,8 +267,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
             children: [
               MdSnsText(
                 "Conversations",
-                size: 18,
-                fontWeight: FontWeight.w700,
+                variant: TextVariant.h1,
+                fontWeight: TextFontWeightVariant.h1,
+
                 color: AppColors.fieldTextColor,
               ),
               SizedBox(width: 10.w),
@@ -282,8 +283,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                 ),
                 child: MdSnsText(
                   convo.length.toString(),
-                  size: 16,
-                  fontWeight: FontWeight.w400,
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h4,
+
                   color: AppColors.fieldTextColor,
                 ),
               ),
@@ -465,8 +467,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                           MdSnsText(
                                             'Archive',
                                             color: AppColors.color9EAAC0,
-                                            fontWeight: FontWeight.w400,
-                                            size: 12,
+                                            variant: TextVariant.h4,
+                                            fontWeight:
+                                                TextFontWeightVariant.h4,
                                           ),
                                         ],
                                       ),
@@ -492,8 +495,10 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                           MdSnsText(
                                             'Delete',
                                             color: AppColors.color9EAAC0,
-                                            fontWeight: FontWeight.w400,
-                                            size: 12,
+
+                                            variant: TextVariant.h4,
+                                            fontWeight:
+                                                TextFontWeightVariant.h4,
                                           ),
                                         ],
                                       ),
@@ -624,8 +629,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                       : Center(
                           child: MdSnsText(
                             "Conversation Not Found",
-                            size: 18,
-                            fontWeight: FontWeight.w600,
+                            variant: TextVariant.h1,
+                            fontWeight: TextFontWeightVariant.h2,
+
                             color: AppColors.fieldTextColor,
                           ),
                         ),
@@ -688,9 +694,10 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                           SizedBox(height: 4),
                                           MdSnsText(
                                             'Archive',
+                                            variant: TextVariant.h4,
+                                            fontWeight:
+                                                TextFontWeightVariant.h4,
                                             color: AppColors.color9EAAC0,
-                                            fontWeight: FontWeight.w400,
-                                            size: 12,
                                           ),
                                         ],
                                       ),
@@ -716,8 +723,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                           MdSnsText(
                                             'Delete',
                                             color: AppColors.color9EAAC0,
-                                            fontWeight: FontWeight.w400,
-                                            size: 12,
                                           ),
                                         ],
                                       ),
@@ -741,8 +746,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                       : Center(
                           child: MdSnsText(
                             "Conversation Not Found",
-                            size: 18,
-                            fontWeight: FontWeight.w600,
+                            variant: TextVariant.h1,
+                            fontWeight: TextFontWeightVariant.h2,
+
                             color: AppColors.fieldTextColor,
                           ),
                         ),
@@ -750,8 +756,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                   Center(
                     child: MdSnsText(
                       "Comming Soon",
-                      size: 18,
-                      fontWeight: FontWeight.w600,
+                      variant: TextVariant.h1,
+                      fontWeight: TextFontWeightVariant.h2,
+
                       color: AppColors.fieldTextColor,
                     ),
                   ),
@@ -760,8 +767,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                   Center(
                     child: MdSnsText(
                       "Comming Soon",
-                      size: 18,
-                      fontWeight: FontWeight.w600,
+                      variant: TextVariant.h1,
+                      fontWeight: TextFontWeightVariant.h2,
+
                       color: AppColors.fieldTextColor,
                     ),
                   ),
@@ -801,13 +809,14 @@ Widget buildCustomTab(String text, int index, TabController tabController) {
             ),
           ),
           alignment: Alignment.center,
-          child: Text(
+          child: MdSnsText(
             text,
-            style: TextStyle(
-              color: isSelected ? AppColors.white : AppColors.color677FA4,
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
-              fontSize: isSelected ? 16 : 14,
-            ),
+            color: isSelected ? AppColors.white : AppColors.color677FA4,
+            variant: isSelected ? TextVariant.h2 : TextVariant.h3,
+
+            fontWeight: isSelected
+                ? TextFontWeightVariant.h1
+                : TextFontWeightVariant.h4,
           ),
         );
       },

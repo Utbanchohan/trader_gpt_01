@@ -1,5 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class WeeklySeasonalityChart extends StatelessWidget {
   final List<Map<String, dynamic>> weeklyData = [
@@ -23,13 +25,11 @@ class WeeklySeasonalityChart extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            MdSnsText(
               "Weekly Seasonality",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+              variant: TextVariant.h1,
+              color: AppColors.white,
+              fontWeight: TextFontWeightVariant.h1,
             ),
             const SizedBox(height: 16),
 
@@ -70,12 +70,10 @@ class WeeklySeasonalityChart extends StatelessWidget {
                             if (index >= 0 && index < weeklyData.length) {
                               return Transform.rotate(
                                 angle: -1.5708, // -90 degree (seedha kar diya)
-                                child: Text(
+                                child: MdSnsText(
                                   weeklyData[index]["day"],
-                                  style: const TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 12,
-                                  ),
+                                  variant: TextVariant.h4,
+                                  color: Color(0xB3FFFFFF),
                                 ),
                               );
                             }
@@ -134,14 +132,11 @@ class WeeklySeasonalityChart extends StatelessWidget {
             const SizedBox(height: 12),
 
             // ✅ Neeche custom text
-            const Center(
-              child: Text(
+            Center(
+              child: MdSnsText(
+                variant: TextVariant.h4,
+                color: Color(0xB3FFFFFF),
                 "Data represents weekly % with total amount",
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                ),
               ),
             ),
           ],

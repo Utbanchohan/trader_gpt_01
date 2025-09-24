@@ -203,8 +203,8 @@ class _NewConversationState extends ConsumerState<NewConversation> {
         title: MdSnsText(
           "Start New Conversation",
           color: AppColors.color9EAAC0,
-          size: 18,
-          fontWeight: FontWeight.w600,
+          variant: TextVariant.h1,
+          fontWeight: TextFontWeightVariant.h2,
         ),
       ),
       body: Column(
@@ -433,8 +433,8 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                   MdSnsText(
                     widget.symbol,
                     color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    size: 12,
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h1,
                   ),
                   SizedBox(
                     width: 50.w,
@@ -443,7 +443,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                       color: Colors.white70,
                       maxLines: 1,
                       textOverflow: TextOverflow.ellipsis,
-                      size: 12,
+                      variant: TextVariant.h4,
                     ),
                   ),
                 ],
@@ -454,8 +454,8 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
           MdSnsText(
             widget.price,
             color: AppColors.white,
-            fontWeight: FontWeight.bold,
-            size: 16,
+            variant: TextVariant.h2,
+            fontWeight: TextFontWeightVariant.h1,
           ),
           Row(
             children: [
@@ -473,8 +473,8 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                 color: widget.change.toString().contains("-")
                     ? AppColors.redFF3B3B
                     : AppColors.color06D54E,
-                size: 12,
-                fontWeight: FontWeight.w400,
+                variant: TextVariant.h4,
+                fontWeight: TextFontWeightVariant.h4,
               ),
             ],
           ),

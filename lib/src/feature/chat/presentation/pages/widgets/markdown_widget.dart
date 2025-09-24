@@ -63,8 +63,9 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
               visible: widget.name != "TDGPT",
               child: MdSnsText(
                 widget.name,
-                fontWeight: FontWeight.w500,
-                size: 12,
+                variant: TextVariant.h4,
+                fontWeight: TextFontWeightVariant.h3,
+
                 color: AppColors.white,
               ),
             ),

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
@@ -48,7 +46,7 @@ class ButtonWidget extends StatelessWidget {
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
           fixedSize: buttonSize,
-          
+
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
@@ -56,37 +54,31 @@ class ButtonWidget extends StatelessWidget {
         ),
         child: Container(
           clipBehavior: Clip.none,
-             decoration: BoxDecoration(
-          color: bgColor,
-          border: Border.all(
-            color: borderColor 
+          decoration: BoxDecoration(
+            color: bgColor,
+            border: Border.all(color: borderColor),
+            borderRadius: BorderRadius.circular(borderRadius),
           ),
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
           padding:
-              padding ??
-               EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding ?? EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           alignment: Alignment.center,
           child: isLoading
               ? SizedBox(
                   height: 20,
                   width: 20,
-                  child: LoadingWidget(
-                    height: 20,
-                    width: 20,
-                    color: textColor,
-                  ),
+                  child: LoadingWidget(height: 20, width: 20, color: textColor),
                 )
               : Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     MdSnsText(
-                      size: fontSize,
+                      variant: TextVariant.h3,
+                      fontWeight: TextFontWeightVariant.h3,
+
                       title,
                       height: 0,
-                      
-                      fontWeight: fontWeight,
+
                       color: textColor,
                     ),
                     if (icon != null) ...[const SizedBox(width: 8), icon!],

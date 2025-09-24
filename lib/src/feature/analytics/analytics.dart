@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
@@ -9,6 +10,7 @@ import 'package:trader_gpt/src/shared/chart/revenue_analysis.dart';
 import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   final ChatRouting? chatRouting;
@@ -354,37 +356,75 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
+                SizedBox(width: 12.w),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        MdSnsText(
+                          "#${selectedStock!.symbol}",
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h1,
 
-                /// Financial Tab Content
-                Center(
-                  child: Text(
-                    "Financial Content",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-
-                /// Earning Tab Content
-                Center(
-                  child: Text(
-                    "Earning Content",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-
-                /// Analytics Tab Content
-                Center(
-                  child: Text(
-                    "Analytics Content",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-
-                /// Technical Tab Content
-                Center(
-                  child: Text(
-                    "Technical Content",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                          color: AppColors.white,
+                        ),
+                        const SizedBox(width: 4),
+                        MdSnsText(
+                          selectedStock!.name.split("-").first.trim(),
+                          color: AppColors.colorB2B2B7,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.white,
+                          size: 20.sp,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        MdSnsText(
+                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.white,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          selectedStock!.changesPercentage.toString().contains(
+                                "-",
+                              )
+                              ? Icons.arrow_drop_down
+                              : Icons.arrow_drop_up,
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          size: 20,
+                        ),
+                        MdSnsText(
+                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -406,8 +446,170 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             SizedBox(height: 20.h),
             RevenueAnalysisChart(),
             SizedBox(height: 20.h),
-            PerformanceTable(),
+
+            // ---------- PERFORMANCE OVERVIEW ----------
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.colorB3B3B3),
+                color: AppColors.primaryColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MdSnsText(
+                        "Performance Overview",
+                        color: AppColors.white,
+                        variant: TextVariant.h2,
+                        fontWeight: TextFontWeightVariant.h4,
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            Assets.images.textalignJustifycenter.path,
+                            height: 14.h,
+                            width: 16.55.w,
+                          ),
+                          SizedBox(width: 10.w),
+                          Image.asset(
+                            Assets.images.chart.path,
+                            height: 14.h,
+                            width: 14.w,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
+                  PerformanceTable(),
+                ],
+              ),
+            ),
             SizedBox(height: 20.h),
+
+            // ---------- PRICE COMPARISON ----------
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.color091224,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  MdSnsText(
+                    "Price Comparison",
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h4,
+
+                    color: AppColors.fieldTextColor,
+                  ),
+                  SizedBox(height: 16.h),
+                  SizedBox(
+                    height: 180,
+                    child: LineChart(
+                      LineChartData(
+                        backgroundColor: AppColors.color091224,
+                        gridData: FlGridData(
+                          show: true,
+                          getDrawingHorizontalLine: (value) => FlLine(
+                            color: AppColors.color1B254B,
+                            strokeWidth: 3,
+                          ),
+                          getDrawingVerticalLine: (value) =>
+                              FlLine(color: Colors.transparent, strokeWidth: 1),
+                        ),
+                        titlesData: FlTitlesData(
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 28,
+                              interval: 10,
+                              getTitlesWidget: (value, meta) => MdSnsText(
+                                value.toInt().toString(),
+                                color: AppColors.white,
+
+                                variant: TextVariant.h5,
+                              ),
+                            ),
+                          ),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 1,
+                              getTitlesWidget: (value, meta) => MdSnsText(
+                                value.toInt().toString(),
+                                color: AppColors.white,
+                                variant: TextVariant.h5,
+                              ),
+                            ),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+                        borderData: FlBorderData(show: false),
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: [
+                              FlSpot(1, 35),
+                              FlSpot(2, 40),
+                              FlSpot(3, 20),
+                              FlSpot(4, 55),
+                              FlSpot(5, 60),
+                              FlSpot(6, 45),
+                              FlSpot(7, 38),
+                              FlSpot(8, 42),
+                              FlSpot(9, 41),
+                              FlSpot(10, 50),
+                              FlSpot(11, 55),
+                              FlSpot(12, 37),
+                            ],
+                            isCurved: true,
+                            color: AppColors.color0098E4,
+                            barWidth: 3,
+                            dotData: FlDotData(show: false),
+                          ),
+                          LineChartBarData(
+                            spots: [
+                              FlSpot(1, 25),
+                              FlSpot(2, 35),
+                              FlSpot(3, 30),
+                              FlSpot(4, 40),
+                              FlSpot(5, 45),
+                              FlSpot(6, 72),
+                              FlSpot(7, 20),
+                              FlSpot(8, 28),
+                              FlSpot(9, 26),
+                              FlSpot(10, 60),
+                              FlSpot(11, 70),
+                              FlSpot(12, 58),
+                            ],
+                            isCurved: true,
+                            color: AppColors.color06D54E,
+                            barWidth: 3,
+                            dotData: FlDotData(show: false),
+                          ),
+                        ],
+                        minX: 1,
+                        maxX: 12,
+                        minY: 10,
+                        maxY: 80,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20.h),
+
             WeeklySeasonalityChart(),
             SizedBox(height: 20.h),
             ShareStructureCard(),
@@ -416,4 +618,42 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       ),
     );
   }
+
+  Widget _buildTab({
+    required bool isSelected,
+    required String title,
+    required String iconPath,
+  }) {
+    return Container(
+      height: 45,
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      decoration: BoxDecoration(
+        color: isSelected ? AppColors.color091224 : Colors.transparent,
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            iconPath,
+            height: 20,
+            width: 20,
+            color: isSelected ? AppColors.color00FF55 : Colors.white,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Custom Chip Widget
+Widget _chip(String label, {bool isSelected = false}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    decoration: BoxDecoration(
+      color: isSelected ? Colors.blueAccent : const Color(0xFF142233),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: MdSnsText(label, color: AppColors.white, variant: TextVariant.h3),
+  );
 }

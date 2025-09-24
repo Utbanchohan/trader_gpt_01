@@ -63,34 +63,29 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
       children: [
         Container(
           // decoration: BoxDecoration(color: AppColors.primaryColor),
-          child: Image.asset(mainImage, ),
+          child: Image.asset(mainImage),
         ),
         SizedBox(height: 20.h),
 
-        Image.asset(
-          imagePath,
-          width: 60.w,
-          height: 60.h,
-          fit: BoxFit.contain,
-        ),
+        Image.asset(imagePath, width: 60.w, height: 60.h, fit: BoxFit.contain),
         SizedBox(height: 24.h),
-    
+
         MdSnsText(
           title,
-          size: 20,
+          variant: TextVariant.h7,
+          fontWeight: TextFontWeightVariant.h1,
           color: AppColors.white,
-          fontWeight: FontWeight.bold,
         ),
-    
+
         SizedBox(height: 10.h),
-    
+
         // 👇 Subtitle text
         MdSnsText(
           subtitle,
           textAlign: TextAlign.center,
-          size: 16,
+          variant: TextVariant.h2,
+          fontWeight: TextFontWeightVariant.h4,
           color: AppColors.colorB2B2B7,
-          fontWeight: FontWeight.w400,
         ),
       ],
     );
@@ -102,9 +97,7 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
       height: MediaQuery.of(context).size.height * 0.7,
       decoration: BoxDecoration(
         color: AppColors.shadowColor,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -122,7 +115,7 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
                 ),
                 _buildPage(
                   mainImage: Assets.images.rightsideimage.path,
-      
+
                   imagePath: Assets.images.rightscrollicon.path,
                   title: "Swipe Right to view Conversation List",
                   subtitle:
@@ -131,7 +124,7 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
               ],
             ),
           ),
-      
+
           Padding(
             padding: EdgeInsets.only(bottom: 24.h),
             child: ElevatedButton(
@@ -151,9 +144,9 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
               ),
               child: MdSnsText(
                 "Continue",
-                size: 16.sp,
+                variant: TextVariant.h2,
+                fontWeight: TextFontWeightVariant.h2,
                 color: AppColors.white,
-                fontWeight: FontWeight.w600,
               ),
             ),
           ),

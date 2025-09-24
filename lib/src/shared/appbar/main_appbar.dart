@@ -28,20 +28,23 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       titleSpacing: showLeading ? 0 : 20,
-      title: MdSnsText(title, size: 20, fontWeight: FontWeight.w400),
+      title: MdSnsText(
+        title,
+        variant: TextVariant.h7,
+        fontWeight: TextFontWeightVariant.h4,
+      ),
       centerTitle: centerTitle,
       backgroundColor: backgroundColor,
       elevation: elevation,
       scrolledUnderElevation: 0,
       actions: actions,
       automaticallyImplyLeading: showLeading,
-      leading:
-          showLeading
-              ? (customLeading ??
-                  (ModalRoute.of(context)?.canPop == true
-                      ? BackButton(color: titleColor)
-                      : null))
-              : null,
+      leading: showLeading
+          ? (customLeading ??
+                (ModalRoute.of(context)?.canPop == true
+                    ? BackButton(color: titleColor)
+                    : null))
+          : null,
     );
   }
 

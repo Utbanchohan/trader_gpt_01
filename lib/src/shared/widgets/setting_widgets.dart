@@ -61,16 +61,16 @@ class SettingBottomSheet extends StatelessWidget {
           MdSnsText(
             title,
             color: AppColors.white,
-            fontWeight: FontWeight.w400,
-            size: 16,
+            variant: TextVariant.h2,
+            fontWeight: TextFontWeightVariant.h4,
           ),
           SizedBox(height: 8),
 
           MdSnsText(
             description,
             color: AppColors.color9EAAC0,
-            fontWeight: FontWeight.w400,
-            size: 12,
+            variant: TextVariant.h4,
+            fontWeight: TextFontWeightVariant.h4,
           ),
         ],
       ),
