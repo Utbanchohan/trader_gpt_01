@@ -60,9 +60,7 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Container(
-          child: Image.asset(mainImage),
-        ),
+        Container(child: Image.asset(mainImage)),
         SizedBox(height: 20.h),
 
         Image.asset(imagePath, width: 60.w, height: 60.h, fit: BoxFit.contain),
@@ -103,19 +101,19 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
               physics: NeverScrollableScrollPhysics(),
               children: [
                 _buildPage(
-                  imagePath: Assets.images.leftscrollicon.path,
-                  title: "Swipe Left to view Analytics",
-                  subtitle:
-                      "See how Charts adapt to queries.Identify trends \nwith AI patterns.",
                   mainImage: Assets.images.leftsideimage.path,
-                ),
-                _buildPage(
-                  mainImage: Assets.images.rightsideimage.path,
 
                   imagePath: Assets.images.rightscrollicon.path,
                   title: "Swipe Right to view Conversation List",
                   subtitle:
                       "Explore the list of previous conversations to \n continue and find more information.",
+                ),
+                _buildPage(
+                  imagePath: Assets.images.leftscrollicon.path,
+                  title: "Swipe Left to view Analytics",
+                  subtitle:
+                      "See how Charts adapt to queries.Identify trends \nwith AI patterns.",
+                  mainImage: Assets.images.rightsideimage.path,
                 ),
               ],
             ),
