@@ -62,6 +62,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   }
 
   getChatsId() async {
+    // if(){}
     if (widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty) {
       chadId = widget.chatRouting!.chatId;
       getchats(chadId ?? "");

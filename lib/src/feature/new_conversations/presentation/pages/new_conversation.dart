@@ -150,7 +150,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
       ChatHistory chatHistory = res;
       if (mounted) {
         context.pushNamed(
-          AppRoutes.chatPage.name,
+          AppRoutes.swipeScreen.name,
           extra: ChatRouting(
             chatId: chatHistory.id,
             symbol: stock.symbol,
