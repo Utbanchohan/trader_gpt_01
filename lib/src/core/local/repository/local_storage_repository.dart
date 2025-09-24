@@ -31,12 +31,30 @@ abstract interface class SharedPrefService {
 
   String get getUserId;
 
+
   Future<void> removeUserId(String userType);
 
   Future<void> saveUser(Map<String, dynamic> user) async {
     await SharedPreferences.getInstance().then((prefs) {
       prefs.setString('user', jsonEncode(user));
     });
+  }
+
+
+
+  Future<void> saveStock(List<Map<String, dynamic> >stocks) async {
+    await SharedPreferences.getInstance().then((prefs) {
+      prefs.setString('stocks', jsonEncode(stocks));
+    });
+  }
+
+   Future<List<Map<String, dynamic>>?> getStocks() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? stocksJson = prefs.getString('stocks');
+    if (stocksJson != null) {
+      return  jsonDecode(stocksJson);
+    }
+    return null;
   }
 
   Future<Map<String, dynamic>?> getUser() async {

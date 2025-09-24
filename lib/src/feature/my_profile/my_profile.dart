@@ -62,7 +62,7 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
                           backgroundImage:
                               userModel != null && userModel!.imgUrl.isNotEmpty
                               ? NetworkImage(userModel!.imgUrl)
-                              : AssetImage(Assets.images.profile.path),
+                              : AssetImage(Assets.images.placeholderimage.path),
                         ),
 
                         Positioned(

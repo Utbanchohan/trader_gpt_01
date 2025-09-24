@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_conversation.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/conversations_start/presentation/pages/conversation_start.dart';
@@ -165,6 +166,14 @@ return AppRoutes.profilePage.path;
         name: AppRoutes.swipeScreen.name,
         builder: (BuildContext context, GoRouterState state) {
           return SwipeScreen();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.chatConversation.path,
+        name: AppRoutes.chatConversation.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return ChatConversation();
         },
         routes: [],
       ),

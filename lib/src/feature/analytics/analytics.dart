@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
@@ -10,12 +11,11 @@ import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   final ChatRouting? chatRouting;
 
-  const AnalyticsScreen({super.key, this.chatRouting});
+   AnalyticsScreen({super.key, this.chatRouting});
 
   @override
   State<AnalyticsScreen> createState() => _AnalyticsScreenState();
@@ -136,75 +136,113 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Analytics & History
+      length: 2,
       child: Scaffold(
         backgroundColor: AppColors.primaryColor,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          backgroundColor: AppColors.color091224,
-          elevation: 0,
-          toolbarHeight: 100, // AppBar height for custom tab
-          title: Container(
-            height: 45,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.grey.withOpacity(0.4),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Delivery Tab
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      isToggle(true);
-                      tabController.animateTo(0);
-                    },
-                    child: _buildTab(
-                      isSelected: isTabSelected,
-                      title: "Delivery",
 
-                      iconPath: Assets.images.searchNormal.path,
+        body: SafeArea(
+          top: true,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 40.w,
+                    height: 71.h,
+
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(Assets.images.shapeRightSide.path),
+                      ),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    child: Image.asset(
+                      Assets.images.message.path,
+
+                      width: 25.w,
+                      height: 21.h,
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
 
-                // Collection Tab
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      isToggle(false);
-                      tabController.animateTo(1);
-                    },
-                    child: _buildTab(
-                      isSelected: !isTabSelected,
-                      title: "Collection",
-
-                      iconPath: Assets.images.searchNormal.path,
+                  TabBar(
+                    physics: NeverScrollableScrollPhysics(),
+                    isScrollable: true,
+                    dividerColor: Colors.transparent,
+                    indicator: BoxDecoration(
+                      color:  Color(0xFF1B254B), // Selected tab background
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            // --------- Analytics Tab ---------
-            _buildAnalyticsTab(),
+                    indicatorPadding: EdgeInsets.zero,
+                    labelPadding:  EdgeInsets.symmetric(horizontal: 8),
+                    labelColor: Colors.white,
+                    unselectedLabelColor:  Color(0xFFB2B2B7),
+                    tabs: [
+                      // ---- First Tab (with icon + text) ----
+                      Tab(
+                        child: Container(
+                          padding:  EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(
+                                "assets/images/analytics.png", // yahan apna asset icon
+                                width: 20,
+                                height: 20,
+                              ),
+                               SizedBox(width: 8),
+                               Text(
+                                "ANALYTICS",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
 
-            // --------- History Tab ---------
-            const Center(
-              child: Text(
-                "History Content Here",
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                      // ---- Second Tab (only text) ----
+                       Tab(
+                        child: Text(
+                          "History",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-          ],
+              Expanded(
+                child: TabBarView(
+              physics: NeverScrollableScrollPhysics(),
+
+                  children: [
+                    _buildAnalyticsTab(),
+
+                     Center(
+                      child: Text(
+                        "History Content Here",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -212,161 +250,111 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   /// Analytics Tab Content
   Widget _buildAnalyticsTab() {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20.h),
-            // ---------- SEARCH BAR ----------
-            TextFormField(
+    return DefaultTabController(
+      length:
+          categories.length, // <- overview categories ko nested TabBar banaya
+      child: Column(
+        children: [
+          /// 🔹 SEARCH BAR
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: TextFormField(
               controller: search,
-              style: TextStyle(color: Colors.white),
-              textInputAction: TextInputAction.search,
-              // onChanged: (value) {
-              //   debounceSearch(value);
-              // },
-              // onFieldSubmitted: (value) {
-              //   debounceSearch(value);
-              // },
+              style:  TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 filled: true,
                 fillColor: AppColors.fieldColor,
                 hintText: 'Search here',
-                hintStyle: TextStyle(color: Color(0xFF8B8B97)),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 10.0,
+                hintStyle:  TextStyle(color: Color(0xFF8B8B97)),
+                contentPadding:  EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
                 ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(50.0), // Rounded corners
+                  borderRadius: BorderRadius.circular(50.0),
                   borderSide: BorderSide.none,
                 ),
                 suffixIcon: InkWell(
                   onTap: () {
                     // debounceSearch(search.text);
                   },
-                  child: Image.asset(
-                    Assets.images.searchNormal.path,
-                    scale: 5,
-                    // width: 20.w,
-                    // height: 20.h,
+                  child: Image.asset(Assets.images.searchNormal.path, scale: 5),
+                ),
+              ),
+            ),
+          ),
+
+          Container(
+            margin: EdgeInsets.only(left: 16),
+            child: TabBar(
+              physics: NeverScrollableScrollPhysics(),
+              // indicatorSize:TabBarIndicatorSize.tab,
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              indicator: BoxDecoration(
+                color: AppColors.color1B254B,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              indicatorPadding:  EdgeInsets.symmetric(
+                horizontal: 0,
+                vertical: 4,
+              ),
+              labelColor: Colors.white,
+              labelPadding: EdgeInsets.symmetric(horizontal: 10.w),
+              unselectedLabelColor: AppColors.colorB2B2B7,
+              dividerColor: Colors.transparent,
+              tabs: List.generate(
+                categories.length,
+                (index) => Tab(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(
+                        color: AppColors.colorB2B2B7.withOpacity(0.4),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (categoryImages[index] != null)
+                          Image.asset(
+                            categoryImages[index]!,
+                            width: 14.w,
+                            height: 14.h,
+                          ),
+                        if (categoryImages[index] != null) SizedBox(width: 8.w),
+                        Text(
+                          categories[index],
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-            // SizedBox(height: 14.h),
+          ),
 
-            // ---------- FILTER CHIPS ----------
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: SizedBox(
-                height: 36.h,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final String? imagePath = categoryImages[index];
+          /// 🔹 Nested TabBarView
+          Expanded(
+            child: TabBarView(
+              physics: NeverScrollableScrollPhysics(),
 
-                    final bool isSelected = selectedIndex == index;
-
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedIndex = index;
-                        });
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(right: 12.w),
-                        height: 36.h,
-                        width: 109.w,
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.color1B254B
-                              : Colors.transparent, // Default color
-                          border: Border.all(
-                            width: 1,
-                            color: Color.fromRGBO(179, 179, 179, 0.1),
-                          ),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Show image if available
-                            if (imagePath != null && imagePath.isNotEmpty) ...[
-                              Image.asset(imagePath, width: 14.w, height: 14.h),
-                              SizedBox(width: 10.w),
-                            ],
-
-                            // Category text
-                            MdSnsText(
-                              categories[index],
-
-                              color: AppColors.white,
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-
-            SizedBox(height: 14.h),
-
-            // ---------- STOCK INFO ----------
-            Row(
               children: [
-                Stack(
-                  children: [
-                    Center(
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        width: 53.w,
-                        height: 53.h,
-                        decoration: BoxDecoration(
-                          color: AppColors.black,
-                          borderRadius: BorderRadius.circular(14.r),
-                        ),
-                        child:
-                            selectedStock != null &&
-                                selectedStock!.logoUrl.isNotEmpty
-                            ? Image.network(
-                                selectedStock!.logoUrl,
-                                width: 31.w,
-                                height: 31.h,
-                              )
-                            : Image.asset(
-                                Assets.images.tesla.path,
-                                width: 31.w,
-                                height: 31.h,
-                              ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        width: 22.w,
-                        height: 22.h,
-                        padding: EdgeInsets.all(5.w),
-                        decoration: BoxDecoration(
-                          color: AppColors.color1A1F2C,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Image.asset(
-                          Assets.images.tradersGPTLogo.path,
-                          width: 15.w,
-                          height: 15.h,
-                        ),
-                      ),
-                    ),
-                  ],
+                /// Overview Tab Content
+                _overviewContent(),
+
+                /// Company Tab Content
+                Center(
+                  child: Text(
+                    "Company Content",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 SizedBox(width: 12.w),
                 Column(
@@ -440,8 +428,20 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 20.h),
+          ),
+        ],
+      ),
+    );
+  }
 
+  /// Overview Content (jo aapka pehle likha hua UI tha)
+  Widget _overviewContent() {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding:  EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          children: [
+            // Aapka poora Overview ka content (Stock Info, Charts, PerformanceTable, etc.)
             CustomLineChart(),
             SizedBox(height: 20.h),
             RevenueAnalysisChart(),
@@ -612,7 +612,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
             WeeklySeasonalityChart(),
             SizedBox(height: 20.h),
-
             ShareStructureCard(),
           ],
         ),

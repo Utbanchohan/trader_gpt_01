@@ -11,13 +11,13 @@ import 'package:trader_gpt/src/feature/chat/data/dto/create_chat_dto/create_chat
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/widget/shimmer_widget.dart';
 import 'package:trader_gpt/src/feature/new_conversations/presentation/provider/create_chat/create_chat.dart';
-import 'package:trader_gpt/src/services/sockets/socket_service.dart';
+import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import '../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../core/routes/routes.dart';
+import '../../../../shared/socket/providers/stocks_price.dart';
 import '../../../chat/domain/model/chat_stock_model.dart';
-
-final SocketService socketService = SocketService();
 
 class NewConversation extends ConsumerStatefulWidget {
   const NewConversation({super.key});
@@ -46,41 +46,60 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   @override
   void initState() {
     super.initState();
-    _connectSocket();
-    _startPolling();
+    getStocks();
+    
+    // _startPolling();
   }
 
-  void _connectSocket() {
-    socketService.connect();
-    socketService.onStockUpdate((data) {
-      updateStocks(data);
-    });
-  }
 
-  void _startPolling() {
-    pollingTimer = Timer.periodic(Duration(milliseconds: 100), (_) {
-      socketService.fetchStocks((data) {
-        updateStocks(data);
-      });
-    });
-  }
+
+  // void _startPolling() {
+  //   pollingTimer = Timer.periodic(Duration(milliseconds: 100), (_) {
+  //     ref.read(socketRepository) .fetchStocks((data) {
+  //       updateStocks(data);
+  //     });
+  //   });
+  // }
 
   void _startPollingSearch(val) {
-    _debounce = Timer.periodic(Duration(milliseconds: 100), (_) {
-      socketService.searchStocks(val, (data) {
+    if (val.isEmpty) {
+      setState(() {
+        searchStock = [];
+      });
+      return;
+    }
+
+    
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      searchStock = [];
+
+      ref.read(socketRepository).searchStocks(val, (data) {
         updateStocksSearch(data);
       });
     });
   }
 
-  void updateStocksSearch(List<dynamic> data) {
-    final updatedStocks = data.map((item) {
-      try {
-        return Stock.fromJson(Map<String, dynamic>.from(item));
-      } catch (e) {
-        print(e);
+  getStocks() async {
+    var res = await ref.read(localDataProvider).getStocks();
+    if (res != null) {
+      for (var stock in res) {
+        stocks.add(Stock.fromJson(stock));
+
       }
-    }).toList();
+        ref.read(socketRepository).getUpdatedStocks(stocks, (stocks) {
+       for (final stock in stocks){
+         stocks.add(stock);
+       }
+    });
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void updateStocksSearch(List<dynamic> data) {
+    final updatedStocks = data;
 
     setState(() {
       for (var updated in updatedStocks) {
@@ -90,7 +109,9 @@ class _NewConversationState extends ConsumerState<NewConversation> {
         if (index >= 0) {
           searchStock[index] = updated!;
         } else {
-          searchStock.add(updated!);
+          if (updated.symbol.isNotEmpty) {
+            searchStock.add(updated!);
+          }
         }
       }
       loading = false;
@@ -98,51 +119,20 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   }
 
   void updateStocks(List<dynamic> data) {
-    final updatedStocks = data.map((item) {
-      try {
-        return Stock.fromJson(Map<String, dynamic>.from(item));
-      } catch (e) {
-        print(e);
-      }
-    }).toList();
-
-    setState(() {
-      for (var updated in updatedStocks) {
-        final index = stocks.indexWhere((s) => s.symbol == updated!.symbol);
-        if (index >= 0) {
-          stocks[index] = updated!;
-        } else {
-          stocks.add(updated!);
+    final updatedStocks = data;
+    if (mounted) {
+      setState(() {
+        for (var updated in updatedStocks) {
+          final index = stocks.indexWhere((s) => s.symbol == updated!.symbol);
+          if (index >= 0) {
+            stocks[index] = updated!;
+          } else {
+            stocks.add(updated!);
+          }
         }
-      }
-      loading = false;
-    });
-  }
-
-  searchStockItem(val) {
-    if (val.isNotEmpty) {
-      searchStock = [];
-      searchStock = stocks
-          .where(
-            (ele) =>
-                ele.name.toLowerCase().contains(val) ||
-                ele.symbol.toLowerCase().contains(val),
-          )
-          .toList();
-
-      setState(() {});
+        loading = false;
+      });
     }
-  }
-
-  debounceSearch(String val) {
-    if (_debounce?.isActive ?? false) {
-      _debounce!.cancel();
-    }
-
-    _debounce = Timer(
-      const Duration(milliseconds: 300),
-      () => searchStockItem(val),
-    );
   }
 
   createChat(Stock stock) async {
@@ -180,7 +170,6 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   @override
   void dispose() {
     search.dispose();
-    socketService.socket.dispose();
     pollingTimer?.cancel();
     if (_debounce != null) {
       _debounce!.cancel();
@@ -196,6 +185,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
@@ -242,7 +232,6 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                 fillColor: AppColors.color091224,
                 suffixIcon: InkWell(
                   onTap: () {
-                    // debounceSearch(search.text);
                     _startPollingSearch(search.text);
                   },
                   child: Icon(Icons.search, color: Colors.white54),
@@ -258,6 +247,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               ),
             ),
           ),
+
           search.text.isNotEmpty && searchStock.isEmpty
               ? Expanded(
                   child: Padding(
@@ -268,7 +258,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                         crossAxisCount: 3, // 3 cards per row
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
-                        childAspectRatio: 0.9.h,
+                        childAspectRatio: 0.85.h,
                       ),
                       itemBuilder: (context, index) {
                         return ShimmerCardStock();
@@ -322,7 +312,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                         crossAxisCount: 3, // 3 cards per row
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
-                        childAspectRatio: 0.9.h,
+                        childAspectRatio: 0.85.h,
                       ),
                       itemBuilder: (context, index) {
                         return ShimmerCardStock();
@@ -336,7 +326,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   }
 }
 
-class BuildStockCard extends StatefulWidget {
+class BuildStockCard extends ConsumerStatefulWidget {
   final String symbol;
   final String company;
   String price;
@@ -355,10 +345,10 @@ class BuildStockCard extends StatefulWidget {
   });
 
   @override
-  State<BuildStockCard> createState() => _BuildStockCardState();
+  ConsumerState<BuildStockCard> createState() => _BuildStockCardState();
 }
 
-class _BuildStockCardState extends State<BuildStockCard> {
+class _BuildStockCardState extends ConsumerState<BuildStockCard> {
   Timer? pollingTimer;
   bool loading = true;
   List<Stock> stocks = [];
@@ -369,54 +359,43 @@ class _BuildStockCardState extends State<BuildStockCard> {
       pollingTimer!.cancel();
     }
 
-    // TODO: implement dispose
     super.dispose();
   }
 
   @override
   void initState() {
-    // TODO: implement initState
-    _connectSocket();
     _startPolling();
     super.initState();
   }
 
-  void _connectSocket() {
-    socketService.connect();
-    socketService.onStockUpdate((data) {
-      updateStocks(data);
-    });
-  }
-
   void _startPolling() {
     pollingTimer = Timer.periodic(Duration(seconds: 2), (_) {
-      socketService.fetchStocks((data) {
+      ref.read(socketRepository).fetchStocks((data) {
         updateStocks(data);
       });
     });
   }
 
   void updateStocks(List<dynamic> data) {
-    final updatedStocks = data
-        .map((item) => Stock.fromJson(Map<String, dynamic>.from(item)))
-        .toList();
-
-    setState(() {
-      for (var updated in updatedStocks) {
-        if (widget.symbol == updated.symbol) {
-          if (widget.price != updated.price.toString()) {
-            widget.price = updated.price.toString();
-          }
-          if (widget.change != updated.change) {
-            widget.change = updated.change;
-          }
-          if (widget.trendchart != updated.fiveDayTrend[0]) {
-            widget.trendchart = updated.fiveDayTrend[0];
+    final updatedStocks = data;
+    if (mounted) {
+      setState(() {
+        for (var updated in updatedStocks) {
+          if (widget.symbol == updated.symbol) {
+            if (widget.price != updated.price.toString()) {
+              widget.price = updated.price.toString();
+            }
+            if (widget.change != updated.change) {
+              widget.change = updated.change;
+            }
+            if (widget.trendchart != updated.fiveDayTrend[0]) {
+              widget.trendchart = updated.fiveDayTrend[0];
+            }
           }
         }
-      }
-      loading = false;
-    });
+        loading = false;
+      });
+    }
   }
 
   @override
@@ -433,12 +412,20 @@ class _BuildStockCardState extends State<BuildStockCard> {
         children: [
           Row(
             children: [
-              Image.network(
-                widget.image,
-                width: 26.w,
-                height: 26.h,
-                fit: BoxFit.cover,
-              ),
+              widget.image.isNotEmpty
+                  ? Container(
+                      width: 26.w,
+                      height: 26.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+
+                          image: NetworkImage(widget.image),
+                        ),
+                      ),
+                    )
+                  : shimmerBox(width: 26.w, height: 26.h),
               SizedBox(width: 7.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -498,7 +485,7 @@ class _BuildStockCardState extends State<BuildStockCard> {
             width: 86.w,
             height: 15.h,
             child: Sparkline(
-              data: widget.trendchart.data,
+              data: widget.trendchart.data!,
 
               lineWidth: 2.0,
               lineColor: widget.change.toString().contains("-")

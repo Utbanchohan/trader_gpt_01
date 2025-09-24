@@ -22,7 +22,6 @@ class SocketService {
 
       // Fetch once via ack
 
-
       // Start listening for live updates
       onStockUpdate((data) {
         _stockStreamController.add(data);
@@ -42,10 +41,10 @@ class SocketService {
 
     socket.emitWithAck(
       'getpopularnasdaqstocks',
-      {'searchStockByKeyword': 'aapl'},
+      {},
       ack: (data) {
         if (data != null && data is List) {
-                  _stockStreamController.add(data);
+          _stockStreamController.add(data);
 
           callback(data);
         } else {
@@ -55,25 +54,24 @@ class SocketService {
     );
   }
 
-void searchStocks(String keyword, Function(List<dynamic>) callback) {
-  if (!socket.connected) {
-    print('⚠️ Socket not connected yet');
-    return;
-  }
+  void searchStocks(String keyword, Function(List<dynamic>) callback) {
+    if (!socket.connected) {
+      print('⚠️ Socket not connected yet');
+      return;
+    }
 
-  socket.emitWithAck(
-    'searchStockByKeyword', // 👈 event name from backend
-    keyword, // 👈 they expect just the string
-    ack: (data) {
-      if (data != null && data is List) {
-        callback(data);
-      } else {
-        print('⚠️ Invalid search result: $data');
-      }
-    },
-    
-  );
-}
+    socket.emitWithAck(
+      'searchStockByKeyword',
+      keyword,
+      ack: (data) {
+        if (data != null && data is List) {
+          callback(data);
+        } else {
+          print('⚠️ Invalid search result: $data');
+        }
+      },
+    );
+  }
 
   /// Listen to live updates (replace event with actual one)
   void onStockUpdate(Function(List<dynamic>) callback) {

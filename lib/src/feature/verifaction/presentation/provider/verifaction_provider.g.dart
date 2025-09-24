@@ -7,7 +7,7 @@ part of 'verifaction_provider.dart';
 // **************************************************************************
 
 String _$verifactionProviderHash() =>
-    r'8de2c693ab8e1fe97fe93282b405719c56e3d861';
+    r'04c0335ede9481a4a113bde0193c40487ce864cb';
 
 /// See also [VerifactionProvider].
 @ProviderFor(VerifactionProvider)

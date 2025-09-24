@@ -5,14 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/src/core/routes/router.dart';
 import 'package:trader_gpt/src/shared/app_start/presentation/app_start_view.dart';
 import 'package:trader_gpt/src/shared/custom_scroll_behavour.dart';
-import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
   Widget build(context, ref) {
-    ref.read(socketRepository);
     final goRouter = ref.watch(routerConfigProvider);
 
     final buttonStyle = ButtonStyle(

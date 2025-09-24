@@ -41,6 +41,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/NVIDIA .png
   AssetGenImage get nvidia => const AssetGenImage('assets/images/NVIDIA .png');
 
+  /// File path: assets/images/Placeholderimage.png
+  AssetGenImage get placeholderimage =>
+      const AssetGenImage('assets/images/Placeholderimage.png');
+
   /// File path: assets/images/Regenerate.png
   AssetGenImage get regenerate =>
       const AssetGenImage('assets/images/Regenerate.png');
@@ -232,6 +236,10 @@ class $AssetsImagesGen {
   AssetGenImage get shapeAngle =>
       const AssetGenImage('assets/images/shapeAngle.png');
 
+  /// File path: assets/images/shapeRightSide.png
+  AssetGenImage get shapeRightSide =>
+      const AssetGenImage('assets/images/shapeRightSide.png');
+
   /// File path: assets/images/sms.png
   AssetGenImage get sms => const AssetGenImage('assets/images/sms.png');
 
@@ -284,6 +292,7 @@ class $AssetsImagesGen {
     meta,
     microinteractionsPreloader03,
     nvidia,
+    placeholderimage,
     regenerate,
     tGBTAimation,
     tradersGPTLogo,
@@ -339,6 +348,7 @@ class $AssetsImagesGen {
     searchNormal,
     setting2,
     shapeAngle,
+    shapeRightSide,
     sms,
     splashScreen,
     statusUp,

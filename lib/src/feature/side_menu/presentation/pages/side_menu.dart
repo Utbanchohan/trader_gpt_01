@@ -211,7 +211,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       backgroundImage:
                           userModel != null && userModel!.imgUrl.isNotEmpty
                           ? NetworkImage(userModel!.imgUrl)
-                          : AssetImage(Assets.images.profile.path),
+                          : AssetImage(Assets.images.placeholderimage.path),
                     ),
                     SizedBox(width: 14.w),
                     Expanded(
@@ -294,6 +294,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                 selectedMenu = routeName;
               });
               if (routeName == "Settings") {
+                if(ref.read(localDataProvider).getIsFirstTime())
+                {
+ref.read(localDataProvider).setIsFirstTime(false);
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
@@ -302,6 +305,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     return OnboardingBottomSheet();
                   },
                 );
+                }else{
+
+                }
               }
               // context.pop();
               context.pushNamed(routeName);

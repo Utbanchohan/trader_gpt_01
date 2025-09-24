@@ -15,7 +15,6 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
-import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/setting_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
@@ -25,16 +24,16 @@ import '../../../sign_in/domain/model/sign_in_response_model/login_response_mode
 import 'widgets/loading_widget.dart';
 
 // ignore: must_be_immutable
-class ChatPage extends ConsumerStatefulWidget {
+class ChatConversation extends ConsumerStatefulWidget {
   ChatRouting? chatRouting;
 
-  ChatPage({super.key, this.chatRouting});
+  ChatConversation({super.key, this.chatRouting});
 
   @override
-  ConsumerState<ChatPage> createState() => _ChatPageState();
+  ConsumerState<ChatConversation> createState() => _ChatConversationState();
 }
 
-class _ChatPageState extends ConsumerState<ChatPage> {
+class _ChatConversationState extends ConsumerState<ChatConversation> {
   TextEditingController message = TextEditingController();
   final ScrollController _textScrollController = ScrollController();
 
@@ -50,9 +49,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   User? user;
   bool dialogOpen = false;
   String? oldResponse;
-  bool webMode = true;
-  bool report = true;
-  bool deepAnalysis = true;
+
   @override
   void initState() {
     getChatsId();
@@ -433,66 +430,27 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          PopupMenuButton<String>(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            color: AppColors.bubbleColor,
-                            onSelected: (value) {
-                              print("Selected: $value");
-                            },
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                enabled: false,
-                                child: _buildSwitchTile(
-                                  icon: Icons.public,
-                                  title: "Web Mode",
-                                  value: webMode,
-                                  onChanged: (val) =>
-                                      setState(() => webMode = val),
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                height: 35.h,
+                                width: 35.w,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.color091224,
+                                  border: Border.all(
+                                    color: AppColors.bluishgrey404F81,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Image.asset(
+                                  Assets.images.textfieldicon3.path,
                                 ),
                               ),
-                              PopupMenuDivider(color: AppColors.white.withOpacity(0.3)),
-                              PopupMenuItem(
-                                enabled: false,
-                                child: _buildSwitchTile(
-                                  icon: Icons.assignment,
-                                  title: "Report",
-                                  value: report,
-                                  onChanged: (val) =>
-                                      setState(() => report = val),
-                                ),
-                              ),
-                              PopupMenuDivider(color: AppColors.white.withOpacity(0.3)),
-                              PopupMenuItem(
-                                enabled: false,
-                                child: _buildSwitchTile(
-                                  icon: Icons.analytics,
-                                  title: "Deep Analysis",
-                                  value: deepAnalysis,
-                                  onChanged: (val) =>
-                                      setState(() => deepAnalysis = val),
-                                ),
-                              ),
+                              SizedBox(width: 8),
                             ],
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-                              height: 35.h,
-                              width: 35.w,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.color091224,
-                                border: Border.all(
-                                  color: AppColors.bluishgrey404F81,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Image.asset(
-                                Assets.images.textfieldicon3.path,
-                              ),
-                            ),
                           ),
-
                           Row(
                             children: [
                               Container(
@@ -628,9 +586,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         children: [
                           MdSnsText(
                             "#${widget.chatRouting!.symbol}",
-                            variant: TextVariant.h2,
-                            fontWeight: TextFontWeightVariant.h1,
 
+                            fontWeight: FontWeight.w700,
+                            size: 16,
                             color: AppColors.white,
                           ),
                           SizedBox(width: 4),
@@ -644,8 +602,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                       .trim(),
 
                               color: AppColors.colorB2B2B7,
-                              variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h4,
+                              size: 12,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                           Icon(
@@ -658,10 +616,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       ),
                       Row(
                         children: [
-                          MdSnsText(
+                          Text(
                             widget.chatRouting!.price.toString(),
-                            variant: TextVariant.h3,
-                            color: AppColors.white,
+                            style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                           SizedBox(width: 6),
                           Icon(
@@ -686,8 +643,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                     .contains("-")
                                 ? AppColors.redFF3B3B
                                 : AppColors.color06D54E,
-                            variant: TextVariant.h4,
-                            fontWeight: TextFontWeightVariant.h4,
+                            size: 12,
+                            fontWeight: FontWeight.w400,
                           ),
                         ],
                       ),
@@ -828,42 +785,48 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       ),
     );
   }
-
-Widget _buildSwitchTile({
-  required IconData icon,
-  required String title,
-  required bool value,
-  required Function(bool) onChanged,
-}) {
-  return ListTile(
-    contentPadding: EdgeInsets.all(0),
-    leading: Icon(icon, color: Colors.white),
-    title: Text(
-      title,
-      style: const TextStyle(color: Colors.white, fontSize: 16),
-    ),
-    trailing: Transform.scale(
-      scale: 0.8,
-      child: StatefulBuilder(
-        builder: (context, setStatePopup) {
-          return Switch(
-            value: value,
-            onChanged: (val) {
-              // local update (popup ke andar)
-              setStatePopup(() {});
-
-              // parent state update
-              onChanged(val);
-            },
-            activeColor: Colors.lightBlueAccent,
-            activeTrackColor: Colors.black,
-            inactiveThumbColor: Colors.grey,
-            inactiveTrackColor: Colors.white24,
-          );
-        },
-      ),
-    ),
-  );
 }
 
+class _ActionChip extends StatelessWidget {
+  final String icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _ActionChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: AppColors.color091224,
+          border: Border.all(color: AppColors.bluishgrey404F81),
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              icon,
+              width: 14.w,
+              height: 14.h,
+              color: AppColors.color3C4E8A,
+            ),
+            SizedBox(width: 4.w),
+            MdSnsText(
+              label,
+              size: 16,
+              color: AppColors.color3C4E8A,
+              fontWeight: FontWeight.w400,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

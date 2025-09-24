@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Stock {
 
-@JsonKey(nullable: true)@JsonKey(nullable: true) int get avgVolume;@JsonKey(nullable: true) double get change;@JsonKey(nullable: true) double get changesPercentage;@JsonKey(nullable: true) double get dayHigh;@JsonKey(nullable: true) double get dayLow;@JsonKey(nullable: true) String get earningsAnnouncement;@JsonKey(nullable: true) double get eps;@JsonKey(nullable: true) String get exchange;@JsonKey(nullable: true) List<FiveDayTrend> get fiveDayTrend;@JsonKey(nullable: true) int get marketCap;@JsonKey(nullable: true) String get name;@JsonKey(nullable: true) double get open;@JsonKey(nullable: true) double get pe;@JsonKey(nullable: true) double get previousClose;@JsonKey(nullable: true) double get price;@JsonKey(nullable: true) double get priceAvg200;@JsonKey(nullable: true) double get priceAvg50;@JsonKey(nullable: true) int get sharesOutstanding;@JsonKey(nullable: true) String get stockId;@JsonKey(nullable: true) String get symbol;@JsonKey(nullable: true) int get timestamp;@JsonKey(nullable: true) int get volume;@JsonKey(nullable: true) double get yearHigh;@JsonKey(nullable: true) double get yearLow;@JsonKey(nullable: true) String get logoUrl;@JsonKey(nullable: true) String get type;@JsonKey(nullable: true) int get count;@JsonKey(nullable: true) String get dateHours;@JsonKey(nullable: true) int get ticks;@JsonKey(nullable: true) String get primaryLogoUrl;@JsonKey(nullable: true) String get secondaryLogoUrl;@JsonKey(nullable: true) String get tertiaryLogoUrl;@JsonKey(nullable: true) String get status;@JsonKey(nullable: true) String get updatedFrom;@JsonKey(nullable: true) String get country;@JsonKey(nullable: true) int get exchangeSortOrder;
+ int get avgVolume; double get change; double get changesPercentage; double get dayHigh; double get dayLow; String get earningsAnnouncement; double get eps; String get exchange; List<FiveDayTrend> get fiveDayTrend; int get marketCap; String get name; double get open; double get pe; double get previousClose; double get price; double get priceAvg200; double get priceAvg50; int get sharesOutstanding; String get stockId; String get symbol; int get timestamp; int get volume; double get yearHigh; double get yearLow; String get logoUrl; String get type; int get count; String get dateHours; int get ticks; String get primaryLogoUrl; String get secondaryLogoUrl; String get tertiaryLogoUrl; String get status; String get updatedFrom; String get country; int get exchangeSortOrder;
 /// Create a copy of Stock
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $StockCopyWith<$Res>  {
   factory $StockCopyWith(Stock value, $Res Function(Stock) _then) = _$StockCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(nullable: true)@JsonKey(nullable: true) int avgVolume,@JsonKey(nullable: true) double change,@JsonKey(nullable: true) double changesPercentage,@JsonKey(nullable: true) double dayHigh,@JsonKey(nullable: true) double dayLow,@JsonKey(nullable: true) String earningsAnnouncement,@JsonKey(nullable: true) double eps,@JsonKey(nullable: true) String exchange,@JsonKey(nullable: true) List<FiveDayTrend> fiveDayTrend,@JsonKey(nullable: true) int marketCap,@JsonKey(nullable: true) String name,@JsonKey(nullable: true) double open,@JsonKey(nullable: true) double pe,@JsonKey(nullable: true) double previousClose,@JsonKey(nullable: true) double price,@JsonKey(nullable: true) double priceAvg200,@JsonKey(nullable: true) double priceAvg50,@JsonKey(nullable: true) int sharesOutstanding,@JsonKey(nullable: true) String stockId,@JsonKey(nullable: true) String symbol,@JsonKey(nullable: true) int timestamp,@JsonKey(nullable: true) int volume,@JsonKey(nullable: true) double yearHigh,@JsonKey(nullable: true) double yearLow,@JsonKey(nullable: true) String logoUrl,@JsonKey(nullable: true) String type,@JsonKey(nullable: true) int count,@JsonKey(nullable: true) String dateHours,@JsonKey(nullable: true) int ticks,@JsonKey(nullable: true) String primaryLogoUrl,@JsonKey(nullable: true) String secondaryLogoUrl,@JsonKey(nullable: true) String tertiaryLogoUrl,@JsonKey(nullable: true) String status,@JsonKey(nullable: true) String updatedFrom,@JsonKey(nullable: true) String country,@JsonKey(nullable: true) int exchangeSortOrder
+ int avgVolume, double change, double changesPercentage, double dayHigh, double dayLow, String earningsAnnouncement, double eps, String exchange, List<FiveDayTrend> fiveDayTrend, int marketCap, String name, double open, double pe, double previousClose, double price, double priceAvg200, double priceAvg50, int sharesOutstanding, String stockId, String symbol, int timestamp, int volume, double yearHigh, double yearLow, String logoUrl, String type, int count, String dateHours, int ticks, String primaryLogoUrl, String secondaryLogoUrl, String tertiaryLogoUrl, String status, String updatedFrom, String country, int exchangeSortOrder
 });
 
 
@@ -188,7 +188,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(nullable: true)@JsonKey(nullable: true)  int avgVolume, @JsonKey(nullable: true)  double change, @JsonKey(nullable: true)  double changesPercentage, @JsonKey(nullable: true)  double dayHigh, @JsonKey(nullable: true)  double dayLow, @JsonKey(nullable: true)  String earningsAnnouncement, @JsonKey(nullable: true)  double eps, @JsonKey(nullable: true)  String exchange, @JsonKey(nullable: true)  List<FiveDayTrend> fiveDayTrend, @JsonKey(nullable: true)  int marketCap, @JsonKey(nullable: true)  String name, @JsonKey(nullable: true)  double open, @JsonKey(nullable: true)  double pe, @JsonKey(nullable: true)  double previousClose, @JsonKey(nullable: true)  double price, @JsonKey(nullable: true)  double priceAvg200, @JsonKey(nullable: true)  double priceAvg50, @JsonKey(nullable: true)  int sharesOutstanding, @JsonKey(nullable: true)  String stockId, @JsonKey(nullable: true)  String symbol, @JsonKey(nullable: true)  int timestamp, @JsonKey(nullable: true)  int volume, @JsonKey(nullable: true)  double yearHigh, @JsonKey(nullable: true)  double yearLow, @JsonKey(nullable: true)  String logoUrl, @JsonKey(nullable: true)  String type, @JsonKey(nullable: true)  int count, @JsonKey(nullable: true)  String dateHours, @JsonKey(nullable: true)  int ticks, @JsonKey(nullable: true)  String primaryLogoUrl, @JsonKey(nullable: true)  String secondaryLogoUrl, @JsonKey(nullable: true)  String tertiaryLogoUrl, @JsonKey(nullable: true)  String status, @JsonKey(nullable: true)  String updatedFrom, @JsonKey(nullable: true)  String country, @JsonKey(nullable: true)  int exchangeSortOrder)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int avgVolume,  double change,  double changesPercentage,  double dayHigh,  double dayLow,  String earningsAnnouncement,  double eps,  String exchange,  List<FiveDayTrend> fiveDayTrend,  int marketCap,  String name,  double open,  double pe,  double previousClose,  double price,  double priceAvg200,  double priceAvg50,  int sharesOutstanding,  String stockId,  String symbol,  int timestamp,  int volume,  double yearHigh,  double yearLow,  String logoUrl,  String type,  int count,  String dateHours,  int ticks,  String primaryLogoUrl,  String secondaryLogoUrl,  String tertiaryLogoUrl,  String status,  String updatedFrom,  String country,  int exchangeSortOrder)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Stock() when $default != null:
 return $default(_that.avgVolume,_that.change,_that.changesPercentage,_that.dayHigh,_that.dayLow,_that.earningsAnnouncement,_that.eps,_that.exchange,_that.fiveDayTrend,_that.marketCap,_that.name,_that.open,_that.pe,_that.previousClose,_that.price,_that.priceAvg200,_that.priceAvg50,_that.sharesOutstanding,_that.stockId,_that.symbol,_that.timestamp,_that.volume,_that.yearHigh,_that.yearLow,_that.logoUrl,_that.type,_that.count,_that.dateHours,_that.ticks,_that.primaryLogoUrl,_that.secondaryLogoUrl,_that.tertiaryLogoUrl,_that.status,_that.updatedFrom,_that.country,_that.exchangeSortOrder);case _:
@@ -209,7 +209,7 @@ return $default(_that.avgVolume,_that.change,_that.changesPercentage,_that.dayHi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(nullable: true)@JsonKey(nullable: true)  int avgVolume, @JsonKey(nullable: true)  double change, @JsonKey(nullable: true)  double changesPercentage, @JsonKey(nullable: true)  double dayHigh, @JsonKey(nullable: true)  double dayLow, @JsonKey(nullable: true)  String earningsAnnouncement, @JsonKey(nullable: true)  double eps, @JsonKey(nullable: true)  String exchange, @JsonKey(nullable: true)  List<FiveDayTrend> fiveDayTrend, @JsonKey(nullable: true)  int marketCap, @JsonKey(nullable: true)  String name, @JsonKey(nullable: true)  double open, @JsonKey(nullable: true)  double pe, @JsonKey(nullable: true)  double previousClose, @JsonKey(nullable: true)  double price, @JsonKey(nullable: true)  double priceAvg200, @JsonKey(nullable: true)  double priceAvg50, @JsonKey(nullable: true)  int sharesOutstanding, @JsonKey(nullable: true)  String stockId, @JsonKey(nullable: true)  String symbol, @JsonKey(nullable: true)  int timestamp, @JsonKey(nullable: true)  int volume, @JsonKey(nullable: true)  double yearHigh, @JsonKey(nullable: true)  double yearLow, @JsonKey(nullable: true)  String logoUrl, @JsonKey(nullable: true)  String type, @JsonKey(nullable: true)  int count, @JsonKey(nullable: true)  String dateHours, @JsonKey(nullable: true)  int ticks, @JsonKey(nullable: true)  String primaryLogoUrl, @JsonKey(nullable: true)  String secondaryLogoUrl, @JsonKey(nullable: true)  String tertiaryLogoUrl, @JsonKey(nullable: true)  String status, @JsonKey(nullable: true)  String updatedFrom, @JsonKey(nullable: true)  String country, @JsonKey(nullable: true)  int exchangeSortOrder)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int avgVolume,  double change,  double changesPercentage,  double dayHigh,  double dayLow,  String earningsAnnouncement,  double eps,  String exchange,  List<FiveDayTrend> fiveDayTrend,  int marketCap,  String name,  double open,  double pe,  double previousClose,  double price,  double priceAvg200,  double priceAvg50,  int sharesOutstanding,  String stockId,  String symbol,  int timestamp,  int volume,  double yearHigh,  double yearLow,  String logoUrl,  String type,  int count,  String dateHours,  int ticks,  String primaryLogoUrl,  String secondaryLogoUrl,  String tertiaryLogoUrl,  String status,  String updatedFrom,  String country,  int exchangeSortOrder)  $default,) {final _that = this;
 switch (_that) {
 case _Stock():
 return $default(_that.avgVolume,_that.change,_that.changesPercentage,_that.dayHigh,_that.dayLow,_that.earningsAnnouncement,_that.eps,_that.exchange,_that.fiveDayTrend,_that.marketCap,_that.name,_that.open,_that.pe,_that.previousClose,_that.price,_that.priceAvg200,_that.priceAvg50,_that.sharesOutstanding,_that.stockId,_that.symbol,_that.timestamp,_that.volume,_that.yearHigh,_that.yearLow,_that.logoUrl,_that.type,_that.count,_that.dateHours,_that.ticks,_that.primaryLogoUrl,_that.secondaryLogoUrl,_that.tertiaryLogoUrl,_that.status,_that.updatedFrom,_that.country,_that.exchangeSortOrder);case _:
@@ -229,7 +229,7 @@ return $default(_that.avgVolume,_that.change,_that.changesPercentage,_that.dayHi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(nullable: true)@JsonKey(nullable: true)  int avgVolume, @JsonKey(nullable: true)  double change, @JsonKey(nullable: true)  double changesPercentage, @JsonKey(nullable: true)  double dayHigh, @JsonKey(nullable: true)  double dayLow, @JsonKey(nullable: true)  String earningsAnnouncement, @JsonKey(nullable: true)  double eps, @JsonKey(nullable: true)  String exchange, @JsonKey(nullable: true)  List<FiveDayTrend> fiveDayTrend, @JsonKey(nullable: true)  int marketCap, @JsonKey(nullable: true)  String name, @JsonKey(nullable: true)  double open, @JsonKey(nullable: true)  double pe, @JsonKey(nullable: true)  double previousClose, @JsonKey(nullable: true)  double price, @JsonKey(nullable: true)  double priceAvg200, @JsonKey(nullable: true)  double priceAvg50, @JsonKey(nullable: true)  int sharesOutstanding, @JsonKey(nullable: true)  String stockId, @JsonKey(nullable: true)  String symbol, @JsonKey(nullable: true)  int timestamp, @JsonKey(nullable: true)  int volume, @JsonKey(nullable: true)  double yearHigh, @JsonKey(nullable: true)  double yearLow, @JsonKey(nullable: true)  String logoUrl, @JsonKey(nullable: true)  String type, @JsonKey(nullable: true)  int count, @JsonKey(nullable: true)  String dateHours, @JsonKey(nullable: true)  int ticks, @JsonKey(nullable: true)  String primaryLogoUrl, @JsonKey(nullable: true)  String secondaryLogoUrl, @JsonKey(nullable: true)  String tertiaryLogoUrl, @JsonKey(nullable: true)  String status, @JsonKey(nullable: true)  String updatedFrom, @JsonKey(nullable: true)  String country, @JsonKey(nullable: true)  int exchangeSortOrder)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int avgVolume,  double change,  double changesPercentage,  double dayHigh,  double dayLow,  String earningsAnnouncement,  double eps,  String exchange,  List<FiveDayTrend> fiveDayTrend,  int marketCap,  String name,  double open,  double pe,  double previousClose,  double price,  double priceAvg200,  double priceAvg50,  int sharesOutstanding,  String stockId,  String symbol,  int timestamp,  int volume,  double yearHigh,  double yearLow,  String logoUrl,  String type,  int count,  String dateHours,  int ticks,  String primaryLogoUrl,  String secondaryLogoUrl,  String tertiaryLogoUrl,  String status,  String updatedFrom,  String country,  int exchangeSortOrder)?  $default,) {final _that = this;
 switch (_that) {
 case _Stock() when $default != null:
 return $default(_that.avgVolume,_that.change,_that.changesPercentage,_that.dayHigh,_that.dayLow,_that.earningsAnnouncement,_that.eps,_that.exchange,_that.fiveDayTrend,_that.marketCap,_that.name,_that.open,_that.pe,_that.previousClose,_that.price,_that.priceAvg200,_that.priceAvg50,_that.sharesOutstanding,_that.stockId,_that.symbol,_that.timestamp,_that.volume,_that.yearHigh,_that.yearLow,_that.logoUrl,_that.type,_that.count,_that.dateHours,_that.ticks,_that.primaryLogoUrl,_that.secondaryLogoUrl,_that.tertiaryLogoUrl,_that.status,_that.updatedFrom,_that.country,_that.exchangeSortOrder);case _:
@@ -244,51 +244,51 @@ return $default(_that.avgVolume,_that.change,_that.changesPercentage,_that.dayHi
 @JsonSerializable()
 
 class _Stock implements Stock {
-  const _Stock({@JsonKey(nullable: true)@JsonKey(nullable: true) required this.avgVolume, @JsonKey(nullable: true) required this.change, @JsonKey(nullable: true) required this.changesPercentage, @JsonKey(nullable: true) required this.dayHigh, @JsonKey(nullable: true) required this.dayLow, @JsonKey(nullable: true) required this.earningsAnnouncement, @JsonKey(nullable: true) required this.eps, @JsonKey(nullable: true) required this.exchange, @JsonKey(nullable: true) required final  List<FiveDayTrend> fiveDayTrend, @JsonKey(nullable: true) required this.marketCap, @JsonKey(nullable: true) required this.name, @JsonKey(nullable: true) required this.open, @JsonKey(nullable: true) required this.pe, @JsonKey(nullable: true) required this.previousClose, @JsonKey(nullable: true) required this.price, @JsonKey(nullable: true) required this.priceAvg200, @JsonKey(nullable: true) required this.priceAvg50, @JsonKey(nullable: true) required this.sharesOutstanding, @JsonKey(nullable: true) required this.stockId, @JsonKey(nullable: true) required this.symbol, @JsonKey(nullable: true) required this.timestamp, @JsonKey(nullable: true) required this.volume, @JsonKey(nullable: true) required this.yearHigh, @JsonKey(nullable: true) required this.yearLow, @JsonKey(nullable: true) required this.logoUrl, @JsonKey(nullable: true) required this.type, @JsonKey(nullable: true) required this.count, @JsonKey(nullable: true) required this.dateHours, @JsonKey(nullable: true) required this.ticks, @JsonKey(nullable: true) required this.primaryLogoUrl, @JsonKey(nullable: true) required this.secondaryLogoUrl, @JsonKey(nullable: true) required this.tertiaryLogoUrl, @JsonKey(nullable: true) required this.status, @JsonKey(nullable: true) required this.updatedFrom, @JsonKey(nullable: true) required this.country, @JsonKey(nullable: true) required this.exchangeSortOrder}): _fiveDayTrend = fiveDayTrend;
+  const _Stock({this.avgVolume = 0, this.change = 0.0, this.changesPercentage = 0.0, this.dayHigh = 0.0, this.dayLow = 0.0, this.earningsAnnouncement = '', this.eps = 0.0, this.exchange = '', final  List<FiveDayTrend> fiveDayTrend = const [], this.marketCap = 0, this.name = '', this.open = 0.0, this.pe = 0.0, this.previousClose = 0.0, this.price = 0.0, this.priceAvg200 = 0.0, this.priceAvg50 = 0.0, this.sharesOutstanding = 0, this.stockId = '', this.symbol = '', this.timestamp = 0, this.volume = 0, this.yearHigh = 0.0, this.yearLow = 0.0, this.logoUrl = '', this.type = '', this.count = 0, this.dateHours = '', this.ticks = 0, this.primaryLogoUrl = '', this.secondaryLogoUrl = '', this.tertiaryLogoUrl = '', this.status = '', this.updatedFrom = '', this.country = '', this.exchangeSortOrder = 0}): _fiveDayTrend = fiveDayTrend;
   factory _Stock.fromJson(Map<String, dynamic> json) => _$StockFromJson(json);
 
-@override@JsonKey(nullable: true)@JsonKey(nullable: true) final  int avgVolume;
-@override@JsonKey(nullable: true) final  double change;
-@override@JsonKey(nullable: true) final  double changesPercentage;
-@override@JsonKey(nullable: true) final  double dayHigh;
-@override@JsonKey(nullable: true) final  double dayLow;
-@override@JsonKey(nullable: true) final  String earningsAnnouncement;
-@override@JsonKey(nullable: true) final  double eps;
-@override@JsonKey(nullable: true) final  String exchange;
+@override@JsonKey() final  int avgVolume;
+@override@JsonKey() final  double change;
+@override@JsonKey() final  double changesPercentage;
+@override@JsonKey() final  double dayHigh;
+@override@JsonKey() final  double dayLow;
+@override@JsonKey() final  String earningsAnnouncement;
+@override@JsonKey() final  double eps;
+@override@JsonKey() final  String exchange;
  final  List<FiveDayTrend> _fiveDayTrend;
-@override@JsonKey(nullable: true) List<FiveDayTrend> get fiveDayTrend {
+@override@JsonKey() List<FiveDayTrend> get fiveDayTrend {
   if (_fiveDayTrend is EqualUnmodifiableListView) return _fiveDayTrend;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_fiveDayTrend);
 }
 
-@override@JsonKey(nullable: true) final  int marketCap;
-@override@JsonKey(nullable: true) final  String name;
-@override@JsonKey(nullable: true) final  double open;
-@override@JsonKey(nullable: true) final  double pe;
-@override@JsonKey(nullable: true) final  double previousClose;
-@override@JsonKey(nullable: true) final  double price;
-@override@JsonKey(nullable: true) final  double priceAvg200;
-@override@JsonKey(nullable: true) final  double priceAvg50;
-@override@JsonKey(nullable: true) final  int sharesOutstanding;
-@override@JsonKey(nullable: true) final  String stockId;
-@override@JsonKey(nullable: true) final  String symbol;
-@override@JsonKey(nullable: true) final  int timestamp;
-@override@JsonKey(nullable: true) final  int volume;
-@override@JsonKey(nullable: true) final  double yearHigh;
-@override@JsonKey(nullable: true) final  double yearLow;
-@override@JsonKey(nullable: true) final  String logoUrl;
-@override@JsonKey(nullable: true) final  String type;
-@override@JsonKey(nullable: true) final  int count;
-@override@JsonKey(nullable: true) final  String dateHours;
-@override@JsonKey(nullable: true) final  int ticks;
-@override@JsonKey(nullable: true) final  String primaryLogoUrl;
-@override@JsonKey(nullable: true) final  String secondaryLogoUrl;
-@override@JsonKey(nullable: true) final  String tertiaryLogoUrl;
-@override@JsonKey(nullable: true) final  String status;
-@override@JsonKey(nullable: true) final  String updatedFrom;
-@override@JsonKey(nullable: true) final  String country;
-@override@JsonKey(nullable: true) final  int exchangeSortOrder;
+@override@JsonKey() final  int marketCap;
+@override@JsonKey() final  String name;
+@override@JsonKey() final  double open;
+@override@JsonKey() final  double pe;
+@override@JsonKey() final  double previousClose;
+@override@JsonKey() final  double price;
+@override@JsonKey() final  double priceAvg200;
+@override@JsonKey() final  double priceAvg50;
+@override@JsonKey() final  int sharesOutstanding;
+@override@JsonKey() final  String stockId;
+@override@JsonKey() final  String symbol;
+@override@JsonKey() final  int timestamp;
+@override@JsonKey() final  int volume;
+@override@JsonKey() final  double yearHigh;
+@override@JsonKey() final  double yearLow;
+@override@JsonKey() final  String logoUrl;
+@override@JsonKey() final  String type;
+@override@JsonKey() final  int count;
+@override@JsonKey() final  String dateHours;
+@override@JsonKey() final  int ticks;
+@override@JsonKey() final  String primaryLogoUrl;
+@override@JsonKey() final  String secondaryLogoUrl;
+@override@JsonKey() final  String tertiaryLogoUrl;
+@override@JsonKey() final  String status;
+@override@JsonKey() final  String updatedFrom;
+@override@JsonKey() final  String country;
+@override@JsonKey() final  int exchangeSortOrder;
 
 /// Create a copy of Stock
 /// with the given fields replaced by the non-null parameter values.
@@ -323,7 +323,7 @@ abstract mixin class _$StockCopyWith<$Res> implements $StockCopyWith<$Res> {
   factory _$StockCopyWith(_Stock value, $Res Function(_Stock) _then) = __$StockCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(nullable: true)@JsonKey(nullable: true) int avgVolume,@JsonKey(nullable: true) double change,@JsonKey(nullable: true) double changesPercentage,@JsonKey(nullable: true) double dayHigh,@JsonKey(nullable: true) double dayLow,@JsonKey(nullable: true) String earningsAnnouncement,@JsonKey(nullable: true) double eps,@JsonKey(nullable: true) String exchange,@JsonKey(nullable: true) List<FiveDayTrend> fiveDayTrend,@JsonKey(nullable: true) int marketCap,@JsonKey(nullable: true) String name,@JsonKey(nullable: true) double open,@JsonKey(nullable: true) double pe,@JsonKey(nullable: true) double previousClose,@JsonKey(nullable: true) double price,@JsonKey(nullable: true) double priceAvg200,@JsonKey(nullable: true) double priceAvg50,@JsonKey(nullable: true) int sharesOutstanding,@JsonKey(nullable: true) String stockId,@JsonKey(nullable: true) String symbol,@JsonKey(nullable: true) int timestamp,@JsonKey(nullable: true) int volume,@JsonKey(nullable: true) double yearHigh,@JsonKey(nullable: true) double yearLow,@JsonKey(nullable: true) String logoUrl,@JsonKey(nullable: true) String type,@JsonKey(nullable: true) int count,@JsonKey(nullable: true) String dateHours,@JsonKey(nullable: true) int ticks,@JsonKey(nullable: true) String primaryLogoUrl,@JsonKey(nullable: true) String secondaryLogoUrl,@JsonKey(nullable: true) String tertiaryLogoUrl,@JsonKey(nullable: true) String status,@JsonKey(nullable: true) String updatedFrom,@JsonKey(nullable: true) String country,@JsonKey(nullable: true) int exchangeSortOrder
+ int avgVolume, double change, double changesPercentage, double dayHigh, double dayLow, String earningsAnnouncement, double eps, String exchange, List<FiveDayTrend> fiveDayTrend, int marketCap, String name, double open, double pe, double previousClose, double price, double priceAvg200, double priceAvg50, int sharesOutstanding, String stockId, String symbol, int timestamp, int volume, double yearHigh, double yearLow, String logoUrl, String type, int count, String dateHours, int ticks, String primaryLogoUrl, String secondaryLogoUrl, String tertiaryLogoUrl, String status, String updatedFrom, String country, int exchangeSortOrder
 });
 
 
@@ -389,7 +389,7 @@ as int,
 /// @nodoc
 mixin _$FiveDayTrend {
 
-@JsonKey(nullable: true) List<double> get data;
+ List<double>? get data;
 /// Create a copy of FiveDayTrend
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -422,7 +422,7 @@ abstract mixin class $FiveDayTrendCopyWith<$Res>  {
   factory $FiveDayTrendCopyWith(FiveDayTrend value, $Res Function(FiveDayTrend) _then) = _$FiveDayTrendCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(nullable: true) List<double> data
+ List<double>? data
 });
 
 
@@ -439,10 +439,10 @@ class _$FiveDayTrendCopyWithImpl<$Res>
 
 /// Create a copy of FiveDayTrend
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? data = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? data = freezed,}) {
   return _then(_self.copyWith(
-data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
-as List<double>,
+data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as List<double>?,
   ));
 }
 
@@ -527,7 +527,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(nullable: true)  List<double> data)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<double>? data)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FiveDayTrend() when $default != null:
 return $default(_that.data);case _:
@@ -548,7 +548,7 @@ return $default(_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(nullable: true)  List<double> data)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<double>? data)  $default,) {final _that = this;
 switch (_that) {
 case _FiveDayTrend():
 return $default(_that.data);case _:
@@ -568,7 +568,7 @@ return $default(_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(nullable: true)  List<double> data)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<double>? data)?  $default,) {final _that = this;
 switch (_that) {
 case _FiveDayTrend() when $default != null:
 return $default(_that.data);case _:
@@ -583,14 +583,16 @@ return $default(_that.data);case _:
 @JsonSerializable()
 
 class _FiveDayTrend implements FiveDayTrend {
-  const _FiveDayTrend({@JsonKey(nullable: true) required final  List<double> data}): _data = data;
+  const _FiveDayTrend({final  List<double>? data}): _data = data;
   factory _FiveDayTrend.fromJson(Map<String, dynamic> json) => _$FiveDayTrendFromJson(json);
 
- final  List<double> _data;
-@override@JsonKey(nullable: true) List<double> get data {
+ final  List<double>? _data;
+@override List<double>? get data {
+  final value = _data;
+  if (value == null) return null;
   if (_data is EqualUnmodifiableListView) return _data;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_data);
+  return EqualUnmodifiableListView(value);
 }
 
 
@@ -627,7 +629,7 @@ abstract mixin class _$FiveDayTrendCopyWith<$Res> implements $FiveDayTrendCopyWi
   factory _$FiveDayTrendCopyWith(_FiveDayTrend value, $Res Function(_FiveDayTrend) _then) = __$FiveDayTrendCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(nullable: true) List<double> data
+ List<double>? data
 });
 
 
@@ -644,10 +646,10 @@ class __$FiveDayTrendCopyWithImpl<$Res>
 
 /// Create a copy of FiveDayTrend
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? data = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? data = freezed,}) {
   return _then(_FiveDayTrend(
-data: null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
-as List<double>,
+data: freezed == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as List<double>?,
   ));
 }
 

@@ -121,7 +121,7 @@ class _ChatApi implements ChatApi {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'chat/archive',
+            '/chat/archive',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -151,7 +151,7 @@ class _ChatApi implements ChatApi {
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'chat/${chatId}',
+            '/chat/${chatId}',
             queryParameters: queryParameters,
             data: _data,
           )
