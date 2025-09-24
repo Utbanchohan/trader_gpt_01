@@ -66,6 +66,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/Visa.png
   AssetGenImage get visa => const AssetGenImage('assets/images/Visa.png');
 
+  /// File path: assets/images/add.png
+  AssetGenImage get add => const AssetGenImage('assets/images/add.png');
+
   /// File path: assets/images/analytics.png
   AssetGenImage get analytics =>
       const AssetGenImage('assets/images/analytics.png');
@@ -300,6 +303,7 @@ class $AssetsImagesGen {
     tradersGPTLogo,
     vector1,
     visa,
+    add,
     analytics,
     appIcon,
     apple,

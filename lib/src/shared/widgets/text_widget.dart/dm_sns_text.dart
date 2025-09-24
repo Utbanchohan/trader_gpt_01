@@ -19,6 +19,7 @@ class MdSnsText extends Text {
     FontStyle? fontStyle,
     TextDecoration? decoration,
     TextOverflow? textOverflow,
+    TextOverflow? overflow,
   }) : super(
          style: GoogleFonts.plusJakartaSans(
            color: color,
@@ -33,7 +34,6 @@ class MdSnsText extends Text {
          overflow: textOverflow,
          textScaler: const TextScaler.linear(1.0),
        );
-
   static double _getFontSize(TextVariant variant) {
     switch (variant) {
       case TextVariant.h1:
@@ -55,7 +55,6 @@ class MdSnsText extends Text {
     }
   }
 
-  // 🔹 Font weights
   static FontWeight _getFontWeight(TextFontWeightVariant fontWeight) {
     switch (fontWeight) {
       case TextFontWeightVariant.h1:
