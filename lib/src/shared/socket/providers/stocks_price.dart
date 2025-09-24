@@ -9,11 +9,12 @@ import '../domain/repository/repository.dart';
 import '../model/stock_model.dart/stock_model.dart';
 
 part 'stocks_price.g.dart';
+
 @Riverpod(keepAlive: true)
 class StocksStream extends _$StocksStream {
   StreamSubscription? _subscription;
   Stock? getStock(String id) {
-    return id==state.stockId?state:null;
+    return id == state.stockId ? state : null;
   }
 
   @override
@@ -22,7 +23,7 @@ class StocksStream extends _$StocksStream {
     _subscription?.cancel();
     _subscription = repo.onStockPriceUpdate().listen((stock) {
       // update state with new stock
-    state = stock;
+      state = stock;
     });
 
     // cleanup on dispose
@@ -33,9 +34,6 @@ class StocksStream extends _$StocksStream {
     return emptyStock(); // initial state
   }
 }
-
-
-
 
 // @riverpod
 // double getStockPrice(Ref ref, String id, double currentPrice) {
@@ -158,7 +156,6 @@ class StocksManager extends _$StocksManager {
     });
 
     _subscription = repo.onStockPriceUpdate().listen((stock) {
-      
       _handlePriceUpdate(stock);
       log("stock listen price update: ${stock.price}");
     });
@@ -201,7 +198,7 @@ class StocksManager extends _$StocksManager {
 
         final updatedStock = stockData.copyWith(
           price: stock.price,
-          changesPercentage: priceChange== 0 ? 0 : priceChange,
+          changesPercentage: priceChange == 0 ? 0 : priceChange,
         );
         state = {...state, stocks[index].stockId: updatedStock};
       }

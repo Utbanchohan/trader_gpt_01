@@ -8,14 +8,13 @@ class DeleteWidget extends StatelessWidget {
   final VoidCallback onCancel;
 
   const DeleteWidget({
-    Key? key,
+    super.key,
     required this.onConfirm,
     required this.onCancel,
-  }) : super(key: key);
- 
+  });
+
   @override
   Widget build(BuildContext context) {
-    
     return Dialog(
       backgroundColor: Color(0xFF0B1433), // Dark navy background
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
