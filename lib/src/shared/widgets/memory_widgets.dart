@@ -60,7 +60,7 @@ class MemoryWidgets extends StatelessWidget {
                 return Padding(
                   padding: EdgeInsets.only(bottom: 10),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                     decoration: BoxDecoration(
                       color: AppColors.color091224,
                       borderRadius: BorderRadius.circular(30),
@@ -75,8 +75,7 @@ class MemoryWidgets extends StatelessWidget {
                             variant: TextVariant.h2,
                             fontWeight: TextFontWeightVariant.h4,
                             textOverflow: TextOverflow.ellipsis,
-                            decoration: TextDecoration
-                                .none, // 👈 Yeh line underline hata degi
+                            decoration: TextDecoration.none,
                           ),
                         ),
                         GestureDetector(
