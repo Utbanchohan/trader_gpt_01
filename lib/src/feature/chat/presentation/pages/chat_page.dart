@@ -20,6 +20,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/setting_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'widgets/loading_widget.dart';
@@ -61,6 +62,25 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
     );
     super.initState();
+  }
+
+  void openBottomSheet(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true, // bahar tap karne se band ho jaye
+      builder: (BuildContext context) {
+        return AlertDialog(
+          alignment: Alignment.bottomCenter, // center overlay
+          backgroundColor: Colors.transparent, // transparent bg
+          insetPadding: EdgeInsets.all(16), // thoda margin
+          contentPadding: EdgeInsets.zero,
+          content: SettingBottomSheet(
+            title: '',
+            description: '',
+          ), // aapka widget
+        );
+      },
+    );
   }
 
   getChatsId() async {
@@ -388,11 +408,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           scrollController: _textScrollController,
-
                           onChanged: (value) {
                             _textScrollController.jumpTo(
                               _textScrollController.position.maxScrollExtent,
                             );
+
+                            if (value.endsWith("/")) {
+                              openBottomSheet(context);
+                            }
                           },
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -444,7 +467,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             itemBuilder: (context) => [
                               PopupMenuItem(
                                 enabled: false,
-                                child: _buildSwitchTile(
+                                child: SettingsCard(
                                   icon: Icons.public,
                                   title: "Web Mode",
                                   value: webMode,
@@ -452,10 +475,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                       setState(() => webMode = val),
                                 ),
                               ),
-                              PopupMenuDivider(color: AppColors.white.withOpacity(0.3)),
+                              PopupMenuDivider(
+                                color: AppColors.white.withOpacity(0.3),
+                              ),
                               PopupMenuItem(
                                 enabled: false,
-                                child: _buildSwitchTile(
+                                child: SettingsCard(
                                   icon: Icons.assignment,
                                   title: "Report",
                                   value: report,
@@ -463,10 +488,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                       setState(() => report = val),
                                 ),
                               ),
-                              PopupMenuDivider(color: AppColors.white.withOpacity(0.3)),
+                              PopupMenuDivider(
+                                color: AppColors.white.withOpacity(0.3),
+                              ),
                               PopupMenuItem(
                                 enabled: false,
-                                child: _buildSwitchTile(
+                                child: SettingsCard(
                                   icon: Icons.analytics,
                                   title: "Deep Analysis",
                                   value: deepAnalysis,
@@ -828,42 +855,4 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       ),
     );
   }
-
-Widget _buildSwitchTile({
-  required IconData icon,
-  required String title,
-  required bool value,
-  required Function(bool) onChanged,
-}) {
-  return ListTile(
-    contentPadding: EdgeInsets.all(0),
-    leading: Icon(icon, color: Colors.white),
-    title: Text(
-      title,
-      style: const TextStyle(color: Colors.white, fontSize: 16),
-    ),
-    trailing: Transform.scale(
-      scale: 0.8,
-      child: StatefulBuilder(
-        builder: (context, setStatePopup) {
-          return Switch(
-            value: value,
-            onChanged: (val) {
-              // local update (popup ke andar)
-              setStatePopup(() {});
-
-              // parent state update
-              onChanged(val);
-            },
-            activeColor: Colors.lightBlueAccent,
-            activeTrackColor: Colors.black,
-            inactiveThumbColor: Colors.grey,
-            inactiveTrackColor: Colors.white24,
-          );
-        },
-      ),
-    ),
-  );
-}
-
 }

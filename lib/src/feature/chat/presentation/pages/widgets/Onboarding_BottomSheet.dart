@@ -33,7 +33,7 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
     if (_currentPage < 1) {
       _currentPage++;
     } else {
-      _currentPage = 0; // 👈 wapas first page par aayega
+      _currentPage = 0;
     }
 
     _pageController.animateToPage(
@@ -42,7 +42,6 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
       curve: Curves.easeInOut,
     );
 
-    // 3 sec baad phir se call
     Future.delayed(const Duration(seconds: 3), _nextPage);
   }
 
@@ -62,7 +61,6 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          // decoration: BoxDecoration(color: AppColors.primaryColor),
           child: Image.asset(mainImage),
         ),
         SizedBox(height: 20.h),
@@ -78,8 +76,6 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
         ),
 
         SizedBox(height: 10.h),
-
-        // 👇 Subtitle text
         MdSnsText(
           subtitle,
           textAlign: TextAlign.center,
@@ -128,9 +124,8 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
           Padding(
             padding: EdgeInsets.only(bottom: 24.h),
             child: ElevatedButton(
-              onPressed: ()
-              {
-                context.pushNamed(AppRoutes.swipeScreen.name);
+              onPressed: () {
+                context.pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.color0098E4,

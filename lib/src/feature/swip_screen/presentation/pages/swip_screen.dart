@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:trader_gpt/src/feature/analytics/analytics.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
-import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_conversation.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/conversations_start/presentation/pages/conversation_start.dart';
-import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/core/theme/app_colors.dart';
 
+class SwipeScreen extends StatefulWidget {
+  final ChatRouting? chatRouting; // 👈 argument accept karne ke liye
 
-class SwipeScreen extends StatelessWidget {
+  const SwipeScreen({super.key, this.chatRouting});
+
+  @override
+  State<SwipeScreen> createState() => _SwipeScreenState();
+}
+
+class _SwipeScreenState extends State<SwipeScreen> {
   final PageController _pageController = PageController(initialPage: 1);
 
-  // Optional: aap yahan default ChatRouting define kar sakte ho
-  final ChatRouting defaultChatRouting = ChatRouting(
-    image: "",
-    symbol: "",
-    companyName: "",
-    price: 0,
-    changePercentage: 0,
-    chatId: "",
-    stockid: "",
-    trendChart: FiveDayTrend(data: []),
-  );
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: AppColors.shadowColor,
+        builder: (context) {
+          return OnboardingBottomSheet();
+        },
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +40,8 @@ class SwipeScreen extends StatelessWidget {
       body: PageView(
         controller: _pageController,
         children: [
-          ConversationStart(), 
-          ChatPage(chatRouting: defaultChatRouting),  // middle page
+          ConversationStart(),
+          ChatConversation(chatRouting: widget.chatRouting), // 👈 argument pass
           AnalyticsScreen(),
         ],
       ),

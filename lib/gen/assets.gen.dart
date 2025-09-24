@@ -52,6 +52,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/TGBT-aimation.json
   String get tGBTAimation => 'assets/images/TGBT-aimation.json';
 
+  /// File path: assets/images/TGPT-Brand-Mark.png
+  AssetGenImage get tGPTBrandMark =>
+      const AssetGenImage('assets/images/TGPT-Brand-Mark.png');
+
   /// File path: assets/images/TradersGPT_Logo.png
   AssetGenImage get tradersGPTLogo =>
       const AssetGenImage('assets/images/TradersGPT_Logo.png');
@@ -295,6 +299,7 @@ class $AssetsImagesGen {
     placeholderimage,
     regenerate,
     tGBTAimation,
+    tGPTBrandMark,
     tradersGPTLogo,
     vector1,
     visa,

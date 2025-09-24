@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 enum TextVariant { h1, h2, h3, h4, h5, h6, h7, h8 }
 
-enum TextFontWeightVariant { h1, h2, h3, h4, h5, h6 }
+enum TextFontWeightVariant { h1, h2, h3, h4, h5, h6, h7 }
 
 class MdSnsText extends Text {
   MdSnsText(
@@ -69,6 +69,8 @@ class MdSnsText extends Text {
         return FontWeight.w300;
       case TextFontWeightVariant.h5:
         return FontWeight.normal;
+      case TextFontWeightVariant.h7:
+        return FontWeight.w700;
     }
   }
 }
