@@ -11,12 +11,11 @@ import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/model/chat_response/chat_message_model.dart';
 import 'chart_widget.dart';
 
-
-class ModelOfAxis{
+class ModelOfAxis {
   final List<String> xAxis;
   final List<double> yAxis;
 
-const  ModelOfAxis({required this.xAxis,required this.yAxis});
+  const ModelOfAxis({required this.xAxis, required this.yAxis});
 }
 
 // ignore: must_be_immutable
@@ -46,7 +45,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
   List<String> addNewxAxis = [];
   List<double> addNewyAxis = [];
 
-ModelOfAxis changeDisplayAble(List<String> display) {
+  ModelOfAxis changeDisplayAble(List<String> display) {
     if (display.isNotEmpty) {
       final rawDisplay = display;
       final displayList = rawDisplay.map((e) {
@@ -75,11 +74,10 @@ ModelOfAxis changeDisplayAble(List<String> display) {
           addNewyAxis.add(axis);
         }
       }
-      return ModelOfAxis(yAxis: addNewyAxis,xAxis: addNewxAxis);
-    }else{
-       return  ModelOfAxis(yAxis: [],xAxis: []);
+      return ModelOfAxis(yAxis: addNewyAxis, xAxis: addNewxAxis);
+    } else {
+      return ModelOfAxis(yAxis: [], xAxis: []);
     }
-    
   }
 
   @override
@@ -153,11 +151,10 @@ ModelOfAxis changeDisplayAble(List<String> display) {
           child: Column(
             children: [
               widget.type != "user"
-                  ?changeDisplayAble(widget.display).xAxis
-                  .isNotEmpty && changeDisplayAble(widget.display).yAxis.isNotEmpty
+                  ? changeDisplayAble(widget.display).xAxis.isNotEmpty &&
+                            changeDisplayAble(widget.display).yAxis.isNotEmpty
                         ? ChartContainer(
-                          key: UniqueKey()
-                          ,
+                            key: UniqueKey(),
                             data: changeDisplayAble(widget.display).yAxis,
                             categories: changeDisplayAble(widget.display).xAxis,
                           )
