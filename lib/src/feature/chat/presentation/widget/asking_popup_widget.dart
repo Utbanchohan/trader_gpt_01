@@ -35,7 +35,6 @@ class _AskingPopupWidgetState extends State<AskingPopupWidget>
   void initState() {
     tabController = TabController(length: 2, vsync: this);
     tabController.animateTo(widget.index);
-    // TODO: implement initState
     super.initState();
   }
 

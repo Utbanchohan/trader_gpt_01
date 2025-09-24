@@ -11,12 +11,14 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_flow.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/setting_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/provider/work_flow_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
@@ -54,6 +56,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   bool webMode = true;
   bool report = true;
   bool deepAnalysis = true;
+  List<Workflow> workflows = [];
   @override
   void initState() {
     getChatsId();
@@ -61,7 +64,16 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     getRandomQuestions(
       selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
     );
+    getWorkFlows();
+
     super.initState();
+  }
+
+  getWorkFlows() async {
+    var res = await ref.read(workFlowProviderProvider.notifier).getWorksFlows();
+    if (res.workflows.isNotEmpty) {
+      workflows.addAll(res.workflows);
+    }
   }
 
   void openBottomSheet(BuildContext context) async {
@@ -74,10 +86,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           backgroundColor: Colors.transparent, // transparent bg
           insetPadding: EdgeInsets.all(16), // thoda margin
           contentPadding: EdgeInsets.zero,
-          content: SettingBottomSheet(
-            title: '',
-            description: '',
-          ), // aapka widget
+          content: SettingBottomSheet(title: '', description: ''),
         );
       },
     );
