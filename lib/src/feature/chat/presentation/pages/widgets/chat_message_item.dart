@@ -33,7 +33,12 @@ class ChatMessageItem extends StatelessWidget {
           message: message.message,
           name: name,
           image: image,
-          type: message.type, display: [],
+          type: message.type,
+          display:
+              message.displayable != null &&
+                  message.displayable!.Display.isNotEmpty
+              ? message.displayable!.Display
+              : [],
         ),
 
         SizedBox(height: 20),

@@ -13,7 +13,12 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_app_bar.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_bottom_bar.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_message_item.dart'
+    show ChatMessageItem;
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_message_list.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/loading_widget.dart'
+    show LoadingWidgetMarkdown;
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/work_flow_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
@@ -23,6 +28,8 @@ import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_mod
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../../core/extensions/empty_stock.dart';
+import '../../../../shared/widgets/loading_widget.dart';
+import 'widgets/message_like_copy_icon.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   ChatRouting? chatRouting;
@@ -276,6 +283,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   void dispose() {
     message.dispose();
+    sc.dispose();
     super.dispose();
   }
 
@@ -504,12 +512,61 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
       appBar: ChatAppBar(),
-      body: ChatMessageList(
-        sc: sc,
-        chats: chats,
-        user: user,
-        chatRouting: widget.chatRouting,
-        asyncStream: asyncStream,
+      body: SingleChildScrollView(
+        controller: sc,
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            boolLoadMoreLoader
+                ? LoadingWidget(height: 20, width: 20, color: AppColors.white)
+                : SizedBox(),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: chats.length,
+              itemBuilder: (_, index) {
+                return ChatMessageItem(
+                  message: chats[index],
+                  chatRouting: widget.chatRouting,
+                  user: user,
+                );
+              },
+            ),
+            asyncStream.when(
+              data: (line) {
+                final text = line["buffer"] ?? "";
+                return text.isNotEmpty
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          ChatMarkdownWidget(
+                            message: text.toString(),
+                            name: widget.chatRouting?.symbol ?? "TDGPT",
+                            image: widget.chatRouting?.image ?? "",
+                            type: "ai",
+                            display: [],
+                          ),
+                          SizedBox(height: 10),
+
+                          Container(
+                            width: 150,
+                            child: MessageLikeCopyIcon(
+                              type: "ai",
+                              message: text.toString(),
+                            ),
+                          ),
+                        ],
+                      )
+                    : SizedBox();
+              },
+              loading: () => Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [LoadingWidgetMarkdown()],
+              ),
+              error: (err, _) => Text("Error: $err"),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         bottom: true,

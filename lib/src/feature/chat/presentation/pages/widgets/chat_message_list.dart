@@ -51,9 +51,8 @@ class ChatMessageList extends StatelessWidget {
                           message: text.toString(),
                           name: chatRouting?.symbol ?? "TDGPT",
                           image: chatRouting?.image ?? "",
-                          type: "ai", display: [
-                            
-                          ],
+                          type: "ai",
+                          display: [],
                         ),
                         SizedBox(height: 10),
 

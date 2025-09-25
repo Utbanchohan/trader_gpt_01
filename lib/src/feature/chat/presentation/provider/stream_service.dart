@@ -37,15 +37,14 @@ class SseService {
         try {
           final json = jsonDecode(line);
           if (json is Map && json["chunk"] != null) {
-            // if (json['type' == "display"]) {
-            //   chartText = json["chunk"];
-            //   yield {"buffer": '', "followUp": [], "chart": chartText};
-            // }
             if (json['type'] == "writer") {
               buffer.write(json["chunk"]);
               yield {"buffer": buffer.toString(), "followUp": []};
             } else if (json['type'] == "followup") {
               followUpText += json["chunk"];
+            } else if (json['type' == "display"]) {
+              chartText = json["chunk"];
+              yield {"buffer": '', "followUp": [], "chart": chartText};
             }
           }
         } catch (e) {

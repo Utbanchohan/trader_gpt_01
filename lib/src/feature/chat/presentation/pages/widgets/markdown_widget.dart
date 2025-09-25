@@ -149,7 +149,6 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                     width: 20.w,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(5),
@@ -209,11 +208,6 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                               xAxis: model!.xAxis,
                             ),
                           )
-                        // ChartContainer(
-                        //     key: UniqueKey(),
-                        //     data: model!.yAxis,
-                        //     categories: model!.xAxis,
-                        //   )
                         : SizedBox()
                   : SizedBox(),
               SizedBox(height: widget.type != "user" ? 10 : 0),
