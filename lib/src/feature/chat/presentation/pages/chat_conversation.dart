@@ -116,9 +116,9 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                         );
 
                         Navigator.pop(context);
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        }
+                        // if (Navigator.of(context).canPop()) {
+                        //   Navigator.of(context).pop();
+                        // }
                         selectedStock = await showDialog<Stock>(
                           context: context,
                           barrierDismissible: true,
@@ -771,6 +771,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                 ),
               ],
             )
+    
           : AppBar(
               scrolledUnderElevation: 0,
               centerTitle: false,
@@ -964,6 +965,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                       );
                     },
                   )
+            
                 : WelcomeWidget(
                     showCompanyBox:
                         widget.chatRouting != null &&
@@ -1002,7 +1004,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                           SizedBox(height: 10),
 
                           Container(
-                            width: 150,
+                            width: 150, 
                             child: MessageLikeCopyIcon(
                               type: "ai",
                               message: text.toString(),
@@ -1019,6 +1021,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
               ),
               error: (err, _) => Center(child: Text("Error: $err")),
             ),
+          
           ],
         ),
       ),

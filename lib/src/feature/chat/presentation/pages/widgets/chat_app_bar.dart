@@ -1,0 +1,52 @@
+import 'package:flutter/material.dart';
+import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
+
+class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
+
+  const ChatAppBar({super.key, });
+
+  @override
+  Size get preferredSize => Size.fromHeight(60);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+              scrolledUnderElevation: 0,
+              centerTitle: false,
+              backgroundColor: AppColors.primaryColor,
+              elevation: 0,
+              leading: Builder(
+                builder: (context) {
+                  return InkWell(
+                    onTap: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: Image.asset(
+                      Assets.images.menu.path,
+                      width: 40,
+                      height: 40,
+                    ),
+                  );
+                },
+              ),
+              title: Image.asset(
+                Assets.images.logo.path,
+                width: 187,
+                height: 35.27,
+              ),
+              actions: [
+                Container(
+                  margin: EdgeInsets.only(right: 20),
+                  child: Image.asset(
+                    Assets.images.searchNormal.path,
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+              ],
+            );
+    
+  }
+}

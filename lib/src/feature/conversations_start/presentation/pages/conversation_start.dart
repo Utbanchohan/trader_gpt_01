@@ -120,6 +120,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         .read(deleteProviderProvider.notifier)
         .archive(chatId: convoId, isArchived: isArchived);
     if (result != null) {
+      Navigator.pop(context);
+
       setState(() {
         convo.removeWhere((c) => c.id == convoId);
         searchConvo.removeWhere((c) => c.id == convoId);
@@ -246,24 +248,20 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
           elevation: 0,
           leadingWidth: 40.w,
 
-          leading: Builder(
-            builder: (context) {
-              return InkWell(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
+          leading:  Builder(
+                builder: (context) {
+                  return InkWell(
+                    onTap: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: Image.asset(
+                      Assets.images.menu.path,
+                      width: 40,
+                      height: 40,
+                    ),
+                  );
                 },
-                child: Container(
-                  margin: EdgeInsets.only(left: 20.w),
-                  child: Image.asset(
-                    Assets.images.directboxNotifc4.path,
-                    // scale: 2.9,
-                    height: 20.h,
-                    width: 18.16.w,
-                  ),
-                ),
-              );
-            },
-          ),
+              ),
           title: Row(
             children: [
               MdSnsText(
