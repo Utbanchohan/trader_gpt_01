@@ -8,6 +8,7 @@ import 'package:trader_gpt/src/core/local/repository/local_storage_repository.da
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
+import 'package:trader_gpt/src/feature/chat/data/dto/company_analysis_dto/company_analysis_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_flow.dart';
@@ -60,6 +61,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   bool report = true;
   bool deepAnalysis = true;
   List<Workflow> workflows = [];
+  Workflow? selectedWorkFlow;
   bool isWorkFlow = false;
   bool isWorkSymbol = false;
 
@@ -352,21 +354,36 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ChatMessageDto(chatId: chadId!, message: text, type: "user"),
           );
       if (res != null) {
-        body = {
-          "task": message.text,
-          "symbol": selectedStock != null ? selectedStock!.symbol : "TDGPT",
-          "symbol_name": selectedStock != null
-              ? selectedStock!.name
-              : "TraderGPT",
-          "report": false,
-          "is_web_research": false,
-          "deep_search": false,
-          "chat_id": chadId,
-          "reply_id": "68c1d2c86d162417bca6fc8e",
-          "workflow_object": null,
-          "analysis_required": false,
-          "is_workflow": false,
-        };
+        body = StreamDto(
+          task: message.text,
+          symbol: selectedStock != null ? selectedStock!.symbol : "TDGPT",
+          symbolName: selectedStock != null ? selectedStock!.name : "TraderGPT",
+          report: false,
+          isWebResearch: false,
+          deepSearch: false,
+          chatId: chadId!,
+          replyId: "68c1d2c86d162417bca6fc8e",
+          workflowObject: isWorkFlow
+              ? WorkflowObject(
+                  name: selectedWorkFlow!.name,
+                  displayName: selectedWorkFlow!.displayName,
+                  description: selectedWorkFlow!.description,
+                  query: selectedWorkFlow!.query,
+                  parameters: [
+                    WorkflowParameter(
+                      name: selectedWorkFlow!.parameters![0].name,
+                      required: selectedWorkFlow!.parameters![0].isRequired,
+                      description:
+                          selectedWorkFlow!.parameters![0].description!,
+                    ),
+                  ],
+                  label: "/${selectedWorkFlow!.displayName}",
+                )
+              : null,
+          analysisRequired: false,
+          isWorkflow: isWorkFlow,
+        ).toJson();
+
         setState(() {
           if (oldResponse != null) {
             chats.add(
@@ -708,7 +725,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   ),
                 ),
               ),
-       
             ],
           ),
         ),
