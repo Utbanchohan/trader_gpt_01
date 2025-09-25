@@ -120,7 +120,7 @@ class SocketRepository {
 
   Stream<dynamic> onStockPriceUpdate() {
     return service.listen(SocketEvents.priceupdate.value).map((data) {
-      log("stock listen price update. : ${data}");
+      log("stock listen price update 1. : ${data}");
       return Stock.fromJson(jsonDecode(data));
     });
   }

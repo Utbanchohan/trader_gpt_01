@@ -1,0 +1,372 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import 'setting_widget.dart';
+
+class ChatBottomBar extends StatelessWidget {
+  final TextEditingController messageController;
+  final TextEditingController limitController;
+  final ScrollController textScrollController;
+  final bool isWorkFlow;
+  final bool isWorkSymbol;
+  final Stock? selectedStock;
+  bool webMode;
+  bool report;
+  bool deepAnalysis;
+  final VoidCallback onSend;
+  final VoidCallback onPrefixTap;
+  final VoidCallback onDeleteWorkflow;
+  final Function(BuildContext) onSlashDetected;
+  final ValueChanged<bool> onWebModeChanged;
+  final ValueChanged<bool> onReportChanged;
+  final ValueChanged<bool> onDeepAnalysisChanged;
+
+  ChatBottomBar({
+    super.key,
+    required this.messageController,
+    required this.limitController,
+    required this.textScrollController,
+    required this.isWorkFlow,
+    required this.isWorkSymbol,
+    required this.selectedStock,
+    required this.webMode,
+    required this.report,
+    required this.deepAnalysis,
+    required this.onSend,
+    required this.onPrefixTap,
+    required this.onDeleteWorkflow,
+    required this.onSlashDetected,
+    required this.onWebModeChanged,
+    required this.onReportChanged,
+    required this.onDeepAnalysisChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPadding(
+      duration: Duration(milliseconds: 200),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Container(
+        color: Colors.transparent,
+        // height: isWorkSymbol ? 190.h : 160.h,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              // height: isWorkSymbol ? 145.h : 115.h,
+              margin: EdgeInsets.all(18),
+              padding: EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25.r),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: AppColors.gradient,
+                ),
+              ),
+              child: Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.color0E1738,
+                  borderRadius: BorderRadius.circular(25.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min, // jitni zarurat utni height
+                  children: [
+                    TextField(
+                      controller: messageController,
+                      style: const TextStyle(color: AppColors.white),
+                      keyboardType: TextInputType.multiline,
+                      minLines: 1, // kam se kam ek line
+                      maxLines: 4, // max 4 line expand
+                      scrollController: textScrollController,
+                      onChanged: (value) {
+                        textScrollController.jumpTo(
+                          textScrollController.position.maxScrollExtent,
+                        );
+                        if (value.endsWith("/")) {
+                          onSlashDetected(context);
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Ask anything about the market",
+                        prefixIcon: GestureDetector(
+                          onTap: onPrefixTap,
+                          child: Image.asset(
+                            Assets.images.prefixIcon.path,
+                            scale: 3.3.sp,
+                          ),
+                        ),
+                        prefixIconConstraints: const BoxConstraints(
+                          minWidth: 0,
+                          minHeight: 0,
+                        ),
+                        suffixIcon: isWorkFlow
+                            ? IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: onDeleteWorkflow,
+                              )
+                            : null,
+                        hintStyle: TextStyle(
+                          color: AppColors.bluishgrey404F81,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 15.h),
+
+                    /// Work symbol chip
+                    if (isWorkSymbol && selectedStock != null)
+                      Container(
+                        padding: EdgeInsets.all(5.w),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.r),
+                          border: Border.all(color: AppColors.redFF3B3B),
+                        ),
+                        child: MdSnsText(
+                          "Symbol | ${selectedStock!.symbol}",
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h4,
+                          color: AppColors.fieldTextColor,
+                        ),
+                      ),
+
+                    if (isWorkSymbol) SizedBox(height: 15.h),
+
+                    /// Actions row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        /// Settings Popup
+                        PopupMenuButton<String>(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          color: AppColors.bubbleColor,
+                          onSelected: (value) {},
+                          itemBuilder: (context) => [
+                            // Web Mode
+                            PopupMenuItem(
+                              enabled: false,
+                              child: StatefulBuilder(
+                                builder: (context, localSetState) {
+                                  return Row(
+                                    children: [
+                                      Image.asset(
+                                        Assets.images.global.path,
+                                        height: 20.h,
+                                        width: 20.w,
+                                      ),
+                                      SizedBox(width: 10),
+                                      MdSnsText(
+                                        "Web Mode",
+                                        variant: TextVariant.h4,
+                                        fontWeight: TextFontWeightVariant.h4,
+                                        color: AppColors.colorB2B2B7,
+                                      ),
+                                      Spacer(),
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: Switch(
+                                          activeColor: Colors.lightBlueAccent,
+                                          activeTrackColor:
+                                              AppColors.secondaryColor,
+                                          inactiveThumbColor:
+                                              Colors.lightBlueAccent,
+                                          inactiveTrackColor:
+                                              AppColors.primaryColor,
+                                          value: webMode,
+                                          onChanged: (val) {
+                                            localSetState(() => webMode = val);
+                                            onWebModeChanged(val);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                            PopupMenuDivider(
+                              color: AppColors.white.withOpacity(0.3),
+                            ),
+
+                            // Report
+                            PopupMenuItem(
+                              child: StatefulBuilder(
+                                builder: (context, localSetState) {
+                                  return Row(
+                                    children: [
+                                      Image.asset(
+                                        Assets.images.note.path,
+                                        height: 20.h,
+                                        width: 20.w,
+                                      ),
+                                      SizedBox(width: 10),
+                                      MdSnsText(
+                                        "Report",
+                                        variant: TextVariant.h4,
+                                        fontWeight: TextFontWeightVariant.h4,
+                                        color: AppColors.colorB2B2B7,
+                                      ),
+                                      Spacer(),
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: Switch(
+                                          activeColor: Colors.lightBlueAccent,
+                                          activeTrackColor:
+                                              AppColors.secondaryColor,
+                                          inactiveThumbColor:
+                                              Colors.lightBlueAccent,
+                                          inactiveTrackColor:
+                                              AppColors.primaryColor,
+                                          value: report,
+                                          onChanged: (val) {
+                                            localSetState(() => report = val);
+                                            onReportChanged(val);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                            PopupMenuDivider(
+                              color: AppColors.white.withOpacity(0.3),
+                            ),
+
+                            // Deep Analysis
+                            PopupMenuItem(
+                              enabled: false,
+                              child: StatefulBuilder(
+                                builder: (context, localSetState) {
+                                  return Row(
+                                    children: [
+                                      Image.asset(
+                                        Assets.images.radar.path,
+                                        height: 20.h,
+                                        width: 20.w,
+                                      ),
+                                      SizedBox(width: 10),
+                                      MdSnsText(
+                                        "Deep Analysis",
+                                        variant: TextVariant.h4,
+                                        fontWeight: TextFontWeightVariant.h4,
+                                        color: AppColors.colorB2B2B7,
+                                      ),
+                                      Spacer(),
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: Switch(
+                                          activeColor: Colors.lightBlueAccent,
+                                          activeTrackColor:
+                                              AppColors.secondaryColor,
+                                          inactiveThumbColor:
+                                              Colors.lightBlueAccent,
+                                          inactiveTrackColor:
+                                              AppColors.primaryColor,
+                                          value: deepAnalysis,
+                                          onChanged: (val) {
+                                            localSetState(
+                                              () => deepAnalysis = val,
+                                            );
+                                            onDeepAnalysisChanged(val);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            height: 35.h,
+                            width: 35.w,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.color091224,
+                              border: Border.all(
+                                color: AppColors.bluishgrey404F81,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Image.asset(
+                              Assets.images.textfieldicon3.path,
+                            ),
+                          ),
+                        ),
+
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              height: 36.h,
+                              width: 36.w,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.bubbleColor,
+                              ),
+                              child: Image.asset(
+                                Assets.images.textfieldicon.path,
+                              ),
+                            ),
+                            SizedBox(width: 6.w),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              height: 36.h,
+                              width: 36.w,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.bubbleColor,
+                              ),
+                              child: Image.asset(
+                                Assets.images.textfieldicon4.path,
+                              ),
+                            ),
+                            SizedBox(width: 6.w),
+                            Container(
+                              height: 36,
+                              width: 36,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.color046297,
+                              ),
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                icon: const Icon(
+                                  Icons.arrow_upward_rounded,
+                                  color: AppColors.white,
+                                  size: 18,
+                                ),
+                                onPressed: onSend,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

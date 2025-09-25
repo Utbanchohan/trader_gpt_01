@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
+import '../../../../../core/extensions/symbol_image.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -19,14 +21,26 @@ class StockTile extends StatelessWidget {
 
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-      leading: stock.logoUrl.isNotEmpty
-          ? Image.network(
-              stock.logoUrl,
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  Icon(Icons.broken_image, size: 40),
+      leading: stock.symbol.isNotEmpty
+          ? Container(
+              width: 42,
+              height: 41,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                // image: DecorationImage(
+                //   image: NetworkImage(widget.stocks.logoUrl),
+                //   fit: BoxFit.cover,
+                // ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: SvgPicture.network(
+                  getItemImage(ImageType.stock, stock.symbol),
+                  fit: BoxFit.cover,
+                  placeholderBuilder: (context) =>
+                      SizedBox(height: 41, width: 42, child: SizedBox()),
+                ),
+              ),
             )
           : Icon(Icons.safety_check, size: 40),
       title: MdSnsText(

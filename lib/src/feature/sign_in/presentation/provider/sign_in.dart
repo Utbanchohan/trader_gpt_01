@@ -10,6 +10,7 @@ import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.
 
 import '../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../shared/custom_message.dart';
+import '../../../../shared/socket/providers/stocks_price.dart';
 import '../../../../shared/states/app_loading_state.dart';
 
 part 'sign_in.g.dart';
@@ -59,7 +60,22 @@ class Login extends _$Login {
               Stock stockItem=updated;
               
               stocks.add(stockItem.toJson());
+
+
             }
+             ref
+            .read(stocksManagerProvider.notifier)
+            .watchStocks(
+              data
+                  .map(
+                    (e) => Stock(
+                      stockId: e.stockId,
+                      symbol: e.symbol,
+                      price: e.price ?? 0,
+                    ),
+                  )
+                  .toList(),
+            );
             ref.read(localDataProvider).saveStock(stocks);
           });
 

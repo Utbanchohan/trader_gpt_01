@@ -21,7 +21,9 @@ _ChatMessageModel _$ChatMessageModelFromJson(Map<String, dynamic> json) =>
       tempMessageId: json['tempMessageId'] as String?,
       symbol: json['symbol'] as String?,
       status: json['status'] as String? ?? "Pending",
-      displayableData: json['displayableData'] as List<dynamic>?,
+      displayable: json['displayable'] == null
+          ? null
+          : Displayable.fromJson(json['displayable'] as Map<String, dynamic>),
       tracing: json['tracing'],
       updates: json['updates'] as List<dynamic>?,
     );
@@ -41,7 +43,56 @@ Map<String, dynamic> _$ChatMessageModelToJson(_ChatMessageModel instance) =>
       'tempMessageId': instance.tempMessageId,
       'symbol': instance.symbol,
       'status': instance.status,
-      'displayableData': instance.displayableData,
+      'displayable': instance.displayable,
       'tracing': instance.tracing,
       'updates': instance.updates,
     };
+
+_Displayable _$DisplayableFromJson(Map<String, dynamic> json) => _Displayable(
+  Worker:
+      (json['Worker'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
+  Display:
+      (json['Display'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
+);
+
+Map<String, dynamic> _$DisplayableToJson(_Displayable instance) =>
+    <String, dynamic>{'Worker': instance.Worker, 'Display': instance.Display};
+
+_DisplayData _$DisplayDataFromJson(Map<String, dynamic> json) => _DisplayData(
+  chartType: json['chart_type'] as String,
+  subType: json['sub_type'] as String?,
+  type: json['type'] as String,
+  title: json['title'] as String,
+  xAxis: json['xAxis'] == null
+      ? null
+      : AxisData.fromJson(json['xAxis'] as Map<String, dynamic>),
+  yAxis: json['yAxis'] == null
+      ? null
+      : AxisData.fromJson(json['yAxis'] as Map<String, dynamic>),
+  data: json['data'] as List<dynamic>?,
+);
+
+Map<String, dynamic> _$DisplayDataToJson(_DisplayData instance) =>
+    <String, dynamic>{
+      'chart_type': instance.chartType,
+      'sub_type': instance.subType,
+      'type': instance.type,
+      'title': instance.title,
+      'xAxis': instance.xAxis,
+      'yAxis': instance.yAxis,
+      'data': instance.data,
+    };
+
+_AxisData _$AxisDataFromJson(Map<String, dynamic> json) => _AxisData(
+  xTitle: json['X_title'] as String?,
+  yTitle: json['Y_title'] as String?,
+  data: json['data'] as List<dynamic>?,
+);
+
+Map<String, dynamic> _$AxisDataToJson(_AxisData instance) => <String, dynamic>{
+  'X_title': instance.xTitle,
+  'Y_title': instance.yTitle,
+  'data': instance.data,
+};

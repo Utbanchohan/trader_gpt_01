@@ -28,6 +28,7 @@ class SseService {
       options: Options(headers: headers, responseType: ResponseType.stream),
     );
     String followUpText = '';
+    String chartText = '';
     await for (final chunk in response.data!.stream) {
       final decoded = utf8.decode(chunk);
       for (final line in const LineSplitter().convert(decoded)) {
@@ -36,6 +37,10 @@ class SseService {
         try {
           final json = jsonDecode(line);
           if (json is Map && json["chunk"] != null) {
+            // if (json['type' == "display"]) {
+            //   chartText = json["chunk"];
+            //   yield {"buffer": '', "followUp": [], "chart": chartText};
+            // }
             if (json['type'] == "writer") {
               buffer.write(json["chunk"]);
               yield {"buffer": buffer.toString(), "followUp": []};
@@ -56,6 +61,10 @@ class SseService {
       followupList.add(loist[i]);
     }
 
-    yield {"buffer": buffer.toString(), "followUp": followupList};
+    yield {
+      "buffer": buffer.toString(),
+      "followUp": followupList,
+      "chart": chartText,
+    };
   }
 }

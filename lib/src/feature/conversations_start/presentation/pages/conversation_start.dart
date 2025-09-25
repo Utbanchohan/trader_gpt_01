@@ -11,18 +11,14 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
-import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/conversations_start/provider/delete_provider.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
-import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
-import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
 import 'package:trader_gpt/src/shared/widgets/archive_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/delete_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-import 'package:chart_sparkline/chart_sparkline.dart';
 
 import '../../../../services/sockets/socket_service.dart';
 import '../../../../shared/socket/model/stock_model.dart/stock_model.dart';
@@ -120,6 +116,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         .read(deleteProviderProvider.notifier)
         .archive(chatId: convoId, isArchived: isArchived);
     if (result != null) {
+      Navigator.pop(context);
+
       setState(() {
         convo.removeWhere((c) => c.id == convoId);
         searchConvo.removeWhere((c) => c.id == convoId);
@@ -230,7 +228,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(stocksStreamProvider);
+    final stockManagerState = ref.watch(stocksManagerProvider);
 
     return DefaultTabController(
       length: 4,
@@ -252,14 +250,10 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                 onTap: () {
                   Scaffold.of(context).openDrawer();
                 },
-                child: Container(
-                  margin: EdgeInsets.only(left: 20.w),
-                  child: Image.asset(
-                    Assets.images.directboxNotifc4.path,
-                    // scale: 2.9,
-                    height: 20.h,
-                    width: 18.16.w,
-                  ),
+                child: Image.asset(
+                  Assets.images.menu.path,
+                  width: 40,
+                  height: 40,
                 ),
               );
             },
@@ -423,23 +417,35 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 search.text.isNotEmpty && searchConvo.isNotEmpty
                                 ? searchConvo[index]
                                 : convo[index];
+
                             int stockIndex = findRelatedStock(stock.symbol);
+                            final liveStock =
+                                stockManagerState[stocks[stockIndex].stockId];
+                            stocks[stockIndex] = stocks[stockIndex].copyWith(
+                              changesPercentage:
+                                  liveStock != null && liveStock.price > 0
+                                  ? liveStock.price -
+                                        stocks[stockIndex].previousClose
+                                  : stocks[stockIndex].changesPercentage,
+                              price:
+                                  liveStock?.price ?? stocks[stockIndex].price,
+                            );
 
                             return GestureDetector(
                               onTap: () {
                                 context.pushNamed(
                                   AppRoutes.chatPage.name,
                                   extra: ChatRouting(
-                                    chatId: stock.id,
-                                    symbol: stocks[stockIndex].symbol,
+                                    chatId: convo[index].id,
+                                    symbol: convo[index].symbol,
                                     image: stocks[stockIndex].logoUrl,
-                                    companyName: stocks[stockIndex].name,
+                                    companyName: convo[index].companyName,
                                     price: stocks[stockIndex].price,
                                     changePercentage:
                                         stocks[stockIndex].changesPercentage,
                                     trendChart:
                                         stocks[stockIndex].fiveDayTrend[0],
-                                    stockid: stocks[stockIndex].stockId,
+                                    stockid: convo[index].stockId,
                                   ),
                                 );
                               },
@@ -532,23 +538,37 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 ? searchConvo[index]
                                 : convo[index];
                             int stockIndex = findRelatedStock(stock.symbol);
+                            final liveStock =
+                                stockManagerState[stocks[stockIndex].stockId];
+                            stocks[stockIndex] = stocks[stockIndex].copyWith(
+                              changesPercentage:
+                                  liveStock != null && liveStock.price > 0
+                                  ? liveStock.price -
+                                        stocks[stockIndex].previousClose
+                                  : stocks[stockIndex].changesPercentage,
+                              price:
+                                  liveStock?.price ?? stocks[stockIndex].price,
+                            );
 
                             return GestureDetector(
                               onTap: () {
                                 context.pushNamed(
                                   AppRoutes.swipeScreen.name,
-                                  extra: ChatRouting(
-                                    chatId: stock.id,
-                                    symbol: stocks[stockIndex].symbol,
-                                    image: stocks[stockIndex].logoUrl,
-                                    companyName: stocks[stockIndex].name,
-                                    price: stocks[stockIndex].price,
-                                    changePercentage:
-                                        stocks[stockIndex].changesPercentage,
-                                    trendChart:
-                                        stocks[stockIndex].fiveDayTrend[0],
-                                    stockid: stocks[stockIndex].stockId,
-                                  ),
+                                  extra: {
+                                    "chatRouting": ChatRouting(
+                                      chatId: convo[index].id,
+                                      symbol: convo[index].symbol,
+                                      image: stocks[stockIndex].logoUrl,
+                                      companyName: convo[index].companyName,
+                                      price: stocks[stockIndex].price,
+                                      changePercentage:
+                                          stocks[stockIndex].changesPercentage,
+                                      trendChart:
+                                          stocks[stockIndex].fiveDayTrend[0],
+                                      stockid: convo[index].stockId,
+                                    ),
+                                    "initialIndex": 1,
+                                  },
                                 );
                               },
                               child: Slidable(
@@ -650,6 +670,17 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 ? searchConvo[index]
                                 : convo[index];
                             int stockIndex = findRelatedStock(stock.symbol);
+                            final liveStock =
+                                stockManagerState[stocks[stockIndex].stockId];
+                            stocks[stockIndex] = stocks[stockIndex].copyWith(
+                              changesPercentage:
+                                  liveStock != null && liveStock.price > 0
+                                  ? liveStock.price -
+                                        stocks[stockIndex].previousClose
+                                  : stocks[stockIndex].changesPercentage,
+                              price:
+                                  liveStock?.price ?? stocks[stockIndex].price,
+                            );
 
                             return GestureDetector(
                               onTap: () {
@@ -657,15 +688,15 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   AppRoutes.chatPage.name,
                                   extra: ChatRouting(
                                     chatId: convo[index].id,
-                                    symbol: stocks[stockIndex].symbol,
+                                    symbol: convo[index].symbol,
                                     image: stocks[stockIndex].logoUrl,
-                                    companyName: stocks[stockIndex].name,
+                                    companyName: convo[index].companyName,
                                     price: stocks[stockIndex].price,
                                     changePercentage:
                                         stocks[stockIndex].changesPercentage,
                                     trendChart:
                                         stocks[stockIndex].fiveDayTrend[0],
-                                    stockid: stocks[stockIndex].stockId,
+                                    stockid: convo[index].stockId,
                                   ),
                                 );
                               },

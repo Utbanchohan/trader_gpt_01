@@ -61,6 +61,8 @@ dependencies:
   fl_chart: ^1.1.1
   shimmer: ^3.0.0
   flutter_launcher_icons: ^0.14.4
+  flutter_svg: ^2.2.0
+
 
 
 dev_dependencies:

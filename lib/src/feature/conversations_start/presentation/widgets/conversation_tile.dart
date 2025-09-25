@@ -6,7 +6,8 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart'
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/socket/providers/stocks_price.dart';
-
+import 'package:flutter_svg/svg.dart';
+import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -42,9 +43,18 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 height: 41,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: NetworkImage(widget.stocks.logoUrl),
+                  // image: DecorationImage(
+                  //   image: NetworkImage(widget.stocks.logoUrl),
+                  //   fit: BoxFit.cover,
+                  // ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: SvgPicture.network(
+                    getItemImage(ImageType.stock, widget.stock.symbol),
                     fit: BoxFit.cover,
+                    placeholderBuilder: (context) =>
+                        SizedBox(height: 41, width: 42, child: SizedBox()),
                   ),
                 ),
               ),
@@ -72,7 +82,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               MdSnsText(
-                widget.stocks.symbol,
+                widget.stock.symbol,
                 variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
@@ -97,7 +107,9 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 width: MediaQuery.sizeOf(context).width * 0.5,
                 child: MdSnsText(
                   textOverflow: TextOverflow.ellipsis,
-                  widget.stock.lastMessage != null ? widget.stock.lastMessage!.message : "",
+                  widget.stock.lastMessage != null
+                      ? widget.stock.lastMessage!.message
+                      : "",
                   maxLines: 1,
                   color: AppColors.color677FA4,
                   variant: TextVariant.h4,
@@ -121,11 +133,15 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                                  ref.watch(stocksStreamProvider)==widget.stocks ?
-                ref.watch(stocksStreamProvider).changesPercentage.toStringAsFixed(2).replaceAll("-", ""):
-                    widget.stocks.changesPercentage
-                        .toStringAsFixed(2)
-                        .replaceAll("-", ""),
+                    ref.watch(stocksStreamProvider) == widget.stocks
+                        ? ref
+                              .watch(stocksStreamProvider)
+                              .changesPercentage
+                              .toStringAsFixed(2)
+                              .replaceAll("-", "")
+                        : widget.stocks.changesPercentage
+                              .toStringAsFixed(2)
+                              .replaceAll("-", ""),
                     color: widget.stocks.changesPercentage < 0
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,
@@ -138,12 +154,9 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 width: 86.w,
                 height: 15.h,
                 child: Sparkline(
-                  data: 
-                   ref.watch(stocksStreamProvider)==widget.stocks
-             ?   ref.watch(stocksStreamProvider).fiveDayTrend[0].data!:
-                   
-                  
-                  widget.stocks.fiveDayTrend[0].data!,
+                  data: ref.watch(stocksStreamProvider) == widget.stocks
+                      ? ref.watch(stocksStreamProvider).fiveDayTrend[0].data!
+                      : widget.stocks.fiveDayTrend[0].data!,
                   lineWidth: 2.0,
                   lineColor: widget.stocks.changesPercentage < 0
                       ? AppColors.redFF3B3B

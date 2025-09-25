@@ -11,6 +11,7 @@ import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../core/local/repository/local_storage_repository.dart';
+import '../../../../shared/socket/providers/stocks_price.dart';
 
 class StockScreen extends ConsumerStatefulWidget {
   StockScreen({super.key});
@@ -24,22 +25,51 @@ class _StockScreenState extends ConsumerState<StockScreen> {
   List<Stock> _stocks = [];
   List<Stock> searchStocks = [];
   Timer? _debounce;
-  bool _loading = true;
-
-  Timer? _pollingTimer;
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
     getStocks();
-    _startPolling();
   }
 
-  void _startPolling() {
-    _pollingTimer = Timer.periodic(Duration(milliseconds: 100), (_) {
-      ref.read(socketRepository).fetchStocks((data) {
-        _updateStocks(data);
+  void _startPollingSearch(val) async {
+    if (val.isEmpty) {
+      setState(() {
+        searchStocks = [];
+        _debounce!.cancel();
       });
+      return;
+    }
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      print("$val searching value");
+
+      ref.read(socketRepository).searchStocks(val, (data) {
+        searchStocks = [];
+        updateStocksSearch(data);
+      });
+    });
+  }
+
+  void updateStocksSearch(List<dynamic> data) {
+    final updatedStocks = data;
+
+    setState(() {
+      for (var updated in updatedStocks) {
+        final index = searchStocks.indexWhere(
+          (s) => s.symbol == updated!.symbol,
+        );
+        if (index >= 0) {
+          searchStocks[index] = updated!;
+        } else {
+          if (updated.symbol.isNotEmpty) {
+            searchStocks.add(updated!);
+          }
+        }
+      }
+      ref.read(stocksManagerProvider.notifier).watchStocks(searchStocks);
+      loading = false;
     });
   }
 
@@ -50,59 +80,18 @@ class _StockScreenState extends ConsumerState<StockScreen> {
         _stocks.add(Stock.fromJson(stock));
       }
     }
-    setState(() {});
-  }
-
-  void _updateStocks(List<dynamic> data) {
-    final updatedStocks = data;
-
     setState(() {
-      for (var updated in updatedStocks) {
-        final index = _stocks.indexWhere((s) => s.symbol == updated.symbol);
-        if (index >= 0) {
-          _stocks[index] = updated;
-        } else {
-          _stocks.add(updated);
-        }
-      }
-      _loading = false;
+      loading = false;
     });
   }
 
   @override
   void dispose() {
-    _pollingTimer?.cancel();
     search.dispose();
     if (_debounce != null) {
       _debounce!.cancel();
     }
     super.dispose();
-  }
-
-  searchStockItem(val) {
-    if (val.isNotEmpty) {
-      searchStocks = [];
-      searchStocks = _stocks
-          .where(
-            (ele) =>
-                ele.name.toLowerCase().contains(val) ||
-                ele.symbol.toLowerCase().contains(val),
-          )
-          .toList();
-
-      setState(() {});
-    }
-  }
-
-  debounceSearch(String val) {
-    if (_debounce?.isActive ?? false) {
-      _debounce!.cancel();
-    }
-
-    _debounce = Timer(
-      const Duration(milliseconds: 300),
-      () => searchStockItem(val),
-    );
   }
 
   void _selectStock(Stock symbol) {
@@ -112,6 +101,8 @@ class _StockScreenState extends ConsumerState<StockScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final stockManagerState = ref.watch(stocksManagerProvider);
+
     return Container(
       padding: EdgeInsets.only(top: 10.h, left: 10.w, right: 10.w),
       decoration: BoxDecoration(
@@ -134,10 +125,10 @@ class _StockScreenState extends ConsumerState<StockScreen> {
             style: TextStyle(color: Colors.white),
             textInputAction: TextInputAction.search,
             onChanged: (value) {
-              debounceSearch(value);
+              _startPollingSearch(value);
             },
             onFieldSubmitted: (value) {
-              debounceSearch(value);
+              _startPollingSearch(value);
             },
             decoration: InputDecoration(
               filled: true,
@@ -156,7 +147,7 @@ class _StockScreenState extends ConsumerState<StockScreen> {
               ),
               suffixIcon: InkWell(
                 onTap: () {
-                  debounceSearch(search.text);
+                  _startPollingSearch(search.text);
                 },
                 child: Icon(
                   Icons.search,
@@ -166,7 +157,7 @@ class _StockScreenState extends ConsumerState<StockScreen> {
             ),
           ),
           SizedBox(height: 10.h),
-          _loading
+          loading
               ? Expanded(
                   child: ListView.separated(
                     padding: EdgeInsets.zero,
@@ -212,11 +203,22 @@ class _StockScreenState extends ConsumerState<StockScreen> {
                         ? searchStocks.length
                         : _stocks.length,
                     itemBuilder: (context, index) {
-                      final stock =
+                      Stock stock =
                           search.text.isNotEmpty && searchStocks.isNotEmpty
                           ? searchStocks[index]
                           : _stocks[index];
-                      final change = stock.changesPercentage;
+                      final liveStock = stockManagerState[stock.stockId];
+                      final change = liveStock != null && liveStock.price > 0
+                          ? liveStock.price - stock.previousClose
+                          : stock.changesPercentage;
+
+                      stock = stock.copyWith(
+                        changesPercentage:
+                            liveStock != null && liveStock.price > 0
+                            ? liveStock.price - stock.previousClose
+                            : stock.changesPercentage,
+                        price: liveStock?.price ?? stock.price,
+                      );
 
                       return GestureDetector(
                         onTap: () => _selectStock(stock),

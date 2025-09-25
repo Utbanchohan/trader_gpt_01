@@ -11,6 +11,8 @@ import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository
 import '../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../shared/custom_message.dart';
 import '../../../../shared/socket/domain/repository/repository.dart';
+import '../../../../shared/socket/model/stock_model.dart/stock_model.dart';
+import '../../../../shared/socket/providers/stocks_price.dart';
 import '../../../../shared/states/app_loading_state.dart';
 
 part 'profile_setup.g.dart';
@@ -61,6 +63,19 @@ class Profile extends _$Profile {
           for (var updated in updatedStocks) {
             stocks.add(jsonDecode(updated));
           }
+           ref
+            .read(stocksManagerProvider.notifier)
+            .watchStocks(
+              data
+                  .map(
+                    (e) => Stock(
+                      stockId: e.stockId,
+                      symbol: e.symbol,
+                      price: e.price ?? 0,
+                    ),
+                  )
+                  .toList(),
+            );
           ref.read(localDataProvider).saveStock(stocks);
         });
 
