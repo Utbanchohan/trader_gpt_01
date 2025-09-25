@@ -11,12 +11,18 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_flow.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/setting_widget.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/welcome_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/provider/work_flow_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/widget/asking_popup_widget.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/widget/gradient_dialog.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -50,35 +56,147 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   User? user;
   bool dialogOpen = false;
   String? oldResponse;
+  bool webMode = true;
+  bool report = true;
+  bool deepAnalysis = true;
+  List<Workflow> workflows = [];
+  bool isWorkFlow = false;
+  bool isWorkSymbol = false;
 
   @override
   void initState() {
     getChatsId();
     selectedStock = _mapChatRoutingToStock(widget.chatRouting);
-    getRandomQuestions(
-      selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
-    );
+    if (selectedStock!.symbol.isNotEmpty) {
+      getRandomQuestions(selectedStock!.symbol);
+    }
+    getWorkFlows();
+
     super.initState();
   }
 
+  getWorkFlows() async {
+    var res = await ref.read(workFlowProviderProvider.notifier).getWorksFlows();
+    if (res.workflows.isNotEmpty) {
+      workflows.addAll(res.workflows);
+    }
+  }
+
+  void questionDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return GradientDialog(
+          child: SizedBox(
+            height: 400.h,
+            width: MediaQuery.sizeOf(context).width,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: workflows.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      isWorkFlow = true;
+                    });
+                    if (widget.chatRouting == null ||
+                        widget.chatRouting!.symbol.isEmpty) {
+                      if (workflows[index].parameters!.length > 0 &&
+                          workflows[index].parameters![0].name == "symbol") {
+                        setState(() {
+                          isWorkSymbol = true;
+                        });
+                        String description = workflows[index].displayName;
+
+                        message.text = description;
+
+                        message.selection = TextSelection.fromPosition(
+                          TextPosition(offset: message.text.length),
+                        );
+
+                        Navigator.pop(context);
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        }
+                        selectedStock = await showDialog<Stock>(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (BuildContext context) {
+                            return GradientDialog(child: StockScreen());
+                          },
+                        );
+                      } else if (workflows[index].parameters!.length > 0 &&
+                          workflows[index].parameters![0].name == "limit") {
+                      } else {
+                        String description = workflows[index].displayName;
+
+                        message.text = description;
+
+                        message.selection = TextSelection.fromPosition(
+                          TextPosition(offset: message.text.length),
+                        );
+
+                        Navigator.pop(context);
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    } else {
+                      String description = workflows[index].displayName;
+
+                      message.text = description;
+
+                      message.selection = TextSelection.fromPosition(
+                        TextPosition(offset: message.text.length),
+                      );
+
+                      Navigator.pop(context);
+                      // if (Navigator.of(context).canPop()) {
+                      //   Navigator.of(context).pop();
+                      // }
+                    }
+                  },
+
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 12),
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.color1B254B,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        MdSnsText(
+                          "/" + workflows[index].displayName,
+                          color: AppColors.white,
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        SizedBox(height: 8),
+                        MdSnsText(
+                          workflows[index].description,
+                          color: AppColors.color9EAAC0,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   getChatsId() async {
-    // if(){}
     if (widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty) {
       chadId = widget.chatRouting!.chatId;
       getchats(chadId ?? "");
-    } else {
-      var res = await ref.read(chatRepository).chats();
-      if (res.isSuccess) {
-        for (int i = 0; i < res.data!.results.length; i++) {
-          if (res.data!.results[i].symbol.toLowerCase() == "tdgpt") {
-            chadId = res.data!.results[i].id;
-            getchats(chadId ?? "");
-            break;
-          }
-        }
-      } else {
-        getchats(chadId ?? "");
-      }
     }
   }
 
@@ -191,9 +309,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         } else {
           if (widget.chatRouting != null ||
               widget.chatRouting!.symbol.isNotEmpty) {
-            questions.add(
-              ij.replaceAll('[SYMBOL]', widget.chatRouting!.symbol),
-            );
+            questions.add(ij);
           } else {
             questions.add(ij);
           }
@@ -357,11 +473,11 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         ),
         child: Container(
           color: Colors.transparent,
-          height: 160.h,
+          height: isWorkSymbol == true ? 190.h : 160.h,
           child: Column(
             children: [
               Container(
-                height: 115.h,
+                height: isWorkSymbol == true ? 145.h : 115.h,
                 margin: EdgeInsets.all(18),
                 padding: EdgeInsets.all(1),
                 decoration: BoxDecoration(
@@ -379,6 +495,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                     borderRadius: BorderRadius.circular(25.r),
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: TextField(
@@ -387,11 +504,14 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           scrollController: _textScrollController,
-
                           onChanged: (value) {
                             _textScrollController.jumpTo(
                               _textScrollController.position.maxScrollExtent,
                             );
+
+                            if (value.endsWith("/")) {
+                              questionDialog(context);
+                            }
                           },
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -419,6 +539,18 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                               minWidth: 0,
                               minHeight: 0,
                             ),
+
+                            suffixIcon: isWorkFlow == true
+                                ? IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () {
+                                      isWorkSymbol = false;
+                                      isWorkFlow = false;
+                                      message.clear();
+                                    },
+                                  )
+                                : null,
+
                             hintStyle: TextStyle(
                               color: AppColors.bluishgrey404F81,
                               fontSize: 16,
@@ -429,30 +561,120 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                       ),
 
                       SizedBox(height: 15.h),
+
+                      // Container(
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(10.r),
+                      //     color: AppColors.bubbleColor,
+                      //   ),
+                      //   height: 30.h,
+                      //   width: 140.w,
+
+                      //   child: TextField(
+                      //     controller: limit,
+                      //     style: TextStyle(color: AppColors.white),
+                      //     keyboardType: TextInputType.multiline,
+                      //     maxLines: null,
+                      //     scrollController: _textScrollController,
+                      //     decoration: InputDecoration(
+                      //       border: InputBorder.none,
+                      //       hintText: "",
+                      //       prefixIconConstraints: BoxConstraints(
+                      //         minWidth: 0,
+                      //         minHeight: 0,
+                      //       ),
+                      //       hintStyle: TextStyle(
+                      //         color: AppColors.bluishgrey404F81,
+                      //         fontSize: 16,
+                      //         fontWeight: FontWeight.w400,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      isWorkSymbol == true
+                          ? Container(
+                              padding: EdgeInsets.all(5.w),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.r),
+                                border: Border.all(color: AppColors.redFF3B3B),
+                              ),
+                              child: MdSnsText(
+                                "Symbol | ${selectedStock!.symbol}",
+                                variant: TextVariant.h2,
+                                fontWeight: TextFontWeightVariant.h4,
+                                color: AppColors.fieldTextColor,
+                              ),
+                            )
+                          : SizedBox(),
+                      SizedBox(height: 15.h),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(12),
-                                height: 35.h,
-                                width: 35.w,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.color091224,
-                                  border: Border.all(
-                                    color: AppColors.bluishgrey404F81,
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: Image.asset(
-                                  Assets.images.textfieldicon3.path,
+                          PopupMenuButton<String>(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            color: AppColors.bubbleColor,
+                            onSelected: (value) {
+                              print("Selected: $value");
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                enabled: false,
+                                child: SettingsCard(
+                                  icon: Icons.public,
+                                  title: "Web Mode",
+                                  value: webMode,
+                                  onChanged: (val) =>
+                                      setState(() => webMode = val),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              PopupMenuDivider(
+                                color: AppColors.white.withOpacity(0.3),
+                              ),
+                              PopupMenuItem(
+                                enabled: false,
+                                child: SettingsCard(
+                                  icon: Icons.assignment,
+                                  title: "Report",
+                                  value: report,
+                                  onChanged: (val) =>
+                                      setState(() => report = val),
+                                ),
+                              ),
+                              PopupMenuDivider(
+                                color: AppColors.white.withOpacity(0.3),
+                              ),
+                              PopupMenuItem(
+                                enabled: false,
+                                child: SettingsCard(
+                                  icon: Icons.analytics,
+                                  title: "Deep Analysis",
+                                  value: deepAnalysis,
+                                  onChanged: (val) =>
+                                      setState(() => deepAnalysis = val),
+                                ),
+                              ),
                             ],
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              height: 35.h,
+                              width: 35.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.color091224,
+                                border: Border.all(
+                                  color: AppColors.bluishgrey404F81,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Image.asset(
+                                Assets.images.textfieldicon3.path,
+                              ),
+                            ),
                           ),
+
                           Row(
                             children: [
                               Container(
@@ -742,63 +964,17 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                       );
                     },
                   )
-                : Container(
-                    height: MediaQuery.sizeOf(context).height * 0.6.h,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          Assets.images.tGPTBrandMark.path,
-                          height: 82.h,
-                          width: 82.w,
-                        ),
-                        SizedBox(height: 17.h),
-                        MdSnsText(
-                          "Welcome to TradersGPT",
-                          color: AppColors.white,
-                          variant: TextVariant.h6,
-                          fontWeight: TextFontWeightVariant.h7,
-                        ),
-                        SizedBox(height: 25.h),
-                        MdSnsText(
-                          textAlign: TextAlign.center,
-                          "Discover anything about the markets, by just asking the intelligent Agent.",
-                          color: AppColors.white,
-                          variant: TextVariant.h2,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                        widget.chatRouting == null ||
-                                widget.chatRouting!.companyName.isEmpty
-                            ? SizedBox()
-                            : Container(
-                                margin: EdgeInsets.only(top: 20),
-                                padding: EdgeInsets.all(10),
-                                height: 55.h,
-                                width: MediaQuery.sizeOf(context).width.w,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15.r),
-                                  color: AppColors.color01B254B,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      Assets.images.prefixIcon.path,
-                                      height: 36.h,
-                                      width: 36.w,
-                                    ),
-                                    AppSpacing.w10,
-                                    MdSnsText(
-                                      "Provide a company overview for TSLA",
-                                      variant: TextVariant.h3,
-                                      fontWeight: TextFontWeightVariant.h4,
-                                      color: AppColors.white,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                      ],
-                    ),
+                : WelcomeWidget(
+                    showCompanyBox:
+                        widget.chatRouting != null &&
+                        widget.chatRouting!.companyName.isNotEmpty,
+                    questions: questions,
+                    onQuestionTap: (selectedQuestion) {
+                      message.text = selectedQuestion;
+                      message.selection = TextSelection.fromPosition(
+                        TextPosition(offset: message.text.length),
+                      );
+                    },
                   ),
             asyncStream.when(
               data: (line) {
