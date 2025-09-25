@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/extensions/symbol_image.dart';
 import '../../../../../core/theme/app_colors.dart';
@@ -276,7 +277,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                     ),
                 onTapLink: (text, href, title) {
                   if (href != null) {
-                    // launchUrl(Uri.parse(href)); // needs url_launcher
+                    launchUrl(Uri.parse(href)); // needs url_launcher
                   }
                 },
               ),
