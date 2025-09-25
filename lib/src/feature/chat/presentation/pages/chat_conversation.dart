@@ -19,6 +19,7 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_bottom_bar.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_message_item.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_message_list.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/conversation_chat_app_bar.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
@@ -485,7 +486,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         child: Column(
           children: [
             chats.isNotEmpty
-                ? ChatMessageList(
+                ? ChatMessagesView(
                     chats: chats,
                     user: user,
                     chatRouting: widget.chatRouting,
