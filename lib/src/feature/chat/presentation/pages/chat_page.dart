@@ -84,6 +84,58 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
+  void _setMessage(String description) {
+    message.text = description;
+    message.selection = TextSelection.fromPosition(
+      TextPosition(offset: message.text.length),
+    );
+  }
+
+  void _closeDialogs() {
+    Navigator.pop(context);
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _handleWorkflowSelection(int index) async {
+    setState(() => isWorkFlow = true);
+
+    final workflow = workflows[index];
+
+    if (widget.chatRouting == null || widget.chatRouting!.symbol.isEmpty) {
+      final params = workflow.parameters ?? [];
+
+      if (params.isNotEmpty && params.first.name == "symbol") {
+        setState(() => isWorkSymbol = true);
+
+        _setMessage(workflow.displayName);
+        _closeDialogs();
+
+        selectedStock = await showDialog<Stock>(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) => GradientDialog(child: StockScreen()),
+        );
+
+        selectedWorkFlow = workflow;
+      } else if (params.isNotEmpty && params.first.name == "limit") {
+        _setMessage(workflow.displayName);
+        selectedWorkFlow = workflow;
+        _closeDialogs();
+      } else {
+        _setMessage(workflow.displayName);
+        selectedWorkFlow = workflow;
+        _closeDialogs();
+      }
+    }
+    // Case 2: Chat routing exists with a symbol
+    else {
+      _setMessage(workflow.displayName);
+      _closeDialogs();
+    }
+  }
+
   void questionDialog(BuildContext context) async {
     await showDialog(
       context: context,
@@ -99,65 +151,72 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () async {
-                    setState(() {
-                      isWorkFlow = true;
-                    });
-                    if (widget.chatRouting == null ||
-                        widget.chatRouting!.symbol.isEmpty) {
-                      if (workflows[index].parameters!.length > 0 &&
-                          workflows[index].parameters![0].name == "symbol") {
-                        setState(() {
-                          isWorkSymbol = true;
-                        });
-                        String description = workflows[index].displayName;
+                    _handleWorkflowSelection(index);
+                    // setState(() {
+                    //   isWorkFlow = true;
+                    // });
+                    // if (widget.chatRouting == null ||
+                    //     widget.chatRouting!.symbol.isEmpty) {
+                    //   if (workflows[index].parameters!.length > 0 &&
+                    //       workflows[index].parameters![0].name == "symbol") {
+                    //     setState(() {
+                    //       isWorkSymbol = true;
+                    //     });
 
-                        message.text = description;
+                    //     String description = workflows[index].displayName;
 
-                        message.selection = TextSelection.fromPosition(
-                          TextPosition(offset: message.text.length),
-                        );
+                    //     message.text = description;
 
-                        Navigator.pop(context);
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        }
-                        selectedStock = await showDialog<Stock>(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext context) {
-                            return GradientDialog(child: StockScreen());
-                          },
-                        );
-                      } else if (workflows[index].parameters!.length > 0 &&
-                          workflows[index].parameters![0].name == "limit") {
-                      } else {
-                        String description = workflows[index].displayName;
+                    //     message.selection = TextSelection.fromPosition(
+                    //       TextPosition(offset: message.text.length),
+                    //     );
 
-                        message.text = description;
+                    //     Navigator.pop(context);
+                    //     if (Navigator.of(context).canPop()) {
+                    //       Navigator.of(context).pop();
+                    //     }
+                    //     selectedStock = await showDialog<Stock>(
+                    //       context: context,
+                    //       barrierDismissible: true,
+                    //       builder: (BuildContext context) {
+                    //         return GradientDialog(child: StockScreen());
+                    //       },
+                    //     );
 
-                        message.selection = TextSelection.fromPosition(
-                          TextPosition(offset: message.text.length),
-                        );
+                    //     selectedWorkFlow = workflows[index];
+                    //   } else if (workflows[index].parameters!.length > 0 &&
+                    //       workflows[index].parameters![0].name == "limit") {
+                    //     selectedWorkFlow = workflows[index];
+                    //   } else {
+                    //     String description = workflows[index].displayName;
 
-                        Navigator.pop(context);
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        }
-                      }
-                    } else {
-                      String description = workflows[index].displayName;
+                    //     message.text = description;
 
-                      message.text = description;
+                    //     message.selection = TextSelection.fromPosition(
+                    //       TextPosition(offset: message.text.length),
+                    //     );
 
-                      message.selection = TextSelection.fromPosition(
-                        TextPosition(offset: message.text.length),
-                      );
+                    //     selectedWorkFlow = workflows[index];
 
-                      Navigator.pop(context);
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-                    }
+                    //     Navigator.pop(context);
+                    //     if (Navigator.of(context).canPop()) {
+                    //       Navigator.of(context).pop();
+                    //     }
+                    //   }
+                    // } else {
+                    //   String description = workflows[index].displayName;
+
+                    //   message.text = description;
+
+                    //   message.selection = TextSelection.fromPosition(
+                    //     TextPosition(offset: message.text.length),
+                    //   );
+
+                    //   Navigator.pop(context);
+                    //   if (Navigator.of(context).canPop()) {
+                    //     Navigator.of(context).pop();
+                    //   }
+                    // }
                   },
 
                   child: Container(
@@ -369,14 +428,22 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   displayName: selectedWorkFlow!.displayName,
                   description: selectedWorkFlow!.description,
                   query: selectedWorkFlow!.query,
-                  parameters: [
-                    WorkflowParameter(
-                      name: selectedWorkFlow!.parameters![0].name,
-                      required: selectedWorkFlow!.parameters![0].isRequired,
-                      description:
-                          selectedWorkFlow!.parameters![0].description!,
-                    ),
-                  ],
+                  companyName: selectedStock != null
+                      ? selectedStock!.name
+                      : "TraderGPT",
+                  parameters:
+                      selectedWorkFlow!.parameters != null &&
+                          selectedWorkFlow!.parameters!.isNotEmpty
+                      ? [
+                          WorkflowParameter(
+                            name: selectedWorkFlow!.parameters![0].name,
+                            required:
+                                selectedWorkFlow!.parameters![0].isRequired,
+                            description:
+                                selectedWorkFlow!.parameters![0].description!,
+                          ),
+                        ]
+                      : [],
                   label: "/${selectedWorkFlow!.displayName}",
                 )
               : null,
@@ -411,6 +478,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           );
 
           startStream = true;
+          isWorkFlow = false;
+          isWorkSymbol = false;
         });
         scrollToBottom();
       }
