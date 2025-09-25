@@ -72,7 +72,7 @@ class _RevenueAnalysisChartState extends State<RevenueAnalysisChart> {
 
           // 🔹 Toggle Tabs
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _tabButton("Revenue"),
               SizedBox(width: 12),
@@ -158,10 +158,8 @@ class _RevenueAnalysisChartState extends State<RevenueAnalysisChart> {
         ),
         child: MdSnsText(
           text,
-          variant: TextVariant.h5,
-          fontWeight: isSelected
-              ? TextFontWeightVariant.h1
-              : TextFontWeightVariant.h4,
+          variant: TextVariant.h4,
+          fontWeight: TextFontWeightVariant.h4,
 
           color: AppColors.white,
         ),

@@ -92,38 +92,38 @@ class CustomLineChart extends StatelessWidget {
                   switch (value.toInt()) {
                     case 0:
                       return MdSnsText(
-                        "6:00",
+                        "1D",
                         color: AppColors.white,
                         variant: TextVariant.h4,
                       );
 
                     case 1:
                       return MdSnsText(
-                        "10:00",
+                        "1W",
                         color: AppColors.white,
                         variant: TextVariant.h4,
                       );
                     case 2:
                       return MdSnsText(
-                        "14:00",
+                        "1M",
                         color: AppColors.white,
                         variant: TextVariant.h4,
                       );
                     case 3:
                       return MdSnsText(
-                        "18:00",
+                        "6M",
                         color: AppColors.white,
                         variant: TextVariant.h4,
                       );
                     case 4:
                       return MdSnsText(
-                        "22:00",
+                        "1Y",
                         color: AppColors.white,
                         variant: TextVariant.h4,
                       );
                     case 5:
                       return MdSnsText(
-                        "2:00",
+                        "5Y",
                         color: AppColors.white,
                         variant: TextVariant.h4,
                       );
