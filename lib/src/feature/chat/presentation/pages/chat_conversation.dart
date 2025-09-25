@@ -438,11 +438,11 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         ),
         child: Container(
           color: Colors.transparent,
-          height: isWorkSymbol == true ? 190.h : 160.h,
+          // 👇 yaha fixed height hata di (ab dynamic hogi)
           child: Column(
+            mainAxisSize: MainAxisSize.min, // jitni zarurat utni height
             children: [
               Container(
-                height: isWorkSymbol == true ? 145.h : 115.h,
                 margin: EdgeInsets.all(18),
                 padding: EdgeInsets.all(1),
                 decoration: BoxDecoration(
@@ -461,118 +461,90 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min, // 👈 important
                     children: [
-                      Expanded(
-                        child: TextField(
-                          controller: message,
-                          style: TextStyle(color: AppColors.white),
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          scrollController: _textScrollController,
-                          onChanged: (value) {
-                            _textScrollController.jumpTo(
-                              _textScrollController.position.maxScrollExtent,
-                            );
+                      /// ✨ TextField - auto expand 1 → 4 lines
+                      TextField(
+                        controller: message,
+                        style: TextStyle(color: AppColors.white),
+                        keyboardType: TextInputType.multiline,
+                        minLines: 1, // minimum ek line
+                        maxLines: 4, // maximum 4 line expand
+                        scrollController: _textScrollController,
+                        onChanged: (value) {
+                          _textScrollController.jumpTo(
+                            _textScrollController.position.maxScrollExtent,
+                          );
 
-                            if (value.endsWith("/")) {
-                              questionDialog(context);
-                            }
-                          },
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Ask anything about the market",
-                            prefixIcon: GestureDetector(
-                              onTap: () async {
-                                if (widget.chatRouting == null ||
-                                    widget.chatRouting!.companyName.isEmpty) {
-                                  selectedStock = await showDialogue(
-                                    questions,
-                                    [],
-                                    message,
-                                    0,
-                                  );
-                                } else {
-                                  showDialogue(questions, [], message, 0);
-                                }
-                              },
-                              child: Image.asset(
-                                Assets.images.prefixIcon.path,
-                                scale: 3.3.sp,
-                              ),
+                          if (value.endsWith("/")) {
+                            questionDialog(context);
+                          }
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Ask anything about the market",
+                          prefixIcon: GestureDetector(
+                            onTap: () async {
+                              if (widget.chatRouting == null ||
+                                  widget.chatRouting!.companyName.isEmpty) {
+                                selectedStock = await showDialogue(
+                                  questions,
+                                  [],
+                                  message,
+                                  0,
+                                );
+                              } else {
+                                showDialogue(questions, [], message, 0);
+                              }
+                            },
+                            child: Image.asset(
+                              Assets.images.prefixIcon.path,
+                              scale: 3.3.sp,
                             ),
-                            prefixIconConstraints: BoxConstraints(
-                              minWidth: 0,
-                              minHeight: 0,
-                            ),
-
-                            suffixIcon: isWorkFlow == true
-                                ? IconButton(
-                                    icon: Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () {
-                                      isWorkSymbol = false;
-                                      isWorkFlow = false;
-                                      message.clear();
-                                    },
-                                  )
-                                : null,
-
-                            hintStyle: TextStyle(
-                              color: AppColors.bluishgrey404F81,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
+                          ),
+                          prefixIconConstraints: BoxConstraints(
+                            minWidth: 0,
+                            minHeight: 0,
+                          ),
+                          suffixIcon: isWorkFlow == true
+                              ? IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () {
+                                    isWorkSymbol = false;
+                                    isWorkFlow = false;
+                                    message.clear();
+                                  },
+                                )
+                              : null,
+                          hintStyle: TextStyle(
+                            color: AppColors.bluishgrey404F81,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ),
 
                       SizedBox(height: 15.h),
 
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(10.r),
-                      //     color: AppColors.bubbleColor,
-                      //   ),
-                      //   height: 30.h,
-                      //   width: 140.w,
+                      /// ✨ Agar symbol select ho to dikhao
+                      if (isWorkSymbol == true)
+                        Container(
+                          padding: EdgeInsets.all(5.w),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.r),
+                            border: Border.all(color: AppColors.redFF3B3B),
+                          ),
+                          child: MdSnsText(
+                            "Symbol | ${selectedStock!.symbol}",
+                            variant: TextVariant.h2,
+                            fontWeight: TextFontWeightVariant.h4,
+                            color: AppColors.fieldTextColor,
+                          ),
+                        ),
 
-                      //   child: TextField(
-                      //     controller: limit,
-                      //     style: TextStyle(color: AppColors.white),
-                      //     keyboardType: TextInputType.multiline,
-                      //     maxLines: null,
-                      //     scrollController: _textScrollController,
-                      //     decoration: InputDecoration(
-                      //       border: InputBorder.none,
-                      //       hintText: "",
-                      //       prefixIconConstraints: BoxConstraints(
-                      //         minWidth: 0,
-                      //         minHeight: 0,
-                      //       ),
-                      //       hintStyle: TextStyle(
-                      //         color: AppColors.bluishgrey404F81,
-                      //         fontSize: 16,
-                      //         fontWeight: FontWeight.w400,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      isWorkSymbol == true
-                          ? Container(
-                              padding: EdgeInsets.all(5.w),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.r),
-                                border: Border.all(color: AppColors.redFF3B3B),
-                              ),
-                              child: MdSnsText(
-                                "Symbol | ${selectedStock!.symbol}",
-                                variant: TextVariant.h2,
-                                fontWeight: TextFontWeightVariant.h4,
-                                color: AppColors.fieldTextColor,
-                              ),
-                            )
-                          : SizedBox(),
-                      SizedBox(height: 15.h),
+                      if (isWorkSymbol == true) SizedBox(height: 15.h),
 
+                      /// ✨ Bottom row (popup + buttons)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -697,7 +669,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
           ),
         ),
       ),
-
       backgroundColor: AppColors.primaryColor,
       appBar:
           widget.chatRouting == null || widget.chatRouting!.companyName.isEmpty
@@ -736,7 +707,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                 ),
               ],
             )
-    
           : AppBar(
               scrolledUnderElevation: 0,
               centerTitle: false,
@@ -939,7 +909,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                       );
                     },
                   )
-            
                 : WelcomeWidget(
                     showCompanyBox:
                         widget.chatRouting != null &&
@@ -979,7 +948,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                           SizedBox(height: 10),
 
                           Container(
-                            width: 150, 
+                            width: 150,
                             child: MessageLikeCopyIcon(
                               type: "ai",
                               message: text.toString(),
@@ -996,7 +965,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
               ),
               error: (err, _) => Center(child: Text("Error: $err")),
             ),
-          
           ],
         ),
       ),
