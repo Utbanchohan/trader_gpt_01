@@ -37,6 +37,8 @@ class WelcomeWidget extends StatelessWidget {
           SizedBox(height: 17.h),
           MdSnsText(
             "Welcome to TradersGPT",
+            textAlign: TextAlign.center,
+
             color: AppColors.white,
             variant: TextVariant.h6,
             fontWeight: TextFontWeightVariant.h7,

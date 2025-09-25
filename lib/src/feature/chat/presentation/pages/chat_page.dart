@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
+import 'package:trader_gpt/src/feature/chat/data/dto/company_analysis_dto/company_analysis_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_response/chat_message_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_flow.dart';
@@ -20,6 +22,9 @@ import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.da
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import '../../../../core/extensions/empty_stock.dart';
+import '../../../../shared/socket/providers/stocks_price.dart';
+
 
 class ChatPage extends ConsumerStatefulWidget {
   ChatRouting? chatRouting;
@@ -53,6 +58,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   bool report = true;
   bool deepAnalysis = true;
   List<Workflow> workflows = [];
+  Workflow? selectedWorkFlow;
   bool isWorkFlow = false;
   bool isWorkSymbol = false;
 
@@ -75,6 +81,58 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
+  void _setMessage(String description) {
+    message.text = description;
+    message.selection = TextSelection.fromPosition(
+      TextPosition(offset: message.text.length),
+    );
+  }
+
+  void _closeDialogs() {
+    Navigator.pop(context);
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _handleWorkflowSelection(int index) async {
+    setState(() => isWorkFlow = true);
+
+    final workflow = workflows[index];
+
+    if (widget.chatRouting == null || widget.chatRouting!.symbol.isEmpty) {
+      final params = workflow.parameters ?? [];
+
+      if (params.isNotEmpty && params.first.name == "symbol") {
+        setState(() => isWorkSymbol = true);
+
+        _setMessage(workflow.displayName);
+        _closeDialogs();
+
+        selectedStock = await showDialog<Stock>(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) => GradientDialog(child: StockScreen()),
+        );
+
+        selectedWorkFlow = workflow;
+      } else if (params.isNotEmpty && params.first.name == "limit") {
+        _setMessage(workflow.displayName);
+        selectedWorkFlow = workflow;
+        _closeDialogs();
+      } else {
+        _setMessage(workflow.displayName);
+        selectedWorkFlow = workflow;
+        _closeDialogs();
+      }
+    }
+    // Case 2: Chat routing exists with a symbol
+    else {
+      _setMessage(workflow.displayName);
+      _closeDialogs();
+    }
+  }
+
   void questionDialog(BuildContext context) async {
     await showDialog(
       context: context,
@@ -90,65 +148,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () async {
-                    setState(() {
-                      isWorkFlow = true;
-                    });
-                    if (widget.chatRouting == null ||
-                        widget.chatRouting!.symbol.isEmpty) {
-                      if (workflows[index].parameters!.length > 0 &&
-                          workflows[index].parameters![0].name == "symbol") {
-                        setState(() {
-                          isWorkSymbol = true;
-                        });
-                        String description = workflows[index].displayName;
-
-                        message.text = description;
-
-                        message.selection = TextSelection.fromPosition(
-                          TextPosition(offset: message.text.length),
-                        );
-
-                        Navigator.pop(context);
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        }
-                        selectedStock = await showDialog<Stock>(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext context) {
-                            return GradientDialog(child: StockScreen());
-                          },
-                        );
-                      } else if (workflows[index].parameters!.length > 0 &&
-                          workflows[index].parameters![0].name == "limit") {
-                      } else {
-                        String description = workflows[index].displayName;
-
-                        message.text = description;
-
-                        message.selection = TextSelection.fromPosition(
-                          TextPosition(offset: message.text.length),
-                        );
-
-                        Navigator.pop(context);
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        }
-                      }
-                    } else {
-                      String description = workflows[index].displayName;
-
-                      message.text = description;
-
-                      message.selection = TextSelection.fromPosition(
-                        TextPosition(offset: message.text.length),
-                      );
-
-                      Navigator.pop(context);
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-                    }
+                    _handleWorkflowSelection(index);
+              
                   },
 
                   child: Container(
@@ -247,44 +248,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             country: "us",
             exchangeSortOrder: 0,
           )
-        : Stock(
-            avgVolume: 0,
-            change: 0,
-            changesPercentage: 0,
-            dayHigh: 0.0,
-            dayLow: 0.0,
-            earningsAnnouncement: "",
-            eps: 0.0,
-            exchange: "",
-            fiveDayTrend: [],
-            marketCap: 0,
-            name: "",
-            open: 0,
-            pe: 0,
-            previousClose: 0.0,
-            price: 0,
-            priceAvg200: 0,
-            priceAvg50: 0,
-            sharesOutstanding: 0,
-            stockId: "",
-            symbol: "",
-            timestamp: 0,
-            volume: 0,
-            yearHigh: 0,
-            yearLow: 0.0,
-            logoUrl: "",
-            type: "",
-            count: 0,
-            dateHours: "",
-            ticks: 0,
-            primaryLogoUrl: "",
-            secondaryLogoUrl: "",
-            tertiaryLogoUrl: "",
-            status: "",
-            updatedFrom: "",
-            country: "us",
-            exchangeSortOrder: 0,
-          );
+        : emptyStock();
   }
 
   void scrollToBottom() {
@@ -382,21 +346,44 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ChatMessageDto(chatId: chadId!, message: text, type: "user"),
           );
       if (res != null) {
-        body = {
-          "task": message.text,
-          "symbol": selectedStock != null ? selectedStock!.symbol : "TDGPT",
-          "symbol_name": selectedStock != null
-              ? selectedStock!.name
-              : "TraderGPT",
-          "report": false,
-          "is_web_research": false,
-          "deep_search": false,
-          "chat_id": chadId,
-          "reply_id": "68c1d2c86d162417bca6fc8e",
-          "workflow_object": null,
-          "analysis_required": false,
-          "is_workflow": false,
-        };
+        body = StreamDto(
+          task: message.text,
+          symbol: selectedStock != null ? selectedStock!.symbol : "TDGPT",
+          symbolName: selectedStock != null ? selectedStock!.name : "TraderGPT",
+          report: false,
+          isWebResearch: false,
+          deepSearch: false,
+          chatId: chadId!,
+          replyId: "68c1d2c86d162417bca6fc8e",
+          workflowObject: isWorkFlow
+              ? WorkflowObject(
+                  name: selectedWorkFlow!.name,
+                  displayName: selectedWorkFlow!.displayName,
+                  description: selectedWorkFlow!.description,
+                  query: selectedWorkFlow!.query,
+                  companyName: selectedStock != null
+                      ? selectedStock!.name
+                      : "TraderGPT",
+                  parameters:
+                      selectedWorkFlow!.parameters != null &&
+                          selectedWorkFlow!.parameters!.isNotEmpty
+                      ? [
+                          WorkflowParameter(
+                            name: selectedWorkFlow!.parameters![0].name,
+                            required:
+                                selectedWorkFlow!.parameters![0].isRequired,
+                            description:
+                                selectedWorkFlow!.parameters![0].description!,
+                          ),
+                        ]
+                      : [],
+                  label: "/${selectedWorkFlow!.displayName}",
+                )
+              : null,
+          analysisRequired: false,
+          isWorkflow: isWorkFlow,
+        ).toJson();
+
         setState(() {
           if (oldResponse != null) {
             chats.add(
@@ -424,6 +411,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           );
 
           startStream = true;
+          isWorkFlow = false;
+          isWorkSymbol = false;
         });
         scrollToBottom();
       }
@@ -449,6 +438,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final stockManagerState = ref.watch(stocksManagerProvider);
+
     getUser();
 
     final asyncStream = startStream

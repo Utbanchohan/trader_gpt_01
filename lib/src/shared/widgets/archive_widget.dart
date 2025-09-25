@@ -8,10 +8,10 @@ class ArchiveWidget extends StatelessWidget {
   final VoidCallback onCancel;
 
   const ArchiveWidget({
-    Key? key,
+    super.key,
     required this.onConfirm,
     required this.onCancel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

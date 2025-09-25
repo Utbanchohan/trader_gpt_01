@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
-import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_conversation.dart';
+// import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_conversation.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/conversations_start/presentation/pages/conversation_start.dart';
@@ -25,6 +25,7 @@ import 'package:trader_gpt/src/feature/verifaction/presentation/pages/verifactio
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
 import '../../feature/chat/domain/model/chat_stock_model.dart';
+import '../../feature/chat/presentation/pages/chat_conversation.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 final shellKey = GlobalKey<NavigatorState>();
