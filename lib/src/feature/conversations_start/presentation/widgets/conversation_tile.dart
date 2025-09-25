@@ -14,11 +14,8 @@ import '../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
 class ConversationTile extends ConsumerStatefulWidget {
   final Stock stocks;
   final ChatHistory stock;
-  const ConversationTile({
-    super.key,
-    required this.stocks,
-    required this.stock,
-  });
+
+  ConversationTile({super.key, required this.stocks, required this.stock});
 
   @override
   ConsumerState<ConversationTile> createState() => _ConversationTileState();
@@ -27,6 +24,8 @@ class ConversationTile extends ConsumerStatefulWidget {
 class _ConversationTileState extends ConsumerState<ConversationTile> {
   @override
   Widget build(BuildContext context) {
+    final stockManagerState = ref.watch(stocksManagerProvider);
+    final liveStock = stockManagerState[widget.stock.stockId];
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
       margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
@@ -122,7 +121,9 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               MdSnsText(
-                "\$${widget.stocks.price.toStringAsFixed(2)}",
+                liveStock != null
+                    ? "\$${liveStock!.price.toStringAsFixed(2)}"
+                    : "\$${widget.stocks.price.toStringAsFixed(2)}",
                 variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
@@ -133,10 +134,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                    ref.watch(stocksStreamProvider) == widget.stocks
-                        ? ref
-                              .watch(stocksStreamProvider)
-                              .changesPercentage
+                    liveStock != null && liveStock.stockId.isEmpty
+                        ? liveStock.changesPercentage
                               .toStringAsFixed(2)
                               .replaceAll("-", "")
                         : widget.stocks.changesPercentage

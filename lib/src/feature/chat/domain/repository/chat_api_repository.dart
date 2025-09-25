@@ -15,60 +15,59 @@ import '../../data/dto/chat_message_dto/chat_message_dto.dart';
 import '../model/base_model/base_model.dart';
 import '../model/delete_model/delete_model.dart';
 
- class ChatApiRepository implements ChatRepository {
+class ChatApiRepository implements ChatRepository {
   ChatApiRepository(this.client);
 
   final Dio client;
 
   @override
-  Future<BaseModel<ChatMessageModel>> sendMessage(ChatMessageDto chatMessageDto) async {
+  Future<BaseModel<ChatMessageModel>> sendMessage(
+    ChatMessageDto chatMessageDto,
+  ) async {
     return await ChatApi(client).sendMessage(chatMessageDto);
   }
-    @override
+
+  @override
   Future<RandomQuestionModel> randomQuestions(String symbol) async {
     return await ChatApi(client).randomQuestion(symbol);
   }
 
-      @override
+  @override
   Future<BaseModel<ChatHistoryResponse>> chats() async {
     return await ChatApi(client).getchats();
   }
 
-     @override
-  Future<BaseModel<Conversation>> getMessages(String chatId,int page) async {
-    return await ChatApi(client).getMessages(chatId,1);
+  @override
+  Future<BaseModel<Conversation>> getMessages(String chatId, int page) async {
+    return await ChatApi(client).getMessages(chatId, page);
   }
 
-
-     @override
-  Future<BaseModel<ChatHistory>> createNewChat(CreateChatDto createChatDto) async {
+  @override
+  Future<BaseModel<ChatHistory>> createNewChat(
+    CreateChatDto createChatDto,
+  ) async {
     return await ChatApi(client).createChat(createChatDto);
   }
 
-       @override
+  @override
   Future<BaseModel<DeleteResponse>> deleteChat(String chatId) async {
     return await ChatApi(client).deleteChat(chatId);
   }
 
-     @override
-  Future<BaseModel<ChatHistory>> archiveChat(ArchiveChatDto archiveChatDto) async {
+  @override
+  Future<BaseModel<ChatHistory>> archiveChat(
+    ArchiveChatDto archiveChatDto,
+  ) async {
     return await ChatApi(client).archiveChat(archiveChatDto);
   }
 
-  
-  
-  
-  
-  
-  
   @override
   Future<dynamic> streamApi(TaskRequestDto taskRequestDto) async {
     return await UserAskStreamApi(client).askStream(taskRequestDto);
-  } 
+  }
 
-    @override
+  @override
   Future<WorkflowsData> getWorkFlows() async {
     return await UserAskStreamApi(client).workFlows();
   }
- 
 }

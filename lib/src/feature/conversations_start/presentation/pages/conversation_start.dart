@@ -669,8 +669,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 ? searchConvo[index]
                                 : convo[index];
                             int stockIndex = findRelatedStock(stock.symbol);
-                            final liveStock =
-                                stockManagerState[stocks[stockIndex].stockId];
+                            final liveStock = stockManagerState[stock.stockId];
                             stocks[stockIndex] = stocks[stockIndex].copyWith(
                               changesPercentage:
                                   liveStock != null && liveStock.price > 0

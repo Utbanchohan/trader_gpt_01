@@ -27,6 +27,7 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 import '../../../../core/extensions/empty_stock.dart';
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../shared/socket/providers/stocks_price.dart';
+import '../../../../shared/widgets/loading_widget.dart';
 import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'widgets/loading_widget.dart';
 
@@ -64,6 +65,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   Workflow? selectedWorkFlow;
   bool isWorkFlow = false;
   bool isWorkSymbol = false;
+  int chatPage = 1;
+  bool boolLoadMoreLoader = false;
 
   @override
   void initState() {
@@ -73,6 +76,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       selectedStock!.symbol.isNotEmpty ? selectedStock!.symbol : "[symbol]",
     );
     getWorkFlows();
+
+    sc.addListener(() {
+      if (sc.position.pixels <= sc.position.minScrollExtent) {
+        loadMore();
+      }
+    });
 
     super.initState();
   }
@@ -257,21 +266,26 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   getChatsId() async {
     if (widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty) {
       chadId = widget.chatRouting!.chatId;
-      getchats(chadId ?? "");
+      getchats(chadId ?? "", chatPage);
     } else {
       var res = await ref.read(chatRepository).chats();
       if (res.isSuccess) {
         for (int i = 0; i < res.data!.results.length; i++) {
           if (res.data!.results[i].symbol.toLowerCase() == "tdgpt") {
             chadId = res.data!.results[i].id;
-            getchats(chadId ?? "");
+            getchats(chadId ?? "", chatPage);
             break;
           }
         }
       } else {
-        getchats(chadId ?? "");
+        getchats(chadId ?? "", chatPage);
       }
     }
+  }
+
+  loadMore() {
+    chatPage++;
+    loadChats(chadId ?? "", chatPage);
   }
 
   Stock _mapChatRoutingToStock(ChatRouting? routing) {
@@ -360,8 +374,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
-  getchats(String id) async {
-    var res = await ref.read(chatRepository).getMessages(id, 1);
+  getchats(String id, int page) async {
+    var res = await ref.read(chatRepository).getMessages(id, page);
     if (res.isSuccess) {
       for (int i = 0; i < res.data!.messages!.length; i++) {
         chats.add(res.data!.messages![i]);
@@ -370,6 +384,36 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       setState(() {});
     } else {
       return false;
+    }
+  }
+
+  loadChats(String id, int page) async {
+    try {
+      boolLoadMoreLoader = true;
+      var res = await ref.read(chatRepository).getMessages(id, page);
+      if (res.isSuccess) {
+        boolLoadMoreLoader = false;
+
+        for (int i = res.data!.messages!.length - 1; i >= 0; i--) {
+          chats.insert(0, res.data!.messages![i]);
+        }
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (sc.hasClients) {
+            sc.animateTo(
+              sc.position.minScrollExtent,
+              duration: const Duration(milliseconds: 750),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+      } else {
+        boolLoadMoreLoader = false;
+        return false;
+      }
+    } catch (e) {
+      boolLoadMoreLoader = false;
+    } finally {
+      boolLoadMoreLoader = false;
     }
   }
 
@@ -999,11 +1043,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               ],
             ),
       body: SingleChildScrollView(
-        // controller: sc,
+        controller: sc,
         physics: AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
+            boolLoadMoreLoader
+                ? LoadingWidget(height: 20, width: 20, color: AppColors.white)
+                : SizedBox(),
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
