@@ -438,7 +438,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         ),
         child: Container(
           color: Colors.transparent,
-          // 👇 yaha fixed height hata di (ab dynamic hogi)
           child: Column(
             mainAxisSize: MainAxisSize.min, // jitni zarurat utni height
             children: [
@@ -461,9 +460,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min, // 👈 important
+                    mainAxisSize: MainAxisSize.min, 
                     children: [
-                      /// ✨ TextField - auto expand 1 → 4 lines
                       TextField(
                         controller: message,
                         style: TextStyle(color: AppColors.white),
