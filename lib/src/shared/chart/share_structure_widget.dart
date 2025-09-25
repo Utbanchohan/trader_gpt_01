@@ -100,9 +100,7 @@ class ShareStructureCard extends StatelessWidget {
                       item['value']!,
                       variant: TextVariant.h2,
                       fontWeight: TextFontWeightVariant.h1,
-                      color: valueIsHighlighted
-                          ? Color(0xFF25A0E3)
-                          : Colors.white,
+                      color: valueIsHighlighted ? Colors.white : Colors.white,
                     ),
                   ],
                 ),

@@ -151,7 +151,7 @@ class _RevenueAnalysisChartState extends State<RevenueAnalysisChart> {
     return GestureDetector(
       onTap: () => setState(() => selectedTab = text),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? Color(0xFF1C2245) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
