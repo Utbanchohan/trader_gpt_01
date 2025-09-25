@@ -120,16 +120,19 @@ class _NewConversationState extends ConsumerState<NewConversation> {
       if (mounted) {
         context.pushNamed(
           AppRoutes.swipeScreen.name,
-          extra: ChatRouting(
-            chatId: chatHistory.id,
-            symbol: stock.symbol,
-            image: stock.logoUrl,
-            companyName: stock.name,
-            price: stock.price,
-            changePercentage: stock.changesPercentage,
-            trendChart: stock.fiveDayTrend[0],
-            stockid: stock.stockId,
-          ),
+          extra: {
+            "chatRouting": ChatRouting(
+              chatId: chatHistory.id,
+              symbol: stock.symbol,
+              image: stock.logoUrl,
+              companyName: stock.name,
+              price: stock.price,
+              changePercentage: stock.changesPercentage,
+              trendChart: stock.fiveDayTrend[0],
+              stockid: stock.stockId,
+            ),
+            "initialIndex": 1,
+          },
         );
         // socketService.dispose();
       }

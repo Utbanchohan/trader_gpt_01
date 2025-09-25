@@ -177,23 +177,31 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.swipeScreen.path,
         name: AppRoutes.swipeScreen.name,
         builder: (BuildContext context, GoRouterState state) {
-          final chatRouting = state.extra != null
-              ? state.extra as ChatRouting
-              : ChatRouting(
-                  image: "",
-                  symbol: "",
-                  companyName: "",
-                  price: 0,
-                  changePercentage: 0,
-                  chatId: "",
-                  stockid: "",
-                  trendChart: FiveDayTrend(data: []),
-                );
+          final extra = state.extra as Map?; // 👈 Map expect kar rahe hain
 
-          return SwipeScreen(chatRouting: chatRouting);
+          final chatRouting =
+              extra?["chatRouting"] as ChatRouting? ??
+              ChatRouting(
+                image: "",
+                symbol: "",
+                companyName: "",
+                price: 0,
+                changePercentage: 0,
+                chatId: "",
+                stockid: "",
+                trendChart: FiveDayTrend(data: []),
+              );
+
+          final initialIndex = extra?["initialIndex"] as int? ?? 1;
+
+          return SwipeScreen(
+            chatRouting: chatRouting,
+            initialIndex: initialIndex,
+          );
         },
         routes: [],
       ),
+
       GoRoute(
         path: AppRoutes.chatConversation.path,
         name: AppRoutes.chatConversation.name,

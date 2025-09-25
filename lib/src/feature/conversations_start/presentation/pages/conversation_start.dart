@@ -244,20 +244,20 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
           elevation: 0,
           leadingWidth: 40.w,
 
-          leading:  Builder(
-                builder: (context) {
-                  return InkWell(
-                    onTap: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                    child: Image.asset(
-                      Assets.images.menu.path,
-                      width: 40,
-                      height: 40,
-                    ),
-                  );
+          leading: Builder(
+            builder: (context) {
+              return InkWell(
+                onTap: () {
+                  Scaffold.of(context).openDrawer();
                 },
-              ),
+                child: Image.asset(
+                  Assets.images.menu.path,
+                  width: 40,
+                  height: 40,
+                ),
+              );
+            },
+          ),
           title: Row(
             children: [
               MdSnsText(
@@ -554,18 +554,21 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                               onTap: () {
                                 context.pushNamed(
                                   AppRoutes.swipeScreen.name,
-                                  extra: ChatRouting(
-                                    chatId: convo[index].id,
-                                    symbol: convo[index].symbol,
-                                    image: stocks[stockIndex].logoUrl,
-                                    companyName: convo[index].companyName,
-                                    price: stocks[stockIndex].price,
-                                    changePercentage:
-                                        stocks[stockIndex].changesPercentage,
-                                    trendChart:
-                                        stocks[stockIndex].fiveDayTrend[0],
-                                    stockid: convo[index].stockId,
-                                  ),
+                                  extra: {
+                                    "chatRouting": ChatRouting(
+                                      chatId: convo[index].id,
+                                      symbol: convo[index].symbol,
+                                      image: stocks[stockIndex].logoUrl,
+                                      companyName: convo[index].companyName,
+                                      price: stocks[stockIndex].price,
+                                      changePercentage:
+                                          stocks[stockIndex].changesPercentage,
+                                      trendChart:
+                                          stocks[stockIndex].fiveDayTrend[0],
+                                      stockid: convo[index].stockId,
+                                    ),
+                                    "initialIndex": 1,
+                                  },
                                 );
                               },
                               child: Slidable(

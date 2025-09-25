@@ -163,9 +163,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       context,
                       Assets.images.conversation.path,
                       "Conversation",
-                      // AppRoutes.conversationStart.name,
                       AppRoutes.swipeScreen.name,
+                      extra: {
+                        "chatRouting":
+                            null, 
+                        "initialIndex": 0,
+                      },
                     ),
+
                     _buildMenuItem(
                       context,
                       Assets.images.book.path,
@@ -257,8 +262,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     BuildContext context,
     String icon,
     String title,
-    String? routeName,
-  ) {
+    String? routeName, {
+    Map<String, dynamic>? extra, // 👈 yahan optional extra argument add kiya
+  }) {
     final bool isSelected = selectedMenu == routeName;
 
     return ListTile(
@@ -280,19 +286,11 @@ class _SideMenuState extends ConsumerState<SideMenu> {
       onTap: routeName == null || routeName.isEmpty
           ? null
           : () {
-              // if (routeName == "Setting") {
-              //   context.pop();
-              //   showModalBottomSheet(
-              //     context: context,
-              //     isScrollControlled: true,
-              //     backgroundColor: AppColors.shadowColor,
-              //     builder: (context) {
-              //       return OnboardingBottomSheet();
-              //     },
-              //   );
-              // }
               context.pop();
-              context.pushNamed(routeName);
+              context.pushNamed(
+                routeName,
+                extra: extra, // 👈 yahan bhej diya
+              );
             },
     );
   }
