@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/new_chart_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../../core/extensions/symbol_image.dart';
@@ -104,7 +105,6 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
   void initState() {
     model = changeDisplayAble(widget.display);
 
-    // changeDisplayAble(widget.display);
     // TODO: implement initState
     super.initState();
   }
@@ -192,17 +192,25 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // widget.type != "user"
-              //     ? model != null &&
-              //               model!.xAxis.isNotEmpty &&
-              //               model!.yAxis.isNotEmpty
-              //           ? ChartContainer(
-              //               key: UniqueKey(),
-              //               data: model!.yAxis,
-              //               categories: model!.xAxis,
-              //             )
-              //           : SizedBox()
-              //     : SizedBox(),
+              widget.type != "user"
+                  ? model != null &&
+                            model!.xAxis.isNotEmpty &&
+                            model!.yAxis.isNotEmpty
+                        ? SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.3.h,
+                            width: MediaQuery.sizeOf(context).width * 0.75.w,
+                            child: ChartExample(
+                              data: model!.yAxis,
+                              xAxis: model!.xAxis,
+                            ),
+                          )
+                        // ChartContainer(
+                        //     key: UniqueKey(),
+                        //     data: model!.yAxis,
+                        //     categories: model!.xAxis,
+                        //   )
+                        : SizedBox()
+                  : SizedBox(),
               SizedBox(height: widget.type != "user" ? 10 : 0),
               MarkdownBody(
                 data: widget.message,
