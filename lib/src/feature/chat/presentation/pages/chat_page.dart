@@ -519,7 +519,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             boolLoadMoreLoader
                 ? LoadingWidget(height: 20, width: 20, color: AppColors.white)
                 : SizedBox(),
-            ListView.builder(
+            ListView.separated(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: chats.length,
@@ -529,6 +529,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   chatRouting: widget.chatRouting,
                   user: user,
                 );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(height: 20);
               },
             ),
             asyncStream.when(
@@ -545,7 +548,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             type: "ai",
                             display: [],
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 20),
 
                           Container(
                             width: 150,

@@ -176,7 +176,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
             ),
           ],
         ),
-        SizedBox(height: 6),
+        SizedBox(height: widget.name == "TDGPT" ? 0 : 20),
 
         Container(
           width: widget.type == "user"

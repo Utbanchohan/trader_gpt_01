@@ -515,7 +515,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
             chats.isNotEmpty
                 ? Column(
                     children: [
-                      ListView.builder(
+                      ListView.separated(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: chats.length,
@@ -525,6 +525,9 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                             chatRouting: widget.chatRouting,
                             user: user,
                           );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return SizedBox(height: 20);
                         },
                       ),
                       asyncStream.when(
@@ -542,7 +545,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                       type: "ai",
                                       display: [],
                                     ),
-                                    SizedBox(height: 10),
+                                    SizedBox(height: 20),
 
                                     SizedBox(
                                       width: 150,
@@ -551,6 +554,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                         message: text.toString(),
                                       ),
                                     ),
+                                    SizedBox(height: 10),
                                   ],
                                 )
                               : SizedBox();
