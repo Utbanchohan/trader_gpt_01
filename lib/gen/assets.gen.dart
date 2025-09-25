@@ -139,6 +139,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/eye.png
   AssetGenImage get eye => const AssetGenImage('assets/images/eye.png');
 
+  /// File path: assets/images/global.png
+  AssetGenImage get global => const AssetGenImage('assets/images/global.png');
+
   /// File path: assets/images/hp.png
   AssetGenImage get hp => const AssetGenImage('assets/images/hp.png');
 
@@ -191,6 +194,9 @@ class $AssetsImagesGen {
   AssetGenImage get netFilex =>
       const AssetGenImage('assets/images/netFilex.png');
 
+  /// File path: assets/images/note.png
+  AssetGenImage get note => const AssetGenImage('assets/images/note.png');
+
   /// File path: assets/images/notification7.png
   AssetGenImage get notification7 =>
       const AssetGenImage('assets/images/notification7.png');
@@ -204,6 +210,9 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/radar-2.png
   AssetGenImage get radar2 => const AssetGenImage('assets/images/radar-2.png');
+
+  /// File path: assets/images/radar.png
+  AssetGenImage get radar => const AssetGenImage('assets/images/radar.png');
 
   /// File path: assets/images/receipt (1).png
   AssetGenImage get receipt1 =>
@@ -325,6 +334,7 @@ class $AssetsImagesGen {
     edit2,
     emptyWallet1,
     eye,
+    global,
     hp,
     information1,
     information,
@@ -340,10 +350,12 @@ class $AssetsImagesGen {
     messageSearch5,
     message,
     netFilex,
+    note,
     notification7,
     prefixIcon,
     profile,
     radar2,
+    radar,
     receipt1,
     receipt,
     rightscrollicon,

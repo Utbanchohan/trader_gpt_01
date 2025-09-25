@@ -19,7 +19,7 @@ abstract class ChatMessageModel with _$ChatMessageModel {
     String? tempMessageId, 
     String? symbol,
     @Default("Pending") String status,
-    List<dynamic>? displayableData,
+   Displayable? displayable,
     dynamic tracing,
     List<dynamic>? updates,
 
@@ -27,4 +27,68 @@ abstract class ChatMessageModel with _$ChatMessageModel {
 
   factory ChatMessageModel.fromJson(Map<String, dynamic> json) =>
       _$ChatMessageModelFromJson(json);
+}
+
+
+
+
+@freezed
+abstract class Displayable with _$Displayable {
+  const factory Displayable({
+    @Default([]) List<String> Worker,
+    @Default([]) List<String> Display,
+
+    
+    
+  }) = _Displayable;
+
+  factory Displayable.fromJson(Map<String, dynamic> json) =>
+      _$DisplayableFromJson(json);
+}
+
+
+
+// @freezed
+// class StockData with _$StockData {
+//   const factory StockData({
+//     required String redis_key,
+//     required String symbol,
+//     String? type,
+//     @JsonKey(name: 'dataframe_shape') List<dynamic>? dataframeShape,
+//     List<String>? columns,
+//     List<Map<String, dynamic>>? data,
+//     String? stored_at,
+//     Map<String, dynamic>? data_stats,
+//   }) = _StockData;
+
+//   factory StockData.fromJson(Map<String, dynamic> json) =>
+//       _$StockDataFromJson(json);
+// }
+
+@freezed
+abstract class DisplayData with _$DisplayData {
+  const factory DisplayData({
+    @JsonKey(name: "chart_type") required String chartType,
+    @JsonKey(name: "sub_type") String? subType,
+    required String type,
+    required String title,
+    AxisData? xAxis,
+    AxisData? yAxis,
+    List<dynamic>? data,
+  }) = _DisplayData;
+
+  factory DisplayData.fromJson(Map<String, dynamic> json) =>
+      _$DisplayDataFromJson(json);
+}
+
+@freezed
+abstract class AxisData with _$AxisData {
+  const factory AxisData({
+    @JsonKey(name: "X_title") String? xTitle,
+    @JsonKey(name: "Y_title") String? yTitle,
+    List<dynamic>? data,
+  }) = _AxisData;
+
+  factory AxisData.fromJson(Map<String, dynamic> json) =>
+      _$AxisDataFromJson(json);
 }
