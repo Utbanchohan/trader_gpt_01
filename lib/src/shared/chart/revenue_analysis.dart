@@ -72,7 +72,7 @@ class _RevenueAnalysisChartState extends State<RevenueAnalysisChart> {
 
           // 🔹 Toggle Tabs
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _tabButton("Revenue"),
               SizedBox(width: 12),
@@ -151,17 +151,15 @@ class _RevenueAnalysisChartState extends State<RevenueAnalysisChart> {
     return GestureDetector(
       onTap: () => setState(() => selectedTab = text),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? Color(0xFF1C2245) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: MdSnsText(
           text,
-          variant: TextVariant.h5,
-          fontWeight: isSelected
-              ? TextFontWeightVariant.h1
-              : TextFontWeightVariant.h4,
+          variant: TextVariant.h4,
+          fontWeight: TextFontWeightVariant.h4,
 
           color: AppColors.white,
         ),

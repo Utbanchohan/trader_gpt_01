@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -64,16 +65,20 @@ class WeeklySeasonalityChart extends StatelessWidget {
                       bottomTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
-                          reservedSize: 60,
+                          reservedSize: 90,
                           getTitlesWidget: (value, meta) {
                             int index = value.toInt();
                             if (index >= 0 && index < weeklyData.length) {
                               return Transform.rotate(
                                 angle: -1.5708, // -90 degree (seedha kar diya)
-                                child: MdSnsText(
-                                  weeklyData[index]["day"],
-                                  variant: TextVariant.h4,
-                                  color: Color(0xB3FFFFFF),
+                                child: Container(
+                                  margin: EdgeInsets.only(top: 30.h),
+
+                                  child: MdSnsText(
+                                    weeklyData[index]["day"],
+                                    variant: TextVariant.h4,
+                                    color: Color(0xB3FFFFFF),
+                                  ),
                                 ),
                               );
                             }
