@@ -18,7 +18,7 @@ class SwipeScreen extends ConsumerStatefulWidget {
 }
 
 class _SwipeScreenState extends ConsumerState<SwipeScreen> {
-  final PageController _pageController = PageController(initialPage: 1);
+  final PageController _pageController = PageController(initialPage: 0);
 
   @override
   void initState() {
