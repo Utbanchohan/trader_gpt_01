@@ -120,16 +120,19 @@ class _NewConversationState extends ConsumerState<NewConversation> {
       if (mounted) {
         context.pushNamed(
           AppRoutes.swipeScreen.name,
-          extra: ChatRouting(
-            chatId: chatHistory.id,
-            symbol: stock.symbol,
-            image: stock.logoUrl,
-            companyName: stock.name,
-            price: stock.price,
-            changePercentage: stock.changesPercentage,
-            trendChart: stock.fiveDayTrend[0],
-            stockid: stock.stockId,
-          ),
+          extra: {
+            "chatRouting": ChatRouting(
+              chatId: chatHistory.id,
+              symbol: stock.symbol,
+              image: stock.logoUrl,
+              companyName: stock.name,
+              price: stock.price,
+              changePercentage: stock.changesPercentage,
+              trendChart: stock.fiveDayTrend[0],
+              stockid: stock.stockId,
+            ),
+            "initialIndex": 1,
+          },
         );
         // socketService.dispose();
       }
@@ -410,7 +413,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6),
                   child: SvgPicture.network(
-                    getItemImage(ImageType.stock, widget.image),
+                    getItemImage(ImageType.stock, widget.symbol),
                     fit: BoxFit.cover,
                     placeholderBuilder: (context) =>
                         SizedBox(width: 26.w, height: 26.h, child: SizedBox()),
