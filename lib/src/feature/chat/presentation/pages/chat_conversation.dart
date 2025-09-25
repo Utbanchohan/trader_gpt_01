@@ -520,8 +520,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: chats.length,
                         itemBuilder: (_, index) {
-                          return ChatMessageItem(
-                            message: chats[index],
+                          return ChatMessagesView(
+                            chats: chats[index],
                             chatRouting: widget.chatRouting,
                             user: user,
                           );

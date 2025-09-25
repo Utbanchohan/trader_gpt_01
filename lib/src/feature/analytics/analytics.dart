@@ -15,7 +15,7 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 class AnalyticsScreen extends StatefulWidget {
   final ChatRouting? chatRouting;
 
-   AnalyticsScreen({super.key, this.chatRouting});
+  AnalyticsScreen({super.key, this.chatRouting});
 
   @override
   State<AnalyticsScreen> createState() => _AnalyticsScreenState();
@@ -172,18 +172,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     isScrollable: true,
                     dividerColor: Colors.transparent,
                     indicator: BoxDecoration(
-                      color:  Color(0xFF1B254B), // Selected tab background
+                      color: Color(0xFF1B254B), // Selected tab background
                       borderRadius: BorderRadius.circular(30),
                     ),
                     indicatorPadding: EdgeInsets.zero,
-                    labelPadding:  EdgeInsets.symmetric(horizontal: 8),
+                    labelPadding: EdgeInsets.symmetric(horizontal: 8),
                     labelColor: Colors.white,
-                    unselectedLabelColor:  Color(0xFFB2B2B7),
+                    unselectedLabelColor: Color(0xFFB2B2B7),
                     tabs: [
                       // ---- First Tab (with icon + text) ----
                       Tab(
                         child: Container(
-                          padding:  EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 8,
                           ),
@@ -198,8 +198,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                 width: 20,
                                 height: 20,
                               ),
-                               SizedBox(width: 8),
-                               Text(
+                              SizedBox(width: 8),
+                              Text(
                                 "ANALYTICS",
                                 style: TextStyle(
                                   fontSize: 14,
@@ -212,12 +212,21 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       ),
 
                       // ---- Second Tab (only text) ----
-                       Tab(
-                        child: Text(
-                          "History",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                      Tab(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Text(
+                            "History",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
@@ -227,12 +236,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               ),
               Expanded(
                 child: TabBarView(
-              physics: NeverScrollableScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
 
                   children: [
                     _buildAnalyticsTab(),
 
-                     Center(
+                    Center(
                       child: Text(
                         "History Content Here",
                         style: TextStyle(color: Colors.white, fontSize: 16),
@@ -260,13 +269,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             padding: EdgeInsets.all(16),
             child: TextFormField(
               controller: search,
-              style:  TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 filled: true,
                 fillColor: AppColors.fieldColor,
                 hintText: 'Search here',
-                hintStyle:  TextStyle(color: Color(0xFF8B8B97)),
-                contentPadding:  EdgeInsets.symmetric(
+                hintStyle: TextStyle(color: Color(0xFF8B8B97)),
+                contentPadding: EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 10,
                 ),
@@ -285,19 +294,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           ),
 
           Container(
-            margin: EdgeInsets.only(left: 16),
+            // 👈 margin hata diya
             child: TabBar(
-              physics: NeverScrollableScrollPhysics(),
-              // indicatorSize:TabBarIndicatorSize.tab,
               isScrollable: true,
+              indicatorSize: TabBarIndicatorSize.tab,
               tabAlignment: TabAlignment.start,
               indicator: BoxDecoration(
                 color: AppColors.color1B254B,
                 borderRadius: BorderRadius.circular(50),
               ),
-              indicatorPadding:  EdgeInsets.symmetric(
-                horizontal: 0,
-                vertical: 4,
+              indicatorPadding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 6,
               ),
               labelColor: Colors.white,
               labelPadding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -438,7 +446,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   Widget _overviewContent() {
     return SafeArea(
       child: SingleChildScrollView(
-        padding:  EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
             // Aapka poora Overview ka content (Stock Info, Charts, PerformanceTable, etc.)

@@ -13,8 +13,7 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_app_bar.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_bottom_bar.dart';
-import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_message_item.dart'
-    show ChatMessageItem;
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_message_item.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_message_list.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/loading_widget.dart'
     show LoadingWidgetMarkdown;
@@ -525,8 +524,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: chats.length,
               itemBuilder: (_, index) {
-                return ChatMessageItem(
-                  message: chats[index],
+                return ChatMessagesView(
+                  chats: chats[index],
                   chatRouting: widget.chatRouting,
                   user: user,
                 );
