@@ -11,6 +11,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_conversation
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/conversations_start/presentation/pages/conversation_start.dart';
+import 'package:trader_gpt/src/feature/forget_password/forget_password.dart';
 import 'package:trader_gpt/src/feature/get_start/presentation/pages/getstart.dart';
 import 'package:trader_gpt/src/feature/my_profile/my_profile.dart';
 import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/new_conversation.dart';
@@ -21,6 +22,7 @@ import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart
 import 'package:trader_gpt/src/feature/sign_in/presentation/pages/sigin_in.dart';
 import 'package:trader_gpt/src/feature/splash/presentation/pages/splash.dart';
 import 'package:trader_gpt/src/feature/swip_screen/presentation/pages/swip_screen.dart';
+import 'package:trader_gpt/src/feature/update_password/update_password.dart';
 import 'package:trader_gpt/src/feature/verifaction/presentation/pages/verifaction.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
@@ -169,6 +171,22 @@ final routerConfigProvider = Provider((ref) {
         name: AppRoutes.newConversation.name,
         builder: (BuildContext context, GoRouterState state) {
           return NewConversation();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.forgotpassword.path,
+        name: AppRoutes.forgotpassword.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return ForgetPassword();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.updatePassword.path,
+        name: AppRoutes.updatePassword.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return UpdatePassword();
         },
         routes: [],
       ),

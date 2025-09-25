@@ -9,11 +9,9 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sign_in/presentation/provider/sign_in.dart';
-import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-import '../../../../core/routes/routes.dart';
 import '../../../../shared/mixin/form_state_mixin.dart';
 import '../../../../shared/states/app_loading_state.dart';
 
@@ -219,13 +217,18 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                 SizedBox(height: 10.h),
 
                 // Forgot password
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: MdSnsText(
-                    "Forgot password?",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
+                GestureDetector(
+                  onTap: () {
+                    context.pushNamed(AppRoutes.forgotpassword.name);
+                  },
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    child: MdSnsText(
+                      "Forgot password?",
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h4,
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
 
