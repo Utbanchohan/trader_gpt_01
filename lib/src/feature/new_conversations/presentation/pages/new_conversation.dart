@@ -413,7 +413,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6),
                   child: SvgPicture.network(
-                    getItemImage(ImageType.stock, widget.image),
+                    getItemImage(ImageType.stock, widget.symbol),
                     fit: BoxFit.cover,
                     placeholderBuilder: (context) =>
                         SizedBox(width: 26.w, height: 26.h, child: SizedBox()),

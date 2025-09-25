@@ -13,11 +13,9 @@ class ChatBottomBar extends StatelessWidget {
   final bool isWorkFlow;
   final bool isWorkSymbol;
   final Stock? selectedStock;
-
-  final bool webMode;
-  final bool report;
-  final bool deepAnalysis;
-
+  bool webMode;
+  bool report;
+  bool deepAnalysis;
   final VoidCallback onSend;
   final VoidCallback onPrefixTap;
   final VoidCallback onDeleteWorkflow;
@@ -26,7 +24,7 @@ class ChatBottomBar extends StatelessWidget {
   final ValueChanged<bool> onReportChanged;
   final ValueChanged<bool> onDeepAnalysisChanged;
 
-  const ChatBottomBar({
+  ChatBottomBar({
     super.key,
     required this.messageController,
     required this.limitController,
@@ -49,17 +47,18 @@ class ChatBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedPadding(
-      duration: const Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 200),
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
         color: Colors.transparent,
-        height: isWorkSymbol ? 190.h : 160.h,
+        // height: isWorkSymbol ? 190.h : 160.h,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              height: isWorkSymbol ? 145.h : 115.h,
+              // height: isWorkSymbol ? 145.h : 115.h,
               margin: EdgeInsets.all(18),
               padding: EdgeInsets.all(1),
               decoration: BoxDecoration(
@@ -78,49 +77,54 @@ class ChatBottomBar extends StatelessWidget {
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min, // jitni zarurat utni height
                   children: [
-                    Expanded(
-                      child: TextField(
-                        controller: messageController,
-                        style: const TextStyle(color: AppColors.white),
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        scrollController: textScrollController,
-                        onChanged: (value) {
-                          textScrollController.jumpTo(
-                            textScrollController.position.maxScrollExtent,
-                          );
-                          if (value.endsWith("/")) {
-                            onSlashDetected(context);
-                          }
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Ask anything about the market",
-                          prefixIcon: GestureDetector(
-                            onTap: onPrefixTap,
-                            child: Image.asset(
-                              Assets.images.prefixIcon.path,
-                              scale: 3.3.sp,
-                            ),
+                    TextField(
+                      controller: messageController,
+                      style: const TextStyle(color: AppColors.white),
+                      keyboardType: TextInputType.multiline,
+                      minLines: 1, // kam se kam ek line
+                      maxLines: 4, // max 4 line expand
+                      scrollController: textScrollController,
+                      onChanged: (value) {
+                        textScrollController.jumpTo(
+                          textScrollController.position.maxScrollExtent,
+                        );
+                        if (value.endsWith("/")) {
+                          onSlashDetected(context);
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Ask anything about the market",
+                        prefixIcon: GestureDetector(
+                          onTap: onPrefixTap,
+                          child: Image.asset(
+                            Assets.images.prefixIcon.path,
+                            scale: 3.3.sp,
                           ),
-                          prefixIconConstraints:
-                              const BoxConstraints(minWidth: 0, minHeight: 0),
-                          suffixIcon: isWorkFlow
-                              ? IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.red),
-                                  onPressed: onDeleteWorkflow,
-                                )
-                              : null,
-                          hintStyle: TextStyle(
-                            color: AppColors.bluishgrey404F81,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
+                        ),
+                        prefixIconConstraints: const BoxConstraints(
+                          minWidth: 0,
+                          minHeight: 0,
+                        ),
+                        suffixIcon: isWorkFlow
+                            ? IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: onDeleteWorkflow,
+                              )
+                            : null,
+                        hintStyle: TextStyle(
+                          color: AppColors.bluishgrey404F81,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
+
                     SizedBox(height: 15.h),
 
                     /// Work symbol chip
@@ -139,7 +143,7 @@ class ChatBottomBar extends StatelessWidget {
                         ),
                       ),
 
-                    SizedBox(height: 15.h),
+                    if (isWorkSymbol) SizedBox(height: 15.h),
 
                     /// Actions row
                     Row(
@@ -153,42 +157,144 @@ class ChatBottomBar extends StatelessWidget {
                           color: AppColors.bubbleColor,
                           onSelected: (value) {},
                           itemBuilder: (context) => [
+                            // Web Mode
                             PopupMenuItem(
                               enabled: false,
-                              child: SettingsCard(
-                                icon: Icons.public,
-                                title: "Web Mode",
-                                value: webMode,
-                                onChanged: onWebModeChanged,
+                              child: StatefulBuilder(
+                                builder: (context, localSetState) {
+                                  return Row(
+                                    children: [
+                                      Image.asset(
+                                        Assets.images.global.path,
+                                        height: 20.h,
+                                        width: 20.w,
+                                      ),
+                                      SizedBox(width: 10),
+                                      MdSnsText(
+                                        "Web Mode",
+                                        variant: TextVariant.h4,
+                                        fontWeight: TextFontWeightVariant.h4,
+                                        color: AppColors.colorB2B2B7,
+                                      ),
+                                      Spacer(),
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: Switch(
+                                          activeColor: Colors.lightBlueAccent,
+                                          activeTrackColor:
+                                              AppColors.secondaryColor,
+                                          inactiveThumbColor:
+                                              Colors.lightBlueAccent,
+                                          inactiveTrackColor:
+                                              AppColors.primaryColor,
+                                          value: webMode,
+                                          onChanged: (val) {
+                                            localSetState(() => webMode = val);
+                                            onWebModeChanged(val);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
                             ),
                             PopupMenuDivider(
                               color: AppColors.white.withOpacity(0.3),
                             ),
+
+                            // Report
                             PopupMenuItem(
-                              enabled: false,
-                              child: SettingsCard(
-                                icon: Icons.assignment,
-                                title: "Report",
-                                value: report,
-                                onChanged: onReportChanged,
+                              child: StatefulBuilder(
+                                builder: (context, localSetState) {
+                                  return Row(
+                                    children: [
+                                      Image.asset(
+                                        Assets.images.note.path,
+                                        height: 20.h,
+                                        width: 20.w,
+                                      ),
+                                      SizedBox(width: 10),
+                                      MdSnsText(
+                                        "Report",
+                                        variant: TextVariant.h4,
+                                        fontWeight: TextFontWeightVariant.h4,
+                                        color: AppColors.colorB2B2B7,
+                                      ),
+                                      Spacer(),
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: Switch(
+                                          activeColor: Colors.lightBlueAccent,
+                                          activeTrackColor:
+                                              AppColors.secondaryColor,
+                                          inactiveThumbColor:
+                                              Colors.lightBlueAccent,
+                                          inactiveTrackColor:
+                                              AppColors.primaryColor,
+                                          value: report,
+                                          onChanged: (val) {
+                                            localSetState(() => report = val);
+                                            onReportChanged(val);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
                             ),
                             PopupMenuDivider(
                               color: AppColors.white.withOpacity(0.3),
                             ),
+
+                            // Deep Analysis
                             PopupMenuItem(
                               enabled: false,
-                              child: SettingsCard(
-                                icon: Icons.analytics,
-                                title: "Deep Analysis",
-                                value: deepAnalysis,
-                                onChanged: onDeepAnalysisChanged,
+                              child: StatefulBuilder(
+                                builder: (context, localSetState) {
+                                  return Row(
+                                    children: [
+                                      Image.asset(
+                                        Assets.images.radar.path,
+                                        height: 20.h,
+                                        width: 20.w,
+                                      ),
+                                      SizedBox(width: 10),
+                                      MdSnsText(
+                                        "Deep Analysis",
+                                        variant: TextVariant.h4,
+                                        fontWeight: TextFontWeightVariant.h4,
+                                        color: AppColors.colorB2B2B7,
+                                      ),
+                                      Spacer(),
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: Switch(
+                                          activeColor: Colors.lightBlueAccent,
+                                          activeTrackColor:
+                                              AppColors.secondaryColor,
+                                          inactiveThumbColor:
+                                              Colors.lightBlueAccent,
+                                          inactiveTrackColor:
+                                              AppColors.primaryColor,
+                                          value: deepAnalysis,
+                                          onChanged: (val) {
+                                            localSetState(
+                                              () => deepAnalysis = val,
+                                            );
+                                            onDeepAnalysisChanged(val);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
                             ),
                           ],
                           child: Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: EdgeInsets.all(10),
                             height: 35.h,
                             width: 35.w,
                             decoration: BoxDecoration(

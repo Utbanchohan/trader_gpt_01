@@ -54,9 +54,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   User? user;
   bool dialogOpen = false;
   String? oldResponse;
-  bool webMode = true;
-  bool report = true;
-  bool deepAnalysis = true;
+  bool? webMode;
+  bool? report ;
+  bool? deepAnalysis;
   List<Workflow> workflows = [];
   Workflow? selectedWorkFlow;
   bool isWorkFlow = false;
@@ -350,9 +350,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           task: message.text,
           symbol: selectedStock != null ? selectedStock!.symbol : "TDGPT",
           symbolName: selectedStock != null ? selectedStock!.name : "TraderGPT",
-          report: false,
-          isWebResearch: false,
-          deepSearch: false,
+          report: report?? false,
+          isWebResearch: webMode?? false,
+          deepSearch: deepAnalysis?? false,
           chatId: chadId!,
           replyId: "68c1d2c86d162417bca6fc8e",
           workflowObject: isWorkFlow
@@ -415,6 +415,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           isWorkSymbol = false;
         });
         scrollToBottom();
+    
       }
 
       message.clear();
@@ -472,35 +473,39 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         chatRouting: widget.chatRouting,
         asyncStream: asyncStream,
       ),
-      bottomNavigationBar: ChatBottomBar(
-        messageController: message,
-        limitController: limit,
-        textScrollController: _textScrollController,
-        isWorkFlow: isWorkFlow,
-        isWorkSymbol: isWorkSymbol,
-        selectedStock: selectedStock,
-        webMode: webMode,
-        report: report,
-        deepAnalysis: deepAnalysis,
-        onSend: () => _sendMessage(ref),
-        onPrefixTap: () async {
-          if (widget.chatRouting == null ||
-              widget.chatRouting!.companyName.isEmpty) {
-            selectedStock = await showDialogue(questions, [], message, 0);
-          } else {
-            showDialogue(questions, [], message, 0);
-          }
-        },
-        onDeleteWorkflow: () {
-          isWorkSymbol = false;
-          isWorkFlow = false;
-          message.clear();
-        },
-        onSlashDetected: (ctx) => questionDialog(ctx),
-        onWebModeChanged: (val) => setState(() => webMode = val),
-        onReportChanged: (val) => setState(() => report = val),
-        onDeepAnalysisChanged: (val) => setState(() => deepAnalysis = val),
+      bottomNavigationBar: SafeArea(
+        bottom: true,
+        child: ChatBottomBar(
+          messageController: message,
+          limitController: limit,
+          textScrollController: _textScrollController,
+          isWorkFlow: isWorkFlow,
+          isWorkSymbol: isWorkSymbol,
+          selectedStock: selectedStock,
+          webMode: webMode??false,
+          report: report??false,
+          deepAnalysis: deepAnalysis??false,
+          onSend: () => _sendMessage(ref),
+          onPrefixTap: () async {
+            if (widget.chatRouting == null ||
+                widget.chatRouting!.companyName.isEmpty) {
+              selectedStock = await showDialogue(questions, [], message, 0);
+            } else {
+              showDialogue(questions, [], message, 0);
+            }
+          },
+          onDeleteWorkflow: () {
+            isWorkSymbol = false;
+            isWorkFlow = false;
+            message.clear();
+          },
+          onSlashDetected: (ctx) => questionDialog(ctx),
+          onWebModeChanged: (val) => setState(() => webMode = val),
+          onReportChanged: (val) => setState(() => report = val),
+          onDeepAnalysisChanged: (val) => setState(() => deepAnalysis = val),
+        ),
       ),
+    
     );
   }
 }
