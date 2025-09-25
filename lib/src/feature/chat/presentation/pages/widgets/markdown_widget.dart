@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/new_chart_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/extensions/symbol_image.dart';
 import '../../../../../core/theme/app_colors.dart';
@@ -133,7 +134,8 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                     height: 20.h,
                     width: 20.w,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(5.r),
+                      // shape: BoxShape.circle,
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         image: widget.image.isEmpty
@@ -145,9 +147,12 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                 : Container(
                     height: 20.h,
                     width: 20.w,
-                    decoration: BoxDecoration(shape: BoxShape.circle),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+
+                    ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(300),
+                      borderRadius: BorderRadius.circular(5),
                       child: SvgPicture.network(
                         getItemImage(ImageType.stock, widget.name),
                         fit: BoxFit.cover,
@@ -280,7 +285,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                     ),
                 onTapLink: (text, href, title) {
                   if (href != null) {
-                    // launchUrl(Uri.parse(href)); // needs url_launcher
+                    launchUrl(Uri.parse(href)); // needs url_launcher
                   }
                 },
               ),
