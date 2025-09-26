@@ -21,7 +21,7 @@ class CustomLineChart extends StatelessWidget {
       child: LineChart(
         LineChartData(
           minX: 0,
-          maxX: 6,
+          maxX: 10,
           minY: 192,
           maxY: 202,
           gridData: FlGridData(
@@ -35,10 +35,7 @@ class CustomLineChart extends StatelessWidget {
           titlesData: FlTitlesData(
             // ✅ LEFT OFF, RIGHT ON
             leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: false, // text hide, सिर्फ space लेगा
-                reservedSize: 16, // 👈 left space मिलेगा
-              ),
+              sideTitles: SideTitles(showTitles: false, reservedSize: 16),
             ),
             rightTitles: AxisTitles(
               sideTitles: SideTitles(
@@ -176,7 +173,11 @@ class CustomLineChart extends StatelessWidget {
                 FlSpot(3, 197),
                 FlSpot(4, 194.84),
                 FlSpot(5, 198),
-                FlSpot(6, 200),
+                FlSpot(6, 196),
+                FlSpot(7, 198),
+                FlSpot(8, 194),
+                FlSpot(9, 200),
+                FlSpot(10, 197),
               ],
             ),
           ],

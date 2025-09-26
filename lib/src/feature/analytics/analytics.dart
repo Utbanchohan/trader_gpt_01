@@ -10,7 +10,9 @@ import 'package:trader_gpt/src/shared/chart/revenue_analysis.dart';
 import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/price_card_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import 'package:trader_gpt/utils/constant.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   final ChatRouting? chatRouting;
@@ -135,6 +137,29 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           );
   }
 
+  final List<Map<String, dynamic>> priceData = [
+    {
+      "previousPrice": "173.19",
+      "afterHoursPrice": "176.22",
+      "percentage": "+0.25%",
+    },
+    {
+      "previousPrice": "210.50",
+      "afterHoursPrice": "212.30",
+      "percentage": "+0.85%",
+    },
+    {
+      "previousPrice": "150.00",
+      "afterHoursPrice": "149.50",
+      "percentage": "-0.33%",
+    },
+    {
+      "previousPrice": "305.75",
+      "afterHoursPrice": "310.25",
+      "percentage": "+1.48%",
+    },
+  ];
+
   @override
   @override
   Widget build(BuildContext context) {
@@ -172,7 +197,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     isScrollable: true,
                     dividerColor: Colors.transparent,
                     indicator: BoxDecoration(
-                      color: Color(0xFF1B254B), // Selected tab background
+                      color: Color(0xFF1B254B),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     indicatorPadding: EdgeInsets.zero,
@@ -294,7 +319,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           ),
 
           Container(
-            // 👈 margin hata diya
+            margin: EdgeInsets.only(left: 5.w),
+
             child: TabBar(
               isScrollable: true,
               indicatorSize: TabBarIndicatorSize.tab,
@@ -449,9 +475,113 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
-            // Aapka poora Overview ka content (Stock Info, Charts, PerformanceTable, etc.)
-            CustomLineChart(),
+            SizedBox(height: 14.h),
+            Row(
+              children: [
+                Image.asset(
+                  Assets.images.frame1171275460.path,
+                  height: 53.h,
+                  width: 53.w,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        MdSnsText(
+                          "#TSLA",
+                          // "#${selectedStock!.symbol}",
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h1,
+
+                          color: AppColors.white,
+                        ),
+                        const SizedBox(width: 4),
+                        MdSnsText(
+                          "TESLA INC",
+                          // selectedStock!.name.split("-").first.trim(),
+                          color: AppColors.colorB2B2B7,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.white,
+                          size: 20.sp,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        MdSnsText(
+                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.white,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          selectedStock!.changesPercentage.toString().contains(
+                                "-",
+                              )
+                              ? Icons.arrow_drop_down
+                              : Icons.arrow_drop_up,
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          size: 20,
+                        ),
+                        MdSnsText(
+                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            AppSpacing.h10,
+            SizedBox(
+              height: 120.h,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal, // Horizontal scrolling
+                // padding: EdgeInsets.symmetric(horizontal: 16.w),
+                itemCount: priceData.length,
+                physics: const BouncingScrollPhysics(), // Smooth scrolling
+                itemBuilder: (context, index) {
+                  final item = priceData[index];
+                  return PriceCardWidget(
+                    previousPrice: item["previousPrice"],
+                    afterHoursPrice: item["afterHoursPrice"],
+                    percentage: item["percentage"],
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(width: 20.w);
+                },
+              ),
+            ),
             SizedBox(height: 20.h),
+            CustomLineChart(),
+
+            SizedBox(height: 20.h),
+
             RevenueAnalysisChart(),
             SizedBox(height: 20.h),
 
@@ -499,7 +629,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
             SizedBox(height: 20.h),
 
-            // ---------- PRICE COMPARISON ----------
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(

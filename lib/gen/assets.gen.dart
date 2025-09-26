@@ -24,6 +24,10 @@ class $AssetsImagesGen {
   AssetGenImage get conversation =>
       const AssetGenImage('assets/images/Conversation.png');
 
+  /// File path: assets/images/Frame 1171275460.png
+  AssetGenImage get frame1171275460 =>
+      const AssetGenImage('assets/images/Frame 1171275460.png');
+
   /// File path: assets/images/Google.png
   AssetGenImage get google => const AssetGenImage('assets/images/Google.png');
 
@@ -300,6 +304,7 @@ class $AssetsImagesGen {
     a4,
     appLogo,
     conversation,
+    frame1171275460,
     google,
     group702,
     meta,
