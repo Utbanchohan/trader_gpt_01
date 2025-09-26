@@ -197,7 +197,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     isScrollable: true,
                     dividerColor: Colors.transparent,
                     indicator: BoxDecoration(
-                      color: Color(0xFF1B254B), 
+                      color: Color(0xFF1B254B),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     indicatorPadding: EdgeInsets.zero,
@@ -318,49 +318,56 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
           ),
 
-          TabBar(
-            isScrollable: true,
-            indicatorSize: TabBarIndicatorSize.tab,
-            tabAlignment: TabAlignment.start,
-            indicator: BoxDecoration(
-              color: AppColors.color1B254B,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            indicatorPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            labelColor: Colors.white,
-            labelPadding: EdgeInsets.symmetric(horizontal: 10.w),
-            unselectedLabelColor: AppColors.colorB2B2B7,
-            dividerColor: Colors.transparent,
-            tabs: List.generate(
-              categories.length,
-              (index) => Tab(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    border: Border.all(
-                      color: AppColors.colorB2B2B7.withOpacity(0.4),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (categoryImages[index] != null)
-                        Image.asset(
-                          categoryImages[index]!,
-                          width: 14.w,
-                          height: 14.h,
-                        ),
-                      if (categoryImages[index] != null) SizedBox(width: 8.w),
-                      Text(
-                        categories[index],
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                        ),
+          Container(
+            margin: EdgeInsets.only(left: 5.w),
+
+            child: TabBar(
+              isScrollable: true,
+              indicatorSize: TabBarIndicatorSize.tab,
+              tabAlignment: TabAlignment.start,
+              indicator: BoxDecoration(
+                color: AppColors.color1B254B,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              indicatorPadding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 6,
+              ),
+              labelColor: Colors.white,
+              labelPadding: EdgeInsets.symmetric(horizontal: 10.w),
+              unselectedLabelColor: AppColors.colorB2B2B7,
+              dividerColor: Colors.transparent,
+              tabs: List.generate(
+                categories.length,
+                (index) => Tab(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(
+                        color: AppColors.colorB2B2B7.withOpacity(0.4),
+                        width: 1,
                       ),
-                    ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (categoryImages[index] != null)
+                          Image.asset(
+                            categoryImages[index]!,
+                            width: 14.w,
+                            height: 14.h,
+                          ),
+                        if (categoryImages[index] != null) SizedBox(width: 8.w),
+                        Text(
+                          categories[index],
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -481,7 +488,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   children: [
                     Row(
                       children: [
-
                         MdSnsText(
                           "#TSLA",
                           // "#${selectedStock!.symbol}",
@@ -552,7 +558,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
             AppSpacing.h10,
             SizedBox(
-              height: 120.h, 
+              height: 120.h,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal, // Horizontal scrolling
                 // padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -565,11 +571,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     afterHoursPrice: item["afterHoursPrice"],
                     percentage: item["percentage"],
                   );
-                }, separatorBuilder: (BuildContext context, int index) { 
-                  return SizedBox(
-                    width: 20.w,
-                  );
-                 },
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(width: 20.w);
+                },
               ),
             ),
             SizedBox(height: 20.h),
