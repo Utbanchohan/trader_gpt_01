@@ -301,12 +301,13 @@ class ChatBottomBar extends StatelessWidget {
                               shape: BoxShape.circle,
                               color: AppColors.color091224,
                               border: Border.all(
-                                color: AppColors.bluishgrey404F81,
+                                color: AppColors.color3C4E8A,
                                 width: 1.5,
                               ),
                             ),
                             child: Image.asset(
                               Assets.images.textfieldicon3.path,
+                              color: AppColors.color3C4E8A,
                             ),
                           ),
                         ),
