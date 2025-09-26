@@ -151,6 +151,10 @@ class ChatBottomBar extends StatelessWidget {
                       children: [
                         /// Settings Popup
                         PopupMenuButton<String>(
+                          offset: Offset(
+                            0,
+                            -160.h,
+                          ), // menu ko upar shift karna (value adjust kar lena)
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -160,43 +164,51 @@ class ChatBottomBar extends StatelessWidget {
                             // Web Mode
                             PopupMenuItem(
                               enabled: false,
-                              child: StatefulBuilder(
-                                builder: (context, localSetState) {
-                                  return Row(
-                                    children: [
-                                      Image.asset(
-                                        Assets.images.global.path,
-                                        height: 20.h,
-                                        width: 20.w,
-                                      ),
-                                      SizedBox(width: 10),
-                                      MdSnsText(
-                                        "Web Mode",
-                                        variant: TextVariant.h4,
-                                        fontWeight: TextFontWeightVariant.h4,
-                                        color: AppColors.colorB2B2B7,
-                                      ),
-                                      Spacer(),
-                                      Transform.scale(
-                                        scale: 0.8,
-                                        child: Switch(
-                                          activeColor: Colors.lightBlueAccent,
-                                          activeTrackColor:
-                                              AppColors.secondaryColor,
-                                          inactiveThumbColor:
-                                              Colors.lightBlueAccent,
-                                          inactiveTrackColor:
-                                              AppColors.primaryColor,
-                                          value: webMode,
-                                          onChanged: (val) {
-                                            localSetState(() => webMode = val);
-                                            onWebModeChanged(val);
-                                          },
+                              padding: EdgeInsets.all(10.w),
+
+                              child: SizedBox(
+                                height: 20.h,
+                                child: StatefulBuilder(
+                                  builder: (context, localSetState) {
+                                    return Row(
+                                      children: [
+                                        Image.asset(
+                                          Assets.images.global.path,
+                                          height: 18,
+                                          width: 18,
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                                        SizedBox(width: 8),
+                                        MdSnsText(
+                                          "Web Mode",
+                                          variant: TextVariant.h4,
+                                          fontWeight: TextFontWeightVariant.h4,
+                                          color: AppColors.colorB2B2B7,
+                                        ),
+                                        Spacer(),
+                                        Transform.scale(
+                                          scale: 0.6,
+
+                                          child: Switch(
+                                            activeColor: Colors.lightBlueAccent,
+                                            activeTrackColor:
+                                                AppColors.secondaryColor,
+                                            inactiveThumbColor:
+                                                Colors.lightBlueAccent,
+                                            inactiveTrackColor:
+                                                AppColors.primaryColor,
+                                            value: webMode,
+                                            onChanged: (val) {
+                                              localSetState(
+                                                () => webMode = val,
+                                              );
+                                              onWebModeChanged(val);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                             PopupMenuDivider(
@@ -205,43 +217,50 @@ class ChatBottomBar extends StatelessWidget {
 
                             // Report
                             PopupMenuItem(
-                              child: StatefulBuilder(
-                                builder: (context, localSetState) {
-                                  return Row(
-                                    children: [
-                                      Image.asset(
-                                        Assets.images.note.path,
-                                        height: 20.h,
-                                        width: 20.w,
-                                      ),
-                                      SizedBox(width: 10),
-                                      MdSnsText(
-                                        "Report",
-                                        variant: TextVariant.h4,
-                                        fontWeight: TextFontWeightVariant.h4,
-                                        color: AppColors.colorB2B2B7,
-                                      ),
-                                      Spacer(),
-                                      Transform.scale(
-                                        scale: 0.8,
-                                        child: Switch(
-                                          activeColor: Colors.lightBlueAccent,
-                                          activeTrackColor:
-                                              AppColors.secondaryColor,
-                                          inactiveThumbColor:
-                                              Colors.lightBlueAccent,
-                                          inactiveTrackColor:
-                                              AppColors.primaryColor,
-                                          value: report,
-                                          onChanged: (val) {
-                                            localSetState(() => report = val);
-                                            onReportChanged(val);
-                                          },
+                              padding: EdgeInsets.all(10.w),
+
+                              child: SizedBox(
+                                height: 20.h,
+
+                                child: StatefulBuilder(
+                                  builder: (context, localSetState) {
+                                    return Row(
+                                      children: [
+                                        Image.asset(
+                                          Assets.images.note.path,
+                                          height: 18,
+                                          width: 18,
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                                        SizedBox(width: 8),
+                                        MdSnsText(
+                                          "Report",
+                                          variant: TextVariant.h4,
+                                          fontWeight: TextFontWeightVariant.h4,
+                                          color: AppColors.colorB2B2B7,
+                                        ),
+                                        Spacer(),
+                                        Transform.scale(
+                                          scale: 0.6,
+
+                                          child: Switch(
+                                            activeColor: Colors.lightBlueAccent,
+                                            activeTrackColor:
+                                                AppColors.secondaryColor,
+                                            inactiveThumbColor:
+                                                Colors.lightBlueAccent,
+                                            inactiveTrackColor:
+                                                AppColors.primaryColor,
+                                            value: report,
+                                            onChanged: (val) {
+                                              localSetState(() => report = val);
+                                              onReportChanged(val);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                             PopupMenuDivider(
@@ -251,45 +270,50 @@ class ChatBottomBar extends StatelessWidget {
                             // Deep Analysis
                             PopupMenuItem(
                               enabled: false,
-                              child: StatefulBuilder(
-                                builder: (context, localSetState) {
-                                  return Row(
-                                    children: [
-                                      Image.asset(
-                                        Assets.images.radar.path,
-                                        height: 20.h,
-                                        width: 20.w,
-                                      ),
-                                      SizedBox(width: 10),
-                                      MdSnsText(
-                                        "Deep Analysis",
-                                        variant: TextVariant.h4,
-                                        fontWeight: TextFontWeightVariant.h4,
-                                        color: AppColors.colorB2B2B7,
-                                      ),
-                                      Spacer(),
-                                      Transform.scale(
-                                        scale: 0.8,
-                                        child: Switch(
-                                          activeColor: Colors.lightBlueAccent,
-                                          activeTrackColor:
-                                              AppColors.secondaryColor,
-                                          inactiveThumbColor:
-                                              Colors.lightBlueAccent,
-                                          inactiveTrackColor:
-                                              AppColors.primaryColor,
-                                          value: deepAnalysis,
-                                          onChanged: (val) {
-                                            localSetState(
-                                              () => deepAnalysis = val,
-                                            );
-                                            onDeepAnalysisChanged(val);
-                                          },
+                              padding: EdgeInsets.all(10.w),
+                              child: SizedBox(
+                                height: 20.h,
+
+                                child: StatefulBuilder(
+                                  builder: (context, localSetState) {
+                                    return Row(
+                                      children: [
+                                        Image.asset(
+                                          Assets.images.radar.path,
+                                          height: 18,
+                                          width: 18,
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                                        SizedBox(width: 8),
+                                        MdSnsText(
+                                          "Deep Analysis",
+                                          variant: TextVariant.h4,
+                                          fontWeight: TextFontWeightVariant.h4,
+                                          color: AppColors.colorB2B2B7,
+                                        ),
+                                        Spacer(),
+                                        Transform.scale(
+                                          scale: 0.6,
+                                          child: Switch(
+                                            activeColor: Colors.lightBlueAccent,
+                                            activeTrackColor:
+                                                AppColors.secondaryColor,
+                                            inactiveThumbColor:
+                                                Colors.lightBlueAccent,
+                                            inactiveTrackColor:
+                                                AppColors.primaryColor,
+                                            value: deepAnalysis,
+                                            onChanged: (val) {
+                                              localSetState(
+                                                () => deepAnalysis = val,
+                                              );
+                                              onDeepAnalysisChanged(val);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ],
@@ -301,16 +325,16 @@ class ChatBottomBar extends StatelessWidget {
                               shape: BoxShape.circle,
                               color: AppColors.color091224,
                               border: Border.all(
-                                color: AppColors.bluishgrey404F81,
+                                color: AppColors.color3C4E8A,
                                 width: 1.5,
                               ),
                             ),
                             child: Image.asset(
                               Assets.images.textfieldicon3.path,
+                              color: AppColors.color3C4E8A,
                             ),
                           ),
                         ),
-
                         Row(
                           children: [
                             Container(
