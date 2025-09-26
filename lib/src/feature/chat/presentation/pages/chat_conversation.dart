@@ -468,49 +468,38 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
-      bottomNavigationBar:
-          widget.chatRouting != null && widget.chatRouting!.companyName.isNotEmpty
-       
-                ? SafeArea(
-                    bottom: true,
-                    child: ChatBottomBar(
-                      messageController: message,
-                      limitController: limit,
-                      textScrollController: _textScrollController,
-                      isWorkFlow: isWorkFlow,
-                      isWorkSymbol: isWorkSymbol,
-                      selectedStock: selectedStock,
-                      webMode: webMode ?? false,
-                      report: report ?? false,
-                      deepAnalysis: deepAnalysis ?? false,
-                      onSend: () => _sendMessage(ref),
-                      onPrefixTap: () async {
-                        if (widget.chatRouting == null ||
-                            widget.chatRouting!.companyName.isEmpty) {
-                          selectedStock = await showDialogue(
-                            questions,
-                            [],
-                            message,
-                            0,
-                          );
-                        } else {
-                          showDialogue(questions, [], message, 0);
-                        }
-                      },
-                      onDeleteWorkflow: () {
-                        isWorkSymbol = false;
-                        isWorkFlow = false;
-                        message.clear();
-                      },
-                      onSlashDetected: (ctx) => questionDialog(ctx),
-                      onWebModeChanged: (val) => setState(() => webMode = val),
-                      onReportChanged: (val) => setState(() => report = val),
-                      onDeepAnalysisChanged: (val) =>
-                          setState(() => deepAnalysis = val),
-                    ),
-                  )
-                : SizedBox()
-,
+      bottomNavigationBar: SafeArea(
+        bottom: true,
+        child: ChatBottomBar(
+          messageController: message,
+          limitController: limit,
+          textScrollController: _textScrollController,
+          isWorkFlow: isWorkFlow,
+          isWorkSymbol: isWorkSymbol,
+          selectedStock: selectedStock,
+          webMode: webMode ?? false,
+          report: report ?? false,
+          deepAnalysis: deepAnalysis ?? false,
+          onSend: () => _sendMessage(ref),
+          onPrefixTap: () async {
+            if (widget.chatRouting == null ||
+                widget.chatRouting!.companyName.isEmpty) {
+              selectedStock = await showDialogue(questions, [], message, 0);
+            } else {
+              showDialogue(questions, [], message, 0);
+            }
+          },
+          onDeleteWorkflow: () {
+            isWorkSymbol = false;
+            isWorkFlow = false;
+            message.clear();
+          },
+          onSlashDetected: (ctx) => questionDialog(ctx),
+          onWebModeChanged: (val) => setState(() => webMode = val),
+          onReportChanged: (val) => setState(() => report = val),
+          onDeepAnalysisChanged: (val) => setState(() => deepAnalysis = val),
+        ),
+      ),
 
       backgroundColor: AppColors.primaryColor,
       appBar: ConversationChatAppBar(chatRouting: widget.chatRouting),
