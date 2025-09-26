@@ -14,6 +14,7 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/welcome_widget.dart';
 import 'package:trader_gpt/src/feature/conversations_start/provider/delete_provider.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/widgets/archive_widget.dart';
@@ -403,7 +404,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                     ),
             ),
 
-            // Yeh Expanded me rakho
             Expanded(
               child: TabBarView(
                 physics: NeverScrollableScrollPhysics(),
@@ -647,15 +647,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : Center(
-                          child: MdSnsText(
-                            "Conversation Not Found",
-                            variant: TextVariant.h1,
-                            fontWeight: TextFontWeightVariant.h2,
-
-                            color: AppColors.fieldTextColor,
-                          ),
-                        ),
+                      : WelcomeWidget(),
 
                   // Second tab
                   convo != null && convo.isNotEmpty && stocks.isNotEmpty
@@ -773,15 +765,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : Center(
-                          child: MdSnsText(
-                            "Conversation Not Found",
-                            variant: TextVariant.h1,
-                            fontWeight: TextFontWeightVariant.h2,
-
-                            color: AppColors.fieldTextColor,
-                          ),
-                        ),
+                      : WelcomeWidget(),
 
                   Center(
                     child: MdSnsText(
