@@ -37,7 +37,11 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
         .onSubmit(email: email.value.text, password: password.value.text);
     if (result != null) {
       if (mounted) {
-        context.goNamed(AppRoutes.conversationStart.name);
+        context.goNamed(AppRoutes.swipeScreen.name,
+        extra: {
+            "initialIndex": 0,
+          }
+        );
       }
     }
   }

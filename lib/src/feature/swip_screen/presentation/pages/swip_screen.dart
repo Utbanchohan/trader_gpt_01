@@ -4,13 +4,17 @@ import 'package:trader_gpt/src/core/local/repository/local_storage_repository.da
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/analytics.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_conversation.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
 import 'package:trader_gpt/src/feature/conversations_start/presentation/pages/conversation_start.dart';
+import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
 class SwipeScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
-  final int initialIndex; // 👈 extra arg
+  final int initialIndex;
 
   const SwipeScreen({
     super.key,
@@ -24,19 +28,48 @@ class SwipeScreen extends ConsumerStatefulWidget {
 
 class _SwipeScreenState extends ConsumerState<SwipeScreen> {
   late PageController _pageController;
+  List<ChatHistory> convo = [];
+  List<Stock> stocks = [];
 
   @override
   void initState() {
     super.initState();
-
+    getChats();
+    getStocks();
     bool isFirstTime = ref.read(localDataProvider).getIsFirstTime();
-
     int pageIndex = isFirstTime ? 0 : widget.initialIndex; 
     _pageController = PageController(initialPage: pageIndex);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       openSheet(isFirstTime);
     });
+  }
+
+  getChats() async {
+    var res = await ref.read(chatRepository).chats();
+    if (!res.isSuccess) return false;
+
+    // make a set of existing symbols for O(1) lookup
+    final existingSymbols = convo.map((e) => e.symbol).toSet();
+
+    for (final chat in res.data!.results) {
+      if (chat.symbol.toLowerCase() != "tdgpt" &&
+          !existingSymbols.contains(chat.symbol)) {
+        convo.add(chat);
+        existingSymbols.add(chat.symbol); // keep set in sync
+      }
+    }
+
+    setState(() {});
+  }
+
+  getStocks() async {
+    var res = await ref.read(localDataProvider).getStocks();
+    if (res != null) {
+      for (var stock in res) {
+        stocks.add(Stock.fromJson(stock));
+      }
+    }
   }
 
   openSheet(bool isFirstTime) {
@@ -59,8 +92,11 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
       body: PageView(
         controller: _pageController,
         children: [
+          
           ConversationStart(),
-          ChatConversation(chatRouting: widget.chatRouting),
+          convo != null && convo.isNotEmpty && stocks.isNotEmpty?
+          ChatConversation(chatRouting: widget.chatRouting):ChatPage(chatRouting: widget.chatRouting,),
+          if(convo != null && convo.isNotEmpty && stocks.isNotEmpty)
           AnalyticsScreen(),
         ],
       ),

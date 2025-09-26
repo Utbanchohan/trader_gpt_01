@@ -70,7 +70,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
 
       if (result != null) {
         if (mounted) {
-          context.goNamed(AppRoutes.conversationStart.name);
+          context.goNamed(AppRoutes.swipeScreen.name,
+          extra: {
+            "initialIndex": 0,
+          }
+          );
         }
       }
     } else {

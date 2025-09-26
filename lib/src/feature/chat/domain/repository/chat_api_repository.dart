@@ -51,7 +51,7 @@ class ChatApiRepository implements ChatRepository {
 
   @override
   Future<BaseModel<DeleteResponse>> deleteChat(String chatId) async {
-    return await ChatApi(client).deleteChat(chatId);
+    return await ChatApi(client).deleteChat(chatId, {});
   }
 
   @override

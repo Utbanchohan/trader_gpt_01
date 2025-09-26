@@ -40,11 +40,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
   final TextEditingController search = TextEditingController();
 
   List<ChatHistory> convo = [];
+  List<Stock> stocks = [];
   List<ChatHistory> searchConvo = [];
 
   final SocketService socketService = SocketService();
   late TabController tabController;
-  List<Stock> stocks = [];
   Timer? pollingTimer;
   bool loading = true;
   Timer? _debounce;
@@ -64,6 +64,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         .delete(chatId: convoId);
 
     if (result != null) {
+      Navigator.pop(context);
+
       setState(() {
         convo.removeWhere((c) => c.id == convoId);
         searchConvo.removeWhere((c) => c.id == convoId);
@@ -434,19 +436,22 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             return GestureDetector(
                               onTap: () {
                                 context.pushNamed(
-                                  AppRoutes.chatPage.name,
-                                  extra: ChatRouting(
-                                    chatId: convo[index].id,
-                                    symbol: convo[index].symbol,
-                                    image: stocks[stockIndex].logoUrl,
-                                    companyName: convo[index].companyName,
-                                    price: stocks[stockIndex].price,
-                                    changePercentage:
-                                        stocks[stockIndex].changesPercentage,
-                                    trendChart:
-                                        stocks[stockIndex].fiveDayTrend[0],
-                                    stockid: convo[index].stockId,
-                                  ),
+                                  AppRoutes.swipeScreen.name,
+                                  extra: {
+                                    "chatRouting": ChatRouting(
+                                      chatId: convo[index].id,
+                                      symbol: convo[index].symbol,
+                                      image: stocks[stockIndex].logoUrl,
+                                      companyName: convo[index].companyName,
+                                      price: stocks[stockIndex].price,
+                                      changePercentage:
+                                          stocks[stockIndex].changesPercentage,
+                                      trendChart:
+                                          stocks[stockIndex].fiveDayTrend[0],
+                                      stockid: convo[index].stockId,
+                                    ),
+                                    "initialIndex": 1,
+                                  },
                                 );
                               },
                               child: Slidable(
@@ -677,19 +682,22 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             return GestureDetector(
                               onTap: () {
                                 context.pushNamed(
-                                  AppRoutes.chatPage.name,
-                                  extra: ChatRouting(
-                                    chatId: convo[index].id,
-                                    symbol: convo[index].symbol,
-                                    image: stocks[stockIndex].logoUrl,
-                                    companyName: convo[index].companyName,
-                                    price: stocks[stockIndex].price,
-                                    changePercentage:
-                                        stocks[stockIndex].changesPercentage,
-                                    trendChart:
-                                        stocks[stockIndex].fiveDayTrend[0],
-                                    stockid: convo[index].stockId,
-                                  ),
+                                  AppRoutes.swipeScreen.name,
+                                  extra: {
+                                    "chatRouting": ChatRouting(
+                                      chatId: convo[index].id,
+                                      symbol: convo[index].symbol,
+                                      image: stocks[stockIndex].logoUrl,
+                                      companyName: convo[index].companyName,
+                                      price: stocks[stockIndex].price,
+                                      changePercentage:
+                                          stocks[stockIndex].changesPercentage,
+                                      trendChart:
+                                          stocks[stockIndex].fiveDayTrend[0],
+                                      stockid: convo[index].stockId,
+                                    ),
+                                    "initialIndex": 1,
+                                  },
                                 );
                               },
                               child: Slidable(
