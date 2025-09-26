@@ -15,8 +15,7 @@ import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_app_
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_bottom_bar.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_message_item.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_message_list.dart';
-import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/loading_widget.dart'
-    show LoadingWidgetMarkdown;
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/loading_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/work_flow_provider.dart';
@@ -563,7 +562,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               },
               loading: () => Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [LoadingWidgetMarkdown()],
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20.h),
+                    child: LoadingWidgetMarkdown(),
+                  ),
+                ],
               ),
               error: (err, _) => Text("Error: $err"),
             ),
