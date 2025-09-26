@@ -10,6 +10,7 @@ import 'package:trader_gpt/src/shared/chart/revenue_analysis.dart';
 import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/price_card_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class AnalyticsScreen extends StatefulWidget {
@@ -134,6 +135,29 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             exchangeSortOrder: 0,
           );
   }
+
+  final List<Map<String, dynamic>> priceData = [
+    {
+      "previousPrice": "173.19",
+      "afterHoursPrice": "176.22",
+      "percentage": "+0.25%",
+    },
+    {
+      "previousPrice": "210.50",
+      "afterHoursPrice": "212.30",
+      "percentage": "+0.85%",
+    },
+    {
+      "previousPrice": "150.00",
+      "afterHoursPrice": "149.50",
+      "percentage": "-0.33%",
+    },
+    {
+      "previousPrice": "305.75",
+      "afterHoursPrice": "310.25",
+      "percentage": "+1.48%",
+    },
+  ];
 
   @override
   @override
@@ -293,55 +317,49 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
           ),
 
-          Container(
-            // 👈 margin hata diya
-            child: TabBar(
-              isScrollable: true,
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabAlignment: TabAlignment.start,
-              indicator: BoxDecoration(
-                color: AppColors.color1B254B,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              indicatorPadding: EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 6,
-              ),
-              labelColor: Colors.white,
-              labelPadding: EdgeInsets.symmetric(horizontal: 10.w),
-              unselectedLabelColor: AppColors.colorB2B2B7,
-              dividerColor: Colors.transparent,
-              tabs: List.generate(
-                categories.length,
-                (index) => Tab(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      border: Border.all(
-                        color: AppColors.colorB2B2B7.withOpacity(0.4),
-                        width: 1,
-                      ),
+          TabBar(
+            isScrollable: true,
+            indicatorSize: TabBarIndicatorSize.tab,
+            tabAlignment: TabAlignment.start,
+            indicator: BoxDecoration(
+              color: AppColors.color1B254B,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            indicatorPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            labelColor: Colors.white,
+            labelPadding: EdgeInsets.symmetric(horizontal: 10.w),
+            unselectedLabelColor: AppColors.colorB2B2B7,
+            dividerColor: Colors.transparent,
+            tabs: List.generate(
+              categories.length,
+              (index) => Tab(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    border: Border.all(
+                      color: AppColors.colorB2B2B7.withOpacity(0.4),
+                      width: 1,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (categoryImages[index] != null)
-                          Image.asset(
-                            categoryImages[index]!,
-                            width: 14.w,
-                            height: 14.h,
-                          ),
-                        if (categoryImages[index] != null) SizedBox(width: 8.w),
-                        Text(
-                          categories[index],
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (categoryImages[index] != null)
+                        Image.asset(
+                          categoryImages[index]!,
+                          width: 14.w,
+                          height: 14.h,
                         ),
-                      ],
-                    ),
+                      if (categoryImages[index] != null) SizedBox(width: 8.w),
+                      Text(
+                        categories[index],
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -449,9 +467,115 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
-            // Aapka poora Overview ka content (Stock Info, Charts, PerformanceTable, etc.)
-            CustomLineChart(),
+            SizedBox(height: 14.h),
+            Row(
+              children: [
+                // Image.asset(
+                //   Assets.images.Frame 1171275460.path,
+                //   height: 53.h,
+                //   width: 53.w,
+                // ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        MdSnsText(
+                          "#TSLA",
+                          // "#${selectedStock!.symbol}",
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h1,
+
+                          color: AppColors.white,
+                        ),
+                        const SizedBox(width: 4),
+                        MdSnsText(
+                          "TESLA INC",
+                          // selectedStock!.name.split("-").first.trim(),
+                          color: AppColors.colorB2B2B7,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.white,
+                          size: 20.sp,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        MdSnsText(
+                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.white,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          selectedStock!.changesPercentage.toString().contains(
+                                "-",
+                              )
+                              ? Icons.arrow_drop_down
+                              : Icons.arrow_drop_up,
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          size: 20,
+                        ),
+                        MdSnsText(
+                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            SizedBox(
+              height: 154.h, // Height fixed for horizontal list
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal, // Horizontal scrolling
+                // padding: EdgeInsets.symmetric(horizontal: 16.w),
+                itemCount: priceData.length,
+                physics: const BouncingScrollPhysics(), // Smooth scrolling
+                itemBuilder: (context, index) {
+                  final item = priceData[index];
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      right: 16.w,
+                    ), // Space between cards
+                    child: PriceCardWidget(
+                      previousPrice: item["previousPrice"],
+                      afterHoursPrice: item["afterHoursPrice"],
+                      percentage: item["percentage"],
+                    ),
+                  );
+                },
+              ),
+            ),
             SizedBox(height: 20.h),
+            CustomLineChart(),
+
+            SizedBox(height: 20.h),
+
             RevenueAnalysisChart(),
             SizedBox(height: 20.h),
 

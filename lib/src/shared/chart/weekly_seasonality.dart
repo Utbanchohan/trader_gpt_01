@@ -29,7 +29,7 @@ class WeeklySeasonalityChart extends StatelessWidget {
             MdSnsText(
               "Weekly Seasonality",
               variant: TextVariant.h1,
-              color: AppColors.white,
+              color: AppColors.fieldTextColor,
               fontWeight: TextFontWeightVariant.h1,
             ),
             const SizedBox(height: 16),
@@ -65,12 +65,12 @@ class WeeklySeasonalityChart extends StatelessWidget {
                       bottomTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
-                          reservedSize: 90,
+                          reservedSize: 80,
                           getTitlesWidget: (value, meta) {
                             int index = value.toInt();
                             if (index >= 0 && index < weeklyData.length) {
                               return Transform.rotate(
-                                angle: -1.5708, // -90 degree (seedha kar diya)
+                                angle: -1.5708,
                                 child: Container(
                                   margin: EdgeInsets.only(top: 30.h),
 

@@ -35,10 +35,7 @@ class CustomLineChart extends StatelessWidget {
           titlesData: FlTitlesData(
             // ✅ LEFT OFF, RIGHT ON
             leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: false, // text hide, सिर्फ space लेगा
-                reservedSize: 16, // 👈 left space मिलेगा
-              ),
+              sideTitles: SideTitles(showTitles: false, reservedSize: 16),
             ),
             rightTitles: AxisTitles(
               sideTitles: SideTitles(
