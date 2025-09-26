@@ -26,7 +26,7 @@ class DeleteProvider extends _$DeleteProvider {
       }
       state = AppLoadingState();
     } catch (e) {
-      $showMessage(e.toString(), isError: true);
+      $showMessage(e. toString(), isError: true);
       state = AppLoadingState();
       debugPrint("errror $e");
     }

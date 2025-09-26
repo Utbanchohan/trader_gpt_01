@@ -561,9 +561,12 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                         },
                         loading: () => Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: [Container(
-                            margin: EdgeInsets.only(top: 20.h),
-                            child: LoadingWidgetMarkdown())],
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 20.h),
+                              child: LoadingWidgetMarkdown(),
+                            ),
+                          ],
                         ),
                         error: (err, _) => Text("Error: $err"),
                       ),

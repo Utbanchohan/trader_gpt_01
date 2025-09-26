@@ -33,7 +33,10 @@ abstract interface class ChatApi {
   Future<BaseModel<ChatHistory>> archiveChat( @Body() ArchiveChatDto archiveChatDto,);
 
   @DELETE("/chat/{chatId}")
-  Future<BaseModel<DeleteResponse>> deleteChat( @Path('chatId') String chatId);
+  Future<BaseModel<DeleteResponse>> deleteChat(
+    @Path("chatId") String chatId,
+    @Body() Map<String, dynamic> body,
+  );
 
   @GET("/message/{chatId}")
   Future<BaseModel<Conversation>> getMessages(

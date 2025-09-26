@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +9,6 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/shared/widgets/confirmation_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/logout_widgets.dart';
-
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class SideMenu extends ConsumerStatefulWidget {
@@ -22,7 +19,7 @@ class SideMenu extends ConsumerStatefulWidget {
 }
 
 class _SideMenuState extends ConsumerState<SideMenu> {
-  String selectedMenu = AppRoutes.chatPage.name;
+  String? selectedMenu;
   User? userModel;
 
   logout() {
@@ -50,24 +47,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     );
   }
 
-  void showConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return ConfirmationDialog(
-          onConfirm: () {
-            Navigator.pop(context); // Close dialog
-            // Perform confirm action here
-            print("Confirmed!");
-          },
-          onCancel: () {
-            Navigator.pop(context); // Close dialog
-          },
-        );
-      },
-    );
-  }
-
   getUser() async {
     dynamic userData = await ref.watch(localDataProvider).getUser();
     if (userData != null) {
@@ -75,6 +54,17 @@ class _SideMenuState extends ConsumerState<SideMenu> {
         userModel = User.fromJson(userData);
       });
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 👇 yahan se current route name milega
+    final routeName = GoRouterState.of(context).name;
+
+    setState(() {
+      selectedMenu = routeName ?? AppRoutes.chatPage.name;
+    });
   }
 
   @override
@@ -86,7 +76,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
       child: SafeArea(
         child: Container(
           padding: EdgeInsets.all(15.w),
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -164,20 +153,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       Assets.images.conversation.path,
                       "Conversation",
                       AppRoutes.swipeScreen.name,
-                      extra: {
-                        "chatRouting":
-                            null, 
-                        "initialIndex": 0,
-                      },
+                      extra: {"chatRouting": null, "initialIndex": 0},
                     ),
-
                     _buildMenuItem(
                       context,
                       Assets.images.book.path,
                       "Books",
                       "",
                     ),
-
                     _buildMenuItem(
                       context,
                       Assets.images.statusUp.path,
@@ -206,7 +189,8 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       backgroundImage:
                           userModel != null && userModel!.imgUrl.isNotEmpty
                           ? NetworkImage(userModel!.imgUrl)
-                          : AssetImage(Assets.images.placeholderimage.path),
+                          : AssetImage(Assets.images.placeholderimage.path)
+                                as ImageProvider,
                     ),
                     SizedBox(width: 14.w),
                     Expanded(
@@ -217,14 +201,12 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                             userModel != null && userModel!.name.isNotEmpty
                                 ? userModel!.name
                                 : "N/A",
-
                             color: AppColors.white,
                             variant: TextVariant.h3,
                             fontWeight: TextFontWeightVariant.h2,
                           ),
                           MdSnsText(
                             "Free Plan",
-
                             color: Colors.lightBlueAccent,
                             variant: TextVariant.h4,
                           ),
@@ -234,13 +216,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     GestureDetector(
                       onTap: () {
                         _showLogoutDialog(context);
-
-                        // showModalBottomSheet(
-                        //   context: context,
-                        //   backgroundColor: Colors.transparent,
-                        //   isScrollControlled: true,
-                        //   builder: (context) => const SettingBottomSheet(),
-                        // );
                       },
                       child: Icon(
                         Icons.logout,
@@ -263,7 +238,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     String icon,
     String title,
     String? routeName, {
-    Map<String, dynamic>? extra, // 👈 yahan optional extra argument add kiya
+    Map<String, dynamic>? extra,
   }) {
     final bool isSelected = selectedMenu == routeName;
 
@@ -286,11 +261,11 @@ class _SideMenuState extends ConsumerState<SideMenu> {
       onTap: routeName == null || routeName.isEmpty
           ? null
           : () {
+              setState(() {
+                selectedMenu = routeName; // 👈 update selected
+              });
               context.pop();
-              context.pushNamed(
-                routeName,
-                extra: extra, // 👈 yahan bhej diya
-              );
+              context.pushNamed(routeName, extra: extra);
             },
     );
   }

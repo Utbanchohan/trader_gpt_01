@@ -21,11 +21,13 @@ class _SplashState extends ConsumerState<Splash>
     super.initState();
 
     _controller = AnimationController(vsync: this);
-
-    // Jaise hi animation complete ho, next screen par jao
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        context.goNamed(AppRoutes.conversationStart.name);
+        context.goNamed(AppRoutes.swipeScreen.name,
+        extra: {
+          "initialIndex":0
+        }
+        );
       }
     });
   }
