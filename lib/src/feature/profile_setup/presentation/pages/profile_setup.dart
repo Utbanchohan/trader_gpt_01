@@ -70,7 +70,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
 
       if (result != null) {
         if (mounted) {
-          context.goNamed(AppRoutes.chatPage.name);
+          context.goNamed(AppRoutes.conversationStart.name);
         }
       }
     } else {

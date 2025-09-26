@@ -25,7 +25,7 @@ class _SplashState extends ConsumerState<Splash>
     // Jaise hi animation complete ho, next screen par jao
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        context.goNamed(AppRoutes.chatPage.name);
+        context.goNamed(AppRoutes.conversationStart.name);
       }
     });
   }
