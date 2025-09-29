@@ -468,10 +468,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         final regex = RegExp(pattern);
                         return regex.hasMatch(value)
                             ? null
-                            : "✖ At least 8 characters long "
-                                  "✖ At least one number (0–9) "
-                                  "✖ At least one uppercase letter (A–Z) "
-                                  "✖ At least one special character";
+                            : "Confirm Password should be same as create Password" ;
                       },
                       decoration: InputDecoration(
                         errorMaxLines: 4,
