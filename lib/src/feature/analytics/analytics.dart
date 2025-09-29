@@ -319,7 +319,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           ),
 
           Container(
-            margin: EdgeInsets.only(left: 5.w),
+            margin: EdgeInsets.only(left: 10.w),
 
             child: TabBar(
               isScrollable: true,
@@ -330,11 +330,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 borderRadius: BorderRadius.circular(50),
               ),
               indicatorPadding: EdgeInsets.symmetric(
-                horizontal: 12,
+                horizontal: 6,
                 vertical: 6,
               ),
               labelColor: Colors.white,
-              labelPadding: EdgeInsets.symmetric(horizontal: 10.w),
+              labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
               unselectedLabelColor: AppColors.colorB2B2B7,
               dividerColor: Colors.transparent,
               tabs: List.generate(

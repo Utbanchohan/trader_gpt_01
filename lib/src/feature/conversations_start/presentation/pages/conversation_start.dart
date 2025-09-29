@@ -652,7 +652,10 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : WelcomeWidget(),
+                      : Container(
+                          margin: EdgeInsets.only(left: 10.w, right: 10.w),
+                          child: WelcomeWidget(),
+                        ),
 
                   // Second tab
                   convo != null && convo.isNotEmpty && stocks.isNotEmpty
@@ -773,7 +776,10 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : WelcomeWidget(),
+                      : Container(
+                          margin: EdgeInsets.only(left: 10.w, right: 10.w),
+                          child: WelcomeWidget(),
+                        ),
 
                   Center(
                     child: MdSnsText(
