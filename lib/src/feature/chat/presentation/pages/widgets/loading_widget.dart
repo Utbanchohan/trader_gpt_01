@@ -12,8 +12,9 @@ class LoadingWidgetMarkdown extends StatelessWidget {
     return Container(
       width: MediaQuery.sizeOf(context).width / 1.4,
       padding: EdgeInsets.all(16),
+      margin: EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
-        color: AppColors.bubbleColor,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(

@@ -447,7 +447,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
     getUser();
     final asyncStream = startStream
         ? ref.watch(sseProvider(body))
-        : const AsyncValue.data({'buffer': "", "followUp": []});
+        : const AsyncValue.data({'buffer': "", "followUp": [], "chart": []});
 
     asyncStream.whenData((data) {
       followupQuestions = data["followUp"].isNotEmpty
@@ -533,6 +533,11 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                       asyncStream.when(
                         data: (line) {
                           final text = line["buffer"] ?? "";
+                          final chartText = line["chart"] ?? [];
+                          print("Chart text: $chartText");
+                          List<String> chartStrings = chartText
+                              .map<String>((e) => e.toString())
+                              .toList();
                           return text.isNotEmpty
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -545,7 +550,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                           widget.chatRouting?.symbol ?? "TDGPT",
                                       image: widget.chatRouting?.image ?? "",
                                       type: "ai",
-                                      display: [],
+                                      display: chartText,
                                     ),
                                     SizedBox(height: 20),
 
@@ -563,12 +568,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                         },
                         loading: () => Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(top: 20.h),
-                              child: LoadingWidgetMarkdown(),
-                            ),
-                          ],
+                          children: [LoadingWidgetMarkdown()],
                         ),
                         error: (err, _) => Text("Error: $err"),
                       ),
