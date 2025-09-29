@@ -176,7 +176,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
             ),
           ],
         ),
-        SizedBox(height: widget.name == "TDGPT" ? 0 : 20),
+        SizedBox(height: widget.name == "TDGPT" ? 0 : 10),
 
         Container(
           width: widget.type == "user"
@@ -210,7 +210,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                           )
                         : SizedBox()
                   : SizedBox(),
-              SizedBox(height: widget.type != "user" ? 10 : 0),
+              // SizedBox(height: widget.type != "user" ? 10 : 0),
               MarkdownBody(
                 data: widget.message,
                 selectable: true,

@@ -14,7 +14,6 @@ import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_app_bar.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_bottom_bar.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_message_item.dart';
-import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_message_list.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/loading_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/markdown_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/provider/chat_provider.dart';
@@ -102,7 +101,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   void _closeDialogs() {
     Navigator.pop(context);
     if (Navigator.of(context).canPop()) {
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
     }
   }
 
@@ -540,6 +539,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          SizedBox(height: 10),
                           ChatMarkdownWidget(
                             message: text.toString(),
                             name: widget.chatRouting?.symbol ?? "TDGPT",

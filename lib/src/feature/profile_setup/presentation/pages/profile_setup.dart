@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
@@ -70,10 +71,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
 
       if (result != null) {
         if (mounted) {
-          context.goNamed(AppRoutes.swipeScreen.name,
-          extra: {
-            "initialIndex": 0,
-          }
+          context.goNamed(
+            AppRoutes.swipeScreen.name,
+            extra: {"initialIndex": 0},
           );
         }
       }
@@ -235,8 +235,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     SizedBox(height: 9.h),
                     TextFormField(
                       controller: fullname,
-                      style: TextStyle(
-                        color: Colors.white,
+                      style: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                       ),
@@ -251,7 +251,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         fillColor: AppColors.bubbleColor,
                         hintText: 'Full Name',
                         hintStyle: TextStyle(
-                          color: Colors.white,
+                          color: AppColors.lightTextColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -295,8 +295,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     TextFormField(
                       readOnly: true,
                       controller: email,
-                      style: TextStyle(
-                        color: Colors.white,
+                      style: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                       ),
@@ -318,9 +318,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: AppColors.bubbleColor,
-                        hintText: 'Burakdeniz@gmail.com',
+                        hintText: 'Email Address',
                         hintStyle: TextStyle(
-                          color: Colors.white,
+                          color: AppColors.lightTextColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -363,8 +363,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     TextFormField(
                       controller: password,
                       obscureText: !visible1,
+                      style: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
                       onChanged: (_) => setState(() {}),
-                      style: TextStyle(color: Colors.white, fontSize: 20),
 
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -382,12 +386,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       },
                       decoration: InputDecoration(
                         errorMaxLines: 4,
-                        hintStyle: TextStyle(
-                          color: Colors.white,
+                        hintStyle: GoogleFonts.plusJakartaSans(
+                          color: AppColors.lightTextColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
                         hintText: "Create Password",
+
                         filled: true,
                         fillColor: AppColors.bubbleColor,
                         contentPadding: EdgeInsets.symmetric(
@@ -409,14 +414,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         suffixIcon: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.check, color: Colors.white70),
+                            Icon(Icons.check, color: AppColors.white),
                             SizedBox(width: 8.w),
                             IconButton(
                               icon: Icon(
                                 visible1
                                     ? Icons.visibility
                                     : Icons.visibility_off,
-                                color: Colors.white70,
+                                color: AppColors.white,
                               ),
                               onPressed: () => setState(() {
                                 visible1 = !visible1;
@@ -449,7 +454,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       controller: confirmPassword,
                       obscureText: !visible2,
                       onChanged: (_) => setState(() {}),
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      style: GoogleFonts.plusJakartaSans(
+                        color: AppColors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Password is required";
@@ -466,8 +475,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       },
                       decoration: InputDecoration(
                         errorMaxLines: 4,
-                        hintStyle: TextStyle(
-                          color: Colors.white,
+                        hintStyle: GoogleFonts.plusJakartaSans(
+                          color: AppColors.lightTextColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -493,14 +502,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         suffixIcon: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.check, color: Colors.white70),
+                            Icon(Icons.check, color: AppColors.white),
                             SizedBox(width: 8.w),
                             IconButton(
                               icon: Icon(
                                 visible2
                                     ? Icons.visibility
                                     : Icons.visibility_off,
-                                color: Colors.white70,
+                                color: AppColors.white,
                               ),
                               onPressed: () => setState(() {
                                 visible2 = !visible2;

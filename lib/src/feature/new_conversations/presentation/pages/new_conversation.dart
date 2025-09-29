@@ -247,10 +247,10 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                           ? searchStock.length
                           : stocks.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, // 3 cards per row
+                        crossAxisCount: 3,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
-                        childAspectRatio: 0.8.h,
+                        childAspectRatio: 0.789.h,
                       ),
                       itemBuilder: (context, index) {
                         Stock stock =

@@ -537,6 +537,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
+                                    SizedBox(height: 20),
+
                                     ChatMarkdownWidget(
                                       message: text.toString(),
                                       name:

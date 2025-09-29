@@ -61,21 +61,23 @@ class Profile extends _$Profile {
           final updatedStocks = data;
 
           for (var updated in updatedStocks) {
-            stocks.add(jsonDecode(updated));
+            Stock stockItem = updated;
+
+            stocks.add(stockItem.toJson());
           }
-           ref
-            .read(stocksManagerProvider.notifier)
-            .watchStocks(
-              data
-                  .map(
-                    (e) => Stock(
-                      stockId: e.stockId,
-                      symbol: e.symbol,
-                      price: e.price ?? 0,
-                    ),
-                  )
-                  .toList(),
-            );
+          ref
+              .read(stocksManagerProvider.notifier)
+              .watchStocks(
+                data
+                    .map(
+                      (e) => Stock(
+                        stockId: e.stockId,
+                        symbol: e.symbol,
+                        price: e.price ?? 0,
+                      ),
+                    )
+                    .toList(),
+              );
           ref.read(localDataProvider).saveStock(stocks);
         });
 
