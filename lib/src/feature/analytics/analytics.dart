@@ -558,7 +558,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
             AppSpacing.h10,
             SizedBox(
-              height: 120.h,
+              height: 122.h,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal, // Horizontal scrolling
                 // padding: EdgeInsets.symmetric(horizontal: 16.w),
