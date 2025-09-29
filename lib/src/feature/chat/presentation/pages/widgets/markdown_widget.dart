@@ -183,8 +183,8 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
               ? MediaQuery.sizeOf(context).width * 0.6.w
               : MediaQuery.sizeOf(context).width * 0.75.w,
           padding: EdgeInsets.symmetric(
-            vertical: 10,
-            horizontal: widget.type == "user" ? 10 : 2,
+            vertical: widget.name == "TDGPT" ? 0 : 10,
+            horizontal: widget.type == "user" ? 10 : 0,
           ),
           decoration: BoxDecoration(
             color: widget.type == "user"

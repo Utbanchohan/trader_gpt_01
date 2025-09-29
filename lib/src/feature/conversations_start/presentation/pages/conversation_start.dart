@@ -70,13 +70,13 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         convo.removeWhere((c) => c.id == convoId);
         searchConvo.removeWhere((c) => c.id == convoId);
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Chat deleted successfully")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Chat deleted successfully")));
     } else {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Failed to delete chat")));
+      ).showSnackBar(SnackBar(content: Text("Failed to delete chat")));
     }
   }
 
