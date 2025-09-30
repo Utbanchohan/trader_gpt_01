@@ -7,6 +7,7 @@ import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/socket/providers/stocks_price.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../../../core/extensions/price_calculation.dart';
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -26,6 +27,22 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
   Widget build(BuildContext context) {
     final stockManagerState = ref.watch(stocksManagerProvider);
     final liveStock = stockManagerState[widget.stock.stockId];
+    String change = liveStock != null && liveStock.stockId.isNotEmpty
+        ? PriceUtils.getChangesPercentage(
+                    liveStock != null && liveStock.price > 0
+                        ? liveStock.price
+                        : widget.stocks.price,
+                    widget.stocks.previousClose,
+                  ) !=
+                  null
+              ? PriceUtils.getChangesPercentage(
+                  liveStock != null && liveStock.price > 0
+                      ? liveStock.price
+                      : widget.stocks.price,
+                  widget.stocks.previousClose,
+                )!.toStringAsFixed(2)
+              : widget.stocks.changesPercentage.toStringAsFixed(2)
+        : widget.stocks.changesPercentage.toStringAsFixed(2);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
       margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
@@ -130,18 +147,12 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               ),
               Row(
                 children: [
-                  widget.stocks.changesPercentage < 0
+                  change.contains("-")
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                    liveStock != null && liveStock.stockId.isEmpty
-                        ? liveStock.changesPercentage
-                              .toStringAsFixed(2)
-                              .replaceAll("-", "")
-                        : widget.stocks.changesPercentage
-                              .toStringAsFixed(2)
-                              .replaceAll("-", ""),
-                    color: widget.stocks.changesPercentage < 0
+                    change.replaceAll("-", ""),
+                    color: change.contains("-")
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,
                     variant: TextVariant.h4,
@@ -157,7 +168,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? ref.watch(stocksStreamProvider).fiveDayTrend[0].data!
                       : widget.stocks.fiveDayTrend[0].data!,
                   lineWidth: 2.0,
-                  lineColor: widget.stocks.changesPercentage < 0
+                  lineColor: change.contains("-")
                       ? AppColors.redFF3B3B
                       : AppColors.color06D54E,
                   pointsMode: PointsMode.none,

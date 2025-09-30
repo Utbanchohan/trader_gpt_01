@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trader_gpt/src/core/extensions/price_calculation.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/create_chat_dto/create_chat_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
@@ -118,10 +119,12 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     if (res != null) {
       ChatHistory chatHistory = res;
       if (mounted) {
+        pushNewStock(stock);
         context.pushNamed(
           AppRoutes.swipeScreen.name,
           extra: {
             "chatRouting": ChatRouting(
+              previousClose: stock.previousClose,
               chatId: chatHistory.id,
               symbol: stock.symbol,
               image: stock.logoUrl,
@@ -137,6 +140,18 @@ class _NewConversationState extends ConsumerState<NewConversation> {
         // socketService.dispose();
       }
     }
+  }
+
+  pushNewStock(Stock stock) {
+    ref.read(localDataProvider).getStocks().then((value) {
+      List<Map<String, dynamic>> stocks = value ?? [];
+      bool exists = stocks.any((s) => s['symbol'] == stock.symbol);
+      if (!exists) {
+        stocks.add(stock.toJson());
+
+        ref.read(localDataProvider).saveStock(stocks);
+      }
+    });
   }
 
   @override
@@ -266,7 +281,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                             symbol: stock.symbol,
                             company: stock.name,
                             price: stock.price,
-                            change: stock.changesPercentage,
+                            change: stock.change,
                             image: stock.logoUrl,
                             trendchart: stock.fiveDayTrend[0],
                             previousClose: stock.previousClose,
@@ -326,54 +341,17 @@ class BuildStockCard extends ConsumerStatefulWidget {
 }
 
 class _BuildStockCardState extends ConsumerState<BuildStockCard> {
-  // Timer? pollingTimer;
-  // bool loading = true;
   List<Stock> stocks = [];
 
   @override
   void dispose() {
-    // if (pollingTimer != null) {
-    //   // pollingTimer!.cancel();
-    // }
-
     super.dispose();
   }
 
   @override
   void initState() {
-    // _startPolling();
     super.initState();
   }
-
-  // void _startPolling() {
-  //   pollingTimer = Timer.periodic(Duration(seconds: 2), (_) {
-  //     ref.read(socketRepository).fetchStocks((data) {
-  //       updateStocks(data);
-  //     });
-  //   });
-  // }
-
-  // void updateStocks(List<dynamic> data) {
-  //   final updatedStocks = data;
-  //   if (mounted) {
-  //     setState(() {
-  //       for (var updated in updatedStocks) {
-  //         if (widget.symbol == updated.symbol) {
-  //           if (widget.price != updated.price.toString()) {
-  //             widget.price = updated.price.toString();
-  //           }
-  //           if (widget.change != updated.change) {
-  //             widget.change = updated.change;
-  //           }
-  //           if (widget.trendchart != updated.fiveDayTrend[0]) {
-  //             widget.trendchart = updated.fiveDayTrend[0];
-  //           }
-  //         }
-  //       }
-  //       loading = false;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -381,9 +359,14 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
 
     final liveStock = stockManagerState[widget.stockId];
 
-    widget.change = liveStock != null && liveStock.price > 0
-        ? liveStock.price - widget.previousClose
-        : widget.change;
+    widget.change =
+        PriceUtils.getChangesPercentage(
+          liveStock != null && liveStock.price > 0
+              ? liveStock.price
+              : widget.price,
+          widget.previousClose,
+        ) ??
+        widget.change;
 
     return Container(
       decoration: BoxDecoration(

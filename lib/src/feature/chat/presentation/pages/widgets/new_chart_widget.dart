@@ -16,6 +16,7 @@ class ChartDataModel {
   final List<String>? legend;
   final dynamic radar;
   final dynamic treemap;
+  final double interval;
 
   ChartDataModel({
     this.chartType,
@@ -26,6 +27,7 @@ class ChartDataModel {
     this.legend,
     this.radar,
     this.treemap,
+    this.interval = 1.0,
   });
 
   factory ChartDataModel.fromJson(Map<String, dynamic> json) {
@@ -307,6 +309,8 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
         minY: spots.isEmpty ? 0 : spots.map((s) => s.y).reduce(math.min),
         maxY: spots.isEmpty ? 10 : spots.map((s) => s.y).reduce(math.max),
         backgroundColor: Colors.transparent,
+        borderData: FlBorderData(show: false),
+
         gridData: FlGridData(
           show: true,
           drawVerticalLine: true,
@@ -461,7 +465,8 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
         LineChartBarData(
           spots: spots,
           color: _getColorForIndex(0),
-          barWidth: 1,
+          barWidth: 2,
+          isCurved: true,
           isStrokeCapRound: true,
           dotData: const FlDotData(show: false),
           belowBarData: isArea
@@ -550,6 +555,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
   /// Get color for series index
   Color _getColorForIndex(int index) {
     final colors = [
+      AppColors.color06D54E,
       const Color(0xFF0098E4),
       const Color(0xFF10B981),
       const Color(0xFFEF4444),
@@ -568,10 +574,11 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
       children: [
         // Dropdown for chart type selection
         if (chartTypeOptions.isNotEmpty)
-          Container(
+          SizedBox(
             // margin: const EdgeInsets.only(bottom: 16),
             width: MediaQuery.sizeOf(context).width * 0.75,
             child: DropdownButton2<String>(
+              underline: SizedBox(),
               isExpanded: true,
               value: selectedChartType,
               hint: const Text('Select Chart Type'),
@@ -606,7 +613,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             ),
           ),
 
-        SizedBox(height: 5),
+        SizedBox(height: 10),
         Expanded(
           child: SizedBox(
             width: double.infinity,
@@ -627,7 +634,15 @@ class ChartExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Example chart data - line chart with multiple series
+    int xLen = xAxis.length;
+    int yLen = data.length;
+    int maxLen = xLen > yLen ? xLen : yLen;
+
+    double verticalInterval = (maxLen / 6).ceilToDouble(); // ~6 labels
+    double maxY = data.map((e) => e.abs()).reduce((a, b) => a > b ? a : b);
+    double horizontalInterval = (maxY / 5e9)
+        .ceilToDouble(); // steps in billions
+
     final chartData = ChartDataModel(
       chartType: 'line',
       title: 'Stock Prices Over Time',
@@ -637,11 +652,70 @@ class ChartExample extends StatelessWidget {
       subType: "",
       radar: "",
       treemap: "",
+      interval: (maxLen / (xLen > 6 ? 6 : xLen)).floorToDouble(),
     );
 
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
-      body: GPTEchartContainer(chartData: chartData),
+      body: xLen > yLen || yLen > xLen
+          ? SizedBox(
+              height: 300,
+              child: LineChart(
+                LineChartData(
+                  borderData: FlBorderData(show: false),
+                  gridData: FlGridData(show: false),
+                  titlesData: FlTitlesData(
+                    show: false,
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: false,
+                        interval: horizontalInterval,
+                        getTitlesWidget: (value, meta) => Text(
+                          "${value.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 9,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: false,
+                        interval: verticalInterval,
+                        getTitlesWidget: (value, meta) {
+                          int index = value.toInt();
+                          if (index < xAxis.length) {
+                            return Text(
+                              xAxis[index],
+                              style: const TextStyle(fontSize: 9),
+                            );
+                          }
+                          return Text(
+                            "$index",
+                          ); // fallback for extra yAxis points
+                        },
+                      ),
+                    ),
+                  ),
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: List.generate(
+                        data.length,
+                        (i) => FlSpot(i.toDouble(), data[i] / 1e9),
+                      ),
+                      isCurved: true,
+                      color: AppColors.color06D54E,
+                      barWidth: 2,
+
+                      isStrokeCapRound: true,
+                      dotData: const FlDotData(show: false),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : GPTEchartContainer(chartData: chartData),
     );
   }
 }

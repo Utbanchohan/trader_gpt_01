@@ -23,8 +23,8 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   User? userModel;
 
   logout() {
-    ref.watch(localDataProvider).setIsFirstTime(true);
-
+    ref.read(localDataProvider).setIsFirstTime(true);
+    ref.read(localDataProvider).saveUserName("");
     String token = "";
     ref.read(localDataProvider).setAccessToken(token);
     context.goNamed(AppRoutes.signInPage.name);
