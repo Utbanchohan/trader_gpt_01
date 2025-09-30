@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/src/core/api_client/client.dart';
+import 'package:trader_gpt/src/feature/change_password/presentation/pages/change_password.dart';
 import 'package:trader_gpt/src/feature/forget_password/presentation/forget_password.dart';
 import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
+import 'package:trader_gpt/src/feature/sign_in/data/dto/change_password/change_password_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/complete_profile/complete_profile_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/otp_request/otp_request_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/profile_update_dto/profile_update_dto.dart';
@@ -22,6 +24,7 @@ abstract interface class AuthRepository {
   Future<BaseModel> forgetPassword(SignUpDto email);
   Future<BaseModel<User>> updatePassword(UpdatePasswordDto emailPassword);
   Future<BaseModel<User>> updateProfile(ProfileUpdateDto profileUpdate);
+  Future<BaseModel<User>> changePassword(ChangePasswordDto changePassword);
 }
 
 final authRepository = Provider<AuthRepository>(

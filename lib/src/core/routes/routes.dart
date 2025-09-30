@@ -18,7 +18,8 @@ enum AppRoutes {
   swipeScreen('swipeScreen', '/swipeScreen'),
   chatConversation('chatConversation', '/chatConversation'),
   forgetPassword('forgetPassword', '/forgetPassword'),
-  updatePassword('updatePassword', '/updatePassword');
+  updatePassword('updatePassword', '/updatePassword'),
+  changePassword('changePassword', '/changePassword');
 
   final String name;
   final String path;
@@ -45,6 +46,7 @@ enum AppRoutes {
     AppRoutes.chatConversation,
     AppRoutes.forgetPassword,
     AppRoutes.updatePassword,
+    AppRoutes.changePassword,
   ];
   static bool isPublicRoute(GoRouterState state) {
     final fullPath = state.fullPath;
