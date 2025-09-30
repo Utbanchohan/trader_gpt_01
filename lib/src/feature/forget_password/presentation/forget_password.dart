@@ -7,33 +7,38 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/forget_password/presentation/provider/forgot_password_provider.dart';
 import 'package:trader_gpt/src/feature/sigin_up/presentation/provider/sign_up.dart';
+import 'package:trader_gpt/src/feature/update_password/presentation/update_password.dart';
+import 'package:trader_gpt/src/shared/mixin/form_state_mixin.dart';
+import 'package:trader_gpt/src/shared/states/app_loading_state.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-import '../../../../shared/mixin/form_state_mixin.dart';
-import '../../../../shared/states/app_loading_state.dart';
-
-class SignUp extends ConsumerStatefulWidget {
-  const SignUp({super.key});
+class ForgetPassword extends ConsumerStatefulWidget {
+  const ForgetPassword({super.key});
 
   @override
-  ConsumerState<SignUp> createState() => _SignUpState();
+  ConsumerState<ForgetPassword> createState() => _ForgetPasswordState();
 }
 
-class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
-  final TextEditingController email = TextEditingController();
+class _ForgetPasswordState extends ConsumerState<ForgetPassword>
+    with FormStateMixin {
+  final TextEditingController emailAddress = TextEditingController();
 
   @override
   FutureOr<void> onSubmit() async {
     final result = await ref
-        .read(signUpProvider.notifier)
-        .onSubmit(email: email.value.text);
-    if (result != null) {
+        .read(forgotPasswordProviderProvider.notifier)
+        .forgot(email: emailAddress.value.text);
+    if (result != null && result == true) {
       if (mounted) {
         context.pushNamed(
           AppRoutes.verifaction.name,
-          queryParameters: {'email': email.value.text, 'isFromSignup': 'true'},
+          queryParameters: {
+            'email': emailAddress.value.text,
+            'isFromSignup': 'false',
+          },
         );
       }
     }
@@ -41,52 +46,9 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(signUpProvider) == AppLoadingState.loading();
+    final isLoading =
+        ref.watch(forgotPasswordProviderProvider) == AppLoadingState.loading();
     return Scaffold(
-      bottomNavigationBar: Container(
-        margin: EdgeInsets.only(left: 20, right: 20, bottom: 40),
-        height: 110.h,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 50.h,
-              width: 1.sw,
-              child: ButtonWidget(
-                isLoading: isLoading,
-                onPressed: () {
-                  submitter();
-                },
-                title: 'Create Account',
-                borderRadius: 50.r,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                textColor: AppColors.white,
-                bgColor: AppColors.color0098E4,
-              ),
-            ),
-
-            SizedBox(height: 15.h),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    context.goNamed(AppRoutes.signInPage.name);
-                  },
-                  child: MdSnsText(
-                    "Already have an account? Sign in",
-                    variant: TextVariant.h3,
-                    fontWeight: TextFontWeightVariant.h4,
-
-                    color: AppColors.white,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
         child: Padding(
@@ -100,7 +62,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
               child: IconButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {
-                  context.goNamed(AppRoutes.getStartedScreen.name);
+                  Navigator.pop(context);
                 },
                 icon: Image.asset(
                   Assets.images.arrowBack.path,
@@ -125,7 +87,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
             SizedBox(height: 30.h),
 
             MdSnsText(
-              "Let’s get started",
+              "Forgot Password?",
               color: AppColors.white,
               variant: TextVariant.h6,
               fontWeight: TextFontWeightVariant.h1,
@@ -134,7 +96,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
             SizedBox(height: 12.h),
 
             MdSnsText(
-              "Enter your email address. we will send you\nthe confirmation code there",
+              " Don’t worry, this happens.",
               color: AppColors.white,
               variant: TextVariant.h2,
               fontWeight: TextFontWeightVariant.h4,
@@ -160,11 +122,10 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
 
             SizedBox(height: 11.h),
 
-            // Email Field
             Form(
               key: formKey,
               child: TextFormField(
-                controller: email,
+                controller: emailAddress,
                 style: GoogleFonts.plusJakartaSans(
                   color: Colors.white,
                   fontSize: 16,
@@ -177,21 +138,13 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                   if (value == null || value.trim().isEmpty) {
                     return "Please enter email";
                   }
-                  final _emailRegex = RegExp(
-                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                  );
-                  if (_emailRegex.hasMatch(value.trim())) {
-                    return null;
-                  } else {
-                    return "Please enter a valid email";
-                  }
                 },
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: AppColors.bubbleColor,
-                  hintText: 'Email',
+                  hintText: 'Email Address',
                   hintStyle: GoogleFonts.plusJakartaSans(
-                    color: AppColors.lightTextColor,
+                    color: AppColors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),
@@ -213,6 +166,23 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
                 ),
+              ),
+            ),
+            SizedBox(height: 25.h),
+            SizedBox(
+              height: 50.h,
+              width: 1.sw,
+              child: ButtonWidget(
+                isLoading: isLoading,
+                onPressed: () {
+                  submitter();
+                },
+                title: 'Send Code',
+                borderRadius: 50.r,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                textColor: AppColors.white,
+                bgColor: AppColors.color0098E4,
               ),
             ),
           ],

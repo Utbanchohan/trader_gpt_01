@@ -21,8 +21,8 @@ import '../../../../shared/mixin/form_state_mixin.dart';
 import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
-  ProfilePage({super.key});
-
+  final bool isFromX;
+  ProfilePage({super.key, required this.isFromX});
   @override
   ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
@@ -31,7 +31,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
   bool visible1 = false;
   bool visible2 = false;
   final formKey = GlobalKey<FormState>();
-  final TextEditingController fullname = TextEditingController();
+  TextEditingController fullname = TextEditingController();
   TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController confirmPassword = TextEditingController();
@@ -45,6 +45,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
     if (user != null && user!.email.isNotEmpty) {
       setState(() {
         email = TextEditingController(text: user!.email);
+        if (widget.isFromX == true) {
+          fullname = TextEditingController(text: user!.name);
+        }
       });
     }
   }
@@ -53,6 +56,21 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
   void initState() {
     getUser();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    password.dispose();
+    confirmPassword.dispose();
+    super.dispose();
+  }
+
+  clearAllFileds() {
+    email.text = "";
+    fullname.text = "";
+    if (mediaModel != null && mediaModel!.url.isNotEmpty) {
+      mediaModel = MediaModel(url: "", type: "");
+    }
   }
 
   @override
@@ -71,6 +89,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
 
       if (result != null) {
         if (mounted) {
+          clearAllFileds();
           context.goNamed(
             AppRoutes.swipeScreen.name,
             extra: {"initialIndex": 0},
@@ -79,6 +98,24 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
       }
     } else {
       $showMessage("Confirm Password should be same as create Password ");
+    }
+  }
+
+  FutureOr<void> prfileUpdtae() async {
+    final result = await ref
+        .read(profileProvider.notifier)
+        .updateProfile(
+          name: fullname.value.text,
+          image: mediaModel != null && mediaModel!.url.isNotEmpty
+              ? mediaModel!.url
+              : "",
+        );
+
+    if (result != null) {
+      if (mounted) {
+        clearAllFileds();
+        context.pop();
+      }
     }
   }
 
@@ -96,9 +133,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
           child: ButtonWidget(
             isLoading: isLoading,
             onPressed: () {
-              submitter();
+              widget.isFromX == true ? prfileUpdtae() : submitter();
             },
-            title: 'Done',
+            title: widget.isFromX == true ? "Update" : 'Done',
             borderRadius: 50.r,
             fontSize: 18,
             fontWeight: FontWeight.w500,
@@ -114,6 +151,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
           child: ListView(
             shrinkWrap: true,
             children: [
+              widget.isFromX == true
+                  ? GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: Image.asset(
+                          Assets.images.arrowBack.path,
+                          height: 19.71.h,
+                          width: 23.w,
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
               SizedBox(height: 24.h),
               Container(
                 alignment: Alignment.centerLeft,
@@ -132,7 +182,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       MdSnsText(
-                        'Your Profile',
+                        widget.isFromX == true
+                            ? "Edit Profile"
+                            : 'Your Profile',
                         color: AppColors.white,
                         variant: TextVariant.h6,
                         fontWeight: TextFontWeightVariant.h1,
@@ -343,184 +395,203 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    Row(
-                      children: [
-                        Image.asset(
-                          Assets.images.lock.path,
-                          height: 15.h,
-                          width: 15.w,
-                        ),
-                        SizedBox(width: 5.w),
-                        MdSnsText(
-                          "Create a password",
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.white,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 9.h),
-                    TextFormField(
-                      controller: password,
-                      obscureText: !visible1,
-                      style: GoogleFonts.plusJakartaSans(
-                        color: AppColors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      onChanged: (_) => setState(() {}),
-
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Password is required";
-                        }
-                        final pattern =
-                            r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$';
-                        final regex = RegExp(pattern);
-                        return regex.hasMatch(value)
-                            ? null
-                            : "✖ At least 8 characters long "
-                                  "✖ At least one number (0–9) "
-                                  "✖ At least one uppercase letter (A–Z) "
-                                  "✖ At least one special character";
-                      },
-                      decoration: InputDecoration(
-                        errorMaxLines: 4,
-                        hintStyle: GoogleFonts.plusJakartaSans(
-                          color: AppColors.lightTextColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        hintText: "Create Password",
-
-                        filled: true,
-                        fillColor: AppColors.bubbleColor,
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 17.w,
-                          vertical: 10.h,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                        suffixIcon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.check, color: AppColors.white),
-                            SizedBox(width: 8.w),
-                            IconButton(
-                              icon: Icon(
-                                visible1
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: AppColors.white,
+                    widget.isFromX == true
+                        ? SizedBox()
+                        : Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    Assets.images.lock.path,
+                                    height: 15.h,
+                                    width: 15.w,
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  MdSnsText(
+                                    "Create a password",
+                                    variant: TextVariant.h4,
+                                    fontWeight: TextFontWeightVariant.h4,
+                                    color: AppColors.white,
+                                  ),
+                                ],
                               ),
-                              onPressed: () => setState(() {
-                                visible1 = !visible1;
-                              }),
-                            ),
-                          ],
-                        ),
-                        suffixIconConstraints: BoxConstraints(minWidth: 80.w),
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
-                    Row(
-                      children: [
-                        Image.asset(
-                          Assets.images.lock.path,
-                          height: 15.h,
-                          width: 15.w,
-                        ),
-                        SizedBox(width: 5.w),
-                        MdSnsText(
-                          "Confirm Password",
-                          color: AppColors.white,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 9.h),
-                    TextFormField(
-                      controller: confirmPassword,
-                      obscureText: !visible2,
-                      onChanged: (_) => setState(() {}),
-                      style: GoogleFonts.plusJakartaSans(
-                        color: AppColors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Password is required";
-                        }
-                        final pattern =
-                            r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$';
-                        final regex = RegExp(pattern);
-                        return regex.hasMatch(value)
-                            ? null
-                            : "✖ At least 8 characters long "
-                                  "✖ At least one number (0–9) "
-                                  "✖ At least one uppercase letter (A–Z) "
-                                  "✖ At least one special character";
-                      },
-                      decoration: InputDecoration(
-                        errorMaxLines: 4,
-                        hintStyle: GoogleFonts.plusJakartaSans(
-                          color: AppColors.lightTextColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        hintText: 'Confirm Password',
-                        filled: true,
-                        fillColor: AppColors.bubbleColor,
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 17.w,
-                          vertical: 10.h,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.r),
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                        suffixIcon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.check, color: AppColors.white),
-                            SizedBox(width: 8.w),
-                            IconButton(
-                              icon: Icon(
-                                visible2
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: AppColors.white,
+                              SizedBox(height: 9.h),
+                              TextFormField(
+                                controller: password,
+                                obscureText: !visible1,
+                                style: GoogleFonts.plusJakartaSans(
+                                  color: AppColors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                onChanged: (_) => setState(() {}),
+
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Password is required";
+                                  }
+                                  final pattern =
+                                      r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$';
+                                  final regex = RegExp(pattern);
+                                  return regex.hasMatch(value)
+                                      ? null
+                                      : "✖ At least 8 characters long "
+                                            "✖ At least one number (0–9) "
+                                            "✖ At least one uppercase letter (A–Z) "
+                                            "✖ At least one special character";
+                                },
+                                decoration: InputDecoration(
+                                  errorMaxLines: 4,
+                                  hintStyle: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.lightTextColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  hintText: "Create Password",
+
+                                  filled: true,
+                                  fillColor: AppColors.bubbleColor,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 17.w,
+                                    vertical: 10.h,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.r),
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.r),
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.r),
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  suffixIcon: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.check, color: AppColors.white),
+                                      SizedBox(width: 8.w),
+                                      IconButton(
+                                        icon: Icon(
+                                          visible1
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: AppColors.white,
+                                        ),
+                                        onPressed: () => setState(() {
+                                          visible1 = !visible1;
+                                        }),
+                                      ),
+                                    ],
+                                  ),
+                                  suffixIconConstraints: BoxConstraints(
+                                    minWidth: 80.w,
+                                  ),
+                                ),
                               ),
-                              onPressed: () => setState(() {
-                                visible2 = !visible2;
-                              }),
-                            ),
-                          ],
-                        ),
-                        suffixIconConstraints: BoxConstraints(minWidth: 80.w),
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
+                              SizedBox(height: 20.h),
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    Assets.images.lock.path,
+                                    height: 15.h,
+                                    width: 15.w,
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  MdSnsText(
+                                    "Confirm Password",
+                                    color: AppColors.white,
+                                    variant: TextVariant.h4,
+                                    fontWeight: TextFontWeightVariant.h4,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 9.h),
+                              TextFormField(
+                                controller: confirmPassword,
+                                obscureText: !visible2,
+                                onChanged: (_) => setState(() {}),
+                                style: GoogleFonts.plusJakartaSans(
+                                  color: AppColors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Password is required";
+                                  }
+                                  final pattern =
+                                      r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$';
+                                  final regex = RegExp(pattern);
+                                  return regex.hasMatch(value)
+                                      ? null
+                                      : "Confirm Password should be same as create Password";
+                                },
+                                decoration: InputDecoration(
+                                  errorMaxLines: 4,
+                                  hintStyle: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.lightTextColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  hintText: 'Confirm Password',
+                                  filled: true,
+                                  fillColor: AppColors.bubbleColor,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 17.w,
+                                    vertical: 10.h,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.r),
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.r),
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.r),
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  suffixIcon: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.check, color: AppColors.white),
+                                      SizedBox(width: 8.w),
+                                      IconButton(
+                                        icon: Icon(
+                                          visible2
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: AppColors.white,
+                                        ),
+                                        onPressed: () => setState(() {
+                                          visible2 = !visible2;
+                                        }),
+                                      ),
+                                    ],
+                                  ),
+                                  suffixIconConstraints: BoxConstraints(
+                                    minWidth: 80.w,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 8.h),
+                            ],
+                          ),
                   ],
                 ),
               ),

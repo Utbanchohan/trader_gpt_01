@@ -35,7 +35,7 @@ abstract interface class ChatApi {
   @DELETE("/chat/{chatId}")
   Future<BaseModel<DeleteResponse>> deleteChat(
     @Path("chatId") String chatId,
-    @Body() Map<String, dynamic> body,
+    @Body() Map<String, dynamic> body,  
   );
 
   @GET("/message/{chatId}")

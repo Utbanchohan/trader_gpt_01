@@ -40,11 +40,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
   final TextEditingController search = TextEditingController();
 
   List<ChatHistory> convo = [];
-  List<Stock> stocks = [];
   List<ChatHistory> searchConvo = [];
 
   final SocketService socketService = SocketService();
   late TabController tabController;
+  List<Stock> stocks = [];
   Timer? pollingTimer;
   bool loading = true;
   Timer? _debounce;
@@ -411,6 +411,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                     ),
             ),
 
+            // Yeh Expanded me rakho
             Expanded(
               child: TabBarView(
                 physics: NeverScrollableScrollPhysics(),
@@ -661,7 +662,10 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : WelcomeWidget(),
+                      : Container(
+                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                          child: WelcomeWidget(),
+                        ),
 
                   // Second tab
                   convo != null && convo.isNotEmpty && stocks.isNotEmpty
@@ -784,27 +788,19 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : WelcomeWidget(),
+                      : Container(
+                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                          child: WelcomeWidget(),
+                        ),
 
-                  Center(
-                    child: MdSnsText(
-                      "Comming Soon",
-                      variant: TextVariant.h1,
-                      fontWeight: TextFontWeightVariant.h2,
-
-                      color: AppColors.fieldTextColor,
-                    ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                    child: WelcomeWidget(),
                   ),
-
                   // Third tab
-                  Center(
-                    child: MdSnsText(
-                      "Comming Soon",
-                      variant: TextVariant.h1,
-                      fontWeight: TextFontWeightVariant.h2,
-
-                      color: AppColors.fieldTextColor,
-                    ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                    child: WelcomeWidget(),
                   ),
                 ],
               ),

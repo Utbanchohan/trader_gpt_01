@@ -27,8 +27,10 @@ class CustomLineChart extends StatelessWidget {
           gridData: FlGridData(
             show: true,
             drawVerticalLine: true,
-            getDrawingHorizontalLine: (value) =>
-                FlLine(color: AppColors.white.withOpacity(0.1), strokeWidth: 1),
+            getDrawingHorizontalLine: (value) => FlLine(
+              color: AppColors.white.withOpacity(0.08),
+              strokeWidth: 1,
+            ),
             getDrawingVerticalLine: (value) =>
                 FlLine(color: Colors.transparent),
           ),
@@ -40,108 +42,122 @@ class CustomLineChart extends StatelessWidget {
             rightTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 22.sp, // 👈 space कम कर दिया
+                reservedSize: 32, // thoda roomy
+                interval: 2, // readability ke liye
                 getTitlesWidget: (value, meta) {
-                  return Align(
-                    alignment: Alignment.centerRight, // 👈 text right align
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 4),
                     child: MdSnsText(
                       value.toInt().toString(),
                       variant: TextVariant.h5,
-                      fontWeight: TextFontWeightVariant.h4,
-                      color: AppColors.white,
+                      fontWeight: TextFontWeightVariant.h6,
+                      color: AppColors.white.withOpacity(0.9),
                     ),
                   );
                 },
               ),
             ),
 
+            // ✅ BOTTOM (time labels)
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 32,
+                reservedSize: 40,
                 interval: 1,
                 getTitlesWidget: (value, meta) {
+                  String text = "";
                   switch (value.toInt()) {
                     case 0:
-                      return MdSnsText("6:00", color: AppColors.white);
-                    case 1:
-                      return MdSnsText("10:00", color: AppColors.white);
+                      text = "6:00";
+                      break;
                     case 2:
-                      return MdSnsText("14:00", color: AppColors.white);
-                    case 3:
-                      return MdSnsText("18:00", color: AppColors.white);
+                      text = "10:00";
+                      break;
                     case 4:
-                      return MdSnsText("22:00", color: AppColors.white);
-                    case 5:
-                      return MdSnsText("2:00", color: AppColors.white);
+                      text = "14:00";
+                      break;
+                    case 6:
+                      text = "18:00";
+                      break;
+                    case 8:
+                      text = "22:00";
+                      break;
+                    case 10:
+                      text = "2:00";
+                      break;
                   }
-                  return MdSnsText("");
+
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      top: 8,
+                    ), // 👈 thoda gap diya chart se
+                    child: MdSnsText(
+                      text,
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h7,
+                      color: AppColors.white.withOpacity(0.95),
+                    ),
+                  );
                 },
               ),
             ),
-            // ✅ TOP
+
             topTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 20,
+                reservedSize: 40,
                 interval: 1,
                 getTitlesWidget: (value, meta) {
+                  String text = "";
                   switch (value.toInt()) {
                     case 0:
-                      return MdSnsText(
-                        "1D",
-                        color: AppColors.white,
-                        variant: TextVariant.h4,
-                      );
-
-                    case 1:
-                      return MdSnsText(
-                        "1W",
-                        color: AppColors.white,
-                        variant: TextVariant.h4,
-                      );
+                      text = "1D";
+                      break;
                     case 2:
-                      return MdSnsText(
-                        "1M",
-                        color: AppColors.white,
-                        variant: TextVariant.h4,
-                      );
-                    case 3:
-                      return MdSnsText(
-                        "6M",
-                        color: AppColors.white,
-                        variant: TextVariant.h4,
-                      );
+                      text = "1W";
+                      break;
                     case 4:
-                      return MdSnsText(
-                        "1Y",
-                        color: AppColors.white,
-                        variant: TextVariant.h4,
-                      );
-                    case 5:
-                      return MdSnsText(
-                        "5Y",
-                        color: AppColors.white,
-                        variant: TextVariant.h4,
-                      );
+                      text = "1M";
+                      break;
+                    case 6:
+                      text = "6M";
+                      break;
+                    case 8:
+                      text = "1Y";
+                      break;
+                    case 10:
+                      text = "5Y";
+                      break;
                   }
-                  return MdSnsText("");
+
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: 8, // 👈 chart se thoda neeche
+                    ),
+                    child: MdSnsText(
+                      text,
+                      variant: TextVariant.h4, // same as bottom
+                      fontWeight: TextFontWeightVariant.h7, // same boldness
+                      color: AppColors.white.withOpacity(0.95),
+                    ),
+                  );
                 },
               ),
             ),
           ),
+
+          // ✅ Border
           borderData: FlBorderData(
             show: true,
             border: Border(
-              left: BorderSide(
-                color: Colors.transparent,
-                width: 16,
-              ), // 👈 left gap
+              left: BorderSide(color: Colors.transparent, width: 8),
               bottom: BorderSide(color: Colors.transparent),
               right: BorderSide(color: Colors.transparent),
               top: BorderSide(color: Colors.transparent),
             ),
           ),
+
+          // ✅ Chart Line
           lineBarsData: [
             LineChartBarData(
               isCurved: true,
@@ -150,7 +166,7 @@ class CustomLineChart extends StatelessWidget {
               belowBarData: BarAreaData(
                 show: true,
                 gradient: LinearGradient(
-                  colors: [Colors.green.withOpacity(0.3), Colors.transparent],
+                  colors: [Colors.green.withOpacity(0.25), Colors.transparent],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -181,19 +197,21 @@ class CustomLineChart extends StatelessWidget {
               ],
             ),
           ],
+
+          // ✅ Tooltip
           lineTouchData: LineTouchData(
             enabled: true,
             touchTooltipData: LineTouchTooltipData(
               getTooltipColor: (touchedSpot) => Colors.white,
               tooltipBorderRadius: BorderRadius.circular(10),
-              tooltipPadding: EdgeInsets.all(6),
+              tooltipPadding: const EdgeInsets.all(6),
               getTooltipItems: (spots) {
                 return spots.map((spot) {
                   return LineTooltipItem(
                     "\$${spot.y.toStringAsFixed(2)}",
                     const TextStyle(
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   );
                 }).toList();
