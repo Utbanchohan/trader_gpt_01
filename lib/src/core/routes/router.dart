@@ -122,15 +122,16 @@ final routerConfigProvider = Provider((ref) {
         },
         routes: [],
       ),
-
       GoRoute(
         path: AppRoutes.profilePage.path,
         name: AppRoutes.profilePage.name,
-        builder: (BuildContext context, GoRouterState state) {
-          return ProfilePage();
+        builder: (context, state) {
+          final isFromX = state.extra as bool? ?? false; // default false
+          return ProfilePage(isFromX: isFromX);
         },
         routes: [],
       ),
+
       GoRoute(
         path: AppRoutes.stockScreen.path,
         name: AppRoutes.stockScreen.name,
@@ -237,18 +238,15 @@ final routerConfigProvider = Provider((ref) {
         },
         routes: [],
       ),
-     GoRoute(
-  path: AppRoutes.updatePassword.path,
-  name: AppRoutes.updatePassword.name,
-  builder: (context, state) {
-    final otp = state.uri.queryParameters['otp']??"";
-    final email = state.uri.queryParameters['email']??"";
-    return UpdatePassword(
-      otp: otp,
-      email: email,
-    );
-  },
-),
+      GoRoute(
+        path: AppRoutes.updatePassword.path,
+        name: AppRoutes.updatePassword.name,
+        builder: (context, state) {
+          final otp = state.uri.queryParameters['otp'] ?? "";
+          final email = state.uri.queryParameters['email'] ?? "";
+          return UpdatePassword(otp: otp, email: email);
+        },
+      ),
     ],
   );
 });

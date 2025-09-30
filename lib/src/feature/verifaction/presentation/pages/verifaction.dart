@@ -73,7 +73,7 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
         .read(verifactionProviderProvider.notifier)
         .onSubmit(email: widget.email, otp: otp.value.text);
     if (result != null && mounted) {
-      context.goNamed(AppRoutes.profilePage.name);
+      context.goNamed(AppRoutes.profilePage.name, extra: false);
     }
   }
 
@@ -209,8 +209,7 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
                   if (widget.isFromSignup == "false") {
                     context.pushNamed(
                       AppRoutes.updatePassword.name,
-                      queryParameters
-                      : {"otp": otp.text, "email": widget.email},
+                      queryParameters: {"otp": otp.text, "email": widget.email},
                     );
                   } else {
                     submitter();
@@ -261,4 +260,3 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
     );
   }
 }
- 

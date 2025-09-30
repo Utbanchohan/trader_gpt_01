@@ -4,6 +4,7 @@ import 'package:trader_gpt/src/feature/forget_password/presentation/forget_passw
 import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/complete_profile/complete_profile_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/otp_request/otp_request_dto.dart';
+import 'package:trader_gpt/src/feature/sign_in/data/dto/profile_update_dto/profile_update_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_up_dto/sign_up.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/update_password/update_password_dto.dart';
@@ -20,6 +21,7 @@ abstract interface class AuthRepository {
   Future<BaseModel<LoginData>> completeRegistration(CompleteProfileDto profile);
   Future<BaseModel> forgetPassword(SignUpDto email);
   Future<BaseModel<User>> updatePassword(UpdatePasswordDto emailPassword);
+  Future<BaseModel<User>> updateProfile(ProfileUpdateDto profileUpdate);
 }
 
 final authRepository = Provider<AuthRepository>(

@@ -102,7 +102,9 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
                 asset: Assets.images.edit2.path,
                 title: "Personal Information",
                 onTap: () {
-                  // context.pushNamed(AppRoutes.profilePage.name)''
+                  context.pushNamed(AppRoutes.profilePage.name,
+                  extra: true,
+                  );
                 },
               ),
               _buildProfileItem(
