@@ -28,6 +28,10 @@ class $AssetsImagesGen {
   AssetGenImage get frame1171275460 =>
       const AssetGenImage('assets/images/Frame 1171275460.png');
 
+  /// File path: assets/images/Frame 1171275790.png
+  AssetGenImage get frame1171275790 =>
+      const AssetGenImage('assets/images/Frame 1171275790.png');
+
   /// File path: assets/images/Google.png
   AssetGenImage get google => const AssetGenImage('assets/images/Google.png');
 
@@ -148,6 +152,18 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/hp.png
   AssetGenImage get hp => const AssetGenImage('assets/images/hp.png');
+
+  /// File path: assets/images/image 262 (1).png
+  AssetGenImage get image2621 =>
+      const AssetGenImage('assets/images/image 262 (1).png');
+
+  /// File path: assets/images/image 262.png
+  AssetGenImage get image262 =>
+      const AssetGenImage('assets/images/image 262.png');
+
+  /// File path: assets/images/image 263.png
+  AssetGenImage get image263 =>
+      const AssetGenImage('assets/images/image 263.png');
 
   /// File path: assets/images/information (1).png
   AssetGenImage get information1 =>
@@ -305,6 +321,7 @@ class $AssetsImagesGen {
     appLogo,
     conversation,
     frame1171275460,
+    frame1171275790,
     google,
     group702,
     meta,
@@ -341,6 +358,9 @@ class $AssetsImagesGen {
     eye,
     global,
     hp,
+    image2621,
+    image262,
+    image263,
     information1,
     information,
     jJ,
