@@ -151,6 +151,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
           child: ListView(
             shrinkWrap: true,
             children: [
+              widget.isFromX == true
+                  ? GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: Image.asset(
+                          Assets.images.arrowBack.path,
+                          height: 19.71.h,
+                          width: 23.w,
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
               SizedBox(height: 24.h),
               Container(
                 alignment: Alignment.centerLeft,
