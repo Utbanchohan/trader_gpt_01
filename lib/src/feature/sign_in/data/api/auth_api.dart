@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
 import 'package:trader_gpt/src/feature/forget_password/presentation/forget_password.dart';
+import 'package:trader_gpt/src/feature/sign_in/data/dto/change_password/change_password_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/complete_profile/complete_profile_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/otp_request/otp_request_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/profile_update_dto/profile_update_dto.dart';
@@ -38,6 +39,10 @@ abstract interface class AuthApi {
   @POST('/forgot-password')
   Future<BaseModel<User>> updatePassword(
     @Body() UpdatePasswordDto emailPassword,
+  );
+  @POST('/changepassword')
+  Future<BaseModel<User>> changePassword(
+    @Body() ChangePasswordDto changePassword,
   );
   @PATCH('/profile')
   Future<BaseModel<User>> updateProfile( @Body() ProfileUpdateDto profileUpdate,);

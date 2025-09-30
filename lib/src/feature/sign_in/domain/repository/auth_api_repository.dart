@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:trader_gpt/src/feature/change_password/presentation/pages/change_password.dart';
 import 'package:trader_gpt/src/feature/chat/data/api/chat_api/chat_api.dart';
 import 'package:trader_gpt/src/feature/chat/data/api/user_ask_stream/user_ask_stream.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/task_dto/task_dto.dart';
@@ -7,6 +8,7 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 import 'package:trader_gpt/src/feature/forget_password/presentation/forget_password.dart';
 import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/api/auth_api.dart';
+import 'package:trader_gpt/src/feature/sign_in/data/dto/change_password/change_password_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/complete_profile/complete_profile_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/otp_request/otp_request_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/profile_update_dto/profile_update_dto.dart';
@@ -56,6 +58,12 @@ class AuthApiRepository implements AuthRepository {
     UpdatePasswordDto emailPassword,
   ) async {
     return await AuthApi(client).updatePassword(emailPassword);
+  }
+  @override
+  Future<BaseModel<User>> changePassword(
+    ChangePasswordDto changePassword,
+  ) async {
+    return await AuthApi(client).changePassword(changePassword);
   }
   @override
   Future<BaseModel<User>> updateProfile(

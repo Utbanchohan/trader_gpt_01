@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
+import 'package:trader_gpt/src/feature/change_password/presentation/pages/change_password.dart';
 // import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_conversation.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
@@ -235,6 +236,14 @@ final routerConfigProvider = Provider((ref) {
         name: AppRoutes.forgetPassword.name,
         builder: (BuildContext context, GoRouterState state) {
           return ForgetPassword();
+        },
+        routes: [],
+      ),
+      GoRoute(
+        path: AppRoutes.changePassword.path,
+        name: AppRoutes.changePassword.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return ChangePassword();
         },
         routes: [],
       ),

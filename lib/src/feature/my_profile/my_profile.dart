@@ -110,7 +110,15 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
               _buildProfileItem(
                 asset: Assets.images.receipt.path,
                 title: "Membership",
-                onTap: () {},
+                onTap: () {
+                },
+              ),
+              _buildProfileItem(
+                asset: Assets.images.receipt.path,
+                title: "Change Password",
+                onTap: () {
+                  context.pushNamed(AppRoutes.changePassword.name);
+                },
               ),
               _buildProfileItem(
                 asset: Assets.images.a4.path,

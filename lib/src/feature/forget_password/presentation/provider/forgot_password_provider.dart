@@ -73,4 +73,5 @@ class ForgotPasswordProvider extends _$ForgotPasswordProvider {
     }
     return null;
   }
+
 }
