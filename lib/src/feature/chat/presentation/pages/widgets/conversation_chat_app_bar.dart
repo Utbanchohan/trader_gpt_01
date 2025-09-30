@@ -10,8 +10,10 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../../../../core/extensions/price_calculation.dart';
 import '../../../../../shared/socket/providers/stocks_price.dart';
 
+// ignore: must_be_immutable
 class ConversationChatAppBar extends ConsumerStatefulWidget
     implements PreferredSizeWidget {
   ChatRouting? chatRouting;
@@ -34,6 +36,21 @@ class _ConversationChatAppBarState
     final stockManagerState = ref.watch(stocksManagerProvider);
 
     final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
+    double change =
+        PriceUtils.getChangesPercentage(
+              liveStock != null && liveStock.price > 0
+                  ? liveStock.price
+                  : widget.chatRouting!.changePercentage,
+              widget.chatRouting!.previousClose,
+            ) !=
+            null
+        ? PriceUtils.getChangesPercentage(
+            liveStock != null && liveStock.price > 0
+                ? liveStock.price
+                : widget.chatRouting!.changePercentage,
+            widget.chatRouting!.previousClose,
+          )!
+        : widget.chatRouting!.changePercentage;
 
     if (widget.chatRouting == null || widget.chatRouting!.companyName.isEmpty) {
       /// Default AppBar (Logo wala)
@@ -144,25 +161,15 @@ class _ConversationChatAppBarState
                     ),
                     SizedBox(width: 6),
                     Icon(
-                      widget.chatRouting!.changePercentage.toString().contains(
-                            "-",
-                          )
-                          ? Icons.arrow_drop_down
-                          : Icons.arrow_drop_up,
-                      color:
-                          widget.chatRouting!.changePercentage
-                              .toString()
-                              .contains("-")
+                      change < 0 ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+                      color: change < 0
                           ? AppColors.redFF3B3B
                           : AppColors.color06D54E,
                       size: 20,
                     ),
                     MdSnsText(
-                      " ${widget.chatRouting!.changePercentage.toStringAsFixed(2).replaceAll("-", "")}%",
-                      color:
-                          widget.chatRouting!.changePercentage
-                              .toString()
-                              .contains("-")
+                      " ${change.toStringAsFixed(2).replaceAll("-", "")}%",
+                      color: change < 0
                           ? AppColors.redFF3B3B
                           : AppColors.color06D54E,
                       fontWeight: TextFontWeightVariant.h4,
