@@ -120,7 +120,7 @@ class _ChangePasswordState extends ConsumerState<ChangePassword>
                 SizedBox(height: 30.h),
 
                 MdSnsText(
-                  "Change your password",
+                  "Change password",
                   color: AppColors.white,
                   variant: TextVariant.h6,
                   fontWeight: TextFontWeightVariant.h1,
