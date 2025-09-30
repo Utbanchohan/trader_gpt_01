@@ -170,7 +170,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     children: [
                       MdSnsText(
                         widget.isFromX == true
-                            ? "Update Profile"
+                            ? "Edit Profile"
                             : 'Your Profile',
                         color: AppColors.white,
                         variant: TextVariant.h6,
