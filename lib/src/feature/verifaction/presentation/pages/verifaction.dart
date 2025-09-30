@@ -17,7 +17,13 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 
 class Verifaction extends ConsumerStatefulWidget {
   final String email;
-  const Verifaction({super.key, required this.email});
+  final String isFromSignup;
+
+  const Verifaction({
+    super.key,
+    required this.email,
+    required this.isFromSignup,
+  });
 
   @override
   ConsumerState<Verifaction> createState() => _VerifactionState();
@@ -28,6 +34,7 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
   int seconds = 30; // ⏳ timer start from 30
   Timer? _timer;
   bool isResending = false;
+  String? email;
   @override
   void initState() {
     super.initState();
@@ -94,7 +101,18 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
           margin: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 40.h),
           child: ButtonWidget(
             isLoading: isLoading,
-            onPressed: () => otp.text.isNotEmpty ? submitter() : null,
+            onPressed: () {
+              if (otp.text.isNotEmpty) {
+                if (widget.isFromSignup == 'false') {
+                  context.pushNamed(
+                    AppRoutes.updatePassword.name,
+                    extra: {"otp": otp.text, "email": widget.email},
+                  );
+                } else {
+                  submitter();
+                }
+              }
+            },
             title: 'Continue',
             borderRadius: 50.r,
             fontSize: 18,
@@ -187,7 +205,16 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
                 onCompleted: (value) {
                   otp.text = value;
                   FocusScope.of(context).unfocus();
-                  submitter();
+
+                  if (widget.isFromSignup == "false") {
+                    context.pushNamed(
+                      AppRoutes.updatePassword.name,
+                      queryParameters
+                      : {"otp": otp.text, "email": widget.email},
+                    );
+                  } else {
+                    submitter();
+                  }
                 },
               ),
             ),
@@ -234,3 +261,4 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
     );
   }
 }
+ 

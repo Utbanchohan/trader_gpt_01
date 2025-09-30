@@ -413,7 +413,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                         ),
                         suffixIcon: Row(
                           mainAxisSize: MainAxisSize.min,
-                          children: [
+                          children: [ 
                             Icon(Icons.check, color: AppColors.white),
                             SizedBox(width: 8.w),
                             IconButton(

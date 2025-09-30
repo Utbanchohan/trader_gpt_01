@@ -6,7 +6,7 @@ enum AppRoutes {
   chatPage('chatPage', '/chat-page'),
   signInPage('signInPage', '/sign-in'),
   signUpPage('signUpPage', '/sign-up'),
-  verifaction('verifaction', '/verifaction/:email'),
+  verifaction('verifaction', '/verifaction'),
   profilePage('profilePage', '/profilePage'),
   stockScreen('stockScreen', '/stockScreen'),
   uploadImage('uploadImage', '/uploadImage'),
@@ -16,7 +16,9 @@ enum AppRoutes {
   conversationStart('conversationStart', '/conversationStart'),
   newConversation('newConversation', '/newConversation'),
   swipeScreen('swipeScreen', '/swipeScreen'),
-  chatConversation('chatConversation', '/chatConversation');
+  chatConversation('chatConversation', '/chatConversation'),
+  forgetPassword('forgetPassword', '/forgetPassword'),
+  updatePassword('updatePassword', '/updatePassword');
 
   final String name;
   final String path;
@@ -40,8 +42,9 @@ enum AppRoutes {
     AppRoutes.analytics,
     AppRoutes.conversationStart,
     AppRoutes.newConversation,
-    // AppRoutes.swipeScreen,
     AppRoutes.chatConversation,
+    AppRoutes.forgetPassword,
+    AppRoutes.updatePassword,
   ];
   static bool isPublicRoute(GoRouterState state) {
     final fullPath = state.fullPath;

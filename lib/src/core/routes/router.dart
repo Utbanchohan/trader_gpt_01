@@ -11,6 +11,7 @@ import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/stock_screen.dart';
 import 'package:trader_gpt/src/feature/conversations_start/presentation/pages/conversation_start.dart';
+import 'package:trader_gpt/src/feature/forget_password/presentation/forget_password.dart';
 import 'package:trader_gpt/src/feature/get_start/presentation/pages/getstart.dart';
 import 'package:trader_gpt/src/feature/my_profile/my_profile.dart';
 import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/new_conversation.dart';
@@ -21,6 +22,7 @@ import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart
 import 'package:trader_gpt/src/feature/sign_in/presentation/pages/sigin_in.dart';
 import 'package:trader_gpt/src/feature/splash/presentation/pages/splash.dart';
 import 'package:trader_gpt/src/feature/swip_screen/presentation/pages/swip_screen.dart';
+import 'package:trader_gpt/src/feature/update_password/presentation/update_password.dart';
 import 'package:trader_gpt/src/feature/verifaction/presentation/pages/verifaction.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
@@ -112,11 +114,15 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.verifaction.path,
         name: AppRoutes.verifaction.name,
         builder: (BuildContext context, GoRouterState state) {
-          final email = state.pathParameters['email']!;
-          return Verifaction(email: email);
+          final email = state.uri.queryParameters['email'] ?? "";
+          final isFromSignup =
+              state.uri.queryParameters['isFromSignup'] ?? "false";
+
+          return Verifaction(email: email, isFromSignup: isFromSignup);
         },
         routes: [],
       ),
+
       GoRoute(
         path: AppRoutes.profilePage.path,
         name: AppRoutes.profilePage.name,
@@ -223,6 +229,26 @@ final routerConfigProvider = Provider((ref) {
         },
         routes: [],
       ),
+      GoRoute(
+        path: AppRoutes.forgetPassword.path,
+        name: AppRoutes.forgetPassword.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return ForgetPassword();
+        },
+        routes: [],
+      ),
+     GoRoute(
+  path: AppRoutes.updatePassword.path,
+  name: AppRoutes.updatePassword.name,
+  builder: (context, state) {
+    final otp = state.uri.queryParameters['otp']??"";
+    final email = state.uri.queryParameters['email']??"";
+    return UpdatePassword(
+      otp: otp,
+      email: email,
+    );
+  },
+),
     ],
   );
 });

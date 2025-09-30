@@ -217,11 +217,16 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                 // Forgot password
                 Container(
                   alignment: Alignment.centerRight,
-                  child: MdSnsText(
-                    "Forgot password?",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
+                  child: GestureDetector(
+                    onTap: () {
+                      context.pushNamed(AppRoutes.forgetPassword.name);
+                    },
+                    child: MdSnsText(
+                      "Forgot password?",
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h4,
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
 
