@@ -54,6 +54,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   User? user;
   bool dialogOpen = false;
   String? oldResponse;
+  List<String> oldDisplays = [];
   bool? webMode;
   bool? report;
   bool? deepAnalysis;
@@ -397,6 +398,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                 id: "temp",
                 chatId: chadId!,
                 message: oldResponse!,
+                displayable: Displayable(Display: oldDisplays),
                 type: "ai",
                 userId: userid,
                 createdAt: DateTime.now(),
@@ -457,9 +459,19 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
       if (followupQuestions.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (!dialogOpen) {
+            final chartText = data["chart"] ?? [];
+            oldDisplays = chartText.map<String>((e) => e.toString()).toList();
             oldResponse = data["buffer"];
             showDialogue(questions, followupQuestions, message, 1);
             changeDialogueStatus();
+          }
+        });
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          if (!dialogOpen) {
+            final chartText = data["chart"] ?? [];
+            oldDisplays = chartText.map<String>((e) => e.toString()).toList();
+            oldResponse = data["buffer"];
           }
         });
       }
@@ -534,7 +546,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                         data: (line) {
                           final text = line["buffer"] ?? "";
                           final chartText = line["chart"] ?? [];
-                          print("Chart text: $chartText");
                           List<String> chartStrings = chartText
                               .map<String>((e) => e.toString())
                               .toList();
@@ -550,7 +561,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                           widget.chatRouting?.symbol ?? "TDGPT",
                                       image: widget.chatRouting?.image ?? "",
                                       type: "ai",
-                                      display: chartText,
+                                      display: chartStrings,
                                     ),
                                     SizedBox(height: 20),
 

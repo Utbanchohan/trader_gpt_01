@@ -51,6 +51,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   dynamic asyncStream;
   bool startStream = false;
   List<String> followupQuestions = [];
+  List<String> oldDisplays = [];
   var body;
   String? chadId;
   User? user;
@@ -438,6 +439,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 message: oldResponse!,
                 type: "ai",
                 userId: userid,
+                displayable: Displayable(Display: oldDisplays),
                 createdAt: DateTime.now(),
                 updatedAt: DateTime.now(),
               ),
@@ -487,7 +489,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
     final asyncStream = startStream
         ? ref.watch(sseProvider(body))
-        : const AsyncValue.data({'buffer': "", "followUp": []});
+        : const AsyncValue.data({'buffer': "", "followUp": [], 'chart': []});
 
     asyncStream.whenData((data) {
       followupQuestions = data["followUp"].isNotEmpty
@@ -496,9 +498,15 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       if (followupQuestions.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (!dialogOpen) {
+            final chartText = data["chart"] ?? [];
+            oldDisplays = chartText.map<String>((e) => e.toString()).toList();
             oldResponse = data["buffer"];
             showDialogue(questions, followupQuestions, message, 1);
             changeDialogueStatus();
+          } else {
+            final chartText = data["chart"] ?? [];
+            oldDisplays = chartText.map<String>((e) => e.toString()).toList();
+            oldResponse = data["buffer"];
           }
         });
       }
@@ -535,6 +543,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             asyncStream.when(
               data: (line) {
                 final text = line["buffer"] ?? "";
+                final chartText = line["chart"] ?? [];
+                print("Chart text: $chartText");
+                List<String> chartStrings = chartText
+                    .map<String>((e) => e.toString())
+                    .toList();
                 return text.isNotEmpty
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -545,11 +558,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             name: widget.chatRouting?.symbol ?? "TDGPT",
                             image: widget.chatRouting?.image ?? "",
                             type: "ai",
-                            display: [],
+                            display: chartStrings,
                           ),
                           SizedBox(height: 20),
 
-                          Container(
+                          SizedBox(
                             width: 150,
                             child: MessageLikeCopyIcon(
                               type: "ai",

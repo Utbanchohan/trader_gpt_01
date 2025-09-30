@@ -83,6 +83,7 @@ final routerConfigProvider = Provider((ref) {
                   companyName: "",
                   price: 0,
                   changePercentage: 0,
+                  previousClose: 0,
                   chatId: "",
                   stockid: "",
                   trendChart: FiveDayTrend(data: []),
@@ -182,6 +183,7 @@ final routerConfigProvider = Provider((ref) {
           final chatRouting =
               extra?["chatRouting"] as ChatRouting? ??
               ChatRouting(
+                previousClose: 0,
                 image: "",
                 symbol: "",
                 companyName: "",
@@ -209,6 +211,7 @@ final routerConfigProvider = Provider((ref) {
           final chatRouting = state.extra != null
               ? state.extra as ChatRouting
               : ChatRouting(
+                  previousClose: 0,
                   image: "",
                   symbol: "",
                   companyName: "",

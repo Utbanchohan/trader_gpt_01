@@ -14,7 +14,7 @@ class LoadingWidgetMarkdown extends StatelessWidget {
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
-        color: Colors.transparent,
+        color: AppColors.bubbleColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
