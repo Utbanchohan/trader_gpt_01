@@ -135,7 +135,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
             onPressed: () {
               widget.isFromX == true ? prfileUpdtae() : submitter();
             },
-            title: widget.isFromX == true ? "Edit" : 'Done',
+            title: widget.isFromX == true ? "Update" : 'Done',
             borderRadius: 50.r,
             fontSize: 18,
             fontWeight: FontWeight.w500,
@@ -169,7 +169,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       MdSnsText(
-                        'Your Profile',
+                        widget.isFromX == true
+                            ? "Update Profile"
+                            : 'Your Profile',
                         color: AppColors.white,
                         variant: TextVariant.h6,
                         fontWeight: TextFontWeightVariant.h1,

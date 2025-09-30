@@ -14,6 +14,7 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/welcome_widget.dart';
 import 'package:trader_gpt/src/feature/conversations_start/provider/delete_provider.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/widgets/archive_widget.dart';
@@ -63,6 +64,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         .delete(chatId: convoId);
 
     if (result != null) {
+      Navigator.pop(context);
+
       setState(() {
         convo.removeWhere((c) => c.id == convoId);
         searchConvo.removeWhere((c) => c.id == convoId);
@@ -647,14 +650,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : Center(
-                          child: MdSnsText(
-                            "Conversation Not Found",
-                            variant: TextVariant.h1,
-                            fontWeight: TextFontWeightVariant.h2,
-
-                            color: AppColors.fieldTextColor,
-                          ),
+                      : Container(
+                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                          child: WelcomeWidget(),
                         ),
 
                   // Second tab
@@ -773,35 +771,19 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : Center(
-                          child: MdSnsText(
-                            "Conversation Not Found",
-                            variant: TextVariant.h1,
-                            fontWeight: TextFontWeightVariant.h2,
-
-                            color: AppColors.fieldTextColor,
-                          ),
+                      : Container(
+                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                          child: WelcomeWidget(),
                         ),
 
-                  Center(
-                    child: MdSnsText(
-                      "Comming Soon",
-                      variant: TextVariant.h1,
-                      fontWeight: TextFontWeightVariant.h2,
-
-                      color: AppColors.fieldTextColor,
-                    ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                    child: WelcomeWidget(),
                   ),
-
                   // Third tab
-                  Center(
-                    child: MdSnsText(
-                      "Comming Soon",
-                      variant: TextVariant.h1,
-                      fontWeight: TextFontWeightVariant.h2,
-
-                      color: AppColors.fieldTextColor,
-                    ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                    child: WelcomeWidget(),
                   ),
                 ],
               ),
