@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trader_gpt/src/core/extensions/price_calculation.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/create_chat_dto/create_chat_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
@@ -99,7 +100,6 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           }
         }
       }
-      ref.read(stocksManagerProvider.notifier).watchStocks(searchStock);
       loading = false;
     });
   }
@@ -118,17 +118,25 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     if (res != null) {
       ChatHistory chatHistory = res;
       if (mounted) {
+        pushNewStock(stock);
+        ref.read(stocksManagerProvider.notifier).watchStock(stock);
+
         context.pushNamed(
           AppRoutes.swipeScreen.name,
           extra: {
             "chatRouting": ChatRouting(
+              previousClose: stock.previousClose,
               chatId: chatHistory.id,
               symbol: stock.symbol,
               image: stock.logoUrl,
               companyName: stock.name,
               price: stock.price,
               changePercentage: stock.changesPercentage,
-              trendChart: stock.fiveDayTrend[0],
+              trendChart:
+                  stock.fiveDayTrend.isNotEmpty &&
+                      stock.fiveDayTrend[0].data != null
+                  ? stock.fiveDayTrend[0]
+                  : FiveDayTrend(data: [0, 0, 0, 0, 0]),
               stockid: stock.stockId,
             ),
             "initialIndex": 1,
@@ -137,6 +145,18 @@ class _NewConversationState extends ConsumerState<NewConversation> {
         // socketService.dispose();
       }
     }
+  }
+
+  pushNewStock(Stock stock) {
+    ref.read(localDataProvider).getStocks().then((value) {
+      List<Map<String, dynamic>> stocks = value ?? [];
+      bool exists = stocks.any((s) => s['symbol'] == stock.symbol);
+      if (!exists) {
+        stocks.add(stock.toJson());
+
+        ref.read(localDataProvider).saveStock(stocks);
+      }
+    });
   }
 
   @override
@@ -247,10 +267,10 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                           ? searchStock.length
                           : stocks.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, // 3 cards per row
+                        crossAxisCount: 3,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
-                        childAspectRatio: 0.8.h,
+                        childAspectRatio: 0.789.h,
                       ),
                       itemBuilder: (context, index) {
                         Stock stock =
@@ -266,9 +286,13 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                             symbol: stock.symbol,
                             company: stock.name,
                             price: stock.price,
-                            change: stock.changesPercentage,
+                            change: stock.change,
                             image: stock.logoUrl,
-                            trendchart: stock.fiveDayTrend[0],
+                            trendchart:
+                                stock.fiveDayTrend.isNotEmpty &&
+                                    stock.fiveDayTrend[0].data != null
+                                ? stock.fiveDayTrend[0]
+                                : FiveDayTrend(data: [0, 0, 0, 0]),
                             previousClose: stock.previousClose,
                           ),
                         );
@@ -326,54 +350,17 @@ class BuildStockCard extends ConsumerStatefulWidget {
 }
 
 class _BuildStockCardState extends ConsumerState<BuildStockCard> {
-  // Timer? pollingTimer;
-  // bool loading = true;
   List<Stock> stocks = [];
 
   @override
   void dispose() {
-    // if (pollingTimer != null) {
-    //   // pollingTimer!.cancel();
-    // }
-
     super.dispose();
   }
 
   @override
   void initState() {
-    // _startPolling();
     super.initState();
   }
-
-  // void _startPolling() {
-  //   pollingTimer = Timer.periodic(Duration(seconds: 2), (_) {
-  //     ref.read(socketRepository).fetchStocks((data) {
-  //       updateStocks(data);
-  //     });
-  //   });
-  // }
-
-  // void updateStocks(List<dynamic> data) {
-  //   final updatedStocks = data;
-  //   if (mounted) {
-  //     setState(() {
-  //       for (var updated in updatedStocks) {
-  //         if (widget.symbol == updated.symbol) {
-  //           if (widget.price != updated.price.toString()) {
-  //             widget.price = updated.price.toString();
-  //           }
-  //           if (widget.change != updated.change) {
-  //             widget.change = updated.change;
-  //           }
-  //           if (widget.trendchart != updated.fiveDayTrend[0]) {
-  //             widget.trendchart = updated.fiveDayTrend[0];
-  //           }
-  //         }
-  //       }
-  //       loading = false;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -381,9 +368,14 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
 
     final liveStock = stockManagerState[widget.stockId];
 
-    widget.change = liveStock != null && liveStock.price > 0
-        ? liveStock.price - widget.previousClose
-        : widget.change;
+    widget.change =
+        PriceUtils.getChangesPercentage(
+          liveStock != null && liveStock.price > 0
+              ? liveStock.price
+              : widget.price,
+          widget.previousClose,
+        ) ??
+        widget.change;
 
     return Container(
       decoration: BoxDecoration(
@@ -404,11 +396,6 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                 height: 26.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
-                  // image: DecorationImage(
-                  //   fit: BoxFit.cover,
-
-                  //   image: NetworkImage(widget.image),
-                  // ),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6),
@@ -425,11 +412,16 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  MdSnsText(
-                    widget.symbol,
-                    color: Colors.white,
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h1,
+                  SizedBox(
+                    width: 50.w,
+                    child: MdSnsText(
+                      widget.symbol,
+                      color: Colors.white,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h1,
+                    ),
                   ),
                   SizedBox(
                     width: 50.w,
@@ -477,7 +469,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
           ),
 
           SizedBox(height: 4),
-          // Mini Graph Placeholder
+
           SizedBox(
             width: 86.w,
             height: 15.h,

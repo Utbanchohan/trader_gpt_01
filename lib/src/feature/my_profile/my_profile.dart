@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/shared/widgets/memory_widgets.dart';
@@ -55,33 +57,12 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
               Center(
                 child: Column(
                   children: [
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 50.r,
-                          backgroundImage:
-                              userModel != null && userModel!.imgUrl.isNotEmpty
-                              ? NetworkImage(userModel!.imgUrl)
-                              : AssetImage(Assets.images.placeholderimage.path),
-                        ),
-
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: const BoxDecoration(
-                              color: AppColors.bubbleColor,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Image.asset(
-                              Assets.images.camera.path,
-                              height: 19.11.h,
-                              width: 18.34.w,
-                            ),
-                          ),
-                        ),
-                      ],
+                    CircleAvatar(
+                      radius: 50.r,
+                      backgroundImage:
+                          userModel != null && userModel!.imgUrl.isNotEmpty
+                          ? NetworkImage(userModel!.imgUrl)
+                          : AssetImage(Assets.images.placeholderimage.path),
                     ),
                     SizedBox(height: 12),
                     MdSnsText(
@@ -120,17 +101,27 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
               _buildProfileItem(
                 asset: Assets.images.edit2.path,
                 title: "Personal Information",
-                onTap: () {},
+                onTap: () {
+                  context.pushNamed(AppRoutes.profilePage.name, extra: true);
+                },
               ),
               _buildProfileItem(
                 asset: Assets.images.receipt.path,
                 title: "Membership",
                 onTap: () {},
               ),
+
               _buildProfileItem(
                 asset: Assets.images.a4.path,
                 title: "Payment Method",
                 onTap: () {},
+              ),
+              _buildProfileItem(
+                asset: Assets.images.keySquare.path,
+                title: "Change Password",
+                onTap: () {
+                  context.pushNamed(AppRoutes.changePassword.name);
+                },
               ),
               _buildProfileItem(
                 asset: Assets.images.messageSearch5.path,

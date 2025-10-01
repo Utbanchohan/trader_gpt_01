@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/base_model/base_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/complete_profile/complete_profile_dto.dart';
+import 'package:trader_gpt/src/feature/sign_in/data/dto/profile_update_dto/profile_update_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';
@@ -61,21 +62,23 @@ class Profile extends _$Profile {
           final updatedStocks = data;
 
           for (var updated in updatedStocks) {
-            stocks.add(jsonDecode(updated));
+            Stock stockItem = updated;
+
+            stocks.add(stockItem.toJson());
           }
-           ref
-            .read(stocksManagerProvider.notifier)
-            .watchStocks(
-              data
-                  .map(
-                    (e) => Stock(
-                      stockId: e.stockId,
-                      symbol: e.symbol,
-                      price: e.price ?? 0,
-                    ),
-                  )
-                  .toList(),
-            );
+          ref
+              .read(stocksManagerProvider.notifier)
+              .watchStocks(
+                data
+                    .map(
+                      (e) => Stock(
+                        stockId: e.stockId,
+                        symbol: e.symbol,
+                        price: e.price ?? 0,
+                      ),
+                    )
+                    .toList(),
+              );
           ref.read(localDataProvider).saveStock(stocks);
         });
 
@@ -85,6 +88,39 @@ class Profile extends _$Profile {
       }
       state = AppLoadingState();
     } catch (e) {
+      state = AppLoadingState();
+      debugPrint("errror $e");
+    }
+    return null;
+  }
+
+
+Future<User?> updateProfile({
+    required String image,
+    required String name,
+  }) async {
+    state = AppLoadingState.loading();
+    try {
+      final response = await ref
+          .read(authRepository)
+          .updateProfile(
+            ProfileUpdateDto(imgUrl: image, name: name),
+          );
+      if (response.isSuccess) {
+                await ref
+            .read(localDataProvider)
+            .saveUserName(response.data?.name ?? '');
+        await ref
+            .read(localDataProvider)
+            .saveUser(response.data!.toJson());
+        state = AppLoadingState();
+        return response.data;
+      } else {
+        $showMessage(response.message, isError: true);
+      }
+      state = AppLoadingState();
+    } catch (e) {
+      $showMessage(e.toString(), isError: true);
       state = AppLoadingState();
       debugPrint("errror $e");
     }

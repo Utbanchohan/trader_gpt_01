@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -9,20 +10,49 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-class ConversationChatAppBar extends StatelessWidget implements PreferredSizeWidget {
+import '../../../../../core/extensions/price_calculation.dart';
+import '../../../../../shared/socket/providers/stocks_price.dart';
+
+// ignore: must_be_immutable
+class ConversationChatAppBar extends ConsumerStatefulWidget
+    implements PreferredSizeWidget {
   ChatRouting? chatRouting;
 
-  ConversationChatAppBar({
-    super.key,
-    required this.chatRouting,
-  });
+  ConversationChatAppBar({super.key, required this.chatRouting});
+
+  @override
+  ConsumerState<ConversationChatAppBar> createState() =>
+      _ConversationChatAppBarState();
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  // TODO: implement preferredSize
+}
 
+class _ConversationChatAppBarState
+    extends ConsumerState<ConversationChatAppBar> {
   @override
   Widget build(BuildContext context) {
-    if (chatRouting == null || chatRouting!.companyName.isEmpty) {
+    final stockManagerState = ref.watch(stocksManagerProvider);
+
+    final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
+    double change =
+        PriceUtils.getChangesPercentage(
+              liveStock != null && liveStock.price > 0
+                  ? liveStock.price
+                  : widget.chatRouting!.changePercentage,
+              widget.chatRouting!.previousClose,
+            ) !=
+            null
+        ? PriceUtils.getChangesPercentage(
+            liveStock != null && liveStock.price > 0
+                ? liveStock.price
+                : widget.chatRouting!.changePercentage,
+            widget.chatRouting!.previousClose,
+          )!
+        : widget.chatRouting!.changePercentage;
+
+    if (widget.chatRouting == null || widget.chatRouting!.companyName.isEmpty) {
       /// Default AppBar (Logo wala)
       return AppBar(
         scrolledUnderElevation: 0,
@@ -43,11 +73,7 @@ class ConversationChatAppBar extends StatelessWidget implements PreferredSizeWid
             );
           },
         ),
-        title: Image.asset(
-          Assets.images.logo.path,
-          width: 187,
-          height: 35.27,
-        ),
+        title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
         actions: [
           Container(
             margin: EdgeInsets.only(right: 20),
@@ -89,10 +115,7 @@ class ConversationChatAppBar extends StatelessWidget implements PreferredSizeWid
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: SvgPicture.network(
-                  getItemImage(
-                    ImageType.stock,
-                    chatRouting!.symbol,
-                  ),
+                  getItemImage(ImageType.stock, widget.chatRouting!.symbol),
                   fit: BoxFit.cover,
                   placeholderBuilder: (context) =>
                       SizedBox(width: 35, height: 35),
@@ -106,7 +129,7 @@ class ConversationChatAppBar extends StatelessWidget implements PreferredSizeWid
                 Row(
                   children: [
                     MdSnsText(
-                      "#${chatRouting!.symbol}",
+                      "#${widget.chatRouting!.symbol}",
                       fontWeight: TextFontWeightVariant.h7,
                       variant: TextVariant.h2,
                       color: AppColors.white,
@@ -115,7 +138,7 @@ class ConversationChatAppBar extends StatelessWidget implements PreferredSizeWid
                     SizedBox(
                       width: MediaQuery.sizeOf(context).width / 3,
                       child: MdSnsText(
-                        " ${chatRouting!.companyName!.split("-").first.trim()}",
+                        " ${widget.chatRouting!.companyName!.split("-").first.trim()}",
                         color: AppColors.colorB2B2B7,
                         fontWeight: TextFontWeightVariant.h4,
                         variant: TextVariant.h4,
@@ -131,26 +154,22 @@ class ConversationChatAppBar extends StatelessWidget implements PreferredSizeWid
                 Row(
                   children: [
                     Text(
-                      "\$${chatRouting!.price}",
+                      liveStock != null
+                          ? "\$${liveStock.price.toStringAsFixed(2)}"
+                          : "\$${widget.chatRouting!.price..toStringAsFixed(2)}",
                       style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                     SizedBox(width: 6),
                     Icon(
-                      chatRouting!.changePercentage.toString().contains("-")
-                          ? Icons.arrow_drop_down
-                          : Icons.arrow_drop_up,
-                      color: chatRouting!.changePercentage
-                              .toString()
-                              .contains("-")
+                      change < 0 ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+                      color: change < 0
                           ? AppColors.redFF3B3B
                           : AppColors.color06D54E,
                       size: 20,
                     ),
                     MdSnsText(
-                      " ${chatRouting!.changePercentage.toStringAsFixed(2).replaceAll("-", "")}%",
-                      color: chatRouting!.changePercentage
-                              .toString()
-                              .contains("-")
+                      " ${change.toStringAsFixed(2).replaceAll("-", "")}%",
+                      color: change < 0
                           ? AppColors.redFF3B3B
                           : AppColors.color06D54E,
                       fontWeight: TextFontWeightVariant.h4,
@@ -167,7 +186,7 @@ class ConversationChatAppBar extends StatelessWidget implements PreferredSizeWid
             onTap: () {
               context.pushNamed(
                 AppRoutes.analytics.name,
-                extra: chatRouting,
+                extra: widget.chatRouting,
               );
             },
             child: Container(

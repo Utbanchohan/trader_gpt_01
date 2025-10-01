@@ -40,14 +40,15 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
   final TextEditingController search = TextEditingController();
 
   List<ChatHistory> convo = [];
-  List<Stock> stocks = [];
   List<ChatHistory> searchConvo = [];
 
   final SocketService socketService = SocketService();
   late TabController tabController;
+  List<Stock> stocks = [];
   Timer? pollingTimer;
   bool loading = true;
   Timer? _debounce;
+  List<Stock> watchStockes = [];
 
   @override
   void initState() {
@@ -146,19 +147,23 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
       if (chat.symbol.toLowerCase() != "tdgpt" &&
           !existingSymbols.contains(chat.symbol)) {
         convo.add(chat);
+        watchStockes.add(
+          Stock(
+            stockId: chat.stockId,
+            symbol: chat.symbol,
+            logoUrl: '',
+            price: 0,
+            changesPercentage: 0,
+            previousClose: 0,
+            fiveDayTrend: [],
+          ),
+        );
         existingSymbols.add(chat.symbol); // keep set in sync
       }
     }
+    ref.read(stocksManagerProvider.notifier).watchStocks(watchStockes);
 
     setState(() {});
-  }
-
-  void _startPolling() {
-    pollingTimer = Timer.periodic(Duration(milliseconds: 100), (_) {
-      socketService.fetchStocks((data) {
-        updateStocks(data);
-      });
-    });
   }
 
   debounceSearch(String val) {
@@ -406,6 +411,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                     ),
             ),
 
+            // Yeh Expanded me rakho
             Expanded(
               child: TabBarView(
                 physics: NeverScrollableScrollPhysics(),
@@ -439,6 +445,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   AppRoutes.swipeScreen.name,
                                   extra: {
                                     "chatRouting": ChatRouting(
+                                      previousClose:
+                                          stocks[stockIndex].previousClose,
                                       chatId: convo[index].id,
                                       symbol: convo[index].symbol,
                                       image: stocks[stockIndex].logoUrl,
@@ -569,8 +577,18 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       changePercentage:
                                           stocks[stockIndex].changesPercentage,
                                       trendChart:
-                                          stocks[stockIndex].fiveDayTrend[0],
+                                          stocks[stockIndex]
+                                                  .fiveDayTrend
+                                                  .isNotEmpty &&
+                                              stocks[stockIndex]
+                                                      .fiveDayTrend[0]
+                                                      .data !=
+                                                  null
+                                          ? stocks[stockIndex].fiveDayTrend[0]
+                                          : FiveDayTrend(data: [0, 0, 0, 0]),
                                       stockid: convo[index].stockId,
+                                      previousClose:
+                                          stocks[stockIndex].previousClose,
                                     ),
                                     "initialIndex": 1,
                                   },
@@ -652,7 +670,10 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : WelcomeWidget(),
+                      : Container(
+                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                          child: WelcomeWidget(),
+                        ),
 
                   // Second tab
                   convo != null && convo.isNotEmpty && stocks.isNotEmpty
@@ -695,6 +716,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
                                       stockid: convo[index].stockId,
+                                      previousClose:
+                                          stocks[stockIndex].previousClose,
                                     ),
                                     "initialIndex": 1,
                                   },
@@ -773,27 +796,19 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : WelcomeWidget(),
+                      : Container(
+                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                          child: WelcomeWidget(),
+                        ),
 
-                  Center(
-                    child: MdSnsText(
-                      "Comming Soon",
-                      variant: TextVariant.h1,
-                      fontWeight: TextFontWeightVariant.h2,
-
-                      color: AppColors.fieldTextColor,
-                    ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                    child: WelcomeWidget(),
                   ),
-
                   // Third tab
-                  Center(
-                    child: MdSnsText(
-                      "Comming Soon",
-                      variant: TextVariant.h1,
-                      fontWeight: TextFontWeightVariant.h2,
-
-                      color: AppColors.fieldTextColor,
-                    ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                    child: WelcomeWidget(),
                   ),
                 ],
               ),

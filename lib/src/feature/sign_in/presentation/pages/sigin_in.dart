@@ -9,11 +9,8 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sign_in/presentation/provider/sign_in.dart';
-import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-
-import '../../../../core/routes/routes.dart';
 import '../../../../shared/mixin/form_state_mixin.dart';
 import '../../../../shared/states/app_loading_state.dart';
 
@@ -37,11 +34,7 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
         .onSubmit(email: email.value.text, password: password.value.text);
     if (result != null) {
       if (mounted) {
-        context.goNamed(AppRoutes.swipeScreen.name,
-        extra: {
-            "initialIndex": 0,
-          }
-        );
+        context.goNamed(AppRoutes.swipeScreen.name, extra: {"initialIndex": 0});
       }
     }
   }
@@ -114,9 +107,8 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                       // Email field
                       TextFormField(
                         controller: email,
-                        style: TextStyle(
-                          color: Colors.white,
-
+                        style: GoogleFonts.plusJakartaSans(
+                          color: AppColors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -125,7 +117,7 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                           fillColor: AppColors.bubbleColor,
                           hintText: 'Email',
                           hintStyle: GoogleFonts.plusJakartaSans(
-                            color: AppColors.white,
+                            color: AppColors.lightTextColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
@@ -175,8 +167,8 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                       TextFormField(
                         obscureText: !visible,
                         controller: password,
-                        style: TextStyle(
-                          color: Colors.white,
+                        style: GoogleFonts.plusJakartaSans(
+                          color: AppColors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -193,8 +185,8 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                           filled: true,
                           fillColor: AppColors.bubbleColor,
                           hintText: 'Password',
-                          hintStyle: TextStyle(
-                            color: Colors.white,
+                          hintStyle: GoogleFonts.plusJakartaSans(
+                            color: AppColors.lightTextColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
@@ -225,11 +217,16 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                 // Forgot password
                 Container(
                   alignment: Alignment.centerRight,
-                  child: MdSnsText(
-                    "Forgot password?",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
+                  child: GestureDetector(
+                    onTap: () {
+                      context.pushNamed(AppRoutes.forgetPassword.name);
+                    },
+                    child: MdSnsText(
+                      "Forgot password?",
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h4,
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
 

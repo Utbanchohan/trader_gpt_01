@@ -176,6 +176,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/j&j.png
   AssetGenImage get jJ => const AssetGenImage('assets/images/j&j.png');
 
+  /// File path: assets/images/key-square.png
+  AssetGenImage get keySquare =>
+      const AssetGenImage('assets/images/key-square.png');
+
   /// File path: assets/images/lamp-charge.png
   AssetGenImage get lampCharge =>
       const AssetGenImage('assets/images/lamp-charge.png');
@@ -364,6 +368,7 @@ class $AssetsImagesGen {
     information1,
     information,
     jJ,
+    keySquare,
     lampCharge,
     leftscrollicon,
     leftsideimage,

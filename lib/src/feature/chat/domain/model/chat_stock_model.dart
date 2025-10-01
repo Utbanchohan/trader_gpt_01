@@ -1,14 +1,15 @@
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
 class ChatRouting {
-  final String image;            
-  final String symbol;           
-  final String companyName;      
-  final double price;            
-  final double changePercentage; 
+  final String image;
+  final String symbol;
+  final String companyName;
+  final double price;
+  final double changePercentage;
   final String chatId;
-   final String stockid;
-  final FiveDayTrend trendChart;           
+  final String stockid;
+  final FiveDayTrend trendChart;
+  final double? previousClose;
 
   ChatRouting({
     required this.image,
@@ -18,7 +19,8 @@ class ChatRouting {
     required this.changePercentage,
     required this.chatId,
     required this.stockid,
-    required this.trendChart
+    required this.trendChart,
+    required this.previousClose,
   });
 
   // factory ChatStock.fromJson(Map<String, dynamic> json) {
