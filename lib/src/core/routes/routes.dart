@@ -40,7 +40,7 @@ enum AppRoutes {
     AppRoutes.analytics,
     AppRoutes.conversationStart,
     AppRoutes.newConversation,
-    AppRoutes.swipeScreen,
+    // AppRoutes.swipeScreen,
     AppRoutes.chatConversation,
   ];
   static bool isPublicRoute(GoRouterState state) {

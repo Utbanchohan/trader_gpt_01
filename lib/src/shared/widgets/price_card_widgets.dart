@@ -20,7 +20,7 @@ class PriceCardWidget extends StatelessWidget {
     return Container(
       width: 220.w,
       // height: 137.h,
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.all(10.w),
       decoration: BoxDecoration(
         color: AppColors.primaryColor,
         borderRadius: BorderRadius.circular(20),

@@ -142,11 +142,15 @@ class _ChatApi implements ChatApi {
   }
 
   @override
-  Future<BaseModel<DeleteResponse>> deleteChat(String chatId) async {
+  Future<BaseModel<DeleteResponse>> deleteChat(
+    String chatId,
+    Map<String, dynamic> body,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
     final _options = _setStreamType<BaseModel<DeleteResponse>>(
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
