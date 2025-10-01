@@ -21,57 +21,101 @@
             "type": "dart",
             "flutterMode": "release"
         },
-         {
+        {
             "name": "trader_gpt_production",
             "request": "launch",
-            "program": "lib/main_uat.dart",
-            "type": "dart"
+            "program": "lib/main_prod.dart",
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "prod"
+            ]
         },
         {
             "name": "trader_gpt_production (profile mode)",
             "request": "launch",
+            "program": "lib/main_prod.dart",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "args": [
+                "--flavor",
+                "prod"
+            ]
         },
         {
             "name": "trader_gpt_production (release mode)",
             "request": "launch",
+            "program": "lib/main_prod.dart",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "args": [
+                "--flavor",
+                "prod"
+            ]
         },
-         {
+        {
             "name": "trader_gpt_Stage",
             "request": "launch",
-            "type": "dart"
+            "program": "lib/main_stage.dart",
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "stage"
+            ]
         },
         {
             "name": "trader_gpt_Stage (profile mode)",
             "request": "launch",
+            "program": "lib/main_stage.dart",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "args": [
+                "--flavor",
+                "stage"
+            ]
         },
         {
             "name": "trader_gpt_Stage (release mode)",
             "request": "launch",
+            "program": "lib/main_stage.dart",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "args": [
+                "--flavor",
+                "stage"
+            ]
         },
         {
             "name": "trader_gpt_Development",
             "request": "launch",
-            "type": "dart"
+            "program": "lib/main_dev.dart",
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "dev"
+            ]
         },
         {
             "name": "trader_gpt_Development (profile mode)",
             "request": "launch",
+            "program": "lib/main_dev.dart",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "args": [
+                "--flavor",
+                "dev"
+            ]
         },
         {
             "name": "trader_gpt_Development (release mode)",
             "request": "launch",
+            "program": "lib/main_dev.dart",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "args": [
+                "--flavor",
+                "dev"
+            ]
         }
     ]
 }
