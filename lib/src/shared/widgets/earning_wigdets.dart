@@ -2,17 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-class CompanyDetailsItem extends StatelessWidget {
+class EarningsItem extends StatelessWidget {
   final String title;
   final String value;
 
-  const CompanyDetailsItem({Key? key, required this.title, required this.value})
+  const EarningsItem({Key? key, required this.title, required this.value})
     : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // 👇 yahan condition lagayi
+    Color textColor;
+    if (value.contains("+")) {
+      textColor = Colors.greenAccent;
+    } else if (value.contains("-")) {
+      textColor = Colors.redAccent;
+    } else {
+      textColor = AppColors.white;
+    }
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -24,8 +34,10 @@ class CompanyDetailsItem extends StatelessWidget {
           ),
           MdSnsText(
             value,
-            color: AppColors.white,
-
+            color: value.contains("+")
+                ? Colors
+                      .greenAccent // 👈 agar + ho to green
+                : AppColors.white, // 👈 warna white
             fontWeight: TextFontWeightVariant.h1,
             variant: TextVariant.h4,
           ),
@@ -35,8 +47,8 @@ class CompanyDetailsItem extends StatelessWidget {
   }
 }
 
-class CompanyDetailsCard extends StatelessWidget {
-  const CompanyDetailsCard({Key? key}) : super(key: key);
+class Earnings extends StatelessWidget {
+  const Earnings({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +56,6 @@ class CompanyDetailsCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        // color: AppColors.white,
         border: Border.all(color: AppColors.color0x0x1AB3B3B3),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -52,42 +63,24 @@ class CompanyDetailsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MdSnsText(
-            "Company Details",
+            "Earnings",
             color: AppColors.fieldTextColor,
             fontWeight: TextFontWeightVariant.h4,
             variant: TextVariant.h3,
           ),
-
-          // SizedBox(height: 16),
           Container(
             width: double.infinity,
-
             padding: const EdgeInsets.all(16),
-            // decoration: BoxDecoration(
-            //   color: const Color(0xFF0B1224), // background color
-            // ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CompanyDetailsItem(title: "Industry", value: "Technology"),
-                CompanyDetailsItem(
-                  title: "Sector",
-                  value: "Information Technology",
+              children: const [
+                EarningsItem(title: "Reported EPS", value: "3.46"),
+                EarningsItem(
+                  title: "Next Earnings Report Date",
+                  value: "InformationTech",
                 ),
-                CompanyDetailsItem(title: "Employees", value: "10,000"),
-                CompanyDetailsItem(
-                  title: "Headquarters",
-                  value: "San Francisco, CA",
-                ),
-                CompanyDetailsItem(title: "Founded", value: "MSFT"),
-                CompanyDetailsItem(title: "MARKET CAP", value: "Technology"),
-                CompanyDetailsItem(
-                  title: "FISCAL YEAR END",
-                  value: "Software-Internet",
-                ),
-                CompanyDetailsItem(title: "INDUSTRY", value: "1998"),
-                CompanyDetailsItem(title: "SELECTOR", value: "June"),
-                CompanyDetailsItem(title: "SYMBOL", value: "3820.20B"),
+                EarningsItem(title: "EPS Surprise", value: "7.45%"),
+                EarningsItem(title: "Total Revenue", value: "70.07B"),
               ],
             ),
           ),

@@ -13,7 +13,7 @@ class OutstandingSharesChart extends StatelessWidget {
       decoration: BoxDecoration(
         // color: AppColors.white,
         border: Border.all(color: AppColors.color0x0x1AB3B3B3),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(20),
       ),
       // margin: const EdgeInsets.all(16),
       // decoration: BoxDecoration(
