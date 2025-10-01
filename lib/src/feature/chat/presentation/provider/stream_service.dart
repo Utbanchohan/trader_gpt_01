@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:trader_gpt/src/shared/flavours.dart';
+
+import '../../../../../flavors.dart';
 
 class SseService {
   final Dio _dio = Dio();
@@ -15,7 +16,7 @@ class SseService {
     Map<String, dynamic> body,
     String token,
   ) async* {
-    final url = "${BaseUrl.baseUrl}tgpt-python/api/user_ask_stream";
+    final url = "${F.baseUrl}tgpt-python/api/user_ask_stream";
 
     final headers = {
       "accept": "text/event-stream",

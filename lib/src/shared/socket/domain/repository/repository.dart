@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
-import 'package:trader_gpt/src/shared/flavours.dart';
 
+import '../../../../../flavors.dart';
 import '../../data/api/socket_api.dart';
 import '../../enums.dart';
 import '../../model/stock_model.dart/stock_model.dart';
@@ -94,7 +94,7 @@ class SocketRepository {
 }
 
 final socketRepository = Provider<SocketRepository>((ref) {
-  final repo = SocketRepository(SocketApi.instance, BaseUrl.socketurl, ref);
+  final repo = SocketRepository(SocketApi.instance, F.socketUrl, ref);
 
   ref.onDispose(() => repo.dispose());
 

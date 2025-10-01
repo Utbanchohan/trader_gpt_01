@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint, Uint8List;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trader_gpt/src/shared/flavours.dart';
+import '../../../flavors.dart';
 import '../local/repository/local_storage_repository.dart';
 part 'interceptors.dart';
 part 'pretty_logger.dart';
@@ -19,7 +19,7 @@ final client = Provider<Dio>((ref) {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        baseUrl: BaseUrl.baseUrl,
+        baseUrl: F.baseUrl,
         connectTimeout: timeOut,
         receiveTimeout: timeOut,
       ),
@@ -44,7 +44,7 @@ final multipartClient = Provider<Dio>((ref) {
           "Content-Type": "multipart/form-data",
           "Accept": "application/json",
         },
-        baseUrl:BaseUrl.baseUrl,
+        baseUrl:F.baseUrl,
         // requestEncoder: (request, options) {
 
         // },
