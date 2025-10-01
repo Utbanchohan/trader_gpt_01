@@ -100,7 +100,6 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           }
         }
       }
-      ref.read(stocksManagerProvider.notifier).watchStocks(searchStock);
       loading = false;
     });
   }
@@ -120,6 +119,8 @@ class _NewConversationState extends ConsumerState<NewConversation> {
       ChatHistory chatHistory = res;
       if (mounted) {
         pushNewStock(stock);
+        ref.read(stocksManagerProvider.notifier).watchStock(stock);
+
         context.pushNamed(
           AppRoutes.swipeScreen.name,
           extra: {
@@ -131,7 +132,11 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               companyName: stock.name,
               price: stock.price,
               changePercentage: stock.changesPercentage,
-              trendChart: stock.fiveDayTrend[0],
+              trendChart:
+                  stock.fiveDayTrend.isNotEmpty &&
+                      stock.fiveDayTrend[0].data != null
+                  ? stock.fiveDayTrend[0]
+                  : FiveDayTrend(data: [0, 0, 0, 0, 0]),
               stockid: stock.stockId,
             ),
             "initialIndex": 1,
@@ -283,7 +288,11 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                             price: stock.price,
                             change: stock.change,
                             image: stock.logoUrl,
-                            trendchart: stock.fiveDayTrend[0],
+                            trendchart:
+                                stock.fiveDayTrend.isNotEmpty &&
+                                    stock.fiveDayTrend[0].data != null
+                                ? stock.fiveDayTrend[0]
+                                : FiveDayTrend(data: [0, 0, 0, 0]),
                             previousClose: stock.previousClose,
                           ),
                         );
@@ -387,11 +396,6 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                 height: 26.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
-                  // image: DecorationImage(
-                  //   fit: BoxFit.cover,
-
-                  //   image: NetworkImage(widget.image),
-                  // ),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6),
@@ -408,11 +412,16 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  MdSnsText(
-                    widget.symbol,
-                    color: Colors.white,
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h1,
+                  SizedBox(
+                    width: 50.w,
+                    child: MdSnsText(
+                      widget.symbol,
+                      color: Colors.white,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h1,
+                    ),
                   ),
                   SizedBox(
                     width: 50.w,
@@ -460,7 +469,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
           ),
 
           SizedBox(height: 4),
-          // Mini Graph Placeholder
+
           SizedBox(
             width: 86.w,
             height: 15.h,

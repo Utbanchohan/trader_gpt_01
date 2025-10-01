@@ -577,7 +577,15 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       changePercentage:
                                           stocks[stockIndex].changesPercentage,
                                       trendChart:
-                                          stocks[stockIndex].fiveDayTrend[0],
+                                          stocks[stockIndex]
+                                                  .fiveDayTrend
+                                                  .isNotEmpty &&
+                                              stocks[stockIndex]
+                                                      .fiveDayTrend[0]
+                                                      .data !=
+                                                  null
+                                          ? stocks[stockIndex].fiveDayTrend[0]
+                                          : FiveDayTrend(data: [0, 0, 0, 0]),
                                       stockid: convo[index].stockId,
                                       previousClose:
                                           stocks[stockIndex].previousClose,

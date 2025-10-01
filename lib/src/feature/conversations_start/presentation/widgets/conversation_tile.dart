@@ -164,9 +164,31 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 width: 86.w,
                 height: 15.h,
                 child: Sparkline(
-                  data: ref.watch(stocksStreamProvider) == widget.stocks
-                      ? ref.watch(stocksStreamProvider).fiveDayTrend[0].data!
-                      : widget.stocks.fiveDayTrend[0].data!,
+                  data:
+                      ref.watch(stocksStreamProvider) != null &&
+                          ref.watch(stocksStreamProvider) == widget.stocks
+                      ? ref
+                                    .watch(stocksStreamProvider)
+                                    .fiveDayTrend
+                                    .isNotEmpty &&
+                                ref
+                                        .watch(stocksStreamProvider)
+                                        .fiveDayTrend[0]
+                                        .data !=
+                                    null
+                            ? ref
+                                  .watch(stocksStreamProvider)
+                                  .fiveDayTrend[0]
+                                  .data!
+                            : widget.stocks.fiveDayTrend.isNotEmpty &&
+                                  widget.stocks.fiveDayTrend[0].data != null
+                            ? widget.stocks.fiveDayTrend[0].data!
+                            : [0, 0, 0, 0, 0]
+                      : widget.stocks.fiveDayTrend.isNotEmpty &&
+                            widget.stocks.fiveDayTrend[0].data != null
+                      ? widget.stocks.fiveDayTrend[0].data!
+                      : [0, 0, 0, 0, 0],
+
                   lineWidth: 2.0,
                   lineColor: change.contains("-")
                       ? AppColors.redFF3B3B

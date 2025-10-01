@@ -9,7 +9,6 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/change_password/presentation/provider/change_password_provider.dart';
-import 'package:trader_gpt/src/feature/sign_in/presentation/provider/sign_in.dart';
 import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/mixin/form_state_mixin.dart';
 import 'package:trader_gpt/src/shared/states/app_loading_state.dart';

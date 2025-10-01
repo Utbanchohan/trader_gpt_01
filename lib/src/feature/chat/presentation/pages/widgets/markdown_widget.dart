@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/new_chart_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -119,7 +120,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               widget.name == "TDGPT"
                   ? Container(
@@ -169,7 +170,10 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
               Visibility(
                 visible: widget.name != "TDGPT",
                 child: MdSnsText(
-                  widget.name,
+                  widget.type == "user"
+                      ? widget.name.capitalize()
+                      : widget.name,
+
                   variant: TextVariant.h4,
                   fontWeight: TextFontWeightVariant.h3,
 
