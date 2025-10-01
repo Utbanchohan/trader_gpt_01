@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
@@ -46,7 +47,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
       setState(() {
         email = TextEditingController(text: user!.email);
         if (widget.isFromX == true) {
-          fullname = TextEditingController(text: user!.name);
+          fullname = TextEditingController(text: user!.name.capitalize());
+          mediaModel = MediaModel(
+            url: user!.imgUrl.isNotEmpty ? user!.imgUrl : "",
+            type: "image",
+          );
         }
       });
     }
@@ -203,7 +208,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with FormStateMixin {
                     children: [
                       state.when(
                         data: (media) {
-                          mediaModel = media;
+                          mediaModel = media != null && media.url.isNotEmpty
+                              ? media
+                              : mediaModel;
                           return Container(
                             height: 63.h,
                             width: 63.w,

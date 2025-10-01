@@ -112,7 +112,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
             companyName: stock.name,
             stockId: stock.stockId,
             symbol: stock.symbol,
-            type: "stocks",
+            type: stock.type,
           ),
         );
     if (res != null) {
