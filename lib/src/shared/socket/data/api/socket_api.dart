@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../../../../flavors.dart';
+
 class SocketApi {
   static final SocketApi _instance = SocketApi._internal();
   factory SocketApi() => _instance;
@@ -13,7 +15,8 @@ class SocketApi {
     if (socket != null && socket!.connected) return; // Already connected
 
     socket = IO.io(
-      'https://stage.tradersgpt.io',
+      F.newSocketUrl,
+      // 'https://stage.tradersgpt.io',
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .enableForceNew()

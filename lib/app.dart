@@ -1,68 +1,33 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:trader_gpt/src/core/routes/router.dart';
-import 'package:trader_gpt/src/shared/app_start/presentation/app_start_view.dart';
-import 'package:trader_gpt/src/shared/custom_scroll_behavour.dart';
 
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+import 'flavors.dart';
+import 'pages/my_home_page.dart';
+
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
-  Widget build(context, ref) {
-    final goRouter = ref.watch(routerConfigProvider);
-
-    final buttonStyle = ButtonStyle(
-      iconColor: WidgetStateProperty.all<Color>(Colors.black),
-      foregroundColor: WidgetStateProperty.all<Color>(Colors.black),
-      padding: WidgetStateProperty.all(const EdgeInsets.all(12)),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-      ),
-    );
-
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: ScreenUtilInit(
-        designSize: const Size(375, 812), // Figma design base size
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) {
-          return MaterialApp.router(
-            scrollBehavior: MyCustomScrollBehavior(),
-            theme: ThemeData(
-              brightness: Brightness.dark,
-              visualDensity: VisualDensity.standard,
-              useMaterial3: true,
-              textTheme: GoogleFonts.plusJakartaSansTextTheme(),
-              inputDecorationTheme: InputDecorationTheme(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
-              textButtonTheme: TextButtonThemeData(style: buttonStyle),
-              outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle),
-            ),
-            title: 'Trader GPT',
-            debugShowCheckedModeBanner: false,
-            routerConfig: goRouter,
-            builder: (_, child) {
-              return AppStartupWidget(
-                onLoaded: (_) => MediaQuery(
-                  data: MediaQuery.of(context).copyWith(
-                    textScaler: TextScaler.linear(1.0),
-                  ),
-                  child: child!,
-                ),
-              );
-            },
-          );
-        },
-      ),
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: F.title,
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: _flavorBanner(child: MyHomePage(), show: kDebugMode),
     );
   }
+
+  Widget _flavorBanner({required Widget child, bool show = true}) => show
+      ? Banner(
+          location: BannerLocation.topStart,
+          message: F.name,
+          color: Colors.green.withAlpha(150),
+          textStyle: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 12.0,
+            letterSpacing: 1.0,
+          ),
+          textDirection: TextDirection.ltr,
+          child: child,
+        )
+      : Container(child: child);
 }

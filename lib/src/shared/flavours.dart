@@ -1,9 +1,11 @@
+import '../../flavors.dart';
+
 class BaseUrl {
   static String get baseUrl {
-    return 'http://stage.tradersgpt.io/';
+    return F.baseUrl;
   }
 
   static String get socketurl {
-    return 'wss://stage.tradersgpt.io/socket.io';
+    return F.socketUrl;
   }
 }

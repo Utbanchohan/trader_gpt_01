@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:trader_gpt/src/shared/flavours.dart';
 
 class UploadApi {
   final Dio dio;
@@ -9,7 +10,8 @@ class UploadApi {
   /// Get presigned S3 URL
   Future<Map<String, dynamic>> getPresignedUrl(String fileName) async {
     final response = await dio.get(
-      'https://stage.tradersgpt.io/tgpt-nestjs/s3',
+      "${BaseUrl.baseUrl}tgpt-nestjs/s3",
+      // 'https://stage.tradersgpt.io/tgpt-nestjs/s3',
       queryParameters: {'fileName': fileName},
     );
     return response.data;

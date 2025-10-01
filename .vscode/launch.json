@@ -20,6 +20,58 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+         {
+            "name": "trader_gpt_production",
+            "request": "launch",
+            "program": "lib/main_uat.dart",
+            "type": "dart"
+        },
+        {
+            "name": "trader_gpt_production (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "trader_gpt_production (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+         {
+            "name": "trader_gpt_Stage",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "trader_gpt_Stage (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "trader_gpt_Stage (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "trader_gpt_Development",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "trader_gpt_Development (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "trader_gpt_Development (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
         }
     ]
 }

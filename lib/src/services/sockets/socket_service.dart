@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../../flavors.dart';
+
 class SocketService {
   late IO.Socket socket;
   final _stockStreamController = StreamController<List<dynamic>>.broadcast();
@@ -9,7 +11,8 @@ class SocketService {
 
   void connect() {
     socket = IO.io(
-      'https://stage.tradersgpt.io',
+F.newSocketUrl,
+      // 'https://stage.tradersgpt.io',
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .enableForceNew()

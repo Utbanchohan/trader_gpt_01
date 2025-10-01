@@ -64,6 +64,8 @@ dependencies:
   flutter_svg: ^2.2.0
   dropdown_button2: ^2.3.9
   url_launcher: ^6.3.2
+  flutter_flavorizr: ^2.4.1
+
 
 
 
@@ -78,6 +80,7 @@ dev_dependencies:
   cached_network_image: ^3.4.1
   flutter_gen_runner: ^5.10.0
   retrofit_generator: ^9.1.9
+  
 
 
 flutter_launcher_icons:
@@ -94,6 +97,40 @@ flutter:
 
   assets:
     - assets/images/
+
+
+flavorizr:
+  app:
+    android:
+      flavorDimensions: "flavor-type"
+  flavors:
+    prod:
+      app:
+        name: "TradersGPT"
+      android:
+        applicationId: "com.neksoft.tradergpt"
+        icon: assets/images/app_icon.png
+      ios:
+        bundleId: "com.neksoft.tradergpt"
+        icon: assets/images/app_icon.png
+    dev:
+      app:
+        name: "TradersGPT-dev"
+      android:
+        applicationId: "com.tradersGPTDev.app"
+        icon: assets/images/app_icon.png
+      ios:
+        bundleId: "com.tradersGPTDev.app"
+        icon: assets/images/app_icon.png
+    stage:
+      app:
+        name: "TradersGPT-stage"
+      android:
+        applicationId: "com.tradersGPTStage.app"
+        icon: assets/images/app_icon.png
+      ios:
+        bundleId: "com.tradersGPTStage.app"
+        icon: assets/images/app_icon.png
 
 # flutter_gen:
 #   output: lib/gen/
