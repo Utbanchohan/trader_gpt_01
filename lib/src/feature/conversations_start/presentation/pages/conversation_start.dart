@@ -207,6 +207,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         stocks.add(Stock.fromJson(stock));
       }
     }
+    setState(() {});
   }
 
   void updateStocks(List<dynamic> data) {
