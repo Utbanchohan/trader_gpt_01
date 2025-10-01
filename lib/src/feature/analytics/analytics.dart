@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
@@ -10,7 +11,12 @@ import 'package:trader_gpt/src/shared/chart/revenue_analysis.dart';
 import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/InfoBox_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/company_detail.widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/outstanding_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/price_card_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/profileCard_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/shortvalue.widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:trader_gpt/utils/constant.dart';
 
@@ -34,6 +40,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     "Analytics",
     "Technical",
   ];
+  final companyInfo = [
+    {"icon": Icons.home, "title": "Headquarter", "value": "One Microsoft Way"},
+    {"icon": Icons.location_on, "title": "Country", "value": "US"},
+    {"icon": Icons.groups, "title": "Employees", "value": "228000"},
+    {
+      "icon": Icons.language,
+      "title": "Website",
+      "value": "https://www.microsoft.com",
+    },
+  ];
+
   bool isTabSelected = true; // Default delivery tab selected
 
   void isToggle(bool value) {
@@ -137,6 +154,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           );
   }
 
+  // final List<ChartData> chartData = [
+  //   ChartData(DateTime(2024, 9, 30), 5, 6, 1),
+  //   ChartData(DateTime(2024, 12, 3), 15, 18, 2),
+  //   ChartData(DateTime(2025, 2, 5), 25, 22, 3),
+  //   ChartData(DateTime(2025, 4, 10), 30, 28, 5),
+  //   ChartData(DateTime(2025, 6, 13), 8, 7, 1),
+  // ];
   final List<Map<String, dynamic>> priceData = [
     {
       "previousPrice": "173.19",
@@ -382,6 +406,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               children: [
                 /// Overview Tab Content
                 _overviewContent(),
+                _companyContent(),
+                _financialContent(),
+                _companyContent(),
+                _companyContent(),
 
                 /// Company Tab Content
                 Center(
@@ -745,6 +773,547 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 ],
               ),
             ),
+            SizedBox(height: 20.h),
+
+            WeeklySeasonalityChart(),
+            SizedBox(height: 20.h),
+            ShareStructureCard(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _companyContent() {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          children: [
+            // SizedBox(height: 14.h),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MdSnsText(
+                  "Company Details",
+                  color: AppColors.fieldTextColor,
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h1,
+                ),
+                SizedBox(height: 14.h),
+
+                ReadMoreText(
+                  "Lorem ipsum dolor sit amet consectetur. Ultrices consectetur turpis egestas faucibus. "
+                  "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+                  trimLines: 2,
+                  trimMode: TrimMode.Line,
+                  trimCollapsedText: '',
+                  trimExpandedText: '',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.white,
+                  ),
+                ),
+                SizedBox(height: 14.h),
+                GestureDetector(
+                  onTap: () {},
+                  child: MdSnsText(
+                    "Read more",
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h1,
+
+                    color: AppColors.secondaryColor,
+                  ),
+                ),
+                SizedBox(height: 14.h),
+                InfoBoxGrid(items: companyInfo),
+                SizedBox(height: 10.h),
+                MdSnsText(
+                  "Key Executives",
+                  color: AppColors.fieldTextColor,
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h1,
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ProfileCardWidget(
+                      imagePath: "assets/images/image 263.png",
+                      designation: "Chairman & Ceo",
+                      name: "Mr. Satya Nadella",
+                    ),
+                    ProfileCardWidget(
+                      imagePath: "assets/images/image 262.png",
+                      designation: "Chairman & Ceo",
+                      name: "Mr. Bradford L. Smith",
+                    ),
+                    ProfileCardWidget(
+                      imagePath: "assets/images/image 262 (1).png",
+                      designation: "Chairman & Ceo",
+                      name: "Ms. Amy E. Hood",
+                    ),
+                  ],
+                ),
+                CompanyDetailsCard(),
+                OutstandingSharesChart(),
+                // ShortVolumeChart(data: chartData),
+              ],
+            ),
+
+            // ---------- PERFORMANCE OVERVIEW ----------
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.colorB3B3B3),
+                color: AppColors.primaryColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MdSnsText(
+                        "Performance Overview",
+                        color: AppColors.white,
+                        variant: TextVariant.h2,
+                        fontWeight: TextFontWeightVariant.h4,
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            Assets.images.textalignJustifycenter.path,
+                            height: 14.h,
+                            width: 16.55.w,
+                          ),
+                          SizedBox(width: 10.w),
+                          Image.asset(
+                            Assets.images.chart.path,
+                            height: 14.h,
+                            width: 14.w,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
+                  PerformanceTable(),
+                ],
+              ),
+            ),
+            SizedBox(height: 20.h),
+
+            // ---------- PRICE COMPARISON ----------
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.color091224,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  MdSnsText(
+                    "Price Comparison",
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h4,
+
+                    color: AppColors.fieldTextColor,
+                  ),
+                  SizedBox(height: 16.h),
+                  SizedBox(
+                    height: 180,
+                    child: LineChart(
+                      LineChartData(
+                        backgroundColor: AppColors.color091224,
+                        gridData: FlGridData(
+                          show: true,
+                          getDrawingHorizontalLine: (value) => FlLine(
+                            color: AppColors.color1B254B,
+                            strokeWidth: 3,
+                          ),
+                          getDrawingVerticalLine: (value) =>
+                              FlLine(color: Colors.transparent, strokeWidth: 1),
+                        ),
+                        titlesData: FlTitlesData(
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 28,
+                              interval: 10,
+                              getTitlesWidget: (value, meta) => MdSnsText(
+                                value.toInt().toString(),
+                                color: AppColors.white,
+
+                                variant: TextVariant.h5,
+                              ),
+                            ),
+                          ),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 1,
+                              getTitlesWidget: (value, meta) => MdSnsText(
+                                value.toInt().toString(),
+                                color: AppColors.white,
+                                variant: TextVariant.h5,
+                              ),
+                            ),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+                        borderData: FlBorderData(show: false),
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: [
+                              FlSpot(1, 35),
+                              FlSpot(2, 40),
+                              FlSpot(3, 20),
+                              FlSpot(4, 55),
+                              FlSpot(5, 60),
+                              FlSpot(6, 45),
+                              FlSpot(7, 38),
+                              FlSpot(8, 42),
+                              FlSpot(9, 41),
+                              FlSpot(10, 50),
+                              FlSpot(11, 55),
+                              FlSpot(12, 37),
+                            ],
+                            isCurved: true,
+                            color: AppColors.color0098E4,
+                            barWidth: 3,
+                            dotData: FlDotData(show: false),
+                          ),
+                          LineChartBarData(
+                            spots: [
+                              FlSpot(1, 25),
+                              FlSpot(2, 35),
+                              FlSpot(3, 30),
+                              FlSpot(4, 40),
+                              FlSpot(5, 45),
+                              FlSpot(6, 72),
+                              FlSpot(7, 20),
+                              FlSpot(8, 28),
+                              FlSpot(9, 26),
+                              FlSpot(10, 60),
+                              FlSpot(11, 70),
+                              FlSpot(12, 58),
+                            ],
+                            isCurved: true,
+                            color: AppColors.color06D54E,
+                            barWidth: 3,
+                            dotData: FlDotData(show: false),
+                          ),
+                        ],
+                        minX: 1,
+                        maxX: 12,
+                        minY: 10,
+                        maxY: 80,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20.h),
+
+            WeeklySeasonalityChart(),
+            SizedBox(height: 20.h),
+            ShareStructureCard(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _financialContent() {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          children: [
+            SizedBox(height: 14.h),
+            Row(
+              children: [
+                // Image.asset(
+                //   Assets.images.Frame 1171275460.path,
+                //   height: 53.h,
+                //   width: 53.w,
+                // ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        MdSnsText(
+                          "#TSLA",
+                          // "#${selectedStock!.symbol}",
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h1,
+
+                          color: AppColors.white,
+                        ),
+                        const SizedBox(width: 4),
+                        MdSnsText(
+                          "TESLA INC",
+                          // selectedStock!.name.split("-").first.trim(),
+                          color: AppColors.colorB2B2B7,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.white,
+                          size: 20.sp,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        MdSnsText(
+                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.white,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          selectedStock!.changesPercentage.toString().contains(
+                                "-",
+                              )
+                              ? Icons.arrow_drop_down
+                              : Icons.arrow_drop_up,
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          size: 20,
+                        ),
+                        MdSnsText(
+                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          color:
+                              selectedStock!.changesPercentage
+                                  .toString()
+                                  .contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            SizedBox(
+              height: 154.h, // Height fixed for horizontal list
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal, // Horizontal scrolling
+                // padding: EdgeInsets.symmetric(horizontal: 16.w),
+                itemCount: priceData.length,
+                physics: const BouncingScrollPhysics(), // Smooth scrolling
+                itemBuilder: (context, index) {
+                  final item = priceData[index];
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      right: 16.w,
+                    ), // Space between cards
+                    child: PriceCardWidget(
+                      previousPrice: item["previousPrice"],
+                      afterHoursPrice: item["afterHoursPrice"],
+                      percentage: item["percentage"],
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 20.h),
+            CustomLineChart(),
+
+            SizedBox(height: 20.h),
+
+            RevenueAnalysisChart(),
+            SizedBox(height: 20.h),
+
+            // ---------- PERFORMANCE OVERVIEW ----------
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.colorB3B3B3),
+                color: AppColors.primaryColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MdSnsText(
+                        "Performance Overview",
+                        color: AppColors.white,
+                        variant: TextVariant.h2,
+                        fontWeight: TextFontWeightVariant.h4,
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            Assets.images.textalignJustifycenter.path,
+                            height: 14.h,
+                            width: 16.55.w,
+                          ),
+                          SizedBox(width: 10.w),
+                          Image.asset(
+                            Assets.images.chart.path,
+                            height: 14.h,
+                            width: 14.w,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
+                  PerformanceTable(),
+                ],
+              ),
+            ),
+            SizedBox(height: 20.h),
+
+            // ---------- PRICE COMPARISON ----------
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.color091224,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  MdSnsText(
+                    "Price Comparison",
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h4,
+
+                    color: AppColors.fieldTextColor,
+                  ),
+                  SizedBox(height: 16.h),
+                  SizedBox(
+                    height: 180,
+                    child: LineChart(
+                      LineChartData(
+                        backgroundColor: AppColors.color091224,
+                        gridData: FlGridData(
+                          show: true,
+                          getDrawingHorizontalLine: (value) => FlLine(
+                            color: AppColors.color1B254B,
+                            strokeWidth: 3,
+                          ),
+                          getDrawingVerticalLine: (value) =>
+                              FlLine(color: Colors.transparent, strokeWidth: 1),
+                        ),
+                        titlesData: FlTitlesData(
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 28,
+                              interval: 10,
+                              getTitlesWidget: (value, meta) => MdSnsText(
+                                value.toInt().toString(),
+                                color: AppColors.white,
+
+                                variant: TextVariant.h5,
+                              ),
+                            ),
+                          ),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 1,
+                              getTitlesWidget: (value, meta) => MdSnsText(
+                                value.toInt().toString(),
+                                color: AppColors.white,
+                                variant: TextVariant.h5,
+                              ),
+                            ),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+                        borderData: FlBorderData(show: false),
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: [
+                              FlSpot(1, 35),
+                              FlSpot(2, 40),
+                              FlSpot(3, 20),
+                              FlSpot(4, 55),
+                              FlSpot(5, 60),
+                              FlSpot(6, 45),
+                              FlSpot(7, 38),
+                              FlSpot(8, 42),
+                              FlSpot(9, 41),
+                              FlSpot(10, 50),
+                              FlSpot(11, 55),
+                              FlSpot(12, 37),
+                            ],
+                            isCurved: true,
+                            color: AppColors.color0098E4,
+                            barWidth: 3,
+                            dotData: FlDotData(show: false),
+                          ),
+                          LineChartBarData(
+                            spots: [
+                              FlSpot(1, 25),
+                              FlSpot(2, 35),
+                              FlSpot(3, 30),
+                              FlSpot(4, 40),
+                              FlSpot(5, 45),
+                              FlSpot(6, 72),
+                              FlSpot(7, 20),
+                              FlSpot(8, 28),
+                              FlSpot(9, 26),
+                              FlSpot(10, 60),
+                              FlSpot(11, 70),
+                              FlSpot(12, 58),
+                            ],
+                            isCurved: true,
+                            color: AppColors.color06D54E,
+                            barWidth: 3,
+                            dotData: FlDotData(show: false),
+                          ),
+                        ],
+                        minX: 1,
+                        maxX: 12,
+                        minY: 10,
+                        maxY: 80,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             SizedBox(height: 20.h),
 
             WeeklySeasonalityChart(),
