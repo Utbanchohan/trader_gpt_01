@@ -35,21 +35,28 @@ class WelcomeWidget extends StatelessWidget {
             width: 82.w,
           ),
           SizedBox(height: 17.h),
-          MdSnsText(
-            "Welcome to TradersGPT",
-            textAlign: TextAlign.center,
-
-            color: AppColors.white,
-            variant: TextVariant.h6,
-            fontWeight: TextFontWeightVariant.h7,
+          SizedBox(
+            child: MdSnsText(
+              "Welcome to TradersGPT",
+              textAlign: TextAlign.center,
+              letterSpacing: 0,
+              color: AppColors.white,
+              variant: TextVariant.h6,
+              fontWeight: TextFontWeightVariant.h1,
+            ),
           ),
-          SizedBox(height: 25.h),
-          MdSnsText(
-            textAlign: TextAlign.center,
-            "Discover anything about the markets, by just asking the intelligent Agent.",
-            color: AppColors.white,
-            variant: TextVariant.h2,
-            fontWeight: TextFontWeightVariant.h4,
+          SizedBox(height: 15.h),
+          SizedBox(
+            width: MediaQuery.sizeOf(context).width / 1.3,
+            // width: 296.w,
+            child: MdSnsText(
+              textAlign: TextAlign.center,
+              "Discover anything about the markets, by just asking the intelligent Agent.",
+              color: AppColors.white,
+              variant: TextVariant.h2,
+              letterSpacing: 0,
+              fontWeight: TextFontWeightVariant.h4,
+            ),
           ),
           if (showCompanyBox && questions.isNotEmpty) ...[
             SizedBox(height: 20.h),

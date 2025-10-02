@@ -671,7 +671,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                           },
                         )
                       : Container(
-                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                          // margin: EdgeInsets.only(left: 20.w, right: 20.w),
                           child: WelcomeWidget(),
                         ),
 
