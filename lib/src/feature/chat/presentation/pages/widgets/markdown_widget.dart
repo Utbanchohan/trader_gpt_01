@@ -246,6 +246,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
 
                           fontWeight: FontWeight.w400,
                         ),
+                        pPadding: EdgeInsets.zero,
                         p: GoogleFonts.plusJakartaSans(
                           color: AppColors.white,
                           fontSize: 14,
