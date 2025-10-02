@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
@@ -199,7 +200,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                         children: [
                           MdSnsText(
                             userModel != null && userModel!.name.isNotEmpty
-                                ? userModel!.name
+                                ? userModel!.name.capitalize()
                                 : "N/A",
                             color: AppColors.white,
                             variant: TextVariant.h3,

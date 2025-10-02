@@ -198,7 +198,7 @@ class StocksManager extends _$StocksManager {
 
         final updatedStock = stockData.copyWith(
           price: stock.price,
-          changesPercentage: priceChange == 0 ? 0 : priceChange,
+          pctChange: priceChange == 0 ? 0 : priceChange,
         );
         state = {...state, stocks[index].stockId: updatedStock};
       }

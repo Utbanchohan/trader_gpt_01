@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/chart/lin_chart.dart';
@@ -84,81 +85,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     selectedStock =
         widget.chatRouting != null && widget.chatRouting!.companyName.isNotEmpty
         ? Stock(
-            avgVolume: 0,
-            change: 0,
-            changesPercentage: widget.chatRouting!.changePercentage,
-            dayHigh: 0.0,
-            dayLow: 0.0,
-            earningsAnnouncement: "",
-            eps: 0.0,
+            pctChange: widget.chatRouting!.changePercentage,
             exchange: "",
             fiveDayTrend: [widget.chatRouting!.trendChart],
             marketCap: 0,
-            name: widget.chatRouting!.companyName,
-            open: 0,
-            pe: 0,
             previousClose: 0.0,
             price: widget.chatRouting!.price,
-            priceAvg200: 0,
-            priceAvg50: 0,
-            sharesOutstanding: 0,
             stockId: widget.chatRouting!.stockid,
             symbol: widget.chatRouting!.symbol,
-            timestamp: 0,
-            volume: 0,
-            yearHigh: 0,
-            yearLow: 0.0,
-            logoUrl: widget.chatRouting!.image,
             type: "",
-            count: 0,
-            dateHours: "",
-            ticks: 0,
-            primaryLogoUrl: widget.chatRouting!.image,
-            secondaryLogoUrl: widget.chatRouting!.image,
-            tertiaryLogoUrl: widget.chatRouting!.image,
-            status: "",
-            updatedFrom: "",
-            country: "us",
-            exchangeSortOrder: 0,
           )
-        : Stock(
-            avgVolume: 0,
-            change: 0,
-            changesPercentage: 0,
-            dayHigh: 0.0,
-            dayLow: 0.0,
-            earningsAnnouncement: "",
-            eps: 0.0,
-            exchange: "",
-            fiveDayTrend: [],
-            marketCap: 0,
-            name: "",
-            open: 0,
-            pe: 0,
-            previousClose: 0.0,
-            price: 0,
-            priceAvg200: 0,
-            priceAvg50: 0,
-            sharesOutstanding: 0,
-            stockId: "",
-            symbol: "",
-            timestamp: 0,
-            volume: 0,
-            yearHigh: 0,
-            yearLow: 0.0,
-            logoUrl: "",
-            type: "",
-            count: 0,
-            dateHours: "",
-            ticks: 0,
-            primaryLogoUrl: "",
-            secondaryLogoUrl: "",
-            tertiaryLogoUrl: "",
-            status: "",
-            updatedFrom: "",
-            country: "us",
-            exchangeSortOrder: 0,
-          );
+        : emptyStock();
   }
 
   final List<ChartData> chartData = [
@@ -441,7 +378,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         ),
                         const SizedBox(width: 4),
                         MdSnsText(
-                          selectedStock!.name.split("-").first.trim(),
+                          selectedStock!.companyName.split("-").first.trim(),
                           color: AppColors.colorB2B2B7,
                           variant: TextVariant.h4,
                           fontWeight: TextFontWeightVariant.h4,
@@ -456,11 +393,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     Row(
                       children: [
                         MdSnsText(
-                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
                           color:
-                              selectedStock!.changesPercentage
-                                  .toString()
-                                  .contains("-")
+                              selectedStock!.pctChange.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.white,
                           variant: TextVariant.h4,
@@ -468,25 +403,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         ),
                         const SizedBox(width: 6),
                         Icon(
-                          selectedStock!.changesPercentage.toString().contains(
-                                "-",
-                              )
+                          selectedStock!.pctChange.toString().contains("-")
                               ? Icons.arrow_drop_down
                               : Icons.arrow_drop_up,
                           color:
-                              selectedStock!.changesPercentage
-                                  .toString()
-                                  .contains("-")
+                              selectedStock!.pctChange.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           size: 20,
                         ),
                         MdSnsText(
-                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
                           color:
-                              selectedStock!.changesPercentage
-                                  .toString()
-                                  .contains("-")
+                              selectedStock!.pctChange.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           variant: TextVariant.h4,
@@ -550,11 +479,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     Row(
                       children: [
                         MdSnsText(
-                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
                           color:
-                              selectedStock!.changesPercentage
-                                  .toString()
-                                  .contains("-")
+                              selectedStock!.pctChange.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.white,
                           variant: TextVariant.h4,
@@ -562,25 +489,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         ),
                         const SizedBox(width: 6),
                         Icon(
-                          selectedStock!.changesPercentage.toString().contains(
-                                "-",
-                              )
+                          selectedStock!.pctChange.toString().contains("-")
                               ? Icons.arrow_drop_down
                               : Icons.arrow_drop_up,
                           color:
-                              selectedStock!.changesPercentage
-                                  .toString()
-                                  .contains("-")
+                              selectedStock!.pctChange.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           size: 20,
                         ),
                         MdSnsText(
-                          " ${selectedStock!.changesPercentage.toStringAsFixed(2)}%",
+                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
                           color:
-                              selectedStock!.changesPercentage
-                                  .toString()
-                                  .contains("-")
+                              selectedStock!.pctChange.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           variant: TextVariant.h4,
