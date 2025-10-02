@@ -62,12 +62,13 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     }
 
     _debounce = Timer(const Duration(milliseconds: 400), () {
-      print("$val searching value");
-
-      ref.read(socketRepository).searchStocks(val, (data) {
-        searchStock = [];
-        updateStocksSearch(data);
-      });
+      if (val.length > 2) {
+        print("$val searching value");
+        ref.read(socketRepository).searchStocks(val, (data) {
+          searchStock = [];
+          updateStocksSearch(data);
+        });
+      }
     });
   }
 
@@ -109,7 +110,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
         .read(createChatProviderProvider.notifier)
         .createChate(
           CreateChatDto(
-            companyName: stock.name,
+            companyName: stock.companyName,
             stockId: stock.stockId,
             symbol: stock.symbol,
             type: stock.type,
@@ -128,10 +129,10 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               previousClose: stock.previousClose,
               chatId: chatHistory.id,
               symbol: stock.symbol,
-              image: stock.logoUrl,
-              companyName: stock.name,
+              image: "",
+              companyName: stock.companyName,
               price: stock.price,
-              changePercentage: stock.changesPercentage,
+              changePercentage: stock.pctChange,
               trendChart:
                   stock.fiveDayTrend.isNotEmpty &&
                       stock.fiveDayTrend[0].data != null
@@ -240,22 +241,11 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           ),
 
           search.text.isNotEmpty && searchStock.isEmpty
-              ? Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: GridView.builder(
-                      itemCount: 21,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, // 3 cards per row
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 0.85.h,
-                      ),
-                      itemBuilder: (context, index) {
-                        return ShimmerCardStock();
-                      },
-                    ),
-                  ),
+              ? MdSnsText(
+                  "No Data Found",
+                  variant: TextVariant.h2,
+                  color: AppColors.white,
+                  fontWeight: TextFontWeightVariant.h2,
                 )
               : stocks.isNotEmpty
               ? Expanded(
@@ -284,10 +274,10 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                           child: BuildStockCard(
                             stockId: stock.stockId,
                             symbol: stock.symbol,
-                            company: stock.name,
+                            company: stock.companyName,
                             price: stock.price,
-                            change: stock.change,
-                            image: stock.logoUrl,
+                            change: stock.pctChange,
+                            image: stock.type,
                             trendchart:
                                 stock.fiveDayTrend.isNotEmpty &&
                                     stock.fiveDayTrend[0].data != null
@@ -400,7 +390,12 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6),
                   child: SvgPicture.network(
-                    getItemImage(ImageType.stock, widget.symbol),
+                    getItemImage(
+                      widget.image.toLowerCase() == "stock"
+                          ? ImageType.stock
+                          : ImageType.crypto,
+                      widget.symbol,
+                    ),
                     fit: BoxFit.cover,
                     placeholderBuilder: (context) =>
                         SizedBox(width: 26.w, height: 26.h, child: SizedBox()),

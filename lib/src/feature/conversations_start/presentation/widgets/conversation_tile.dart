@@ -41,8 +41,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       : widget.stocks.price,
                   widget.stocks.previousClose,
                 )!.toStringAsFixed(2)
-              : widget.stocks.changesPercentage.toStringAsFixed(2)
-        : widget.stocks.changesPercentage.toStringAsFixed(2);
+              : widget.stocks.pctChange.toStringAsFixed(2)
+        : widget.stocks.pctChange.toStringAsFixed(2);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
       margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
@@ -67,7 +67,12 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: SvgPicture.network(
-                    getItemImage(ImageType.stock, widget.stock.symbol),
+                    getItemImage(
+                      widget.stocks.type == "stock"
+                          ? ImageType.stock
+                          : ImageType.crypto,
+                      widget.stock.symbol,
+                    ),
                     fit: BoxFit.cover,
                     placeholderBuilder: (context) =>
                         SizedBox(height: 41, width: 42, child: SizedBox()),
@@ -139,7 +144,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
             children: [
               MdSnsText(
                 liveStock != null
-                    ? "\$${liveStock!.price.toStringAsFixed(2)}"
+                    ? "\$${liveStock.price.toStringAsFixed(2)}"
                     : "\$${widget.stocks.price.toStringAsFixed(2)}",
                 variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
