@@ -17,6 +17,7 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/welcome_widget.dart';
 import 'package:trader_gpt/src/feature/conversations_start/provider/delete_provider.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
+import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/widgets/archive_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/delete_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -71,13 +72,13 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         convo.removeWhere((c) => c.id == convoId);
         searchConvo.removeWhere((c) => c.id == convoId);
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Chat deleted successfully")),
-      );
+      setState(() {
+        convo.removeWhere((c) => c.id == convoId);
+        searchConvo.removeWhere((c) => c.id == convoId);
+      });
+      $showMessage("Chat deleted successfully", isError: false);
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Failed to delete chat")));
+      $showMessage("Failed to delete chat", isError: true);
     }
   }
 
@@ -126,13 +127,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         convo.removeWhere((c) => c.id == convoId);
         searchConvo.removeWhere((c) => c.id == convoId);
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Chat Archived successfully")),
-      );
+      $showMessage("Chat Archived successfully", isError: false);
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Failed to Archived chat")));
+      $showMessage("Failed to Archived chat", isError: true);
     }
   }
 

@@ -46,7 +46,10 @@ class _ChangePasswordState extends ConsumerState<ChangePassword>
         }
       }
     } else {
-      $showMessage("Confirm Password should be same as create Password ");
+      $showMessage(
+        "Confirm Password should be same as create Password ",
+        isError: true,
+      );
     }
   }
 
