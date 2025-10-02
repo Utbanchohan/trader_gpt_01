@@ -1,10 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/chart/lin_chart.dart';
 import 'package:trader_gpt/src/shared/chart/performance_table.dart';
@@ -20,17 +23,61 @@ import 'package:trader_gpt/src/shared/widgets/profileCard_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:trader_gpt/utils/constant.dart';
 
-class AnalyticsScreen extends StatefulWidget {
+import '../../data/dto/overview_dto/overview_dto.dart';
+import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
+import '../../domain/model/matrics_data_model/matrics_data_model.dart';
+import '../../domain/model/monthly_model/monthly_model.dart';
+import '../../domain/model/overview_model/overview_model.dart';
+import '../../domain/model/price_comparison_model/price_comparison_model.dart';
+import '../../domain/model/stock_price_model/stock_price_model.dart';
+import '../../domain/model/weekly_model/weekly_model.dart';
+import '../provider/monthly_data/monthly_data.dart';
+
+class AnalyticsScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
 
   AnalyticsScreen({super.key, this.chatRouting});
 
   @override
-  State<AnalyticsScreen> createState() => _AnalyticsScreenState();
+  ConsumerState<AnalyticsScreen> createState() => _AnalyticsScreenState();
 }
 
-class _AnalyticsScreenState extends State<AnalyticsScreen> {
+class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   late TabController tabController;
+  StockPriceModel? stockPrices;
+  StockResponse? stockResponse;
+  PriceComparisonModel? priceComparisonModel;
+  MatricsResponse? matricData;
+  ProbabilityResponse? probabilityResponse;
+  WeeklyModel? weeklyData;
+  ProbabilityResponse? monthlyData;
+
+  getOverview(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .getOverview(symbol);
+    if (res != null) {
+      stockResponse = res;
+    }
+  }
+
+  getMatricsData(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .matricsData(symbol);
+    if (res != null) {
+      matricData = res;
+    }
+  }
+
+  priceComparison(PriceComparisonDto priceComparisonDto) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .priceComparison(priceComparisonDto);
+    if (res != null) {
+      priceComparisonModel = res;
+    }
+  }
 
   final List<String> categories = [
     "Overview",
@@ -73,6 +120,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.chatRouting != null) {
+      getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
+      getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      priceComparison(
+        PriceComparisonDto(
+          daysBack: 365,
+          symbol1: widget.chatRouting!.symbol,
+          symbol2: "SPY",
+        ),
+      );
+      getMonthlyData(widget.chatRouting!.symbol);
+      getMonthlyData(widget.chatRouting!.symbol);
+    }
 
     selectedStock =
         widget.chatRouting != null && widget.chatRouting!.companyName.isNotEmpty
@@ -119,6 +179,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       "percentage": "+1.48%",
     },
   ];
+
+  getWeeklyData(symbol) async {
+    weeklyData = await ref
+        .read(weeklyDataProvider.notifier)
+        .getWeeklyData(symbol);
+  }
+
+  getMonthlyData(symbol) async {
+    monthlyData = await ref
+        .read(monthlyDataProvider.notifier)
+        .getMonthlyData(symbol);
+  }
 
   @override
   @override
@@ -424,8 +496,31 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     );
   }
 
-  /// Overview Content (jo aapka pehle likha hua UI tha)
   Widget _overviewContent() {
+    double? maxY;
+    double? maxX;
+
+    List<FlSpot> buildSpots(Map<String, double> values) {
+      final List<FlSpot> spots = [];
+      double i = 0;
+
+      values.entries.forEach((entry) {
+        final ts = int.parse(entry.key); // timestamp string
+        final date = DateTime.fromMillisecondsSinceEpoch(ts);
+        final price = (entry.value as num).toDouble();
+
+        spots.add(FlSpot(i, price));
+        i++;
+      });
+
+      // sort by time
+      spots.sort((a, b) => a.x.compareTo(b.x));
+
+      maxY = spots.last.y;
+      maxX = spots.last.x;
+      return spots;
+    }
+
     return SafeArea(
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -445,8 +540,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     Row(
                       children: [
                         MdSnsText(
-                          "#TSLA",
-                          // "#${selectedStock!.symbol}",
+                          "#${selectedStock!.symbol}",
                           variant: TextVariant.h2,
                           fontWeight: TextFontWeightVariant.h1,
 
@@ -454,8 +548,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         ),
                         const SizedBox(width: 4),
                         MdSnsText(
-                          "TESLA INC",
-                          // selectedStock!.name.split("-").first.trim(),
+                          selectedStock!.companyName.split("-").first.trim(),
                           color: AppColors.colorB2B2B7,
                           variant: TextVariant.h4,
                           fontWeight: TextFontWeightVariant.h4,
@@ -505,24 +598,79 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               ],
             ),
             AppSpacing.h10,
-            SizedBox(
-              height: 122.h,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal, // Horizontal scrolling
-                // padding: EdgeInsets.symmetric(horizontal: 16.w),
-                itemCount: priceData.length,
-                physics: const BouncingScrollPhysics(), // Smooth scrolling
-                itemBuilder: (context, index) {
-                  final item = priceData[index];
-                  return PriceCardWidget(
-                    previousPrice: item["previousPrice"],
-                    afterHoursPrice: item["afterHoursPrice"],
-                    percentage: item["percentage"],
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(width: 20.w);
-                },
+            Visibility(
+              visible:
+                  stockResponse != null &&
+                  stockResponse!.data.previousClose != null,
+              child: SizedBox(
+                height: 122.h,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal, // Horizontal scrolling
+                  // padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  itemCount: 5,
+                  physics: const BouncingScrollPhysics(), // Smooth scrolling
+                  itemBuilder: (context, index) {
+                    final item = priceData[0];
+                    return index == 0
+                        ? PriceCardWidget(
+                            firstHeading: "PREVIOUSLY CLOSE PRICE",
+                            secondHeading: "AFTER HOURS",
+                            previousPrice: stockResponse!.data.previousClose
+                                .toString(),
+                            afterHoursPrice: stockResponse!.data.AfterHours
+                                .toString(),
+                            percentage: item["percentage"],
+                          )
+                        : index == 1
+                        ? PriceCardWidget(
+                            firstHeading: "MARKET CAPITILIZATION",
+                            secondHeading: "OUTSTANDING SHARES",
+                            previousPrice: stockResponse!
+                                .data
+                                .MarketCapitalization
+                                .toString(),
+                            afterHoursPrice: stockResponse!
+                                .data
+                                .SharesOutstanding
+                                .toString(),
+                            percentage: item["percentage"],
+                          )
+                        : index == 2
+                        ? PriceCardWidget(
+                            firstHeading: "TOTAL VOLUME",
+                            secondHeading: "AVERAGE VOLUME(3M)",
+                            previousPrice: stockResponse!.data.TotalVolume
+                                .toString(),
+                            afterHoursPrice: stockResponse!.data.AverageVolume
+                                .toString(),
+                            percentage: item["percentage"],
+                          )
+                        : index == 3
+                        ? PriceCardWidget(
+                            firstHeading: "EXCHANGE",
+                            secondHeading: "MARKET CAPTILIZATION",
+                            previousPrice: stockResponse!.data.Exchange
+                                .toString(),
+                            afterHoursPrice: stockResponse!
+                                .data
+                                .MarketCapClassification
+                                .toString(),
+                            percentage: item["percentage"],
+                          )
+                        : PriceCardWidget(
+                            firstHeading: "SECTOR",
+                            secondHeading: "INDUSTRY",
+                            previousPrice: stockResponse!.data.Sector
+                                .toString(),
+                            afterHoursPrice: stockResponse!.data.Industry
+                                .toString(),
+                            percentage: item["percentage"],
+                          );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(width: 20.w);
+                  },
+                ),
               ),
             ),
             SizedBox(height: 20.h),
@@ -577,127 +725,127 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
             SizedBox(height: 20.h),
 
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.color091224,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  MdSnsText(
-                    "Price Comparison",
-                    variant: TextVariant.h3,
-                    fontWeight: TextFontWeightVariant.h4,
+            Visibility(
+              visible:
+                  priceComparisonModel != null &&
+                  priceComparisonModel!.data.MSFT != null &&
+                  priceComparisonModel!.data.SPY != null,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.color091224,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    MdSnsText(
+                      "Price Comparison",
+                      variant: TextVariant.h3,
+                      fontWeight: TextFontWeightVariant.h4,
 
-                    color: AppColors.fieldTextColor,
-                  ),
-                  SizedBox(height: 16.h),
-                  SizedBox(
-                    height: 180,
-                    child: LineChart(
-                      LineChartData(
-                        backgroundColor: AppColors.color091224,
-                        gridData: FlGridData(
-                          show: true,
-                          getDrawingHorizontalLine: (value) => FlLine(
-                            color: AppColors.color1B254B,
-                            strokeWidth: 3,
-                          ),
-                          getDrawingVerticalLine: (value) =>
-                              FlLine(color: Colors.transparent, strokeWidth: 1),
-                        ),
-                        titlesData: FlTitlesData(
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 28,
-                              interval: 10,
-                              getTitlesWidget: (value, meta) => MdSnsText(
-                                value.toInt().toString(),
-                                color: AppColors.white,
-
-                                variant: TextVariant.h5,
-                              ),
-                            ),
-                          ),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              interval: 1,
-                              getTitlesWidget: (value, meta) => MdSnsText(
-                                value.toInt().toString(),
-                                color: AppColors.white,
-                                variant: TextVariant.h5,
-                              ),
-                            ),
-                          ),
-                          topTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          rightTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                        ),
-                        borderData: FlBorderData(show: false),
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: [
-                              FlSpot(1, 35),
-                              FlSpot(2, 40),
-                              FlSpot(3, 20),
-                              FlSpot(4, 55),
-                              FlSpot(5, 60),
-                              FlSpot(6, 45),
-                              FlSpot(7, 38),
-                              FlSpot(8, 42),
-                              FlSpot(9, 41),
-                              FlSpot(10, 50),
-                              FlSpot(11, 55),
-                              FlSpot(12, 37),
-                            ],
-                            isCurved: true,
-                            color: AppColors.color0098E4,
-                            barWidth: 3,
-                            dotData: FlDotData(show: false),
-                          ),
-                          LineChartBarData(
-                            spots: [
-                              FlSpot(1, 25),
-                              FlSpot(2, 35),
-                              FlSpot(3, 30),
-                              FlSpot(4, 40),
-                              FlSpot(5, 45),
-                              FlSpot(6, 72),
-                              FlSpot(7, 20),
-                              FlSpot(8, 28),
-                              FlSpot(9, 26),
-                              FlSpot(10, 60),
-                              FlSpot(11, 70),
-                              FlSpot(12, 58),
-                            ],
-                            isCurved: true,
-                            color: AppColors.color06D54E,
-                            barWidth: 3,
-                            dotData: FlDotData(show: false),
-                          ),
-                        ],
-                        minX: 1,
-                        maxX: 12,
-                        minY: 10,
-                        maxY: 80,
-                      ),
+                      color: AppColors.fieldTextColor,
                     ),
-                  ),
-                ],
+                    SizedBox(height: 16.h),
+                    priceComparisonModel != null &&
+                            priceComparisonModel!.data.MSFT != null &&
+                            priceComparisonModel!.data.SPY != null
+                        ? SizedBox(
+                            height: 180,
+                            child: LineChart(
+                              LineChartData(
+                                backgroundColor: AppColors.color091224,
+                                gridData: FlGridData(
+                                  show: true,
+                                  getDrawingHorizontalLine: (value) => FlLine(
+                                    color: AppColors.color1B254B,
+                                    strokeWidth: 3,
+                                  ),
+                                  getDrawingVerticalLine: (value) => FlLine(
+                                    color: Colors.transparent,
+                                    strokeWidth: 1,
+                                  ),
+                                ),
+                                titlesData: FlTitlesData(
+                                  show: true,
+                                  leftTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 28,
+                                      interval: 100,
+                                      getTitlesWidget: (value, meta) =>
+                                          MdSnsText(
+                                            value.toInt().toString(),
+                                            color: AppColors.white,
+
+                                            variant: TextVariant.h5,
+                                          ),
+                                    ),
+                                  ),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      interval: 50,
+                                      getTitlesWidget: (value, meta) =>
+                                          MdSnsText(
+                                            value.toInt().toString(),
+                                            color: AppColors.white,
+                                            variant: TextVariant.h5,
+                                          ),
+                                    ),
+                                  ),
+                                  topTitles: AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  rightTitles: AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                ),
+                                borderData: FlBorderData(show: false),
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    spots: buildSpots(
+                                      priceComparisonModel!.data.MSFT!,
+                                    ),
+                                    isCurved: true,
+                                    color: AppColors.color0098E4,
+                                    barWidth: 3,
+                                    dotData: FlDotData(show: false),
+                                  ),
+                                  LineChartBarData(
+                                    spots: buildSpots(
+                                      priceComparisonModel!.data.SPY!,
+                                    ),
+                                    isCurved: true,
+                                    color: AppColors.color06D54E,
+                                    barWidth: 3,
+                                    dotData: FlDotData(show: false),
+                                  ),
+                                ],
+                                minX: 1,
+                                maxX: maxX ?? 10000,
+                                minY: 0,
+                                maxY: maxY ?? 10000,
+                              ),
+                            ),
+                          )
+                        : SizedBox(),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 20.h),
 
-            WeeklySeasonalityChart(),
+            monthlyData != null
+                ? WeeklySeasonalityChart(data: monthlyData)
+                : SizedBox(),
             SizedBox(height: 20.h),
-            ShareStructureCard(),
+
+            matricData != null &&
+                    matricData!.data != null &&
+                    matricData!.data!.isNotEmpty
+                ? ShareStructureCard(data: matricData!.data)
+                : SizedBox(),
           ],
         ),
       ),
@@ -945,9 +1093,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
             SizedBox(height: 20.h),
 
-            WeeklySeasonalityChart(),
-            SizedBox(height: 20.h),
-            ShareStructureCard(),
+            // WeeklySeasonalityChart(),
+            // SizedBox(height: 20.h),
+            // ShareStructureCard(),
           ],
         ),
       ),
@@ -974,8 +1122,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     Row(
                       children: [
                         MdSnsText(
-                          "#TSLA",
-                          // "#${selectedStock!.symbol}",
+                          "",
+
+                          // "#${widget.chatRouting!.symbol}",
                           variant: TextVariant.h2,
                           fontWeight: TextFontWeightVariant.h1,
 
@@ -984,7 +1133,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         const SizedBox(width: 4),
                         MdSnsText(
                           "TESLA INC",
-                          // selectedStock!.name.split("-").first.trim(),
+                          // widget.chatRouting!.companyName
+                          //     .split("-")
+                          //     .first
+                          //     .trim(),
                           color: AppColors.colorB2B2B7,
                           variant: TextVariant.h4,
                           fontWeight: TextFontWeightVariant.h4,
@@ -1048,6 +1200,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       right: 16.w,
                     ), // Space between cards
                     child: PriceCardWidget(
+                      secondHeading: "AFTER HOURS",
+                      firstHeading: "Previous Close",
                       previousPrice: item["previousPrice"],
                       afterHoursPrice: item["afterHoursPrice"],
                       percentage: item["percentage"],
@@ -1228,9 +1382,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
             SizedBox(height: 20.h),
 
-            WeeklySeasonalityChart(),
-            SizedBox(height: 20.h),
-            ShareStructureCard(),
+            // WeeklySeasonalityChart(),
+            // SizedBox(height: 20.h),
+            // ShareStructureCard(),
           ],
         ),
       ),

@@ -2,21 +2,80 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/analytics/domain/model/weekly_model/weekly_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../feature/analytics/domain/model/monthly_model/monthly_model.dart';
+
 class WeeklySeasonalityChart extends StatelessWidget {
-  final List<Map<String, dynamic>> weeklyData = [
-    {"day": "Monday", "value": 85.0, "amount": 250.45},
-    {"day": "Tuesday", "value": 60.0, "amount": 180.22},
-    {"day": "Wednesday", "value": 70.0, "amount": 220.10},
-    {"day": "Thursday", "value": 92.0, "amount": 274.52},
-    {"day": "Friday", "value": 100.0, "amount": 300.00},
-    {"day": "Saturday", "value": 50.0, "amount": 150.00},
-    {"day": "Sunday", "value": 65.0, "amount": 200.00},
-  ];
+  ProbabilityResponse? data;
+
+  WeeklySeasonalityChart({required this.data});
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> weeklyData = [
+      {
+        "day": "Jan",
+        "value": data!.probability!.january! * 100,
+        "amount": data!.probability!.january,
+      },
+      {
+        "day": "Feb",
+        "value": data!.probability!.february! * 100,
+        "amount": data!.probability!.february,
+      },
+      {
+        "day": "Mar",
+        "value": data!.probability!.march! * 100,
+        "amount": data!.probability!.march,
+      },
+      {
+        "day": "Apr",
+        "value": data!.probability!.april! * 100,
+        "amount": data!.probability!.april,
+      },
+      {
+        "day": "May",
+        "value": data!.probability!.may! * 100,
+        "amount": data!.probability!.may,
+      },
+      {
+        "day": "Jun",
+        "value": data!.probability!.june! * 100,
+        "amount": data!.probability!.june,
+      },
+      {
+        "day": "Jul",
+        "value": data!.probability!.july! * 100,
+        "amount": data!.probability!.july,
+      },
+      {
+        "day": "Aug",
+        "value": data!.probability!.august! * 100,
+        "amount": data!.probability!.august,
+      },
+      {
+        "day": "Sep",
+        "value": data!.probability!.september! * 100,
+        "amount": data!.probability!.september,
+      },
+      {
+        "day": "Oct",
+        "value": data!.probability!.october! * 100,
+        "amount": data!.probability!.october,
+      },
+      {
+        "day": "Nov",
+        "value": data!.probability!.november! * 100,
+        "amount": data!.probability!.november,
+      },
+      {
+        "day": "Dec",
+        "value": data!.probability!.december! * 100,
+        "amount": data!.probability!.december,
+      },
+    ];
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       color: const Color(0xFF0B132B),
@@ -27,7 +86,7 @@ class WeeklySeasonalityChart extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MdSnsText(
-              "Weekly Seasonality",
+              "Monthly Seasonality",
               variant: TextVariant.h1,
               color: AppColors.fieldTextColor,
               fontWeight: TextFontWeightVariant.h1,
@@ -105,7 +164,7 @@ class WeeklySeasonalityChart extends StatelessWidget {
                         barRods: [
                           BarChartRodData(
                             toY: entry.value["value"] * 1.0,
-                            width: 18,
+                            width: 10,
                             color: Colors.blueAccent,
                             borderRadius: BorderRadius.circular(6),
                           ),

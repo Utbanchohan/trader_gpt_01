@@ -7,12 +7,16 @@ class PriceCardWidget extends StatelessWidget {
   final String previousPrice;
   final String afterHoursPrice;
   final String percentage;
+  final String firstHeading;
+  final String secondHeading;
 
   const PriceCardWidget({
     super.key,
     required this.previousPrice,
     required this.afterHoursPrice,
     required this.percentage,
+    required this.firstHeading,
+    required this.secondHeading,
   });
 
   @override
@@ -32,7 +36,7 @@ class PriceCardWidget extends StatelessWidget {
         children: [
           // --- Previously Close Price ---
           MdSnsText(
-            "PREVIOUSLY CLOSE PRICE",
+            firstHeading,
             color: AppColors.color9EAAC0,
             variant: TextVariant.h4,
             fontWeight: TextFontWeightVariant.h4,
@@ -48,7 +52,8 @@ class PriceCardWidget extends StatelessWidget {
 
           // --- After Hours ---
           MdSnsText(
-            "AFTER HOURS",
+            secondHeading,
+
             color: AppColors.color9EAAC0,
             variant: TextVariant.h4,
             fontWeight: TextFontWeightVariant.h4,
@@ -62,16 +67,16 @@ class PriceCardWidget extends StatelessWidget {
                 variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
               ),
-              SizedBox(width: 8.w),
-              MdSnsText(
-                percentage,
-                color: percentage.startsWith('-')
-                    ? Colors
-                          .red // Negative percentage red
-                    : AppColors.color0xFF28CF62, // Positive green
-                variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h1,
-              ),
+              // SizedBox(width: 8.w),
+              // MdSnsText(
+              //   percentage,
+              //   color: percentage.startsWith('-')
+              //       ? Colors
+              //             .red // Negative percentage red
+              //       : AppColors.color0xFF28CF62, // Positive green
+              //   variant: TextVariant.h4,
+              //   fontWeight: TextFontWeightVariant.h1,
+              // ),
             ],
           ),
         ],
