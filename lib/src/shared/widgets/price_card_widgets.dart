@@ -7,12 +7,20 @@ class PriceCardWidget extends StatelessWidget {
   final String previousPrice;
   final String afterHoursPrice;
   final String percentage;
+  final String firstHeading;
+  final String secondHeading;
+  final Color firstColor;
+  final Color secondColor;
 
   const PriceCardWidget({
     super.key,
     required this.previousPrice,
     required this.afterHoursPrice,
     required this.percentage,
+    required this.firstHeading,
+    required this.secondHeading,
+    required this.firstColor,
+    required this.secondColor,
   });
 
   @override
@@ -32,7 +40,7 @@ class PriceCardWidget extends StatelessWidget {
         children: [
           // --- Previously Close Price ---
           MdSnsText(
-            "PREVIOUSLY CLOSE PRICE",
+            firstHeading,
             color: AppColors.color9EAAC0,
             variant: TextVariant.h4,
             fontWeight: TextFontWeightVariant.h4,
@@ -40,7 +48,8 @@ class PriceCardWidget extends StatelessWidget {
           SizedBox(height: 10.h),
           MdSnsText(
             previousPrice,
-            color: AppColors.white,
+            color: firstColor,
+
             variant: TextVariant.h4,
             fontWeight: TextFontWeightVariant.h1,
           ),
@@ -48,7 +57,8 @@ class PriceCardWidget extends StatelessWidget {
 
           // --- After Hours ---
           MdSnsText(
-            "AFTER HOURS",
+            secondHeading,
+
             color: AppColors.color9EAAC0,
             variant: TextVariant.h4,
             fontWeight: TextFontWeightVariant.h4,
@@ -58,20 +68,20 @@ class PriceCardWidget extends StatelessWidget {
             children: [
               MdSnsText(
                 afterHoursPrice,
-                color: AppColors.color0xFFFFB21D,
-                variant: TextVariant.h2,
-                fontWeight: TextFontWeightVariant.h1,
-              ),
-              SizedBox(width: 8.w),
-              MdSnsText(
-                percentage,
-                color: percentage.startsWith('-')
-                    ? Colors
-                          .red // Negative percentage red
-                    : AppColors.color0xFF28CF62, // Positive green
+                color: secondColor,
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h1,
               ),
+              // SizedBox(width: 8.w),
+              // MdSnsText(
+              //   percentage,
+              //   color: percentage.startsWith('-')
+              //       ? Colors
+              //             .red // Negative percentage red
+              //       : AppColors.color0xFF28CF62, // Positive green
+              //   variant: TextVariant.h4,
+              //   fontWeight: TextFontWeightVariant.h1,
+              // ),
             ],
           ),
         ],

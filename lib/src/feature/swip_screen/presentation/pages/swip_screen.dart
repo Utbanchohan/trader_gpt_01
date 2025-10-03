@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
-import 'package:trader_gpt/src/feature/analytics/analytics.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/analytics.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.dart';
@@ -16,11 +16,7 @@ class SwipeScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
   final int initialIndex;
 
-  const SwipeScreen({
-    super.key,
-    this.chatRouting,
-    this.initialIndex = 1,
-  });
+  const SwipeScreen({super.key, this.chatRouting, this.initialIndex = 1});
 
   @override
   ConsumerState<SwipeScreen> createState() => _SwipeScreenState();
@@ -37,7 +33,7 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
     getChats();
     getStocks();
     bool isFirstTime = ref.read(localDataProvider).getIsFirstTime();
-    int pageIndex = isFirstTime ? 0 : widget.initialIndex; 
+    int pageIndex = isFirstTime ? 0 : widget.initialIndex;
     _pageController = PageController(initialPage: pageIndex);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -92,12 +88,12 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
       body: PageView(
         controller: _pageController,
         children: [
-          
           ConversationStart(),
-          convo != null && convo.isNotEmpty && stocks.isNotEmpty?
-          ChatConversation(chatRouting: widget.chatRouting):ChatPage(chatRouting: widget.chatRouting,),
-          if(convo != null && convo.isNotEmpty && stocks.isNotEmpty)
-          AnalyticsScreen(),
+          convo != null && convo.isNotEmpty && stocks.isNotEmpty
+              ? ChatConversation(chatRouting: widget.chatRouting)
+              : ChatPage(chatRouting: widget.chatRouting),
+          if (convo != null && convo.isNotEmpty && stocks.isNotEmpty)
+            AnalyticsScreen(chatRouting: widget.chatRouting),
         ],
       ),
     );

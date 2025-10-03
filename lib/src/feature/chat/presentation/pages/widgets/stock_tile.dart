@@ -52,7 +52,9 @@ class StockTile extends StatelessWidget {
         fontWeight: TextFontWeightVariant.h4,
       ),
       subtitle: MdSnsText(
-        stock.name.isNotEmpty ? stock.name.split("-").first.trim() : "",
+        stock.companyName.isNotEmpty
+            ? stock.companyName.split("-").first.trim()
+            : "",
         variant: TextVariant.h4,
         fontWeight: TextFontWeightVariant.h4,
 

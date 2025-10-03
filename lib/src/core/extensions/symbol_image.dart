@@ -1,4 +1,5 @@
 String getItemImage(ImageType? type, String symbol) {
+  // print(type!.value + "=================================type $symbol");
   if (symbol.isNotEmpty) {
     if (type!.value == ImageType.crypto.value) {
       return "https://storage.googleapis.com/analytics-images-traderverse/crypto_v1/${symbol.toUpperCase()}.svg";
@@ -8,9 +9,9 @@ String getItemImage(ImageType? type, String symbol) {
   } else {
     if (type!.value == ImageType.crypto.value) {
       return "https://cdn-images.traderverse.io/crypto_dummy.svg";
-    } else  if (type.value == ImageType.stock.value){
+    } else if (type.value == ImageType.stock.value) {
       return "https://cdn-images.traderverse.io/stock_dummy.svg";
-    }else{
+    } else {
       return "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg";
     }
   }

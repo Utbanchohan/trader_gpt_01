@@ -25,6 +25,9 @@ import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.da
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../../shared/widgets/loading_widget.dart';
+import '../../../analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
+import '../../../analytics/data/dto/overview_dto/overview_dto.dart';
+import '../../../analytics/domain/model/overview_model/overview_model.dart';
 import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'widgets/loading_widget.dart';
 
@@ -65,10 +68,12 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   bool isWorkSymbol = false;
   int chatPage = 1;
   bool boolLoadMoreLoader = false;
+  StockResponse? stockResponse;
 
   @override
   void initState() {
     getChatsId();
+
     selectedStock = _mapChatRoutingToStock(widget.chatRouting);
     if (selectedStock!.symbol.isNotEmpty) {
       getRandomQuestions(selectedStock!.symbol);
@@ -219,42 +224,20 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
     return widget.chatRouting != null &&
             widget.chatRouting!.companyName.isNotEmpty
         ? Stock(
-            avgVolume: 0,
-            change: 0,
-            changesPercentage: widget.chatRouting!.changePercentage,
-            dayHigh: 0.0,
-            dayLow: 0.0,
-            earningsAnnouncement: "",
-            eps: 0.0,
+            pctChange: widget.chatRouting!.changePercentage,
+
             exchange: "",
             fiveDayTrend: [widget.chatRouting!.trendChart],
             marketCap: 0,
-            name: widget.chatRouting!.companyName,
-            open: 0,
-            pe: 0,
+            companyName: widget.chatRouting!.companyName,
+
             previousClose: 0.0,
             price: widget.chatRouting!.price,
-            priceAvg200: 0,
-            priceAvg50: 0,
-            sharesOutstanding: 0,
+
             stockId: widget.chatRouting!.stockid,
             symbol: widget.chatRouting!.symbol,
-            timestamp: 0,
-            volume: 0,
-            yearHigh: 0,
-            yearLow: 0.0,
-            logoUrl: widget.chatRouting!.image,
+
             type: "",
-            count: 0,
-            dateHours: "",
-            ticks: 0,
-            primaryLogoUrl: widget.chatRouting!.image,
-            secondaryLogoUrl: widget.chatRouting!.image,
-            tertiaryLogoUrl: widget.chatRouting!.image,
-            status: "",
-            updatedFrom: "",
-            country: "us",
-            exchangeSortOrder: 0,
           )
         : emptyStock();
   }
@@ -356,7 +339,9 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         body = StreamDto(
           task: message.text,
           symbol: selectedStock != null ? selectedStock!.symbol : "TDGPT",
-          symbolName: selectedStock != null ? selectedStock!.name : "TraderGPT",
+          symbolName: selectedStock != null
+              ? selectedStock!.companyName
+              : "TraderGPT",
           report: report ?? false,
           isWebResearch: webMode ?? false,
           deepSearch: deepAnalysis ?? false,
@@ -369,7 +354,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                   description: selectedWorkFlow!.description,
                   query: selectedWorkFlow!.query,
                   companyName: selectedStock != null
-                      ? selectedStock!.name
+                      ? selectedStock!.companyName
                       : "TraderGPT",
                   parameters:
                       selectedWorkFlow!.parameters != null &&
@@ -432,9 +417,9 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   getUser() async {
     dynamic userData = await ref.watch(localDataProvider).getUser();
     if (userData != null) {
-      setState(() {
-        user = User.fromJson(userData);
-      });
+      // setState(() {
+      user = User.fromJson(userData);
+      // });
     }
   }
 
