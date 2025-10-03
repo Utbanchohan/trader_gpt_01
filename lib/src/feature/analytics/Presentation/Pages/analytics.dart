@@ -2,6 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
@@ -23,6 +25,8 @@ import 'package:trader_gpt/src/shared/widgets/profileCard_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:trader_gpt/utils/constant.dart';
 
+import '../../../../core/extensions/symbol_image.dart';
+import '../../../../core/routes/routes.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../domain/model/matrics_data_model/matrics_data_model.dart';
@@ -130,13 +134,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           symbol2: "SPY",
         ),
       );
-      getMonthlyData(widget.chatRouting!.symbol);
+      getWeeklyData(widget.chatRouting!.symbol);
       getMonthlyData(widget.chatRouting!.symbol);
     }
 
     selectedStock =
         widget.chatRouting != null && widget.chatRouting!.companyName.isNotEmpty
         ? Stock(
+            companyName: widget.chatRouting!.companyName,
             pctChange: widget.chatRouting!.changePercentage,
             exchange: "",
             fiveDayTrend: [widget.chatRouting!.trendChart],
@@ -190,6 +195,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     monthlyData = await ref
         .read(monthlyDataProvider.notifier)
         .getMonthlyData(symbol);
+    setState(() {});
   }
 
   @override
@@ -206,21 +212,32 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             children: [
               Row(
                 children: [
-                  Container(
-                    width: 40.w,
-                    height: 71.h,
+                  InkWell(
+                    onTap: () {
+                      context.pushNamed(
+                        AppRoutes.swipeScreen.name,
+                        extra: {
+                          "chatRouting": widget.chatRouting,
+                          "initialIndex": 1,
+                        },
+                      );
+                    },
+                    child: Container(
+                      width: 40.w,
+                      height: 71.h,
 
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(Assets.images.shapeRightSide.path),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(Assets.images.shapeRightSide.path),
+                        ),
                       ),
-                    ),
-                    padding: EdgeInsets.all(15),
-                    child: Image.asset(
-                      Assets.images.message.path,
+                      padding: EdgeInsets.all(15),
+                      child: Image.asset(
+                        Assets.images.message.path,
 
-                      width: 25.w,
-                      height: 21.h,
+                        width: 25.w,
+                        height: 21.h,
+                      ),
                     ),
                   ),
 
@@ -456,7 +473,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     Row(
                       children: [
                         MdSnsText(
-                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
+                          "\$${selectedStock!.price.toStringAsFixed(2)}",
                           color:
                               selectedStock!.pctChange.toString().contains("-")
                               ? AppColors.redFF3B3B
@@ -529,11 +546,38 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             SizedBox(height: 14.h),
             Row(
               children: [
-                Image.asset(
-                  Assets.images.frame1171275460.path,
-                  height: 53.h,
-                  width: 53.w,
+                // Image.asset(
+                //   Assets.images.frame1171275460.path,
+                //   height: 53.h,
+                //   width: 53.w,
+                // ),
+                SizedBox(width: 10),
+                Container(
+                  height: 26.h,
+                  width: 26.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: SvgPicture.network(
+                      getItemImage(
+                        // selectedStock!.type.toLowerCase() == "stock"
+                        // ?
+                        ImageType.stock,
+                        //     : ImageType.crypto,
+                        selectedStock!.symbol,
+                      ),
+                      fit: BoxFit.cover,
+                      placeholderBuilder: (context) => SizedBox(
+                        height: 26.h,
+                        width: 26.w,
+                        child: SizedBox(),
+                      ),
+                    ),
+                  ),
                 ),
+                SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -563,7 +607,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     Row(
                       children: [
                         MdSnsText(
-                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
+                          "\$${selectedStock!.price.toStringAsFixed(2)}",
                           color:
                               selectedStock!.pctChange.toString().contains("-")
                               ? AppColors.redFF3B3B
@@ -613,6 +657,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     final item = priceData[0];
                     return index == 0
                         ? PriceCardWidget(
+                            firstColor: AppColors.white,
+                            secondColor: AppColors.color0xFFFFB21D,
                             firstHeading: "PREVIOUSLY CLOSE PRICE",
                             secondHeading: "AFTER HOURS",
                             previousPrice: stockResponse!.data.previousClose
@@ -623,6 +669,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           )
                         : index == 1
                         ? PriceCardWidget(
+                            secondColor: AppColors.white,
+                            firstColor: AppColors.color046297,
                             firstHeading: "MARKET CAPITILIZATION",
                             secondHeading: "OUTSTANDING SHARES",
                             previousPrice: stockResponse!
@@ -637,6 +685,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           )
                         : index == 2
                         ? PriceCardWidget(
+                            firstColor: AppColors.white,
+                            secondColor: AppColors.white,
+
                             firstHeading: "TOTAL VOLUME",
                             secondHeading: "AVERAGE VOLUME(3M)",
                             previousPrice: stockResponse!.data.TotalVolume
@@ -647,6 +698,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           )
                         : index == 3
                         ? PriceCardWidget(
+                            firstColor: AppColors.color00FF55,
+                            secondColor: AppColors.colorab75b8,
                             firstHeading: "EXCHANGE",
                             secondHeading: "MARKET CAPTILIZATION",
                             previousPrice: stockResponse!.data.Exchange
@@ -658,6 +711,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             percentage: item["percentage"],
                           )
                         : PriceCardWidget(
+                            firstColor: AppColors.white,
+                            secondColor: AppColors.white,
                             firstHeading: "SECTOR",
                             secondHeading: "INDUSTRY",
                             previousPrice: stockResponse!.data.Sector
@@ -837,7 +892,19 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             SizedBox(height: 20.h),
 
             monthlyData != null
-                ? WeeklySeasonalityChart(data: monthlyData)
+                ? WeeklySeasonalityChart(
+                    data: monthlyData!,
+                    isWeekly: false,
+                    weeklyModel: WeeklyModel(),
+                  )
+                : SizedBox(),
+            SizedBox(height: 20.h),
+            weeklyData != null
+                ? WeeklySeasonalityChart(
+                    weeklyModel: weeklyData!,
+                    isWeekly: true,
+                    data: ProbabilityResponse(),
+                  )
                 : SizedBox(),
             SizedBox(height: 20.h),
 
@@ -1200,6 +1267,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       right: 16.w,
                     ), // Space between cards
                     child: PriceCardWidget(
+                      firstColor: AppColors.white,
+                      secondColor: AppColors.white,
                       secondHeading: "AFTER HOURS",
                       firstHeading: "Previous Close",
                       previousPrice: item["previousPrice"],

@@ -9,6 +9,8 @@ class PriceCardWidget extends StatelessWidget {
   final String percentage;
   final String firstHeading;
   final String secondHeading;
+  final Color firstColor;
+  final Color secondColor;
 
   const PriceCardWidget({
     super.key,
@@ -17,6 +19,8 @@ class PriceCardWidget extends StatelessWidget {
     required this.percentage,
     required this.firstHeading,
     required this.secondHeading,
+    required this.firstColor,
+    required this.secondColor,
   });
 
   @override
@@ -44,7 +48,8 @@ class PriceCardWidget extends StatelessWidget {
           SizedBox(height: 10.h),
           MdSnsText(
             previousPrice,
-            color: AppColors.white,
+            color: firstColor,
+
             variant: TextVariant.h4,
             fontWeight: TextFontWeightVariant.h1,
           ),
@@ -63,8 +68,8 @@ class PriceCardWidget extends StatelessWidget {
             children: [
               MdSnsText(
                 afterHoursPrice,
-                color: AppColors.color0xFFFFB21D,
-                variant: TextVariant.h2,
+                color: secondColor,
+                variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h1,
               ),
               // SizedBox(width: 8.w),
