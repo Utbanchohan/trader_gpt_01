@@ -151,9 +151,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
           Stock(
             stockId: chat.stockId,
             symbol: chat.symbol,
-            logoUrl: '',
+            companyName: chat.companyName,
             price: 0,
-            changesPercentage: 0,
+            pctChange: 0,
             previousClose: 0,
             fiveDayTrend: [],
           ),
@@ -430,11 +430,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             final liveStock =
                                 stockManagerState[stocks[stockIndex].stockId];
                             stocks[stockIndex] = stocks[stockIndex].copyWith(
-                              changesPercentage:
+                              pctChange:
                                   liveStock != null && liveStock.price > 0
                                   ? liveStock.price -
                                         stocks[stockIndex].previousClose
-                                  : stocks[stockIndex].changesPercentage,
+                                  : stocks[stockIndex].pctChange,
                               price:
                                   liveStock?.price ?? stocks[stockIndex].price,
                             );
@@ -449,14 +449,15 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                           stocks[stockIndex].previousClose,
                                       chatId: convo[index].id,
                                       symbol: convo[index].symbol,
-                                      image: stocks[stockIndex].logoUrl,
+
                                       companyName: convo[index].companyName,
                                       price: stocks[stockIndex].price,
                                       changePercentage:
-                                          stocks[stockIndex].changesPercentage,
+                                          stocks[stockIndex].pctChange,
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
                                       stockid: convo[index].stockId,
+                                      image: '',
                                     ),
                                     "initialIndex": 1,
                                   },
@@ -554,11 +555,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             final liveStock =
                                 stockManagerState[stocks[stockIndex].stockId];
                             stocks[stockIndex] = stocks[stockIndex].copyWith(
-                              changesPercentage:
+                              pctChange:
                                   liveStock != null && liveStock.price > 0
                                   ? liveStock.price -
                                         stocks[stockIndex].previousClose
-                                  : stocks[stockIndex].changesPercentage,
+                                  : stocks[stockIndex].pctChange,
                               price:
                                   liveStock?.price ?? stocks[stockIndex].price,
                             );
@@ -571,11 +572,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     "chatRouting": ChatRouting(
                                       chatId: convo[index].id,
                                       symbol: convo[index].symbol,
-                                      image: stocks[stockIndex].logoUrl,
+                                      image: "",
                                       companyName: convo[index].companyName,
                                       price: stocks[stockIndex].price,
                                       changePercentage:
-                                          stocks[stockIndex].changesPercentage,
+                                          stocks[stockIndex].pctChange,
                                       trendChart:
                                           stocks[stockIndex]
                                                   .fiveDayTrend
@@ -691,11 +692,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             final liveStock =
                                 stockManagerState[stocks[stockIndex].stockId];
                             stocks[stockIndex] = stocks[stockIndex].copyWith(
-                              changesPercentage:
+                              pctChange:
                                   liveStock != null && liveStock.price > 0
                                   ? liveStock.price -
                                         stocks[stockIndex].previousClose
-                                  : stocks[stockIndex].changesPercentage,
+                                  : stocks[stockIndex].pctChange,
                               price:
                                   liveStock?.price ?? stocks[stockIndex].price,
                             );
@@ -708,11 +709,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     "chatRouting": ChatRouting(
                                       chatId: convo[index].id,
                                       symbol: convo[index].symbol,
-                                      image: stocks[stockIndex].logoUrl,
+                                      image: "",
                                       companyName: convo[index].companyName,
                                       price: stocks[stockIndex].price,
                                       changePercentage:
-                                          stocks[stockIndex].changesPercentage,
+                                          stocks[stockIndex].pctChange,
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
                                       stockid: convo[index].stockId,

@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../feature/analytics/domain/model/matrics_data_model/matrics_data_model.dart';
+
+extension MatricsDataMapper on MatricsData {
+  List<Map<String, dynamic>> toKeyValueList() {
+    final json =
+        toJson(); // <-- uses freezed/json_serializable generated method
+    return json.entries.map((e) => {"key": e.key, "value": e.value}).toList();
+  }
+}
+
+final compactFormatter = NumberFormat.compact();
+
 class ShareStructureCard extends StatelessWidget {
-  ShareStructureCard({super.key});
+  List<MatricsData>? data;
+  ShareStructureCard({super.key, required this.data});
 
   final double _radius = 20.0;
 
   @override
   Widget build(BuildContext context) {
-    final rows = <Map<String, String>>[
-      {'label': 'Authorized Shares', 'value': '500,000M'},
-      {'label': 'Outstanding Shares', 'value': '7.43B'},
-      {'label': 'Percent Insiders', 'value': '0.052'},
-      {'label': 'Percent Institutions', 'value': '73.212'},
-      {'label': 'Held at DTC', 'value': 'N/A'},
-      {'label': 'Float', 'value': '7,423,671,316'},
-    ];
+    final keyValueList = data![0].toKeyValueList();
 
     return Container(
       decoration: BoxDecoration(
@@ -73,8 +80,8 @@ class ShareStructureCard extends StatelessWidget {
 
           // Rows
           Column(
-            children: List.generate(rows.length, (index) {
-              final item = rows[index];
+            children: List.generate(keyValueList.length, (index) {
+              final item = keyValueList[index];
               final bool isStriped = index % 2 == 0;
               // Use deeper navy for striped rows like image
               final rowColor = isStriped
@@ -88,16 +95,31 @@ class ShareStructureCard extends StatelessWidget {
                 color: rowColor,
                 padding: EdgeInsets.symmetric(horizontal: 18, vertical: 18),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width / 2,
                       child: MdSnsText(
-                        item['label']!,
+                        item["key"]
+                            .toString()
+                            .replaceAll("_", " ")
+                            .split(" ")
+                            .map(
+                              (word) => word.isEmpty
+                                  ? ""
+                                  : "${word[0].toUpperCase()}${word.substring(1)}",
+                            )
+                            .join(" "),
+                        maxLines: 1,
+
                         variant: TextVariant.h2,
                         color: Color(0xFF9AA6B2),
                       ),
                     ),
+
                     MdSnsText(
-                      item['value']!,
+                      // item['value'].toString(),
+                      compactFormatter.format(item['value']),
                       variant: TextVariant.h2,
                       fontWeight: TextFontWeightVariant.h1,
                       color: valueIsHighlighted ? Colors.white : Colors.white,

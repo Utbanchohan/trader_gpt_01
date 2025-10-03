@@ -12,7 +12,7 @@ import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_up_dto/sign_up.dart
 import 'package:trader_gpt/src/feature/sign_in/data/dto/update_password/update_password_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_api_repository.dart';
-
+import 'package:trader_gpt/src/shared/flavours.dart';
 
 import '../../../chat/domain/model/base_model/base_model.dart';
 
@@ -28,5 +28,5 @@ abstract interface class AuthRepository {
 }
 
 final authRepository = Provider<AuthRepository>(
-  (ref) => AuthApiRepository(ref.read(client)),
+  (ref) => AuthApiRepository(ref.read(client(BaseUrl.baseUrl))),
 );

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';
@@ -12,6 +13,8 @@ import '../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../shared/custom_message.dart';
 import '../../../../shared/socket/providers/stocks_price.dart';
 import '../../../../shared/states/app_loading_state.dart';
+import '../../../analytics/data/dto/market_login_dto/market_login_dto.dart';
+import '../../../analytics/domain/repositroy/overview_repository.dart';
 
 part 'sign_in.g.dart';
 
@@ -32,6 +35,20 @@ class Login extends _$Login {
           .read(authRepository)
           .login(SignIn(email: email, password: password));
       if (response.isSuccess) {
+        final response1 = await ref
+            .read(overviewRepository)
+            .marketDataLogin(
+              MarketLoginDto(
+                username: "traderverse_profile",
+                password: "aX2Txl2yxt1ic0xs-@wXcw-ds0at\$sa-ofZwelad",
+              ),
+            );
+        if (response1.accessToken.isNotEmpty) {
+          await ref
+              .read(localDataProvider)
+              .setAccessTokenMarket(response1.accessToken);
+        }
+
         bool isEmailVerified = false;
         if (response.data?.user?.isVerified ?? false) {
           isEmailVerified = true;

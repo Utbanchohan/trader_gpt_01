@@ -157,7 +157,7 @@ class StocksManager extends _$StocksManager {
 
     _subscription = repo.onStockPriceUpdate().listen((stock) {
       _handlePriceUpdate(stock);
-      log("stock listen price update: ${stock.price}");
+      // log("stock listen price update: ${stock.price}");
     });
 
     return {};
@@ -198,7 +198,7 @@ class StocksManager extends _$StocksManager {
 
         final updatedStock = stockData.copyWith(
           price: stock.price,
-          changesPercentage: priceChange == 0 ? 0 : priceChange,
+          pctChange: priceChange == 0 ? 0 : priceChange,
         );
         state = {...state, stocks[index].stockId: updatedStock};
       }

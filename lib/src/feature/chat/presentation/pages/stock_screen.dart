@@ -210,13 +210,12 @@ class _StockScreenState extends ConsumerState<StockScreen> {
                       final liveStock = stockManagerState[stock.stockId];
                       final change = liveStock != null && liveStock.price > 0
                           ? liveStock.price - stock.previousClose
-                          : stock.changesPercentage;
+                          : stock.pctChange;
 
                       stock = stock.copyWith(
-                        changesPercentage:
-                            liveStock != null && liveStock.price > 0
+                        pctChange: liveStock != null && liveStock.price > 0
                             ? liveStock.price - stock.previousClose
-                            : stock.changesPercentage,
+                            : stock.pctChange,
                         price: liveStock?.price ?? stock.price,
                       );
 

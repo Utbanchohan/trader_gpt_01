@@ -109,16 +109,24 @@ class _ConversationChatAppBarState
         ),
         title: Row(
           children: [
-            SizedBox(
-              width: 35,
-              height: 35,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: SvgPicture.network(
-                  getItemImage(ImageType.stock, widget.chatRouting!.symbol),
-                  fit: BoxFit.cover,
-                  placeholderBuilder: (context) =>
-                      SizedBox(width: 35, height: 35),
+            InkWell(
+              onTap: () {
+                context.pushNamed(
+                  AppRoutes.swipeScreen.name,
+                  extra: {"chatRouting": widget.chatRouting, "initialIndex": 2},
+                );
+              },
+              child: SizedBox(
+                width: 35,
+                height: 35,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: SvgPicture.network(
+                    getItemImage(ImageType.stock, widget.chatRouting!.symbol),
+                    fit: BoxFit.cover,
+                    placeholderBuilder: (context) =>
+                        SizedBox(width: 35, height: 35),
+                  ),
                 ),
               ),
             ),
