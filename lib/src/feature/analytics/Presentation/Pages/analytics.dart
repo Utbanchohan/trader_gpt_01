@@ -17,22 +17,18 @@ import 'package:trader_gpt/src/shared/chart/revenue_analysis.dart';
 import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/EarningsChart_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/InfoBox_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/cashdebt_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/company_detail.widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/earning_wigdets.dart'
     hide CompanyDetailsCard;
+import 'package:trader_gpt/src/shared/widgets/earningsTable_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/financialtable_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/insiderTrader_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/outstanding_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/price_card_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/profileCard_widgets.dart';
-<<<<<<< HEAD
-=======
-import 'package:trader_gpt/src/shared/widgets/security_short_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/securityownership_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/shortvalue.widgets.dart';
->>>>>>> todayissues
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:trader_gpt/utils/constant.dart';
 
@@ -448,7 +444,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 _overviewContent(),
                 _companyContent(),
                 _financialContent(),
-                _companyContent(),
+                _earningsContent(),
                 _companyContent(),
 
                 /// Company Tab Content
@@ -744,7 +740,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               ),
             ),
             SizedBox(height: 20.h),
-            CustomLineChart(),
+            CustomLineChart(
+              lineColor: Colors.green,
+              areaColor: Colors.greenAccent,
+            ),
 
             SizedBox(height: 20.h),
 
@@ -1206,134 +1205,45 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
   Widget _financialContent() {
     return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 14.h),
+            SizedBox(height: 15),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Image.asset(
-                //   Assets.images.Frame 1171275460.path,
-                //   height: 53.h,
-                //   width: 53.w,
-                // ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        MdSnsText(
-                          "",
+                MdSnsText(
+                  "Financial",
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h1,
 
-                          // "#${widget.chatRouting!.symbol}",
-                          variant: TextVariant.h2,
-                          fontWeight: TextFontWeightVariant.h1,
-
-                          color: AppColors.white,
-                        ),
-                        const SizedBox(width: 4),
-                        MdSnsText(
-                          "TESLA INC",
-                          // widget.chatRouting!.companyName
-                          //     .split("-")
-                          //     .first
-                          //     .trim(),
-                          color: AppColors.colorB2B2B7,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          color: AppColors.white,
-                          size: 20.sp,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        MdSnsText(
-                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.white,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                        const SizedBox(width: 6),
-                        Icon(
-                          selectedStock!.pctChange.toString().contains("-")
-                              ? Icons.arrow_drop_down
-                              : Icons.arrow_drop_up,
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.color00FF55,
-                          size: 20,
-                        ),
-                        MdSnsText(
-                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.color00FF55,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                      ],
-                    ),
-                  ],
+                  color: AppColors.fieldTextColor,
+                ),
+                SizedBox(width: 5),
+                Align(
+                  alignment: Alignment.center,
+                  child: Image.asset(
+                    "assets/images/info-circle.png",
+                    height: 14,
+                    width: 14,
+                  ),
                 ),
               ],
             ),
-
-            SizedBox(
-              height: 154.h, // Height fixed for horizontal list
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal, // Horizontal scrolling
-                // padding: EdgeInsets.symmetric(horizontal: 16.w),
-                itemCount: priceData.length,
-                physics: const BouncingScrollPhysics(), // Smooth scrolling
-                itemBuilder: (context, index) {
-                  final item = priceData[index];
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      right: 16.w,
-                    ), // Space between cards
-                    child: PriceCardWidget(
-                      firstColor: AppColors.white,
-                      secondColor: AppColors.white,
-                      secondHeading: "AFTER HOURS",
-                      firstHeading: "Previous Close",
-                      previousPrice: item["previousPrice"],
-                      afterHoursPrice: item["afterHoursPrice"],
-                      percentage: item["percentage"],
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(width: 5),
-            Image.asset("assets/images/info-circle.png", height: 14, width: 14),
-
-<<<<<<< HEAD
-=======
-            const SizedBox(height: 10),
-
->>>>>>> todayissues
+            SizedBox(height: 6),
             // ---- Sub text ----
-            const Text(
+            MdSnsText(
               "Last Updated: 01-19-2023 10:30:33 EST",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 20),
+              variant: TextVariant.h3,
+              fontWeight: TextFontWeightVariant.h4,
 
-            // ---- FIRST TAB CONTROLLER ----
+              color: AppColors.white,
+            ),
+
+            // SizedBox(height: 20),
             DefaultTabController(
               length: 4,
               child: Expanded(
@@ -1349,7 +1259,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       ),
                       indicatorPadding: const EdgeInsets.symmetric(
                         horizontal: 6,
-                        vertical: 6,
+                        vertical: 7,
                       ),
                       labelColor: Colors.white,
                       labelPadding: const EdgeInsets.symmetric(horizontal: 4),
@@ -1481,19 +1391,49 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           //tab 2
                           SingleChildScrollView(
                             child: Column(
-                              children: [CustomLineChart(), FinancialTable()],
+                              children: [
+                                SizedBox(height: 10),
+                                CustomLineChart(
+                                  lineColor: Colors.green,
+                                  areaColor: Colors.greenAccent,
+
+                                  title: "Income Statement for MSFT",
+                                ),
+                                SizedBox(height: 20),
+                                FinancialTable(),
+                              ],
                             ),
                           ),
-                          Center(
-                            child: Text(
-                              "Page 3",
-                              style: TextStyle(color: Colors.white),
+                          // tab 2
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                SizedBox(height: 10),
+                                CustomLineChart(
+                                  lineColor: Colors.purpleAccent,
+                                  areaColor: Colors.purple,
+
+                                  title: "Balance Sheet for MSFT",
+                                ),
+                                SizedBox(height: 20),
+                                FinancialTable(),
+                              ],
                             ),
                           ),
-                          Center(
-                            child: Text(
-                              "Page 4",
-                              style: TextStyle(color: Colors.white),
+                          // 3
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                SizedBox(height: 10),
+                                CustomLineChart(
+                                  lineColor: Colors.purpleAccent,
+                                  areaColor: Colors.purple,
+
+                                  title: "Cash Flow for MSFT",
+                                ),
+                                SizedBox(height: 20),
+                                FinancialTable(),
+                              ],
                             ),
                           ),
                         ],
@@ -1503,17 +1443,28 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   ],
                 ),
               ),
-
-              // WeeklySeasonalityChart(),
-              // SizedBox(height: 20.h),
-<<<<<<< HEAD
-            ), // ShareStructureCard(),
-=======
-
-              // ShareStructureCard(),
             ),
->>>>>>> todayissues
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _earningsContent() {
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 15),
+              EarningsChart(),
+              SizedBox(height: 20),
+              EarningsTable(),
+            ],
+          ),
         ),
       ),
     );
