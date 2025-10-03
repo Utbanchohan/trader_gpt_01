@@ -157,7 +157,7 @@ class StocksManager extends _$StocksManager {
 
     _subscription = repo.onStockPriceUpdate().listen((stock) {
       _handlePriceUpdate(stock);
-      log("stock listen price update: ${stock.price}");
+      // log("stock listen price update: ${stock.price}");
     });
 
     return {};

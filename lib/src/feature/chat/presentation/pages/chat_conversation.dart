@@ -25,6 +25,9 @@ import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.da
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../../shared/widgets/loading_widget.dart';
+import '../../../analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
+import '../../../analytics/data/dto/overview_dto/overview_dto.dart';
+import '../../../analytics/domain/model/overview_model/overview_model.dart';
 import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'widgets/loading_widget.dart';
 
@@ -65,10 +68,12 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   bool isWorkSymbol = false;
   int chatPage = 1;
   bool boolLoadMoreLoader = false;
+  StockResponse? stockResponse;
 
   @override
   void initState() {
     getChatsId();
+
     selectedStock = _mapChatRoutingToStock(widget.chatRouting);
     if (selectedStock!.symbol.isNotEmpty) {
       getRandomQuestions(selectedStock!.symbol);
@@ -412,9 +417,9 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   getUser() async {
     dynamic userData = await ref.watch(localDataProvider).getUser();
     if (userData != null) {
-      setState(() {
-        user = User.fromJson(userData);
-      });
+      // setState(() {
+      user = User.fromJson(userData);
+      // });
     }
   }
 

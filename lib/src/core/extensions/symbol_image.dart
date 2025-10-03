@@ -1,7 +1,7 @@
 String getItemImage(ImageType? type, String symbol) {
-  print(type!.value + "=================================type $symbol");
+  // print(type!.value + "=================================type $symbol");
   if (symbol.isNotEmpty) {
-    if (type.value == ImageType.crypto.value) {
+    if (type!.value == ImageType.crypto.value) {
       return "https://storage.googleapis.com/analytics-images-traderverse/crypto_v1/${symbol.toUpperCase()}.svg";
     } else {
       return "https://storage.googleapis.com/analytics-images-traderverse/stocks_v1/${symbol.toUpperCase()}.svg";

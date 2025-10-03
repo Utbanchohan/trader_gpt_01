@@ -10,17 +10,16 @@ import 'package:trader_gpt/src/shared/states/app_loading_state.dart';
 
 part 'chat_provider.g.dart';
 
-final sseProvider = StreamProvider.family<Map<String, dynamic>, Map<String, dynamic>>((
-  ref,
-  body,
-) {
-  final service = SseService();
-  String token = ref.watch(localDataProvider).accessToken ?? "";
+final sseProvider =
+    StreamProvider.family<Map<String, dynamic>, Map<String, dynamic>>((
+      ref,
+      body,
+    ) {
+      final service = SseService();
+      String token = ref.watch(localDataProvider).accessToken ?? "";
 
-  return service.connect(body, token);
-});
-
-
+      return service.connect(body, token);
+    });
 
 @riverpod
 class ChatProvider extends _$ChatProvider {

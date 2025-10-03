@@ -10,6 +10,7 @@ import 'package:trader_gpt/src/feature/chat/domain/model/conversation/conversati
 import 'package:trader_gpt/src/feature/chat/domain/model/random_question/random_question_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_flow.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_api_repository.dart';
+import 'package:trader_gpt/src/shared/flavours.dart';
 
 import '../../../../core/api_client/client.dart';
 import '../model/delete_model/delete_model.dart';
@@ -28,5 +29,5 @@ abstract interface class ChatRepository {
 }
 
 final chatRepository = Provider<ChatRepository>(
-  (ref) => ChatApiRepository(ref.read(client)),
+  (ref) => ChatApiRepository(ref.read(client(BaseUrl.baseUrl))),
 );

@@ -12,23 +12,19 @@ class SharedPreferencesService implements SharedPrefService {
   final idKey = 'id-user';
   final login = 'login';
   final _userKey = 'user';
-  final userNameKey="user-name";
-  final stocksKey="stocks";
-
+  final userNameKey = "user-name";
+  final stocksKey = "stocks";
+  final _marketAccessToken = "metaAccessToken";
 
   @override
   String? get accessToken => sharedPreferences.getString(_tokenKey);
 
+  @override
+  String? get marketAccessToken =>
+      sharedPreferences.getString(_marketAccessToken);
 
   @override
-   String? get getUserName => sharedPreferences.getString(userNameKey);
-
-  
-
-
-
-
-
+  String? get getUserName => sharedPreferences.getString(userNameKey);
 
   @override
   Future<bool> setAccessToken(String token) async {
@@ -36,13 +32,18 @@ class SharedPreferencesService implements SharedPrefService {
   }
 
   @override
-  Future<bool> setLogout() async {
-     await sharedPreferences.setBool(login, true);
-   await setAccessToken('');
-
-
-     return true;
+  Future<bool> setAccessTokenMarket(String token) async {
+    return await sharedPreferences.setString(_marketAccessToken, token);
   }
+
+  @override
+  Future<bool> setLogout() async {
+    await sharedPreferences.setBool(login, true);
+    await setAccessToken('');
+
+    return true;
+  }
+
   @override
   Future<bool> setIsLogin() async {
     return await sharedPreferences.setBool(login, true);
@@ -74,7 +75,7 @@ class SharedPreferencesService implements SharedPrefService {
     return sharedPreferences.setString(idKey, userId);
   }
 
-   @override
+  @override
   Future<void> saveUserName(String userName) {
     return sharedPreferences.setString(userNameKey, userName);
   }
@@ -100,7 +101,7 @@ class SharedPreferencesService implements SharedPrefService {
   }
 
   @override
-  Future<void>  saveStock(List<Map<String, dynamic>> stock) {
+  Future<void> saveStock(List<Map<String, dynamic>> stock) {
     String stockJson = jsonEncode(stock);
     return sharedPreferences.setString(stocksKey, stockJson);
   }
@@ -109,15 +110,16 @@ class SharedPreferencesService implements SharedPrefService {
   Future<List<Map<String, dynamic>>?> getStocks() async {
     String? userJson = sharedPreferences.getString(stocksKey);
     if (userJson != null) {
-    final decoded = jsonDecode(userJson);
-    if (decoded is List) {
-      return decoded.map<Map<String, dynamic>>(
-        (e) => Map<String, dynamic>.from(e as Map),
-      ).toList();
-    }
-       return null;
+      final decoded = jsonDecode(userJson);
+      if (decoded is List) {
+        return decoded
+            .map<Map<String, dynamic>>(
+              (e) => Map<String, dynamic>.from(e as Map),
+            )
+            .toList();
+      }
+      return null;
     }
     return null;
   }
-  
 }
