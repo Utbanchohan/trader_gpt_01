@@ -1,8 +1,4 @@
-enum Flavor {
-  prod,
-  dev,
-  stage,
-}
+enum Flavor { prod, dev, stage }
 
 class F {
   static late final Flavor appFlavor;
@@ -20,9 +16,8 @@ class F {
     }
   }
 
-
-  static String get baseUrl{
-      switch (appFlavor) {
+  static String get baseUrl {
+    switch (appFlavor) {
       case Flavor.prod:
         return 'http://app.tradersgpt.io/';
       case Flavor.dev:
@@ -32,9 +27,8 @@ class F {
     }
   }
 
-
-    static String get socketUrl{
-      switch (appFlavor) {
+  static String get socketUrl {
+    switch (appFlavor) {
       case Flavor.prod:
         return 'wss://app.tradersgpt.io/socket.io';
       case Flavor.dev:
@@ -44,9 +38,8 @@ class F {
     }
   }
 
-
-      static String get newSocketUrl{
-      switch (appFlavor) {
+  static String get newSocketUrl {
+    switch (appFlavor) {
       case Flavor.prod:
         return 'https://app.tradersgpt.io';
       case Flavor.dev:
@@ -56,6 +49,25 @@ class F {
     }
   }
 
+  static String get marketDataUrl {
+    switch (appFlavor) {
+      case Flavor.prod:
+        return 'https://marketsdata-prod-ff.traderverse.io/';
+      case Flavor.dev:
+        return 'https://marketsdata-prod-ff.traderverse.io/';
+      case Flavor.stage:
+        return 'https://marketsdata-prod-ff.traderverse.io/';
+    }
+  }
 
-
+  static String get etlDataUrl {
+    switch (appFlavor) {
+      case Flavor.prod:
+        return 'https://etl-payload.traderverse.io/';
+      case Flavor.dev:
+        return 'https://etl-payload.traderverse.io/';
+      case Flavor.stage:
+        return 'https://etl-payload.traderverse.io/';
+    }
+  }
 }
