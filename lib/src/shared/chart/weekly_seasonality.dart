@@ -1,11 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/weekly_model/weekly_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../feature/analytics/domain/model/monthly_model/monthly_model.dart';
+import 'dart:math';
 
 class WeeklySeasonalityChart extends StatelessWidget {
   final ProbabilityResponse data;
@@ -127,106 +129,149 @@ class WeeklySeasonalityChart extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Chart
-            AspectRatio(
-              aspectRatio: 1.6,
-              child: RotatedBox(
-                quarterTurns: 1,
-                child: BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.spaceAround,
-                    minY: 0,
-                    maxY: 100,
-                    gridData: FlGridData(
-                      show: true,
-                      drawHorizontalLine: true,
-                      drawVerticalLine: false,
-                      horizontalInterval: 20,
-                      getDrawingHorizontalLine: (value) =>
-                          FlLine(color: Colors.white24, strokeWidth: 1),
-                    ),
-                    titlesData: FlTitlesData(
-                      leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 80,
-                          getTitlesWidget: (value, meta) {
-                            int index = value.toInt();
-                            if (index >= 0 && index < weeklyData.length) {
-                              return Transform.rotate(
-                                angle: -1.5708,
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 30.h),
+            MonthlySpiderChart(
+              isWeekly: isWeekly,
+              lables: !isWeekly
+                  ? [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ]
+                  : ["Mon", "Tue", "Wed", "Thur", "Fri"],
 
-                                  child: MdSnsText(
-                                    weeklyData[index]["day"],
-                                    variant: TextVariant.h4,
-                                    color: Color(0xB3FFFFFF),
-                                  ),
-                                ),
-                              );
-                            }
-                            return const SizedBox.shrink();
-                          },
-                        ),
-                      ),
-                    ),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: const Border(
-                        bottom: BorderSide(color: Colors.white30, width: 1),
-                        right: BorderSide(
-                          color: Colors.white30,
-                          width: 1,
-                        ), // ✅ right line
-                        left: BorderSide.none,
-                        top: BorderSide.none,
-                      ),
-                    ),
-                    barGroups: weeklyData.asMap().entries.map((entry) {
-                      return BarChartGroupData(
-                        x: entry.key,
-                        barRods: [
-                          BarChartRodData(
-                            toY: entry.value["value"] * 1.0,
-                            width: 10,
-                            color: Colors.blueAccent,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ],
-                      );
-                    }).toList(),
-                    barTouchData: BarTouchData(
-                      enabled: true,
-                      touchTooltipData: BarTouchTooltipData(
-                        tooltipMargin: 8,
-                        tooltipPadding: const EdgeInsets.all(8),
-                        getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                          final data = weeklyData[group.x.toInt()];
-                          return BarTooltipItem(
-                            '\$${data["amount"].toStringAsFixed(2)}\n${data["value"].toStringAsFixed(0)}%',
-                            const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              values: isWeekly
+                  ? [
+                      weeklyData[0]['value'],
+                      weeklyData[1]['value'],
+                      weeklyData[2]['value'],
+                      weeklyData[3]['value'],
+                      weeklyData[4]['value'],
+                    ]
+                  : [
+                      weeklyData[0]['value'],
+                      weeklyData[1]['value'],
+                      weeklyData[2]['value'],
+                      weeklyData[3]['value'],
+                      weeklyData[4]['value'],
+                      weeklyData[5]['value'],
+                      weeklyData[6]['value'],
+                      weeklyData[7]['value'],
+                      weeklyData[8]['value'],
+                      weeklyData[9]['value'],
+                      weeklyData[10]['value'],
+                      weeklyData[11]['value'],
+                    ], // Jan–Dec
+              maxValue: 100, // highest expected value
             ),
 
+            // Chart
+            // AspectRatio(
+            //   aspectRatio: 1.6,
+            //   child: RotatedBox(
+            //     quarterTurns: 1,
+            //     child: BarChart(
+            //       BarChartData(
+            //         alignment: BarChartAlignment.spaceAround,
+            //         minY: 0,
+            //         maxY: 100,
+            //         gridData: FlGridData(
+            //           show: true,
+            //           drawHorizontalLine: true,
+            //           drawVerticalLine: false,
+            //           horizontalInterval: 20,
+            //           getDrawingHorizontalLine: (value) =>
+            //               FlLine(color: Colors.white24, strokeWidth: 1),
+            //         ),
+            //         titlesData: FlTitlesData(
+            //           leftTitles: const AxisTitles(
+            //             sideTitles: SideTitles(showTitles: false),
+            //           ),
+            //           rightTitles: const AxisTitles(
+            //             sideTitles: SideTitles(showTitles: false),
+            //           ),
+            //           topTitles: const AxisTitles(
+            //             sideTitles: SideTitles(showTitles: false),
+            //           ),
+            //           bottomTitles: AxisTitles(
+            //             sideTitles: SideTitles(
+            //               showTitles: true,
+            //               reservedSize: 80,
+            //               getTitlesWidget: (value, meta) {
+            //                 int index = value.toInt();
+            //                 if (index >= 0 && index < weeklyData.length) {
+            //                   return Transform.rotate(
+            //                     angle: -1.5708,
+            //                     child: Container(
+            //                       margin: EdgeInsets.only(top: 30.h),
+
+            //                       child: MdSnsText(
+            //                         weeklyData[index]["day"],
+            //                         variant: TextVariant.h4,
+            //                         color: Color(0xB3FFFFFF),
+            //                       ),
+            //                     ),
+            //                   );
+            //                 }
+            //                 return const SizedBox.shrink();
+            //               },
+            //             ),
+            //           ),
+            //         ),
+            //         borderData: FlBorderData(
+            //           show: true,
+            //           border: const Border(
+            //             bottom: BorderSide(color: Colors.white30, width: 1),
+            //             right: BorderSide(
+            //               color: Colors.white30,
+            //               width: 1,
+            //             ), // ✅ right line
+            //             left: BorderSide.none,
+            //             top: BorderSide.none,
+            //           ),
+            //         ),
+            //         barGroups: weeklyData.asMap().entries.map((entry) {
+            //           return BarChartGroupData(
+            //             x: entry.key,
+            //             barRods: [
+            //               BarChartRodData(
+            //                 toY: entry.value["value"] * 1.0,
+            //                 width: 10,
+            //                 color: Colors.blueAccent,
+            //                 borderRadius: BorderRadius.circular(6),
+            //               ),
+            //             ],
+            //           );
+            //         }).toList(),
+            //         barTouchData: BarTouchData(
+            //           enabled: true,
+            //           touchTooltipData: BarTouchTooltipData(
+            //             tooltipMargin: 8,
+            //             tooltipPadding: const EdgeInsets.all(8),
+            //             getTooltipItem: (group, groupIndex, rod, rodIndex) {
+            //               final data = weeklyData[group.x.toInt()];
+            //               return BarTooltipItem(
+            //                 '\$${data["amount"].toStringAsFixed(2)}\n${data["value"].toStringAsFixed(0)}%',
+            //                 const TextStyle(
+            //                   color: Colors.black,
+            //                   fontWeight: FontWeight.bold,
+            //                 ),
+            //               );
+            //             },
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 12),
 
             // ✅ Neeche custom text
@@ -242,4 +287,142 @@ class WeeklySeasonalityChart extends StatelessWidget {
       ),
     );
   }
+}
+
+class MonthlySpiderChart extends StatelessWidget {
+  final List<double> values; // values for 12 months
+  final double maxValue;
+  final bool? isWeekly;
+  final List<String> lables;
+
+  const MonthlySpiderChart({
+    super.key,
+    required this.values,
+    required this.isWeekly,
+    required this.lables,
+    this.maxValue = 100.0,
+  }) : assert(values.length == lables.length);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: const Size(350, 350),
+      painter: _SpiderPainter(values, lables, maxValue, isWeekly!),
+    );
+  }
+}
+
+class _SpiderPainter extends CustomPainter {
+  final List<double> values;
+  final List<String> labels;
+  final double maxValue;
+  final bool isWeekly;
+
+  _SpiderPainter(this.values, this.labels, this.maxValue, this.isWeekly);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final sides = values.length;
+    final radius = min(size.width, size.height) / 2 - 40;
+
+    final Paint gridPaint = Paint()
+      ..color = Colors.grey.shade400
+      ..style = PaintingStyle.stroke;
+
+    final Paint dataPaint = Paint()
+      ..color = isWeekly
+          ? AppColors.color0098E4.withOpacity(0.3)
+          : AppColors.colorab75b8.withOpacity(0.3)
+      ..style = PaintingStyle.fill;
+
+    final Paint dataBorderPaint = Paint()
+      ..color = isWeekly ? AppColors.color0098E4 : AppColors.colorab75b8
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    final Paint circlePoint = Paint()
+      ..color = isWeekly
+          ? AppColors.color0098E4.withOpacity(0.3)
+          : AppColors.colorab75b8.withOpacity(0.3)
+      ..style = PaintingStyle.fill;
+
+    final Paint circleBorderPont = Paint()
+      ..color = isWeekly ? AppColors.color0098E4 : AppColors.colorab75b8
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    // --- Draw spider grid
+    for (int i = 1; i <= 5; i++) {
+      final r = radius * i / 5;
+      final path = Path();
+      for (int j = 0; j < sides; j++) {
+        final angle = (2 * pi / sides) * j - pi / 2;
+        final point = center + Offset(r * cos(angle), r * sin(angle));
+        if (j == 0) {
+          path.moveTo(point.dx, point.dy);
+        } else {
+          path.lineTo(point.dx, point.dy);
+        }
+      }
+      path.close();
+      canvas.drawPath(path, gridPaint);
+    }
+
+    // --- Draw axes + labels
+    final textPainter = TextPainter(
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+
+    for (int i = 0; i < sides; i++) {
+      final angle = (2 * pi / sides) * i - pi / 2;
+      final end = center + Offset(radius * cos(angle), radius * sin(angle));
+      canvas.drawLine(center, end, gridPaint);
+
+      // Label
+      final labelOffset =
+          center +
+          Offset((radius + 20) * cos(angle), (radius + 20) * sin(angle));
+      textPainter.text = TextSpan(
+        text: labels[i],
+        style: GoogleFonts.plusJakartaSans(
+          fontSize: 12,
+          color: AppColors.white,
+          fontWeight: FontWeight.w500,
+        ),
+      );
+      textPainter.layout();
+      textPainter.paint(
+        canvas,
+        Offset(
+          labelOffset.dx - textPainter.width / 2,
+          labelOffset.dy - textPainter.height / 2,
+        ),
+      );
+    }
+
+    // --- Draw data polygon
+    final dataPath = Path();
+    for (int i = 0; i < sides; i++) {
+      final angle = (2 * pi / sides) * i - pi / 2;
+      final r = radius * (values[i] / maxValue);
+      final point = center + Offset(r * cos(angle), r * sin(angle));
+      if (i == 0) {
+        dataPath.moveTo(point.dx, point.dy);
+      } else {
+        dataPath.lineTo(point.dx, point.dy);
+      }
+      canvas.drawCircle(point, 7, circlePoint);
+      canvas.drawCircle(point, 7, circleBorderPont);
+    }
+
+    dataPath.close();
+    canvas.drawPath(dataPath, dataPaint);
+
+    canvas.drawPath(dataPath, dataBorderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
