@@ -27,6 +27,12 @@ import 'package:trader_gpt/src/shared/widgets/insiderTrader_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/outstanding_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/price_card_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/profileCard_widgets.dart';
+<<<<<<< HEAD
+=======
+import 'package:trader_gpt/src/shared/widgets/security_short_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/securityownership_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/shortvalue.widgets.dart';
+>>>>>>> todayissues
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:trader_gpt/utils/constant.dart';
 
@@ -1311,6 +1317,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             const SizedBox(width: 5),
             Image.asset("assets/images/info-circle.png", height: 14, width: 14),
 
+<<<<<<< HEAD
+=======
+            const SizedBox(height: 10),
+
+>>>>>>> todayissues
             // ---- Sub text ----
             const Text(
               "Last Updated: 01-19-2023 10:30:33 EST",
@@ -1495,7 +1506,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
               // WeeklySeasonalityChart(),
               // SizedBox(height: 20.h),
+<<<<<<< HEAD
             ), // ShareStructureCard(),
+=======
+
+              // ShareStructureCard(),
+            ),
+>>>>>>> todayissues
           ],
         ),
       ),
