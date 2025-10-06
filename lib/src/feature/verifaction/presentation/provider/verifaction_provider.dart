@@ -29,17 +29,17 @@ class VerifactionProvider extends _$VerifactionProvider {
       final response = await ref
           .read(authRepository)
           .verifyOtp(OtpRequest(otp: otp, email: email));
-      if (response.isSuccess) {
-           await ref
-              .read(localDataProvider)
-              .setAccessToken(response.data?.accessToken ?? '');
-          await ref
-              .read(localDataProvider)
-              .saveUserId(response.data?.user?.id ?? '');
+      if (response.isSuccess != null && response.isSuccess!) {
+        await ref
+            .read(localDataProvider)
+            .setAccessToken(response.data?.accessToken ?? '');
+        await ref
+            .read(localDataProvider)
+            .saveUserId(response.data?.user?.id ?? '');
 
         await ref
-              .read(localDataProvider)
-              .saveUser(response.data!.user.toJson());
+            .read(localDataProvider)
+            .saveUser(response.data!.user.toJson());
         state = AppLoadingState();
         return response.data;
       } else {
@@ -55,12 +55,13 @@ class VerifactionProvider extends _$VerifactionProvider {
     return null;
   }
 
-
-    Future<User?> resend({required String email}) async {
+  Future<User?> resend({required String email}) async {
     state = AppLoadingState.loading();
     try {
-      final response = await ref.read(authRepository).signUp(SignUpDto(email: email));
-      if (response.isSuccess) {
+      final response = await ref
+          .read(authRepository)
+          .signUp(SignUpDto(email: email));
+      if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
         return response.data;
       } else {
@@ -68,7 +69,7 @@ class VerifactionProvider extends _$VerifactionProvider {
       }
       state = AppLoadingState();
     } catch (e) {
-      $showMessage(e.toString(),isError: true);
+      $showMessage(e.toString(), isError: true);
       state = AppLoadingState();
       debugPrint("errror $e");
     }

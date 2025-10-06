@@ -32,8 +32,9 @@ class AuthApiRepository implements AuthRepository {
   }
 
   @override
-  Future<BaseModel<User>> signUp(SignUpDto email) async {
-    return await AuthApi(client).signUp(email);
+  Future<BaseModel<User?>> signUp(SignUpDto email) async {
+    var res = await AuthApi(client).signUp(email);
+    return res;
   }
 
   @override
@@ -59,16 +60,16 @@ class AuthApiRepository implements AuthRepository {
   ) async {
     return await AuthApi(client).updatePassword(emailPassword);
   }
+
   @override
   Future<BaseModel<User>> changePassword(
     ChangePasswordDto changePassword,
   ) async {
     return await AuthApi(client).changePassword(changePassword);
   }
+
   @override
-  Future<BaseModel<User>> updateProfile(
-    ProfileUpdateDto profileUpdate,
-  ) async {
+  Future<BaseModel<User>> updateProfile(ProfileUpdateDto profileUpdate) async {
     return await AuthApi(client).updateProfile(profileUpdate);
   }
 }

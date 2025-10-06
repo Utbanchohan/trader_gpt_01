@@ -23,7 +23,7 @@ abstract interface class AuthApi {
   Future<BaseModel<LoginData>> signIn(@Body() SignIn signIn);
 
   @POST('/signup')
-  Future<BaseModel<User>> signUp(@Body() SignUpDto signUp);
+  Future<BaseModel<User?>> signUp(@Body() SignUpDto signUp);
 
   @POST('/verify-otp')
   Future<BaseModel<LoginData>> verifyOtp(@Body() OtpRequest otpRequest);
@@ -34,8 +34,7 @@ abstract interface class AuthApi {
   );
   @POST('/reset-password')
   Future<BaseModel> forgetPassword(@Body() SignUpDto email);
-  
-  
+
   @POST('/forgot-password')
   Future<BaseModel<User>> updatePassword(
     @Body() UpdatePasswordDto emailPassword,
@@ -45,5 +44,5 @@ abstract interface class AuthApi {
     @Body() ChangePasswordDto changePassword,
   );
   @PATCH('/profile')
-  Future<BaseModel<User>> updateProfile( @Body() ProfileUpdateDto profileUpdate,);
+  Future<BaseModel<User>> updateProfile(@Body() ProfileUpdateDto profileUpdate);
 }

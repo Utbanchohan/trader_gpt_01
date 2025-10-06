@@ -30,7 +30,7 @@ class ChangePasswordProvider extends _$ChangePasswordProvider {
               newPassword: newPassword,
             ),
           );
-      if (response.isSuccess) {
+      if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
         return response.data;
       } else {

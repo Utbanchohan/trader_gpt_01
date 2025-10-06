@@ -97,7 +97,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
     try {
       boolLoadMoreLoader = true;
       var res = await ref.read(chatRepository).getMessages(id, page);
-      if (res.isSuccess) {
+      if (res.isSuccess != null && res.isSuccess!) {
         boolLoadMoreLoader = false;
 
         for (int i = res.data!.messages!.length - 1; i >= 0; i--) {
@@ -285,7 +285,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   getchats(String id, int page) async {
     var res = await ref.read(chatRepository).getMessages(id, page);
-    if (res.isSuccess) {
+    if (res.isSuccess != null && res.isSuccess!) {
       for (int i = 0; i < res.data!.messages!.length; i++) {
         chats.add(res.data!.messages![i]);
       }

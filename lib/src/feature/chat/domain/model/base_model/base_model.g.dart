@@ -11,7 +11,7 @@ _BaseModel<T> _$BaseModelFromJson<T>(
   T Function(Object? json) fromJsonT,
 ) => _BaseModel<T>(
   message: json['message'] as String,
-  isSuccess: json['success'] as bool,
+  isSuccess: json['success'] as bool?,
   data: _$nullableGenericFromJson(json['data'], fromJsonT),
 );
 

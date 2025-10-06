@@ -6,21 +6,19 @@ import '../../../../chat/domain/repository/chat_repository.dart';
 
 part 'create_chat.g.dart';
 
-
 @riverpod
 class CreateChatProvider extends _$CreateChatProvider {
-  
   @override
   AppLoadingState build() => const AppLoadingState();
 
   createChate(CreateChatDto createChatDto) async {
-    state=AppLoadingState.loading();
+    state = AppLoadingState.loading();
     var res = await ref.read(chatRepository).createNewChat(createChatDto);
-    if (res.isSuccess) {
-      state=AppLoadingState();
+    if (res.isSuccess != null && res.isSuccess!) {
+      state = AppLoadingState();
       return res.data;
     } else {
-      state=AppLoadingState();
+      state = AppLoadingState();
       return false;
     }
   }

@@ -21,7 +21,7 @@ class ForgotPasswordProvider extends _$ForgotPasswordProvider {
       final response = await ref
           .read(authRepository)
           .forgetPassword(SignUpDto(email: email));
-      if (response.isSuccess) {
+      if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
         return response.isSuccess;
       } else {
@@ -48,7 +48,7 @@ class ForgotPasswordProvider extends _$ForgotPasswordProvider {
           .updatePassword(
             UpdatePasswordDto(email: email, code: otp, newPassword: password),
           );
-      if (response.isSuccess) {
+      if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
         return response.data;
       } else {

@@ -34,7 +34,7 @@ class Login extends _$Login {
       final response = await ref
           .read(authRepository)
           .login(SignIn(email: email, password: password));
-      if (response.isSuccess) {
+      if (response.isSuccess != null && response.isSuccess!) {
         final response1 = await ref
             .read(overviewRepository)
             .marketDataLogin(

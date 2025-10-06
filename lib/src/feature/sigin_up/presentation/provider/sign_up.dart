@@ -22,8 +22,10 @@ class SignUp extends _$SignUp {
   Future<User?> onSubmit({required String email}) async {
     state = AppLoadingState.loading();
     try {
-      final response = await ref.read(authRepository).signUp(SignUpDto(email: email));
-      if (response.isSuccess) {
+      final response = await ref
+          .read(authRepository)
+          .signUp(SignUpDto(email: email));
+      if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
         return response.data;
       } else {
@@ -31,7 +33,7 @@ class SignUp extends _$SignUp {
       }
       state = AppLoadingState();
     } catch (e) {
-      $showMessage(e.toString(),isError: true);
+      $showMessage(e.toString(), isError: true);
       state = AppLoadingState();
       debugPrint("errror $e");
     }
