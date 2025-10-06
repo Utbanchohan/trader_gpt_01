@@ -15,7 +15,7 @@ class _AnalysisApi implements AnalysisApi {
 
   String? baseUrl;
 
-  final dynamic errorLogger;
+  final ParseErrorLogger? errorLogger;
 
   @override
   Future<StockResponse> getOverview(SymbolDto overview) async {

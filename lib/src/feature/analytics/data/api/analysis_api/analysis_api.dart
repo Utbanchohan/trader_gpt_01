@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
 import 'package:trader_gpt/src/feature/analytics/data/dto/market_login_dto/market_login_dto.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/stock_price_model/stock_price_model.dart';

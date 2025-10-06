@@ -18,6 +18,7 @@ import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsChart_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/EarningsTrend_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/InfoBox_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/cashdebt_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/company_detail.widgets.dart';
@@ -99,7 +100,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     "Financial",
     "Earning",
     "Analytics",
-    "Technical",
   ];
   final companyInfo = [
     {"icon": Icons.home, "title": "Headquarter", "value": "One Microsoft Way"},
@@ -123,7 +123,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     Assets.images.c2.path,
     Assets.images.diagramc3.path,
     Assets.images.directboxNotifc4.path,
-    Assets.images.categoryc1.path,
     Assets.images.categoryc1.path,
   ];
 
@@ -445,7 +444,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 _companyContent(),
                 _financialContent(),
                 _earningsContent(),
-                _companyContent(),
+                _analysisContent(),
 
                 /// Company Tab Content
                 Center(
@@ -767,7 +766,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       MdSnsText(
                         "Performance Overview",
                         color: AppColors.white,
-                        variant: TextVariant.h2,
+                        variant: TextVariant.h3,
                         fontWeight: TextFontWeightVariant.h4,
                       ),
                       Row(
@@ -1022,7 +1021,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 SizedBox(height: 14.h),
                 OutstandingSharesChart(),
                 SizedBox(height: 14.h),
-
                 InsiderTraderTable(),
                 SizedBox(height: 14.h),
                 SecurityOwnershipTable(),
@@ -1031,167 +1029,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               ],
             ),
 
-            // ---------- PERFORMANCE OVERVIEW ----------
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.colorB3B3B3),
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      MdSnsText(
-                        "Performance Overview",
-                        color: AppColors.white,
-                        variant: TextVariant.h2,
-                        fontWeight: TextFontWeightVariant.h4,
-                      ),
-                      Row(
-                        children: [
-                          Image.asset(
-                            Assets.images.textalignJustifycenter.path,
-                            height: 14.h,
-                            width: 16.55.w,
-                          ),
-                          SizedBox(width: 10.w),
-                          Image.asset(
-                            Assets.images.chart.path,
-                            height: 14.h,
-                            width: 14.w,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  PerformanceTable(),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.h),
-
-            // ---------- PRICE COMPARISON ----------
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.color091224,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  MdSnsText(
-                    "Price Comparison",
-                    variant: TextVariant.h3,
-                    fontWeight: TextFontWeightVariant.h4,
-
-                    color: AppColors.fieldTextColor,
-                  ),
-                  SizedBox(height: 16.h),
-                  SizedBox(
-                    height: 180,
-                    child: LineChart(
-                      LineChartData(
-                        backgroundColor: AppColors.color091224,
-                        gridData: FlGridData(
-                          show: true,
-                          getDrawingHorizontalLine: (value) => FlLine(
-                            color: AppColors.color1B254B,
-                            strokeWidth: 3,
-                          ),
-                          getDrawingVerticalLine: (value) =>
-                              FlLine(color: Colors.transparent, strokeWidth: 1),
-                        ),
-                        titlesData: FlTitlesData(
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 28,
-                              interval: 10,
-                              getTitlesWidget: (value, meta) => MdSnsText(
-                                value.toInt().toString(),
-                                color: AppColors.white,
-
-                                variant: TextVariant.h5,
-                              ),
-                            ),
-                          ),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              interval: 1,
-                              getTitlesWidget: (value, meta) => MdSnsText(
-                                value.toInt().toString(),
-                                color: AppColors.white,
-                                variant: TextVariant.h5,
-                              ),
-                            ),
-                          ),
-                          topTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          rightTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                        ),
-                        borderData: FlBorderData(show: false),
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: [
-                              FlSpot(1, 35),
-                              FlSpot(2, 40),
-                              FlSpot(3, 20),
-                              FlSpot(4, 55),
-                              FlSpot(5, 60),
-                              FlSpot(6, 45),
-                              FlSpot(7, 38),
-                              FlSpot(8, 42),
-                              FlSpot(9, 41),
-                              FlSpot(10, 50),
-                              FlSpot(11, 55),
-                              FlSpot(12, 37),
-                            ],
-                            isCurved: true,
-                            color: AppColors.color0098E4,
-                            barWidth: 3,
-                            dotData: FlDotData(show: false),
-                          ),
-                          LineChartBarData(
-                            spots: [
-                              FlSpot(1, 25),
-                              FlSpot(2, 35),
-                              FlSpot(3, 30),
-                              FlSpot(4, 40),
-                              FlSpot(5, 45),
-                              FlSpot(6, 72),
-                              FlSpot(7, 20),
-                              FlSpot(8, 28),
-                              FlSpot(9, 26),
-                              FlSpot(10, 60),
-                              FlSpot(11, 70),
-                              FlSpot(12, 58),
-                            ],
-                            isCurved: true,
-                            color: AppColors.color06D54E,
-                            barWidth: 3,
-                            dotData: FlDotData(show: false),
-                          ),
-                        ],
-                        minX: 1,
-                        maxX: 12,
-                        minY: 10,
-                        maxY: 80,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
             SizedBox(height: 20.h),
 
             // WeeklySeasonalityChart(),
@@ -1463,6 +1300,31 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               EarningsChart(),
               SizedBox(height: 20),
               EarningsTable(),
+              SizedBox(height: 20),
+              EarningsTrend(title: "Earnings Trend"),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _analysisContent() {
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10),
+              CustomLineChart(
+                lineColor: Colors.purpleAccent,
+                areaColor: Colors.purple,
+              ),
+              SizedBox(height: 20),
+              EarningsTrend(title: "Earnings Trend"),
             ],
           ),
         ),

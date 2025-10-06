@@ -12,22 +12,18 @@ class EarningsTable extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.colorB3B3B3),
         color: AppColors.color091224,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 🔹 Header
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             child: MdSnsText(
               "Earnings",
-              variant: TextVariant.h2,
-              fontWeight: TextFontWeightVariant.h4,
-
               color: AppColors.fieldTextColor,
+              fontWeight: TextFontWeightVariant.h4,
+              variant: TextVariant.h3,
             ),
           ),
 
@@ -106,7 +102,7 @@ class EarningsTable extends StatelessWidget {
                       row["period"]!,
                       variant: TextVariant.h4,
                       fontWeight: TextFontWeightVariant.h4,
-                      color: Colors.blue,
+                      color: AppColors.white,
                     ),
                   ),
                   Expanded(
@@ -115,7 +111,7 @@ class EarningsTable extends StatelessWidget {
                       row["estEPS"]!,
                       variant: TextVariant.h4,
                       fontWeight: TextFontWeightVariant.h4,
-                      color: Colors.orange.shade400,
+                      color: AppColors.color0xFFCD3438,
                     ),
                   ),
                   Expanded(
@@ -124,7 +120,7 @@ class EarningsTable extends StatelessWidget {
                       row["revenue"]!,
                       variant: TextVariant.h4,
                       fontWeight: TextFontWeightVariant.h4,
-                      color: Colors.blue,
+                      color: AppColors.color0098E4,
                     ),
                   ),
                   Expanded(

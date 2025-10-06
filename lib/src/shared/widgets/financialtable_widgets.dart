@@ -7,182 +7,140 @@ class FinancialTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final headerStyle = const TextStyle(
-      color: Colors.grey,
-      fontWeight: FontWeight.w600,
-      fontSize: 13,
-    );
-
-    final valueStyle = const TextStyle(
-      color: Colors.white,
-      fontSize: 13,
-      fontWeight: FontWeight.w500,
-    );
-
-    final growthStyle = const TextStyle(
-      color: Colors.greenAccent,
-      fontSize: 11,
-      fontWeight: FontWeight.w500,
-    );
-
-    final negativeStyle = const TextStyle(
-      color: Colors.redAccent,
-      fontSize: 11,
-      fontWeight: FontWeight.w500,
-    );
+    final rows = [
+      {
+        "color": Colors.purpleAccent,
+        "title": "Research Development",
+        "values": ["29,510", "27,195", "0", "24,512"],
+        "growth": ["8.51%", "10.95%", "0%", "18.32%"],
+        "growthColors": [
+          AppColors.color06D54E,
+          AppColors.color06D54E,
+          AppColors.color0xFFCD3438,
+          AppColors.color06D54E,
+        ],
+      },
+      {
+        "color": Colors.blueAccent,
+        "title": "Effect Of Accounting Charges",
+        "values": ["0", "0", "0", "0"],
+        "growth": ["0%", "0%", "0%", "0%"],
+        "growthColors": [
+          AppColors.color0xFFCD3438,
+          AppColors.color0xFFCD3438,
+          AppColors.color0xFFCD3438,
+          AppColors.color0xFFCD3438,
+        ],
+      },
+      {
+        "color": Colors.orangeAccent,
+        "title": "Income Before Tax",
+        "values": ["107,787", "89,311", "0", "83,716"],
+        "growth": ["20.69%", "6.66%", "0%", "17.63%"],
+        "growthColors": [
+          AppColors.color06D54E,
+          AppColors.color06D54E,
+          AppColors.color0xFFCD3438,
+          AppColors.color06D54E,
+        ],
+      },
+      {
+        "color": AppColors.color06D54E,
+        "title": "Minority Interest",
+        "values": ["0", "0", "0", "0"],
+        "growth": ["0%", "0%", "0%", "0%"],
+        "growthColors": [
+          AppColors.color0xFFCD3438,
+          AppColors.color0xFFCD3438,
+          AppColors.color0xFFCD3438,
+          AppColors.color0xFFCD3438,
+        ],
+      },
+    ];
 
     return Container(
-      // margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.colorB3B3B3),
-        color: AppColors.color091224,
         borderRadius: BorderRadius.circular(16),
       ),
-      // decoration: BoxDecoration(
-      //   color: const Color(0xFF0B1221),
-      //   borderRadius: BorderRadius.circular(20),
-      // ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: AppColors.fieldColor,
-              // borderRadius: BorderRadius.circular(20),
+      clipBehavior: Clip.hardEdge,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ---------- Header ----------
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+              decoration: BoxDecoration(
+                color: AppColors.fieldColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
+              ),
+              child: Row(
+                children: [
+                  buildHeaderCell("Values in USD", width: 150),
+                  buildHeaderCell("Jun31,24", width: 90),
+                  buildHeaderCell("Jun30,23", width: 80),
+                  buildHeaderCell("Jun30,22", width: 75),
+                  buildHeaderCell("Jun30,21", width: 90),
+                ],
+              ),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: MdSnsText(
-                    "Values in USD",
-                    color: AppColors.color0xB3FFFFFF,
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                  ),
-                ),
-                Expanded(
-                  child: MdSnsText(
-                    "Jun 30, 2024",
-                    color: AppColors.color0xB3FFFFFF,
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                  ),
-                ),
 
-                Expanded(
-                  child: MdSnsText(
-                    "Jun 30, 2023",
-                    color: AppColors.color0xB3FFFFFF,
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+            // ---------- Data Rows ----------
+            ...List.generate(rows.length, (index) {
+              final row = rows[index];
+              final isLast = index == rows.length - 1;
+
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 6,
+                      horizontal: 6,
+                    ),
+                    child: buildRow(
+                      color: row["color"] as Color,
+                      title: row["title"] as String,
+                      values: List<String>.from(row["values"] as List),
+                      growth: List<String>.from(row["growth"] as List),
+                      growthColors: List<Color>.from(
+                        row["growthColors"] as List,
+                      ),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: MdSnsText(
-                    "Jun 30, 2022",
-                    color: AppColors.color0xB3FFFFFF,
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+
+                  // 👇 Divider under every row (including the last one)
+                  Container(
+                    height: 1,
+                    color: AppColors.colorB3B3B3,
+                    margin: EdgeInsets.only(
+                      left: 6,
+                      right: 6,
+                      bottom: isLast ? 6 : 0, // small padding for bottom edge
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: MdSnsText(
-                    "Jun 30, 2021",
-                    color: AppColors.color0xB3FFFFFF,
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 16),
-          Column(
-            children: [
-              buildRow(
-                color: Colors.purpleAccent,
-                title: "Research Development",
-                values: [
-                  "29,510,000,000",
-                  "27,195,000,000",
-                  "0",
-                  "24,512,000,000",
                 ],
-                growth: ["8.51%", "10.95%", "0%", "18.32%"],
-                growthColors: [
-                  Colors.greenAccent,
-                  Colors.greenAccent,
-                  Colors.redAccent,
-                  Colors.greenAccent,
-                ],
-                valueStyle: valueStyle,
-              ),
-              SizedBox(height: 10),
-              Divider(color: AppColors.colorB3B3B3, height: 1),
-              SizedBox(height: 10),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
 
-              // Row 2
-              buildRow(
-                color: Colors.blueAccent,
-                title: "Effect Of Accounting Charges",
-                values: ["0", "0", "0", "0"],
-                growth: ["0%", "0%", "0%", "0%"],
-                growthColors: [
-                  Colors.redAccent,
-                  Colors.redAccent,
-                  Colors.redAccent,
-                  Colors.redAccent,
-                ],
-                valueStyle: valueStyle,
-              ),
-
-              SizedBox(height: 10),
-              Divider(color: AppColors.colorB3B3B3, height: 1),
-              SizedBox(height: 10),
-              // Row 3
-              buildRow(
-                color: Colors.orangeAccent,
-                title: "Income Before Tax",
-                values: [
-                  "107,787,000,000",
-                  "89,311,000,000",
-                  "0",
-                  "83,716,000,000",
-                ],
-                growth: ["20.69%", "6.66%", "0%", "17.63%"],
-                growthColors: [
-                  Colors.greenAccent,
-                  Colors.greenAccent,
-                  Colors.redAccent,
-                  Colors.greenAccent,
-                ],
-                valueStyle: valueStyle,
-              ),
-              SizedBox(height: 10),
-              Divider(color: AppColors.colorB3B3B3, height: 1),
-              SizedBox(height: 10),
-
-              // Row 4
-              buildRow(
-                color: Colors.greenAccent,
-                title: "Minority Interest",
-                values: ["0", "0", "0", "0"],
-                growth: ["0%", "0%", "0%", "0%"],
-                growthColors: [
-                  Colors.redAccent,
-                  Colors.redAccent,
-                  Colors.redAccent,
-                  Colors.redAccent,
-                ],
-                valueStyle: valueStyle,
-              ),
-            ],
-          ),
-
-          // Row 1
-        ],
+  Widget buildHeaderCell(String text, {double width = 100}) {
+    return Container(
+      width: width,
+      alignment: Alignment.centerLeft,
+      child: MdSnsText(
+        text,
+        color: AppColors.white,
+        variant: TextVariant.h5,
+        fontWeight: TextFontWeightVariant.h4,
       ),
     );
   }
@@ -193,48 +151,49 @@ class FinancialTable extends StatelessWidget {
     required List<String> values,
     required List<String> growth,
     required List<Color> growthColors,
-    required TextStyle valueStyle,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Colored bar + Title
-        Expanded(
-          flex: 3,
+        // Title + color bar
+        SizedBox(
+          width: 160,
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(width: 3, height: 60, color: color),
-              const SizedBox(width: 8),
+              Container(width: 1, height: 45, color: color),
+              const SizedBox(width: 6),
               Expanded(
                 child: MdSnsText(
                   title,
                   color: AppColors.white,
-
                   variant: TextVariant.h4,
                   fontWeight: TextFontWeightVariant.h4,
-                  maxLines: 1,
+                  maxLines: 2,
                 ),
               ),
             ],
           ),
         ),
-        // Values + Growth
+
+        // Values + growth
         ...List.generate(values.length, (i) {
-          return Expanded(
+          return SizedBox(
+            width: 80,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 MdSnsText(
                   values[i],
                   color: AppColors.white,
-
-                  variant: TextVariant.h4,
-                  fontWeight: TextFontWeightVariant.h6,
+                  variant: TextVariant.h5,
+                  fontWeight: TextFontWeightVariant.h4,
                 ),
+                const SizedBox(height: 2),
                 MdSnsText(
-                  "Growth YoY\n${growth[i]}",
+                  growth[i],
                   color: growthColors[i],
-                  variant: TextVariant.h4,
+                  variant: TextVariant.h5,
                   fontWeight: TextFontWeightVariant.h6,
                 ),
               ],

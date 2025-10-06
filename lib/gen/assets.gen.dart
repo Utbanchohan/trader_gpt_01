@@ -74,6 +74,18 @@ class $AssetsImagesGen {
   /// File path: assets/images/Visa.png
   AssetGenImage get visa => const AssetGenImage('assets/images/Visa.png');
 
+  /// File path: assets/images/ab-4.png
+  AssetGenImage get ab4 => const AssetGenImage('assets/images/ab-4.png');
+
+  /// File path: assets/images/ab-5.png
+  AssetGenImage get ab5 => const AssetGenImage('assets/images/ab-5.png');
+
+  /// File path: assets/images/ab-6.png
+  AssetGenImage get ab6 => const AssetGenImage('assets/images/ab-6.png');
+
+  /// File path: assets/images/ab-7.png
+  AssetGenImage get ab7 => const AssetGenImage('assets/images/ab-7.png');
+
   /// File path: assets/images/add.png
   AssetGenImage get add => const AssetGenImage('assets/images/add.png');
 
@@ -97,6 +109,10 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/c2.png
   AssetGenImage get c2 => const AssetGenImage('assets/images/c2.png');
+
+  /// File path: assets/images/calendar (1).png
+  AssetGenImage get calendar1 =>
+      const AssetGenImage('assets/images/calendar (1).png');
 
   /// File path: assets/images/camera.png
   AssetGenImage get camera => const AssetGenImage('assets/images/camera.png');
@@ -164,6 +180,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/image 263.png
   AssetGenImage get image263 =>
       const AssetGenImage('assets/images/image 263.png');
+
+  /// File path: assets/images/info-circle.png
+  AssetGenImage get infoCircle =>
+      const AssetGenImage('assets/images/info-circle.png');
 
   /// File path: assets/images/information (1).png
   AssetGenImage get information1 =>
@@ -338,6 +358,10 @@ class $AssetsImagesGen {
     tradersGPTLogo,
     vector1,
     visa,
+    ab4,
+    ab5,
+    ab6,
+    ab7,
     add,
     analytics,
     appIcon,
@@ -345,6 +369,7 @@ class $AssetsImagesGen {
     arrowBack,
     book,
     c2,
+    calendar1,
     camera,
     categoryc1,
     cerosil,
@@ -365,6 +390,7 @@ class $AssetsImagesGen {
     image2621,
     image262,
     image263,
+    infoCircle,
     information1,
     information,
     jJ,

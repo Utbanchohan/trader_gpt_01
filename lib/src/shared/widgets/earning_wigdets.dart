@@ -73,7 +73,7 @@ class Earnings extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 EarningsItem(title: "Reported EPS", value: "3.46"),
                 EarningsItem(
                   title: "Next Earnings Report Date",
