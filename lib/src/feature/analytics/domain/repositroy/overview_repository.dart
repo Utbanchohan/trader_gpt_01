@@ -7,6 +7,8 @@ import '../../../../shared/flavours.dart';
 import '../../data/dto/market_login_dto/market_login_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
+import '../model/analytics_model/analytics_model.dart';
+import '../model/fundamental_model/fundamental_model.dart';
 import '../model/market_data_login/market_data_login.dart';
 import '../model/market_data_login_model/market_data_login_model.dart';
 import '../model/matrics_data_model/matrics_data_model.dart';
@@ -14,6 +16,7 @@ import '../model/monthly_model/monthly_model.dart';
 import '../model/overview_model/overview_model.dart';
 import '../model/price_comparison_model/price_comparison_model.dart';
 import '../model/price_target_matrics_model/price_target_matrics_model.dart';
+import '../model/share_stats/share_stats.dart';
 import '../model/stock_price_model/stock_price_model.dart';
 import '../model/weekly_model/weekly_model.dart';
 
@@ -28,6 +31,9 @@ abstract interface class OverviewRepository {
   Future<WeeklyModel> weeklyData(String ticker);
   Future<ProbabilityResponse> monthlyData(String ticker);
   Future<MatricsResponse> matricsData(SymbolDto symbolData);
+  Future<SharesResponse> shareStats(SymbolDto symbolData);
+  Future<FundamentalResponse> fundamentalModel(SymbolDto symbolData);
+  Future<AnalystRatingResponse> analyticsData(SymbolDto symbolData);
 }
 
 final overviewRepository = Provider<OverviewRepository>(

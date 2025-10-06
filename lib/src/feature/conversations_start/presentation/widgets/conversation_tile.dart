@@ -11,6 +11,7 @@ import '../../../../core/extensions/price_calculation.dart';
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
+import 'package:intl/intl.dart';
 
 class ConversationTile extends ConsumerStatefulWidget {
   final Stock stocks;
@@ -23,6 +24,12 @@ class ConversationTile extends ConsumerStatefulWidget {
 }
 
 class _ConversationTileState extends ConsumerState<ConversationTile> {
+  final compactFormatter = NumberFormat.compactCurrency(
+    locale: "en",
+    symbol: "\$",
+    decimalDigits: 2,
+  );
+
   @override
   Widget build(BuildContext context) {
     final stockManagerState = ref.watch(stocksManagerProvider);
@@ -144,8 +151,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
             children: [
               MdSnsText(
                 liveStock != null
-                    ? "\$${liveStock.price.toStringAsFixed(2)}"
-                    : "\$${widget.stocks.price.toStringAsFixed(2)}",
+                    ? compactFormatter.format(liveStock.price)
+                    : compactFormatter.format(widget.stocks.price),
                 variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
