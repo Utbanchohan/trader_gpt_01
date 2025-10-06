@@ -3,7 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
+
 class PriceTargetWidget extends StatelessWidget {
+  final List<PriceTargetData> data;
+  PriceTargetWidget({required this.data});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,7 +59,8 @@ class PriceTargetWidget extends StatelessWidget {
 
                         const SizedBox(height: 10),
                         MdSnsText(
-                          '\$94',
+                          // '\$94',
+                          "\$${data[0].high.toString()}",
 
                           color: AppColors.color00FF55,
                           variant: TextVariant.h7,
@@ -78,21 +83,26 @@ class PriceTargetWidget extends StatelessWidget {
                 // --- High Target Bar ---
                 buildPriceTargetBar(
                   'High',
-                  '\$96',
-                  9.92,
+                  "\$${data[0].high.toString()}",
+                  data[0].highPercentage ?? 0,
                   AppColors.color00FF55,
                 ),
 
                 // --- Median Target Bar ---
                 buildPriceTargetBar(
                   'Median',
-                  '\$96',
-                  9.92,
+                  "\$${data[0].median.toString()}",
+                  data[0].medianPercentage ?? 0,
                   AppColors.color00FF55,
                 ),
 
                 // --- Low Target Bar ---
-                buildPriceTargetBar('Low', '\$90', 3.05, AppColors.color00FF55),
+                buildPriceTargetBar(
+                  'Low',
+                  "\$${data[0].low.toString()}",
+                  data[0].lowPercentage ?? 0,
+                  AppColors.color00FF55,
+                ),
               ],
             ),
           ),
@@ -110,7 +120,7 @@ Widget buildPriceTargetBar(
   Color greenColor,
 ) {
   // Convert the visual percentage (9.92%) into a fraction (0.0992)
-  double fraction = percentage / 100.0;
+  double fraction = percentage > 0 ? percentage / 100.0 : 0;
 
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),

@@ -8,6 +8,8 @@ import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analytics_widget.dart'
+    show AnalyticsWidget;
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
@@ -30,11 +32,13 @@ import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/routes/routes.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
+import '../../domain/model/analytics_model/analytics_model.dart';
 import '../../domain/model/fundamental_model/fundamental_model.dart';
 import '../../domain/model/matrics_data_model/matrics_data_model.dart';
 import '../../domain/model/monthly_model/monthly_model.dart';
 import '../../domain/model/overview_model/overview_model.dart';
 import '../../domain/model/price_comparison_model/price_comparison_model.dart';
+import '../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
 import '../../domain/model/share_stats/share_stats.dart';
 import '../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../domain/model/weekly_model/weekly_model.dart';
@@ -60,6 +64,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   ProbabilityResponse? monthlyData;
   FundamentalResponse? fundamentalResponse;
   SharesResponse? sharesResponse;
+  PriceTargetMatrics? priceTargetMatrics;
+  AnalystRatingResponse? analyticsRespinseData;
 
   getOverview(SymbolDto symbol) async {
     var res = await ref
@@ -67,6 +73,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         .getOverview(symbol);
     if (res != null) {
       stockResponse = res;
+    }
+  }
+
+  analyticsData(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .analyticsData(symbol);
+    if (res != null) {
+      analyticsRespinseData = res;
     }
   }
 
@@ -94,6 +109,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         .shareStats(symbol);
     if (res != null) {
       sharesResponse = res;
+    }
+  }
+
+  priceTargetMatricsData(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .priceTargetMatrics(symbol);
+    if (res != null) {
+      priceTargetMatrics = res;
     }
   }
 
@@ -150,6 +174,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     if (widget.chatRouting != null) {
       getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
       getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      priceTargetMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
       priceComparison(
         PriceComparisonDto(
           daysBack: 365,
@@ -750,7 +776,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             SizedBox(height: 20.h),
             CustomLineChart(),
             SizedBox(height: 20.h),
-            PriceTargetWidget(),
+            priceTargetMatrics != null && priceTargetMatrics!.data.length > 0
+                ? PriceTargetWidget(data: priceTargetMatrics!.data)
+                : SizedBox(),
             SizedBox(height: 20.h),
             RevenueAnalysisChart(),
             SizedBox(height: 20.h),
@@ -912,59 +940,65 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   )
                 : SizedBox(),
 
-            // SizedBox(height: 20.h),
-            // sharesResponse != null &&
-            //         sharesResponse!.data.PercentInsiders != null
-            //     ? ShareStructureCard(
-            //         matrics: null,
-            //         fundamentalData: null,
-            //         shareData: sharesResponse!.data,
-            //         heading: Headings.shareStructure,
-            //       )
-            //     : SizedBox(),
             SizedBox(height: 20.h),
-            // fundamentalResponse != null &&
-            //         fundamentalResponse!
-            //             .data
-            //             .fundamentals
-            //             .annualIncome
-            //             .isNotEmpty
-            //     ? ShareStructureCard(
-            //         matrics: null,
-            //         fundamentalData: fundamentalResponse!.data,
-            //         shareData: null,
-            //         heading: Headings.fundamental,
-            //       )
-            //     : SizedBox(),
-            // SizedBox(height: 20.h),
+            sharesResponse != null &&
+                    sharesResponse!.data.PercentInsiders != null
+                ? ShareStructureCard(
+                    matrics: null,
+                    fundamentalData: null,
+                    shareData: sharesResponse!.data,
+                    heading: Headings.shareStructure,
+                  )
+                : SizedBox(),
+            SizedBox(height: 20.h),
+            fundamentalResponse != null &&
+                    fundamentalResponse!
+                        .data
+                        .fundamentals
+                        .annualIncome
+                        .isNotEmpty
+                ? ShareStructureCard(
+                    matrics: null,
+                    fundamentalData: fundamentalResponse!.data,
+                    shareData: null,
+                    heading: Headings.fundamental,
+                  )
+                : SizedBox(),
+            SizedBox(height: 20.h),
 
-            // matricData != null &&
-            //         matricData!.data != null &&
-            //         matricData!.data!.isNotEmpty
-            //     ? ShareStructureCard(
-            //         matrics: matricData!.data,
-            //         fundamentalData: null,
-            //         shareData: null,
-            //         heading: Headings.matrics,
-            //       )
-            //     : SizedBox(),
-            // SizedBox(height: 20.h),
-            // monthlyData != null
-            //     ? WeeklySeasonalityChart(
-            //         data: monthlyData!,
-            //         isWeekly: false,
-            //         weeklyModel: WeeklyModel(),
-            //       )
-            //     : SizedBox(),
-            // SizedBox(height: 20.h),
-            // weeklyData != null
-            //     ? WeeklySeasonalityChart(
-            //         weeklyModel: weeklyData!,
-            //         isWeekly: true,
-            //         data: ProbabilityResponse(),
-            //       )
-            //     : SizedBox(),
-            // SizedBox(height: 20.h),
+            matricData != null &&
+                    matricData!.data != null &&
+                    matricData!.data!.isNotEmpty
+                ? ShareStructureCard(
+                    matrics: matricData!.data,
+                    fundamentalData: null,
+                    shareData: null,
+                    heading: Headings.matrics,
+                  )
+                : SizedBox(),
+            SizedBox(height: 20.h),
+            monthlyData != null
+                ? WeeklySeasonalityChart(
+                    data: monthlyData!,
+                    isWeekly: false,
+                    weeklyModel: WeeklyModel(),
+                  )
+                : SizedBox(),
+            SizedBox(height: 20.h),
+            weeklyData != null
+                ? WeeklySeasonalityChart(
+                    weeklyModel: weeklyData!,
+                    isWeekly: true,
+                    data: ProbabilityResponse(),
+                  )
+                : SizedBox(),
+            SizedBox(height: 20.h),
+
+            analyticsRespinseData != null &&
+                    analyticsRespinseData!.data.isNotEmpty
+                ? AnalyticsWidget(data: analyticsRespinseData!.data)
+                : SizedBox(),
+            SizedBox(height: 20.h),
           ],
         ),
       ),

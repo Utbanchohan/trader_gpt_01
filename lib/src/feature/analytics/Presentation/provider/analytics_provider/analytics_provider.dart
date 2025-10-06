@@ -4,9 +4,11 @@ import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository
 import '../../../../../shared/states/app_loading_state.dart';
 import '../../../data/dto/overview_dto/overview_dto.dart';
 import '../../../data/dto/price_comparison_dto/price_comparison_dto.dart';
+import '../../../domain/model/analytics_model/analytics_model.dart';
 import '../../../domain/model/fundamental_model/fundamental_model.dart';
 import '../../../domain/model/overview_model/overview_model.dart';
 import '../../../domain/model/price_comparison_model/price_comparison_model.dart';
+import '../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
 import '../../../domain/model/share_stats/share_stats.dart';
 import '../../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../../domain/repositroy/overview_repository.dart'
@@ -72,6 +74,24 @@ class AnalyticsProvider extends _$AnalyticsProvider {
 
   Future<SharesResponse?> shareStats(SymbolDto symbol) async {
     var res = await ref.read(overviewRepository).shareStats(symbol);
+    if (res.status == 200) {
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  Future<PriceTargetMatrics?> priceTargetMatrics(SymbolDto symbol) async {
+    var res = await ref.read(overviewRepository).priceTargetMatrics(symbol);
+    if (res.status == 200) {
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  Future<AnalystRatingResponse?> analyticsData(SymbolDto symbol) async {
+    var res = await ref.read(overviewRepository).analyticsData(symbol);
     if (res.status == 200) {
       return res;
     } else {

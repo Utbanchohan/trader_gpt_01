@@ -7,6 +7,7 @@ import '../../../../shared/flavours.dart';
 import '../../data/dto/market_login_dto/market_login_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
+import '../model/analytics_model/analytics_model.dart';
 import '../model/fundamental_model/fundamental_model.dart';
 import '../model/market_data_login/market_data_login.dart';
 import '../model/market_data_login_model/market_data_login_model.dart';
@@ -32,6 +33,7 @@ abstract interface class OverviewRepository {
   Future<MatricsResponse> matricsData(SymbolDto symbolData);
   Future<SharesResponse> shareStats(SymbolDto symbolData);
   Future<FundamentalResponse> fundamentalModel(SymbolDto symbolData);
+  Future<AnalystRatingResponse> analyticsData(SymbolDto symbolData);
 }
 
 final overviewRepository = Provider<OverviewRepository>(
