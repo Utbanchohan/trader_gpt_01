@@ -35,14 +35,14 @@ class ShortVolumeChart extends StatelessWidget {
               MdSnsText(
                 "Short Volume",
                 color: AppColors.fieldTextColor,
-                variant: TextVariant.h3,
                 fontWeight: TextFontWeightVariant.h4,
+                variant: TextVariant.h3,
               ),
               MdSnsText(
                 "Shel",
                 color: AppColors.fieldTextColor,
-                variant: TextVariant.h3,
                 fontWeight: TextFontWeightVariant.h4,
+                variant: TextVariant.h3,
               ),
             ],
           ),
