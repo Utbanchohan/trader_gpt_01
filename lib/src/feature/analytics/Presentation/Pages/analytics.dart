@@ -283,12 +283,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 height: 20,
                               ),
                               SizedBox(width: 8),
-                              Text(
+                              MdSnsText(
                                 "ANALYTICS",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                color: AppColors.white,
+                                fontWeight: TextFontWeightVariant.h4,
+                                variant: TextVariant.h3,
                               ),
                             ],
                           ),
@@ -305,12 +304,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          child: Text(
+                          child: MdSnsText(
                             "History",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            fontWeight: TextFontWeightVariant.h4,
+                            variant: TextVariant.h3,
+                            color: AppColors.white,
                           ),
                         ),
                       ),
@@ -326,9 +324,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     _buildAnalyticsTab(),
 
                     Center(
-                      child: Text(
+                      child: MdSnsText(
                         "History Content Here",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        color: AppColors.white,
                       ),
                     ),
                   ],

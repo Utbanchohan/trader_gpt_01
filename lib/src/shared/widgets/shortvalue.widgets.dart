@@ -46,7 +46,7 @@ class ShortVolumeChart extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           Container(
             padding: const EdgeInsets.all(16),
