@@ -34,7 +34,7 @@ class Login extends _$Login {
     try {
       final response = await ref
           .read(authRepository)
-          .login(SignIn(email: email, password: password));
+          .login(SignIn(email: email.toLowerCase(), password: password));
       if (response.isSuccess != null && response.isSuccess!) {
         final response1 = await ref
             .read(overviewRepository)
