@@ -19,6 +19,8 @@ import '../model/overview_model/overview_model.dart';
 import '../model/price_comparison_model/price_comparison_model.dart';
 import '../model/price_target_matrics_model/price_target_matrics_model.dart'
     show PriceTargetMatrics;
+import '../model/security_ownership_model/security_ownership_model.dart';
+import '../model/security_short/short_security_model.dart';
 import '../model/share_stats/share_stats.dart';
 import '../model/short_volume/short_volume_model.dart';
 import '../model/stock_price_model/stock_price_model.dart';
@@ -94,6 +96,15 @@ class OverviewApiRepository implements OverviewRepository {
   @override
   Future<ShortVolumeModel> shortVolumeData(SymbolDto symbolData) async {
     return await AnalysisApi(client).shortVolume(symbolData);
+  }
+
+  @override
+  Future<ShortSecurityResponse> securityShortVolume(SymbolDto overview) async {
+    return await AnalysisApi(client).securityShortVolume(overview);
+  }
+
+  Future<SecurityOwnershipResponse> shortOwnership(SymbolDto overview) async {
+    return await AnalysisApi(client).shortOwnership(overview);
   }
 
   @override

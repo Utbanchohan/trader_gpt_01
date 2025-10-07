@@ -278,14 +278,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         : emptyStock();
   }
 
-  final List<ChartData> chartData = [
-    ChartData(DateTime(2024, 1, 1), 200, 500, 100),
-    ChartData(DateTime(2024, 2, 1), 300, 600, 150),
-    ChartData(DateTime(2024, 3, 1), 250, 700, 200),
-    ChartData(DateTime(2024, 4, 1), 400, 900, 220),
-    ChartData(DateTime(2024, 5, 1), 350, 800, 180),
-  ];
-
   final List<Map<String, dynamic>> priceData = [
     {
       "previousPrice": "173.19",
@@ -1247,16 +1239,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                shortVolumeModel != null
-                    ? ShortVolumeChart(
-                        data: [
-                          ChartData(DateTime(2024, 1, 1), 200, 500, 100),
-                          ChartData(DateTime(2024, 2, 1), 300, 600, 150),
-                          ChartData(DateTime(2024, 3, 1), 250, 700, 200),
-                          ChartData(DateTime(2024, 4, 1), 400, 900, 220),
-                          ChartData(DateTime(2024, 5, 1), 350, 800, 180),
-                        ],
-                      )
+                shortVolumeModel != null &&
+                        shortVolumeModel!.data!.Charts.length > 0
+                    ? ShortVolumeChart(data: shortVolumeModel!.data!.Charts)
                     : SizedBox(),
                 SizedBox(height: 14.h),
                 OutstandingSharesChart(),

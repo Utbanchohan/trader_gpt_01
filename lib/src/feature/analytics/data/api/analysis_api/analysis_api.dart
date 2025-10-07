@@ -5,6 +5,7 @@ import 'package:trader_gpt/src/feature/analytics/data/dto/market_login_dto/marke
 import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/earnings_model/earnings_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/fundamental_model/fundamental_model.dart';
+import 'package:trader_gpt/src/feature/analytics/domain/model/security_ownership_model/security_ownership_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/short_volume/short_volume_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/stock_price_model/stock_price_model.dart';
 import 'package:trader_gpt/src/shared/widgets/insiderTrader_widgets.dart';
@@ -16,6 +17,7 @@ import '../../../domain/model/monthly_model/monthly_model.dart';
 import '../../../domain/model/overview_model/overview_model.dart';
 import '../../../domain/model/price_comparison_model/price_comparison_model.dart';
 import '../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
+import '../../../domain/model/security_short/short_security_model.dart';
 import '../../../domain/model/share_stats/share_stats.dart';
 import '../../../domain/model/weekly_model/weekly_model.dart';
 import '../../dto/overview_dto/overview_dto.dart';
@@ -64,6 +66,12 @@ abstract interface class AnalysisApi {
 
   @POST("api/v1/company/shorts_volume")
   Future<ShortVolumeModel> shortVolume(@Body() SymbolDto overview);
+
+  @POST("api/v1/company/web_premium_table/security_short_vol")
+  Future<ShortSecurityResponse> securityShortVolume(@Body() SymbolDto overview);
+
+  @POST("api/v1/company/web_premium_table/security_ownership")
+  Future<SecurityOwnershipResponse> shortOwnership(@Body() SymbolDto overview);
 
   @POST("api/v1/company/web_premium_table/insider_trades")
   Future<InsiderTransactionResponse> insiderTrades(@Body() SymbolDto overview);
