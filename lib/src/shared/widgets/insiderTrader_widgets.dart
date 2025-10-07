@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -9,149 +10,166 @@ class InsiderTraderTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColors.color0x0x1AB3B3B3,
-        ), // background (dark blue like your UI)
+        border: Border.all(color: AppColors.color0x0x1AB3B3B3),
+        color: AppColors.color091224, // dark background
         borderRadius: BorderRadius.circular(20),
       ),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
+          /// 🔹 Header Row (Title + Icon)
           Padding(
-            padding: const EdgeInsets.all(20),
-            child: MdSnsText(
-              "Insider Trader",
-              color: AppColors.fieldTextColor,
-              fontWeight: TextFontWeightVariant.h4,
-              variant: TextVariant.h2,
-            ),
-          ),
-
-          // Table Header
-          Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-            color: AppColors.color1B254B,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  flex: 3,
-                  child: MdSnsText(
-                    "Name",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h2,
-                    color: AppColors.white,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                MdSnsText(
+                  "Insider Trader",
+                  color: AppColors.fieldTextColor,
+                  fontWeight: TextFontWeightVariant.h4,
+                  variant: TextVariant.h3,
                 ),
-                Expanded(
-                  flex: 2,
-                  child: MdSnsText(
-                    "Type",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h2,
-                    color: AppColors.white,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: MdSnsText(
-                    "File Date",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h2,
-                    color: AppColors.white,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: MdSnsText(
-                    "Transaction",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h2,
-                    color: AppColors.white,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: MdSnsText(
-                    "Code",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h2,
-                    color: AppColors.white,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                Image.asset(
+                  Assets.images.calendar1.path,
+                  height: 16,
+                  width: 14,
                 ),
               ],
             ),
           ),
 
-          Divider(color: AppColors.color0x0x1AB3B3B3, height: 1),
+          /// 🔹 Scrollable Table Section
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Column(
+              children: [
+                /// Table Header
+                Container(
+                  width: 600, // 👈 controls total table width
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 10,
+                  ),
+                  color: AppColors.color1B254B,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: MdSnsText(
+                            "Name",
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: MdSnsText(
+                            "Form Type",
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: MdSnsText(
+                            "File Date",
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: MdSnsText(
+                            "Transaction",
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: MdSnsText(
+                            "Code",
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
-          // Rows
-          _buildRow(
-            "Coleman Amy",
-            "4",
-            "9/15/2025",
-            "9/15/2025",
-            "F-InKind",
-            Colors.orange,
-          ),
-          _buildRow(
-            "Nadella Satya",
-            "4",
-            "9/04/2025",
-            "9/03/2025",
-            "S-Sale",
-            Colors.green,
-          ),
-          _buildRow(
-            "Nadella Satya",
-            "4",
-            "9/04/2025",
-            "9/03/2025",
-            "S-Sale",
-            Colors.green,
-          ),
-          _buildRow(
-            "Nadella Satya",
-            "4",
-            "9/04/2025",
-            "9/03/2025",
-            "S-Sale",
-            Colors.green,
-          ),
-          _buildRow(
-            "Nadella Satya",
-            "4",
-            "9/04/2025",
-            "9/03/2025",
-            "S-Sale",
-            Colors.green,
+                Divider(color: AppColors.color0x0x1AB3B3B3, height: 1),
+
+                /// 🔹 Data Rows
+                _buildRow(
+                  "Coleman Amy",
+                  "4",
+                  "9/15/2025",
+                  "F-InKind",
+                  "F-InKind",
+                  Colors.orange,
+                ),
+                _buildRow(
+                  "Nadella Satya",
+                  "4",
+                  "9/04/2025",
+                  "S-Sale",
+                  "S-Sale",
+                  Colors.green,
+                ),
+                _buildRow(
+                  "Nadella Satya",
+                  "4",
+                  "9/04/2025",
+                  "S-Sale",
+                  "S-Sale",
+                  Colors.green,
+                ),
+                _buildRow(
+                  "Nadella Satya",
+                  "4",
+                  "9/04/2025",
+                  "S-Sale",
+                  "S-Sale",
+                  Colors.green,
+                ),
+                _buildRow(
+                  "Nadella Satya",
+                  "4",
+                  "9/04/2025",
+                  "S-Sale",
+                  "S-Sale",
+                  Colors.green,
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  static const TextStyle _headerStyle = TextStyle(
-    color: Colors.white70,
-    fontSize: 13,
-    fontWeight: FontWeight.w600,
-  );
-
-  static const TextStyle _cellStyle = TextStyle(
-    color: Colors.white,
-    fontSize: 13,
-  );
-
+  /// 🔹 Row Builder
   Widget _buildRow(
     String name,
     String form,
@@ -160,94 +178,91 @@ class InsiderTraderTable extends StatelessWidget {
     String code,
     Color badgeColor,
   ) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 3,
-                child: MdSnsText(
-                  name,
-                  variant: TextVariant.h5,
-                  fontWeight: TextFontWeightVariant.h2,
-                  color: AppColors.white,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+    return Container(
+      width: 600, // 👈 same width as header for alignment
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: AppColors.color0x0x1AB3B3B3, width: 1),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: MdSnsText(
+                name,
+                variant: TextVariant.h4,
+                fontWeight: TextFontWeightVariant.h4,
+                color: AppColors.white,
+                overflow: TextOverflow.ellipsis,
               ),
-              Expanded(
-                flex: 2,
-                child: MdSnsText(
-                  form,
-                  variant: TextVariant.h5,
-                  fontWeight: TextFontWeightVariant.h2,
-                  color: AppColors.white,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: MdSnsText(
-                  fileDate,
-                  variant: TextVariant.h5,
-                  fontWeight: TextFontWeightVariant.h2,
-                  color: AppColors.white,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: MdSnsText(
-                  transaction,
-                  variant: TextVariant.h5,
-                  fontWeight: TextFontWeightVariant.h2,
-                  color: AppColors.white,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: badgeColor, width: 1),
-                    borderRadius: BorderRadius.circular(6),
-                    color: Colors.transparent,
-                  ),
-                  child: MdSnsText(
-                    code,
-                    textAlign: TextAlign.center,
-                    color: badgeColor,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    variant: TextVariant.h5,
-                    fontWeight: TextFontWeightVariant.h2,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-
-        // 👇 Divider Line
-        Container(
-          height: 1,
-          width: double.infinity,
-          color:
-              AppColors.color0x0x1AB3B3B3, // light grey ya jo tum use karte ho
-          // margin: const EdgeInsets.symmetric(horizontal: 8),
-        ),
-      ],
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: MdSnsText(
+                form,
+                variant: TextVariant.h4,
+                fontWeight: TextFontWeightVariant.h4,
+                color: AppColors.white,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: MdSnsText(
+                fileDate,
+                variant: TextVariant.h4,
+                fontWeight: TextFontWeightVariant.h4,
+                color: AppColors.white,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: MdSnsText(
+                transaction,
+                variant: TextVariant.h4,
+                fontWeight: TextFontWeightVariant.h4,
+                color: AppColors.white,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              decoration: BoxDecoration(
+                border: Border.all(color: badgeColor, width: 1),
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.transparent,
+              ),
+              child: MdSnsText(
+                code,
+                textAlign: TextAlign.center,
+                color: badgeColor,
+                variant: TextVariant.h5,
+                fontWeight: TextFontWeightVariant.h2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

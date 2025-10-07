@@ -51,9 +51,11 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
         });
       } else {
         t.cancel();
+        //  $showMessage("Code expired, please request again.");
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Code expired, please request again."),
+            content: MdSnsText("Code expired, please request again."),
             backgroundColor: Colors.red,
           ),
         );

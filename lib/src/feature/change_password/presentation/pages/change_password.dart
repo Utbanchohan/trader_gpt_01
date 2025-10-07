@@ -163,13 +163,12 @@ class _ChangePasswordState extends ConsumerState<ChangePassword>
                       ),
                       SizedBox(height: 9.h),
 
-                      // Email field
+                      // Email field 1111
                       TextFormField(
                         onChanged: (_) => setState(() {}),
-
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "Password is required";
+                            return "Old password is required";
                           }
                           final pattern =
                               r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$';
@@ -181,7 +180,6 @@ class _ChangePasswordState extends ConsumerState<ChangePassword>
                                     "✖ At least one uppercase letter (A–Z) "
                                     "✖ At least one special character";
                         },
-
                         obscureText: !isOldVisble,
                         controller: oldPassword,
                         style: TextStyle(
@@ -229,6 +227,8 @@ class _ChangePasswordState extends ConsumerState<ChangePassword>
                             borderSide: BorderSide(color: Colors.transparent),
                           ),
                         ),
+
+                        // ... rest of decoration same
                       ),
 
                       SizedBox(height: 16.h),
@@ -256,22 +256,28 @@ class _ChangePasswordState extends ConsumerState<ChangePassword>
                       // Email field
                       TextFormField(
                         onChanged: (_) => setState(() {}),
-
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Password is required";
                           }
+
                           final pattern =
                               r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$';
                           final regex = RegExp(pattern);
-                          return regex.hasMatch(value)
-                              ? null
-                              : "✖ At least 8 characters long "
-                                    "✖ At least one number (0–9) "
-                                    "✖ At least one uppercase letter (A–Z) "
-                                    "✖ At least one special character";
-                        },
 
+                          if (!regex.hasMatch(value)) {
+                            return "✖ At least 8 characters long "
+                                "✖ At least one number (0–9) "
+                                "✖ At least one uppercase letter (A–Z) "
+                                "✖ At least one special character";
+                          }
+
+                          if (value == oldPassword.text) {
+                            return "New password must be different from old password";
+                          }
+
+                          return null;
+                        },
                         obscureText: !visible,
                         controller: createpassword,
                         style: TextStyle(
@@ -317,6 +323,8 @@ class _ChangePasswordState extends ConsumerState<ChangePassword>
                             borderSide: BorderSide(color: Colors.transparent),
                           ),
                         ),
+
+                        // ... rest same
                       ),
 
                       SizedBox(height: 16.h),
@@ -344,23 +352,29 @@ class _ChangePasswordState extends ConsumerState<ChangePassword>
                       // Password field
                       TextFormField(
                         onChanged: (_) => setState(() {}),
-
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Password is required";
                           }
+
                           final pattern =
                               r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$';
                           final regex = RegExp(pattern);
-                          return regex.hasMatch(value)
-                              ? null
-                              : "✖ At least 8 characters long "
-                                    "✖ At least one number (0–9) "
-                                    "✖ At least one uppercase letter (A–Z) "
-                                    "✖ At least one special character";
-                        },
 
-                        obscureText: !isible,
+                          if (!regex.hasMatch(value)) {
+                            return "✖ At least 8 characters long "
+                                "✖ At least one number (0–9) "
+                                "✖ At least one uppercase letter (A–Z) "
+                                "✖ At least one special character";
+                          }
+
+                          if (value == oldPassword.text) {
+                            return "New password must be different from old password";
+                          }
+
+                          return null;
+                        },
+                        obscureText: !visible,
                         controller: confirmpassword,
                         style: TextStyle(
                           color: Colors.white,
@@ -403,6 +417,8 @@ class _ChangePasswordState extends ConsumerState<ChangePassword>
                             borderSide: BorderSide(color: Colors.transparent),
                           ),
                         ),
+
+                        // ... rest same
                       ),
                     ],
                   ),

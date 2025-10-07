@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -70,10 +71,11 @@ class PriceTargetWidget extends StatelessWidget {
                       ],
                     ),
                     // The circular icon on the top right
-                    const Icon(
-                      Icons.monetization_on,
-                      color: AppColors.color00FF55,
-                      size: 40,
+                    SvgPicture.network(
+                      'https://stage.tradersgpt.io/img/dollar.aa601f2d.svg',
+                      height: 50, // 👈 set your desired size
+                      width: 50,
+                      fit: BoxFit.contain,
                     ),
                   ],
                 ),
@@ -142,7 +144,7 @@ Widget buildPriceTargetBar(
             Container(
               height: 30,
               decoration: BoxDecoration(
-                color: const Color(0xFF1E2135), // A dark background color
+                color: AppColors.fieldColor, // A dark background color
                 borderRadius: BorderRadius.circular(4),
               ),
             ),

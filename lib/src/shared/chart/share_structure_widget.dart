@@ -313,7 +313,7 @@ class ShareStructureCard extends StatelessWidget {
 }
 
 enum Headings {
-  matrics('Matrics'),
+  matrics('Metrics'),
   fundamental('Fundamental'),
   shareStructure('Share Structure');
 
