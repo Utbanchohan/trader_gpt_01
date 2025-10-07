@@ -110,6 +110,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/c2.png
   AssetGenImage get c2 => const AssetGenImage('assets/images/c2.png');
 
+  /// File path: assets/images/calendar (1).png
+  AssetGenImage get calendar1 =>
+      const AssetGenImage('assets/images/calendar (1).png');
+
   /// File path: assets/images/camera.png
   AssetGenImage get camera => const AssetGenImage('assets/images/camera.png');
 
@@ -365,6 +369,7 @@ class $AssetsImagesGen {
     arrowBack,
     book,
     c2,
+    calendar1,
     camera,
     categoryc1,
     cerosil,

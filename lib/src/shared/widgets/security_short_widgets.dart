@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -41,27 +42,26 @@ class SecurityShortVolume extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: const EdgeInsets.all(16),
-      // padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.color0x0x1AB3B3B3),
         color: AppColors.color091224,
-
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.color0x0x1AB3B3B3, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// Title
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             child: MdSnsText(
               "Security Short Volume",
-              color: AppColors.white,
-              variant: TextVariant.h3,
+              color: AppColors.fieldTextColor,
               fontWeight: TextFontWeightVariant.h4,
+              variant: TextVariant.h3,
             ),
           ),
 
+          /// Table
           Table(
             columnWidths: const {
               0: FlexColumnWidth(2),
@@ -76,135 +76,67 @@ class SecurityShortVolume extends StatelessWidget {
               ),
             ),
             children: [
-              // Header row
+              /// Header Row
               TableRow(
-                decoration: const BoxDecoration(
-                  color: Color(0xFF1B254B), // 👈 row background color
-                ),
+                decoration: BoxDecoration(color: AppColors.color1B254B),
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14, // 👈 10 se 14 ya 16 kar do
-                      horizontal: 6,
-                    ),
-                    child: MdSnsText(
-                      "Market Date",
-                      variant: TextVariant.h4,
-                      fontWeight: TextFontWeightVariant.h2,
-                      color: AppColors.white,
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14, // 👈 10 se 14 ya 16 kar do
-                      horizontal: 6,
-                    ),
-                    child: MdSnsText(
-                      "Short Volume",
-                      variant: TextVariant.h4,
-                      fontWeight: TextFontWeightVariant.h2,
-                      color: AppColors.white,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14, // 👈 10 se 14 ya 16 kar do
-                      horizontal: 6,
-                    ),
-                    child: MdSnsText(
-                      "Total Volume",
-                      variant: TextVariant.h4,
-                      fontWeight: TextFontWeightVariant.h2,
-                      color: AppColors.white,
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14,
-                      horizontal: 6,
-                    ),
-                    child: MdSnsText(
-                      "Short Volume",
-                      variant: TextVariant.h4,
-                      fontWeight: TextFontWeightVariant.h2,
-                      color: AppColors.white,
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
+                  _buildHeaderCell("Market Date"),
+                  _buildHeaderCell("Short Volume"),
+                  _buildHeaderCell("Total Volume"),
+                  _buildHeaderCell("Short Volume %"),
                 ],
               ),
-              // Data rows
+
+              /// Data Rows
               ...data.map(
                 (row) => TableRow(
-                  decoration: const BoxDecoration(
-                    // color: Color(0xFF0A1525), // 👈 background for data row
-                  ),
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 14, // 👈 10 se 14 ya 16 kar do
-                        horizontal: 6,
-                      ),
-                      alignment: Alignment.topLeft,
-                      child: MdSnsText(
-                        row["date"]!,
-                        variant: TextVariant.h5,
-                        fontWeight: TextFontWeightVariant.h2,
-                        color: AppColors.white,
-                        textAlign: TextAlign.start,
-                      ),
+                    _buildDataCell(row["date"]!, AppColors.white),
+                    _buildDataCell(
+                      row["shortVolume"]!,
+                      AppColors.color0xFFCD3438,
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 14, // 👈 10 se 14 ya 16 kar do
-                        horizontal: 6,
-                      ),
-                      alignment: Alignment.centerLeft,
-                      child: MdSnsText(
-                        row["shortVolume"]!,
-                        variant: TextVariant.h5,
-                        fontWeight: TextFontWeightVariant.h2,
-                        color: const Color(0xFFF5A623), // orange
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 14, // 👈 10 se 14 ya 16 kar do
-                        horizontal: 6,
-                      ),
-                      alignment: Alignment.topLeft,
-                      child: MdSnsText(
-                        row["totalVolume"]!,
-                        variant: TextVariant.h5,
-                        fontWeight: TextFontWeightVariant.h2,
-                        color: AppColors.white,
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 14, // 👈 10 se 14 ya 16 kar do
-                        horizontal: 6,
-                      ),
-                      alignment: Alignment.topLeft,
-                      child: MdSnsText(
-                        row["ratio"]!,
-                        variant: TextVariant.h5,
-                        fontWeight: TextFontWeightVariant.h2,
-                        color: Colors.lightBlueAccent,
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
+                    _buildDataCell(row["totalVolume"]!, AppColors.color0098E4),
+                    _buildDataCell(row["ratio"]!, AppColors.white),
                   ],
                 ),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  /// Header cell helper
+  Widget _buildHeaderCell(String text) {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(
+        vertical: 10, // 👈 smaller header height
+        horizontal: 8,
+      ),
+      child: MdSnsText(
+        text,
+        variant: TextVariant.h4,
+        fontWeight: TextFontWeightVariant.h4,
+        color: AppColors.white,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  /// Data cell helper
+  Widget _buildDataCell(String text, Color color) {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+      child: MdSnsText(
+        text,
+        variant: TextVariant.h4,
+        fontWeight: TextFontWeightVariant.h4,
+        color: color,
+        textAlign: TextAlign.center,
       ),
     );
   }

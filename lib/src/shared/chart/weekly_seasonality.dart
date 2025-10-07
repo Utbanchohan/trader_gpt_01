@@ -1,6 +1,6 @@
-import 'package:fl_chart/fl_chart.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/weekly_model/weekly_model.dart';
@@ -9,7 +9,7 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 import '../../feature/analytics/domain/model/monthly_model/monthly_model.dart';
 import 'dart:math';
 
-class WeeklySeasonalityChart extends StatelessWidget {
+class WeeklySeasonalityChart extends ConsumerStatefulWidget {
   final ProbabilityResponse data;
   final bool isWeekly;
   final WeeklyModel weeklyModel;
@@ -19,97 +19,105 @@ class WeeklySeasonalityChart extends StatelessWidget {
     required this.isWeekly,
     required this.weeklyModel,
   });
+  @override
+  ConsumerState<WeeklySeasonalityChart> createState() =>
+      _WeeklySeasonalityChartState();
+}
 
+class _WeeklySeasonalityChartState
+    extends ConsumerState<WeeklySeasonalityChart> {
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> weeklyData = isWeekly
+    String selectedValue = "Radar";
+
+    final List<Map<String, dynamic>> weeklyData = widget.isWeekly
         ? [
             {
               "day": "Monday",
-              "value": weeklyModel.probability!.monday! * 100,
-              "amount": weeklyModel.probability!.monday!,
+              "value": widget.weeklyModel.probability!.monday! * 100,
+              "amount": widget.weeklyModel.probability!.monday!,
             },
             {
               "day": "Tuesday",
-              "value": weeklyModel.probability!.tuesday! * 100,
-              "amount": weeklyModel.probability!.tuesday,
+              "value": widget.weeklyModel.probability!.tuesday! * 100,
+              "amount": widget.weeklyModel.probability!.tuesday,
             },
             {
               "day": "Wednesday",
-              "value": weeklyModel.probability!.wednesday! * 100,
-              "amount": weeklyModel.probability!.wednesday!,
+              "value": widget.weeklyModel.probability!.wednesday! * 100,
+              "amount": widget.weeklyModel.probability!.wednesday!,
             },
             {
               "day": "Thursday",
-              "value": weeklyModel.probability!.thursday! * 100,
-              "amount": weeklyModel.probability!.thursday,
+              "value": widget.weeklyModel.probability!.thursday! * 100,
+              "amount": widget.weeklyModel.probability!.thursday,
             },
             {
               "day": "Friday",
-              "value": weeklyModel.probability!.friday! * 100,
-              "amount": weeklyModel.probability!.friday,
+              "value": widget.weeklyModel.probability!.friday! * 100,
+              "amount": widget.weeklyModel.probability!.friday,
             },
           ]
         : [
             {
               "day": "Jan",
-              "value": data.probability!.january! * 100,
-              "amount": data.probability!.january,
+              "value": widget.data.probability!.january! * 100,
+              "amount": widget.data.probability!.january,
             },
             {
               "day": "Feb",
-              "value": data.probability!.february! * 100,
-              "amount": data.probability!.february,
+              "value": widget.data.probability!.february! * 100,
+              "amount": widget.data.probability!.february,
             },
             {
               "day": "Mar",
-              "value": data.probability!.march! * 100,
-              "amount": data.probability!.march,
+              "value": widget.data.probability!.march! * 100,
+              "amount": widget.data.probability!.march,
             },
             {
               "day": "Apr",
-              "value": data.probability!.april! * 100,
-              "amount": data.probability!.april,
+              "value": widget.data.probability!.april! * 100,
+              "amount": widget.data.probability!.april,
             },
             {
               "day": "May",
-              "value": data.probability!.may! * 100,
-              "amount": data.probability!.may,
+              "value": widget.data.probability!.may! * 100,
+              "amount": widget.data.probability!.may,
             },
             {
               "day": "Jun",
-              "value": data.probability!.june! * 100,
-              "amount": data.probability!.june,
+              "value": widget.data.probability!.june! * 100,
+              "amount": widget.data.probability!.june,
             },
             {
               "day": "Jul",
-              "value": data.probability!.july! * 100,
-              "amount": data.probability!.july,
+              "value": widget.data.probability!.july! * 100,
+              "amount": widget.data.probability!.july,
             },
             {
               "day": "Aug",
-              "value": data.probability!.august! * 100,
-              "amount": data.probability!.august,
+              "value": widget.data.probability!.august! * 100,
+              "amount": widget.data.probability!.august,
             },
             {
               "day": "Sep",
-              "value": data.probability!.september! * 100,
-              "amount": data.probability!.september,
+              "value": widget.data.probability!.september! * 100,
+              "amount": widget.data.probability!.september,
             },
             {
               "day": "Oct",
-              "value": data.probability!.october! * 100,
-              "amount": data.probability!.october,
+              "value": widget.data.probability!.october! * 100,
+              "amount": widget.data.probability!.october,
             },
             {
               "day": "Nov",
-              "value": data.probability!.november! * 100,
-              "amount": data.probability!.november,
+              "value": widget.data.probability!.november! * 100,
+              "amount": widget.data.probability!.november,
             },
             {
               "day": "Dec",
-              "value": data.probability!.december! * 100,
-              "amount": data.probability!.december,
+              "value": widget.data.probability!.december! * 100,
+              "amount": widget.data.probability!.december,
             },
           ];
     return Card(
@@ -121,34 +129,123 @@ class WeeklySeasonalityChart extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MdSnsText(
-              isWeekly ? "Weekly Seasonality" : "Monthly Seasonality",
-              variant: TextVariant.h1,
-              color: AppColors.fieldTextColor,
-              fontWeight: TextFontWeightVariant.h1,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Left side text
+                MdSnsText(
+                  widget.isWeekly
+                      ? "Weekly Seasonality"
+                      : "Monthly Seasonality",
+                  variant: TextVariant.h1,
+                  color: AppColors.fieldTextColor,
+                  fontWeight: TextFontWeightVariant.h1,
+                ),
+
+                Container(
+                  height: 30,
+                  width: 90, // increased a bit for text + arrow
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColors.fieldTextColor,
+                      width: 1.2,
+                    ),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<String>(
+                      isExpanded: true,
+                      value: selectedValue,
+                      // 👇 show selected text + arrow inside the same Row
+                      customButton: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: MdSnsText(
+                              selectedValue, // 👈 shows current selection beside the arrow
+                              variant: TextVariant.h5,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.fieldTextColor,
+                            ),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                            color: AppColors.fieldTextColor,
+                            size: 18,
+                          ),
+                        ],
+                      ),
+                      dropdownStyleData: DropdownStyleData(
+                        offset: const Offset(0, 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.zero,
+                      ),
+                      items: [
+                        DropdownMenuItem(
+                          value: "Radar",
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: MdSnsText(
+                              "Radar",
+                              variant: TextVariant.h5,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.fieldTextColor,
+                            ),
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: "Bar",
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: MdSnsText(
+                              "Bar",
+                              variant: TextVariant.h5,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.fieldTextColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            selectedValue = value;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
+
+            SizedBox(height: 16),
 
             MonthlySpiderChart(
-              isWeekly: isWeekly,
-              lables: !isWeekly
+              isWeekly: widget.isWeekly,
+              lables: !widget.isWeekly
                   ? [
-                      "Jan",
-                      "Feb",
-                      "Mar",
-                      "Apr",
+                      "January",
+                      "February",
+                      "March",
+                      "April",
                       "May",
-                      "Jun",
-                      "Jul",
-                      "Aug",
-                      "Sep",
-                      "Oct",
-                      "Nov",
-                      "Dec",
+                      "June",
+                      "July",
+                      "August",
+                      "September",
+                      "October",
+                      "November",
+                      "December",
                     ]
-                  : ["Mon", "Tue", "Wed", "Thur", "Fri"],
+                  : ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
 
-              values: isWeekly
+              values: widget.isWeekly
                   ? [
                       weeklyData[0]['value'],
                       weeklyData[1]['value'],

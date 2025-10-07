@@ -21,7 +21,8 @@ class OutstandingSharesChart extends StatelessWidget {
       //   borderRadius: BorderRadius.circular(12),
       // ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -29,7 +30,7 @@ class OutstandingSharesChart extends StatelessWidget {
               "Outstanding Shares",
               color: AppColors.fieldTextColor,
               fontWeight: TextFontWeightVariant.h4,
-              variant: TextVariant.h2,
+              variant: TextVariant.h3,
             ),
             SizedBox(height: 12),
             Container(

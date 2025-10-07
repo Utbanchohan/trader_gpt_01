@@ -63,6 +63,7 @@ class PerformanceTable extends StatelessWidget {
           children: [
             MdSnsText(
               text,
+
               variant: TextVariant.h4,
               fontWeight: TextFontWeightVariant.h1,
 
@@ -72,8 +73,9 @@ class PerformanceTable extends StatelessWidget {
               MdSnsText(
                 subtitle,
                 textAlign: TextAlign.center,
-                variant: TextVariant.h5,
+                variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
+                maxLines: 1,
 
                 color: AppColors.fieldTextColor,
               ),
@@ -92,6 +94,8 @@ class PerformanceTable extends StatelessWidget {
         child: MdSnsText(
           text,
           color: AppColors.white,
+          variant: TextVariant.h4,
+          fontWeight: TextFontWeightVariant.h4,
           textAlign: TextAlign.center,
         ),
       ),

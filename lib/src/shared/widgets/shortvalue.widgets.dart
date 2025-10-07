@@ -12,8 +12,8 @@ class ShortVolumeChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (data.isEmpty) {
-      return const Center(
-        child: Text("No data available", style: TextStyle(color: Colors.white)),
+      return Center(
+        child: MdSnsText("No data available", color: AppColors.white),
       );
     }
 
@@ -35,18 +35,18 @@ class ShortVolumeChart extends StatelessWidget {
               MdSnsText(
                 "Short Volume",
                 color: AppColors.fieldTextColor,
-                variant: TextVariant.h3,
                 fontWeight: TextFontWeightVariant.h4,
+                variant: TextVariant.h3,
               ),
               MdSnsText(
                 "Shel",
                 color: AppColors.fieldTextColor,
-                variant: TextVariant.h3,
                 fontWeight: TextFontWeightVariant.h4,
+                variant: TextVariant.h3,
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           Container(
             padding: const EdgeInsets.all(16),
