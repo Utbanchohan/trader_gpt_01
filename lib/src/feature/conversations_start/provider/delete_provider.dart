@@ -18,7 +18,7 @@ class DeleteProvider extends _$DeleteProvider {
     state = AppLoadingState.loading();
     try {
       final response = await ref.read(chatRepository).deleteChat(chatId);
-      if (response.isSuccess) {
+      if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
         return response.data;
       } else {
@@ -26,14 +26,12 @@ class DeleteProvider extends _$DeleteProvider {
       }
       state = AppLoadingState();
     } catch (e) {
-      $showMessage(e. toString(), isError: true);
+      $showMessage(e.toString(), isError: true);
       state = AppLoadingState();
       debugPrint("errror $e");
     }
     return null;
   }
-
-
 
   Future<ChatHistory?> archive({
     required String chatId,
@@ -44,7 +42,7 @@ class DeleteProvider extends _$DeleteProvider {
       final response = await ref
           .read(chatRepository)
           .archiveChat(ArchiveChatDto(chatId: chatId, isArchived: isArchived));
-      if (response.isSuccess) {
+      if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
         return response.data;
       } else {

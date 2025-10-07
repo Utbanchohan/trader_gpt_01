@@ -8,6 +8,9 @@ import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analytics_widget.dart'
+    show AnalyticsWidget;
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
@@ -40,10 +43,14 @@ import '../../../../shared/widgets/securityownership_widgets.dart';
 import '../../../../shared/widgets/shortvalue.widgets.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
+import '../../domain/model/analytics_model/analytics_model.dart';
+import '../../domain/model/fundamental_model/fundamental_model.dart';
 import '../../domain/model/matrics_data_model/matrics_data_model.dart';
 import '../../domain/model/monthly_model/monthly_model.dart';
 import '../../domain/model/overview_model/overview_model.dart';
 import '../../domain/model/price_comparison_model/price_comparison_model.dart';
+import '../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
+import '../../domain/model/share_stats/share_stats.dart';
 import '../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../domain/model/weekly_model/weekly_model.dart';
 import '../provider/monthly_data/monthly_data.dart';
@@ -66,6 +73,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   ProbabilityResponse? probabilityResponse;
   WeeklyModel? weeklyData;
   ProbabilityResponse? monthlyData;
+  FundamentalResponse? fundamentalResponse;
+  SharesResponse? sharesResponse;
+  PriceTargetMatrics? priceTargetMatrics;
+  AnalystRatingResponse? analyticsRespinseData;
 
   getOverview(SymbolDto symbol) async {
     var res = await ref
@@ -76,12 +87,48 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
+  analyticsData(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .analyticsData(symbol);
+    if (res != null) {
+      analyticsRespinseData = res;
+    }
+  }
+
   getMatricsData(SymbolDto symbol) async {
     var res = await ref
         .read(analyticsProviderProvider.notifier)
         .matricsData(symbol);
     if (res != null) {
       matricData = res;
+    }
+  }
+
+  fundamental(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .fundamentalData(symbol);
+    if (res != null) {
+      fundamentalResponse = res;
+    }
+  }
+
+  shares(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .shareStats(symbol);
+    if (res != null) {
+      sharesResponse = res;
+    }
+  }
+
+  priceTargetMatricsData(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .priceTargetMatrics(symbol);
+    if (res != null) {
+      priceTargetMatrics = res;
     }
   }
 
@@ -136,6 +183,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     if (widget.chatRouting != null) {
       getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
       getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      priceTargetMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
       priceComparison(
         PriceComparisonDto(
           daysBack: 365,
@@ -143,6 +192,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           symbol2: "SPY",
         ),
       );
+      fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
+      shares(SymbolDto(symbol: widget.chatRouting!.symbol));
       getWeeklyData(widget.chatRouting!.symbol);
       getMonthlyData(widget.chatRouting!.symbol);
     }
@@ -647,6 +698,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               ],
             ),
             AppSpacing.h10,
+
             Visibility(
               visible:
                   stockResponse != null &&
@@ -740,11 +792,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             ),
 
             SizedBox(height: 20.h),
-
+            priceTargetMatrics != null && priceTargetMatrics!.data.length > 0
+                ? PriceTargetWidget(data: priceTargetMatrics!.data)
+                : SizedBox(),
+            SizedBox(height: 20.h),
             RevenueAnalysisChart(),
             SizedBox(height: 20.h),
 
-            // ---------- PERFORMANCE OVERVIEW ----------
+            // // ---------- PERFORMANCE OVERVIEW ----------
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -788,117 +843,156 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             ),
             SizedBox(height: 20.h),
 
-            Visibility(
-              visible:
-                  priceComparisonModel != null &&
-                  priceComparisonModel!.data.MSFT != null &&
-                  priceComparisonModel!.data.SPY != null,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.color091224,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    MdSnsText(
-                      "Price Comparison",
-                      variant: TextVariant.h3,
-                      fontWeight: TextFontWeightVariant.h4,
-
-                      color: AppColors.fieldTextColor,
+            priceComparisonModel != null &&
+                    priceComparisonModel!.data.MSFT != null &&
+                    priceComparisonModel!.data.SPY != null
+                ? Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.color091224,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    SizedBox(height: 16.h),
-                    priceComparisonModel != null &&
-                            priceComparisonModel!.data.MSFT != null &&
-                            priceComparisonModel!.data.SPY != null
-                        ? SizedBox(
-                            height: 180,
-                            child: LineChart(
-                              LineChartData(
-                                backgroundColor: AppColors.color091224,
-                                gridData: FlGridData(
-                                  show: true,
-                                  getDrawingHorizontalLine: (value) => FlLine(
-                                    color: AppColors.color1B254B,
-                                    strokeWidth: 3,
-                                  ),
-                                  getDrawingVerticalLine: (value) => FlLine(
-                                    color: Colors.transparent,
-                                    strokeWidth: 1,
-                                  ),
-                                ),
-                                titlesData: FlTitlesData(
-                                  show: true,
-                                  leftTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                      showTitles: true,
-                                      reservedSize: 28,
-                                      interval: 100,
-                                      getTitlesWidget: (value, meta) =>
-                                          MdSnsText(
-                                            value.toInt().toString(),
-                                            color: AppColors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        MdSnsText(
+                          "Price Comparison",
+                          variant: TextVariant.h3,
+                          fontWeight: TextFontWeightVariant.h4,
 
-                                            variant: TextVariant.h5,
+                          color: AppColors.fieldTextColor,
+                        ),
+                        SizedBox(height: 16.h),
+                        priceComparisonModel != null &&
+                                priceComparisonModel!.data.MSFT != null &&
+                                priceComparisonModel!.data.SPY != null
+                            ? SizedBox(
+                                height: 180,
+                                child: LineChart(
+                                  LineChartData(
+                                    backgroundColor: AppColors.color091224,
+                                    gridData: FlGridData(
+                                      show: true,
+                                      getDrawingHorizontalLine: (value) =>
+                                          FlLine(
+                                            color: AppColors.color1B254B,
+                                            strokeWidth: 3,
                                           ),
+                                      getDrawingVerticalLine: (value) => FlLine(
+                                        color: Colors.transparent,
+                                        strokeWidth: 1,
+                                      ),
                                     ),
-                                  ),
-                                  bottomTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                      showTitles: true,
-                                      interval: 50,
-                                      getTitlesWidget: (value, meta) =>
-                                          MdSnsText(
-                                            value.toInt().toString(),
-                                            color: AppColors.white,
-                                            variant: TextVariant.h5,
-                                          ),
+                                    titlesData: FlTitlesData(
+                                      show: true,
+                                      leftTitles: AxisTitles(
+                                        sideTitles: SideTitles(
+                                          showTitles: true,
+                                          reservedSize: 28,
+                                          interval: 100,
+                                          getTitlesWidget: (value, meta) =>
+                                              MdSnsText(
+                                                value.toInt().toString(),
+                                                color: AppColors.white,
+
+                                                variant: TextVariant.h5,
+                                              ),
+                                        ),
+                                      ),
+                                      bottomTitles: AxisTitles(
+                                        sideTitles: SideTitles(
+                                          showTitles: true,
+                                          interval: 50,
+                                          getTitlesWidget: (value, meta) =>
+                                              MdSnsText(
+                                                value.toInt().toString(),
+                                                color: AppColors.white,
+                                                variant: TextVariant.h5,
+                                              ),
+                                        ),
+                                      ),
+                                      topTitles: AxisTitles(
+                                        sideTitles: SideTitles(
+                                          showTitles: false,
+                                        ),
+                                      ),
+                                      rightTitles: AxisTitles(
+                                        sideTitles: SideTitles(
+                                          showTitles: false,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  topTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                  rightTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
+                                    borderData: FlBorderData(show: false),
+                                    lineBarsData: [
+                                      LineChartBarData(
+                                        spots: buildSpots(
+                                          priceComparisonModel!.data.MSFT!,
+                                        ),
+                                        isCurved: true,
+                                        color: AppColors.color0098E4,
+                                        barWidth: 3,
+                                        dotData: FlDotData(show: false),
+                                      ),
+                                      LineChartBarData(
+                                        spots: buildSpots(
+                                          priceComparisonModel!.data.SPY!,
+                                        ),
+                                        isCurved: true,
+                                        color: AppColors.color06D54E,
+                                        barWidth: 3,
+                                        dotData: FlDotData(show: false),
+                                      ),
+                                    ],
+                                    minX: 1,
+                                    maxX: maxX ?? 10000,
+                                    minY: 0,
+                                    maxY: maxY ?? 10000,
                                   ),
                                 ),
-                                borderData: FlBorderData(show: false),
-                                lineBarsData: [
-                                  LineChartBarData(
-                                    spots: buildSpots(
-                                      priceComparisonModel!.data.MSFT!,
-                                    ),
-                                    isCurved: true,
-                                    color: AppColors.color0098E4,
-                                    barWidth: 3,
-                                    dotData: FlDotData(show: false),
-                                  ),
-                                  LineChartBarData(
-                                    spots: buildSpots(
-                                      priceComparisonModel!.data.SPY!,
-                                    ),
-                                    isCurved: true,
-                                    color: AppColors.color06D54E,
-                                    barWidth: 3,
-                                    dotData: FlDotData(show: false),
-                                  ),
-                                ],
-                                minX: 1,
-                                maxX: maxX ?? 10000,
-                                minY: 0,
-                                maxY: maxY ?? 10000,
-                              ),
-                            ),
-                          )
-                        : SizedBox(),
-                  ],
-                ),
-              ),
-            ),
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
+                  )
+                : SizedBox(),
+
+            SizedBox(height: 20.h),
+            sharesResponse != null &&
+                    sharesResponse!.data.PercentInsiders != null
+                ? ShareStructureCard(
+                    matrics: null,
+                    fundamentalData: null,
+                    shareData: sharesResponse!.data,
+                    heading: Headings.shareStructure,
+                  )
+                : SizedBox(),
+            SizedBox(height: 20.h),
+            fundamentalResponse != null &&
+                    fundamentalResponse!
+                        .data
+                        .fundamentals
+                        .annualIncome
+                        .isNotEmpty
+                ? ShareStructureCard(
+                    matrics: null,
+                    fundamentalData: fundamentalResponse!.data,
+                    shareData: null,
+                    heading: Headings.fundamental,
+                  )
+                : SizedBox(),
             SizedBox(height: 20.h),
 
+            matricData != null &&
+                    matricData!.data != null &&
+                    matricData!.data!.isNotEmpty
+                ? ShareStructureCard(
+                    matrics: matricData!.data,
+                    fundamentalData: null,
+                    shareData: null,
+                    heading: Headings.matrics,
+                  )
+                : SizedBox(),
+            SizedBox(height: 20.h),
             monthlyData != null
                 ? WeeklySeasonalityChart(
                     data: monthlyData!,
@@ -916,11 +1010,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 : SizedBox(),
             SizedBox(height: 20.h),
 
-            matricData != null &&
-                    matricData!.data != null &&
-                    matricData!.data!.isNotEmpty
-                ? ShareStructureCard(data: matricData!.data)
+            analyticsRespinseData != null &&
+                    analyticsRespinseData!.data.isNotEmpty
+                ? AnalyticsWidget(data: analyticsRespinseData!.data)
                 : SizedBox(),
+            SizedBox(height: 20.h),
           ],
         ),
       ),

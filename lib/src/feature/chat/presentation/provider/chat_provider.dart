@@ -30,7 +30,7 @@ class ChatProvider extends _$ChatProvider {
 
   sendMessage(ChatMessageDto chatMessageDto) async {
     var res = await ref.read(chatRepository).sendMessage(chatMessageDto);
-    if (res.isSuccess) {
+    if (res.isSuccess != null && res.isSuccess!) {
       return res.data;
     } else {
       return false;

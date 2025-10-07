@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -33,8 +34,8 @@ class Login extends _$Login {
     try {
       final response = await ref
           .read(authRepository)
-          .login(SignIn(email: email, password: password));
-      if (response.isSuccess) {
+          .login(SignIn(email: email.toLowerCase(), password: password));
+      if (response.isSuccess != null && response.isSuccess!) {
         final response1 = await ref
             .read(overviewRepository)
             .marketDataLogin(
@@ -100,8 +101,18 @@ class Login extends _$Login {
         $showMessage(response.message, isError: true);
       }
       state = AppLoadingState();
-    } catch (e) {
-      $showMessage("Invalid Credentials", isError: true);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        try {
+          $showMessage(e.response!.data!['message'], isError: true);
+        } catch (e) {
+          $showMessage("Something went wrong", isError: true);
+        }
+      } else if (e.type == DioExceptionType.connectionError) {
+        print('❌ Network error');
+      } else {
+        print('❌ Unknown error: ${e.message}');
+      }
 
       state = AppLoadingState();
       debugPrint("errror $e");

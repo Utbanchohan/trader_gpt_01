@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_up_dto/sign_up.dart';
@@ -20,19 +21,31 @@ class ForgotPasswordProvider extends _$ForgotPasswordProvider {
     try {
       final response = await ref
           .read(authRepository)
-          .forgetPassword(SignUpDto(email: email));
-      if (response.isSuccess) {
+          .forgetPassword(SignUpDto(email: email.toLowerCase()));
+      if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
         return response.isSuccess;
       } else {
         $showMessage(response.message, isError: true);
       }
       state = AppLoadingState();
-    } catch (e) {
-      $showMessage(e.toString(), isError: true);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        try {
+          $showMessage(e.response!.data!['message'], isError: true);
+        } catch (e) {
+          $showMessage("Something went wrong", isError: true);
+        }
+      } else if (e.type == DioExceptionType.connectionError) {
+        print('❌ Network error');
+      } else {
+        print('❌ Unknown error: ${e.message}');
+      }
+
       state = AppLoadingState();
       debugPrint("errror $e");
     }
+
     return null;
   }
 
@@ -46,17 +59,32 @@ class ForgotPasswordProvider extends _$ForgotPasswordProvider {
       final response = await ref
           .read(authRepository)
           .updatePassword(
-            UpdatePasswordDto(email: email, code: otp, newPassword: password),
+            UpdatePasswordDto(
+              email: email.toLowerCase(),
+              code: otp,
+              newPassword: password,
+            ),
           );
-      if (response.isSuccess) {
+      if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
         return response.data;
       } else {
         $showMessage(response.message, isError: true);
       }
       state = AppLoadingState();
-    } catch (e) {
-      $showMessage(e.toString(), isError: true);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        try {
+          $showMessage(e.response!.data!['message'], isError: true);
+        } catch (e) {
+          $showMessage("Something went wrong", isError: true);
+        }
+      } else if (e.type == DioExceptionType.connectionError) {
+        print('❌ Network error');
+      } else {
+        print('❌ Unknown error: ${e.message}');
+      }
+
       state = AppLoadingState();
       debugPrint("errror $e");
     }

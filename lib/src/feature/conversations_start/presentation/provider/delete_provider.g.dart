@@ -6,7 +6,7 @@ part of 'delete_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$deleteProviderHash() => r'6e599af9be70b5dc181771127c7151bff8fdc395';
+String _$deleteProviderHash() => r'7f1c1e5790017eea7751a326d7a006c5005c2cc5';
 
 /// See also [DeleteProvider].
 @ProviderFor(DeleteProvider)

@@ -203,7 +203,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       getchats(chadId ?? "", chatPage);
     } else {
       var res = await ref.read(chatRepository).chats();
-      if (res.isSuccess) {
+      if (res.isSuccess != null && res.isSuccess!) {
         for (int i = 0; i < res.data!.results.length; i++) {
           if (res.data!.results[i].symbol.toLowerCase() == "tdgpt") {
             chadId = res.data!.results[i].id;
@@ -285,7 +285,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
   getchats(String id, int page) async {
     var res = await ref.read(chatRepository).getMessages(id, page);
-    if (res.isSuccess) {
+    if (res.isSuccess != null && res.isSuccess!) {
       for (int i = 0; i < res.data!.messages!.length; i++) {
         chats.add(res.data!.messages![i]);
       }
@@ -300,7 +300,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     try {
       boolLoadMoreLoader = true;
       var res = await ref.read(chatRepository).getMessages(id, page);
-      if (res.isSuccess) {
+      if (res.isSuccess != null && res.isSuccess!) {
         boolLoadMoreLoader = false;
 
         for (int i = res.data!.messages!.length - 1; i >= 0; i--) {
