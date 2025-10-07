@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class SettingsCard extends StatefulWidget {
   IconData? icon;
@@ -28,9 +29,10 @@ class _SettingsCardState extends State<SettingsCard> {
     return ListTile(
       contentPadding: EdgeInsets.all(0),
       leading: Icon(widget.icon, color: Colors.white),
-      title: Text(
+      title: MdSnsText(
         widget.title!,
-        style: const TextStyle(color: Colors.white, fontSize: 16),
+        color: AppColors.white,
+        variant: TextVariant.h2,
       ),
       trailing: Transform.scale(
         scale: 0.8,

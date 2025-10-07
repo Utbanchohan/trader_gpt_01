@@ -161,11 +161,12 @@ class _ConversationChatAppBarState
                 ),
                 Row(
                   children: [
-                    Text(
+                    MdSnsText(
                       liveStock != null
                           ? "\$${liveStock.price.toStringAsFixed(2)}"
                           : "\$${widget.chatRouting!.price..toStringAsFixed(2)}",
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      variant: TextVariant.h3,
+                      color: AppColors.white,
                     ),
                     SizedBox(width: 6),
                     Icon(

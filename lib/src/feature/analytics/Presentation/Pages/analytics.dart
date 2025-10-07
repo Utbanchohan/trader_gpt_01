@@ -446,10 +446,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
                 /// Company Tab Content
                 Center(
-                  child: Text(
-                    "Company Content",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  child: MdSnsText("Company Content", color: AppColors.white),
                 ),
                 SizedBox(width: 12.w),
                 Column(
@@ -1114,12 +1111,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 width: 1,
                               ),
                             ),
-                            child: const Text(
+                            child: MdSnsText(
                               "Summary",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              // color: AppColors.white,
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ),
                         ),
@@ -1136,12 +1132,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 width: 1,
                               ),
                             ),
-                            child: Text(
+                            child: MdSnsText(
                               "Income Statement",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              // color: AppColors.white,
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ),
                         ),
@@ -1158,12 +1153,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 width: 1,
                               ),
                             ),
-                            child: const Text(
+                            child: MdSnsText(
                               "Balance Sheet",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              // color: AppColors.white,
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ),
                         ),
@@ -1176,16 +1170,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
                               border: Border.all(
-                                color: const Color(0xFFB2B2B7).withOpacity(0.4),
+                                color: Color(0xFFB2B2B7).withOpacity(0.4),
                                 width: 1,
                               ),
                             ),
-                            child: Text(
+                            child: MdSnsText(
                               "Cash Flow",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              color: AppColors.white,
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ),
                         ),
