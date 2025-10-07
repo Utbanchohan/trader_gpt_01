@@ -8,6 +8,7 @@ import '../../data/api/analysis_api/analysis_api.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../model/analytics_model/analytics_model.dart';
 import '../model/compnay_model/company_model.dart';
+import '../model/earnings_model/earnings_model.dart';
 import '../model/fundamental_model/fundamental_model.dart';
 import '../model/market_data_login/market_data_login.dart';
 import '../model/market_data_login_model/market_data_login_model.dart';
@@ -18,6 +19,7 @@ import '../model/price_comparison_model/price_comparison_model.dart';
 import '../model/price_target_matrics_model/price_target_matrics_model.dart'
     show PriceTargetMatrics;
 import '../model/share_stats/share_stats.dart';
+import '../model/short_volume/short_volume_model.dart';
 import '../model/stock_price_model/stock_price_model.dart';
 import '../model/weekly_model/weekly_model.dart';
 
@@ -86,5 +88,15 @@ class OverviewApiRepository implements OverviewRepository {
   @override
   Future<CompanyModel> companyData(SymbolDto symbolData) async {
     return await AnalysisApi(client).companyData(symbolData);
+  }
+
+  @override
+  Future<ShortVolumeModel> shortVolumeData(SymbolDto symbolData) async {
+    return await AnalysisApi(client).shortVolume(symbolData);
+  }
+
+  @override
+  Future<EarningsModel> earningsData(SymbolDto overview) async {
+    return await AnalysisApi(client).earningsData(overview);
   }
 }
