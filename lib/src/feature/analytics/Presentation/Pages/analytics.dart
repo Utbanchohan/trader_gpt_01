@@ -141,6 +141,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
+  late TabController _tabController;
+
+  final List<String> _tabs = [
+    "Summary",
+    "Income Statement",
+    "Balance Sheet",
+    "Cash Flow",
+  ];
   final List<String> categories = [
     "Overview",
     "Company",
@@ -313,7 +321,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     indicatorPadding: EdgeInsets.zero,
                     labelPadding: EdgeInsets.symmetric(horizontal: 8),
                     labelColor: Colors.white,
-                    unselectedLabelColor: Color(0xFFB2B2B7),
                     tabs: [
                       // ---- First Tab (with icon + text) ----
                       Tab(
@@ -1189,7 +1196,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       ),
                       labelColor: Colors.white,
                       labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      unselectedLabelColor: const Color(0xFFB2B2B7),
+                      unselectedLabelColor: AppColors.colorB2B2B7,
                       dividerColor: Colors.transparent,
                       tabs: [
                         Tab(
@@ -1207,9 +1214,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Summary",
-                              // color: AppColors.white,
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
+                              variant: TextVariant.h2,
+                              fontWeight: TextFontWeightVariant.h1,
                             ),
                           ),
                         ),
@@ -1228,7 +1235,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Income Statement",
-                              // color: AppColors.white,
+                              color: AppColors.white,
                               variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
                             ),
@@ -1249,7 +1256,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Balance Sheet",
-                              // color: AppColors.white,
+                              color: AppColors.white,
                               variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
                             ),
