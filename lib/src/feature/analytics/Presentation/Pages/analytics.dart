@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
@@ -14,7 +13,6 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/anal
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
-import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/chart/lin_chart.dart';
 import 'package:trader_gpt/src/shared/chart/performance_table.dart';
@@ -57,12 +55,6 @@ import '../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../domain/model/weekly_model/weekly_model.dart';
 import '../provider/monthly_data/monthly_data.dart';
 
-final compactFormatter = NumberFormat.compactCurrency(
-  locale: "en",
-  symbol: "\$",
-  decimalDigits: 2,
-);
-
 class AnalyticsScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
 
@@ -85,7 +77,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   SharesResponse? sharesResponse;
   PriceTargetMatrics? priceTargetMatrics;
   AnalystRatingResponse? analyticsRespinseData;
-  CompanyData? companyModel;
 
   getOverview(SymbolDto symbol) async {
     var res = await ref
@@ -93,15 +84,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         .getOverview(symbol);
     if (res != null) {
       stockResponse = res;
-    }
-  }
-
-  getcompanyData(SymbolDto symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .companyData(symbol);
-    if (res != null) {
-      companyModel = res.data;
     }
   }
 
@@ -159,14 +141,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
-  late TabController _tabController;
-
-  final List<String> _tabs = [
-    "Summary",
-    "Income Statement",
-    "Balance Sheet",
-    "Cash Flow",
-  ];
   final List<String> categories = [
     "Overview",
     "Company",
@@ -222,7 +196,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       shares(SymbolDto(symbol: widget.chatRouting!.symbol));
       getWeeklyData(widget.chatRouting!.symbol);
       getMonthlyData(widget.chatRouting!.symbol);
-      getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
 
     selectedStock =
@@ -340,6 +313,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     indicatorPadding: EdgeInsets.zero,
                     labelPadding: EdgeInsets.symmetric(horizontal: 8),
                     labelColor: Colors.white,
+                    unselectedLabelColor: Color(0xFFB2B2B7),
                     tabs: [
                       // ---- First Tab (with icon + text) ----
                       Tab(
@@ -522,10 +496,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 _analysisContent(),
 
                 /// Company Tab Content
-                Center(
-                  child: MdSnsText("Company Content", color: AppColors.white),
-                ),
-                SizedBox(width: 12.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1065,44 +1035,32 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 ),
                 SizedBox(height: 14.h),
 
-                companyModel != null &&
-                        companyModel!.general.Description != null
-                    ? ReadMoreText(
-                        companyModel!.general.Description!,
-                        trimLines: 2,
-                        trimMode: TrimMode.Line,
-                        trimCollapsedText: 'Show More',
-                        trimExpandedText: 'Show Less',
-                        moreStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.secondaryColor,
-                        ),
-                        lessStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.secondaryColor,
-                        ),
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.white,
-                        ),
-                      )
-                    : SizedBox(),
+                ReadMoreText(
+                  "Lorem ipsum dolor sit amet consectetur. Ultrices consectetur turpis egestas faucibus. "
+                  "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+                  trimLines: 2,
+                  trimMode: TrimMode.Line,
+                  trimCollapsedText: '',
+                  trimExpandedText: '',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.white,
+                  ),
+                ),
                 SizedBox(height: 14.h),
+                GestureDetector(
+                  onTap: () {},
+                  child: MdSnsText(
+                    "Read more",
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h1,
 
+                    color: AppColors.secondaryColor,
+                  ),
+                ),
                 SizedBox(height: 14.h),
-                companyModel != null
-                    ? InfoBoxGrid(
-                        items: [
-                          companyModel!.general.Address ?? "",
-                          companyModel!.general.Country ?? "",
-                          companyModel!.general.FullTimeEmployees.toString(),
-                          companyModel!.general.WebURL ?? "",
-                        ],
-                      )
-                    : SizedBox(),
+                InfoBoxGrid(items: []),
                 SizedBox(height: 10.h),
                 MdSnsText(
                   "Key Executives",
@@ -1110,88 +1068,29 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   variant: TextVariant.h2,
                   fontWeight: TextFontWeightVariant.h1,
                 ),
-                SizedBox(height: 10.h),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    companyModel != null &&
-                            companyModel!.general.Officers != null &&
-                            companyModel!.general.Officers!.isNotEmpty
-                        ? SizedBox(
-                            height: 220.h,
-                            width: MediaQuery.sizeOf(context).width / 1.1,
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: companyModel!.general.Officers!.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ProfileCardWidget(
-                                  imagePath:
-                                      companyModel!
-                                          .general
-                                          .Officers![index]
-                                          .Image ??
-                                      "",
-
-                                  designation:
-                                      companyModel!
-                                          .general
-                                          .Officers![index]
-                                          .Title ??
-                                      "",
-                                  name:
-                                      companyModel!
-                                          .general
-                                          .Officers![index]
-                                          .Name ??
-                                      "",
-                                );
-                              },
-                              separatorBuilder:
-                                  (BuildContext context, int index) {
-                                    return SizedBox(width: 10);
-                                  },
-                            ),
-                          )
-                        : SizedBox(),
-                    // ProfileCardWidget(
-                    //   imagePath: "assets/images/image 263.png",
-                    //   designation: "Chairman & Ceo",
-                    //   name: "Mr. Satya Nadella",
-                    // ),
-                    // ProfileCardWidget(
-                    //   imagePath: "assets/images/image 262.png",
-                    //   designation: "Chairman & Ceo",
-                    //   name: "Mr. Bradford L. Smith",
-                    // ),
-                    // ProfileCardWidget(
-                    //   imagePath: "assets/images/image 262 (1).png",
-                    //   designation: "Chairman & Ceo",
-                    //   name: "Ms. Amy E. Hood",
-                    // ),
+                    ProfileCardWidget(
+                      imagePath: "assets/images/image 263.png",
+                      designation: "Chairman & Ceo",
+                      name: "Mr. Satya Nadella",
+                    ),
+                    ProfileCardWidget(
+                      imagePath: "assets/images/image 262.png",
+                      designation: "Chairman & Ceo",
+                      name: "Mr. Bradford L. Smith",
+                    ),
+                    ProfileCardWidget(
+                      imagePath: "assets/images/image 262 (1).png",
+                      designation: "Chairman & Ceo",
+                      name: "Ms. Amy E. Hood",
+                    ),
                   ],
                 ),
 
                 SizedBox(height: 14.h),
-                CompanyDetailsCard(
-                  items: [
-                    compactFormatter.format(
-                      companyModel!.general.SharesOutstanding ?? 0,
-                    ),
-
-                    companyModel!.general.PercentInstitutions.toString(),
-                    companyModel!.general.EBITDA.toString(),
-                    companyModel!.general.Exchange ?? "",
-                    companyModel!.general.Symbol ?? "",
-                    companyModel!.general.Sector ?? "",
-                    companyModel!.general.Industry ?? "",
-                    companyModel!.general.FiscalYearEnd ?? "",
-                    compactFormatter.format(
-                      companyModel!.general.MarketCapitalization ?? 0,
-                    ),
-                  ],
-                ),
+                CompanyDetailsCard(items: []),
                 SizedBox(height: 14.h),
                 Earnings(),
                 SizedBox(height: 14.h),
@@ -1286,7 +1185,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       ),
                       labelColor: Colors.white,
                       labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      unselectedLabelColor: AppColors.colorB2B2B7,
+                      unselectedLabelColor: const Color(0xFFB2B2B7),
                       dividerColor: Colors.transparent,
                       tabs: [
                         Tab(
@@ -1304,9 +1203,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Summary",
-                              color: AppColors.white,
-                              variant: TextVariant.h2,
-                              fontWeight: TextFontWeightVariant.h1,
+                              // color: AppColors.white,
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ),
                         ),
@@ -1325,7 +1224,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Income Statement",
-                              color: AppColors.white,
+                              // color: AppColors.white,
                               variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
                             ),
@@ -1346,7 +1245,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Balance Sheet",
-                              color: AppColors.white,
+                              // color: AppColors.white,
                               variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
                             ),
