@@ -37,7 +37,7 @@ class ConversationStart extends ConsumerStatefulWidget {
 class _ConversationStartState extends ConsumerState<ConversationStart>
     with TickerProviderStateMixin {
   final FocusNode searchFocus = FocusNode();
-  bool isSearching = false; // 👈 ye flag add karo
+  bool isSearching = false;
   final TextEditingController search = TextEditingController();
 
   List<ChatHistory> convo = [];
