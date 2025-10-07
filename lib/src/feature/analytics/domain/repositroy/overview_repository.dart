@@ -11,6 +11,7 @@ import '../model/analytics_model/analytics_model.dart';
 import '../model/compnay_model/company_model.dart';
 import '../model/earnings_model/earnings_model.dart';
 import '../model/fundamental_model/fundamental_model.dart';
+import '../model/insider_transaction/insider_transaction_model.dart';
 import '../model/market_data_login/market_data_login.dart';
 import '../model/market_data_login_model/market_data_login_model.dart';
 import '../model/matrics_data_model/matrics_data_model.dart';
@@ -40,6 +41,7 @@ abstract interface class OverviewRepository {
   Future<AnalystRatingResponse> analyticsData(SymbolDto symbolData);
   Future<EarningsModel> earningsData(SymbolDto overview);
   Future<ShortVolumeModel> shortVolumeData(SymbolDto symbolData);
+  Future<InsiderTransactionResponse> insiderTrades(SymbolDto overview);
 }
 
 final overviewRepository = Provider<OverviewRepository>(

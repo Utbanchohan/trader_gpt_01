@@ -10,6 +10,7 @@ import '../model/analytics_model/analytics_model.dart';
 import '../model/compnay_model/company_model.dart';
 import '../model/earnings_model/earnings_model.dart';
 import '../model/fundamental_model/fundamental_model.dart';
+import '../model/insider_transaction/insider_transaction_model.dart';
 import '../model/market_data_login/market_data_login.dart';
 import '../model/market_data_login_model/market_data_login_model.dart';
 import '../model/matrics_data_model/matrics_data_model.dart';
@@ -98,5 +99,10 @@ class OverviewApiRepository implements OverviewRepository {
   @override
   Future<EarningsModel> earningsData(SymbolDto overview) async {
     return await AnalysisApi(client).earningsData(overview);
+  }
+
+  @override
+  Future<InsiderTransactionResponse> insiderTrades(SymbolDto overview) async {
+    return await AnalysisApi(client).insiderTrades(overview);
   }
 }

@@ -48,7 +48,8 @@ class EarningsItem extends StatelessWidget {
 }
 
 class Earnings extends StatelessWidget {
-  const Earnings({Key? key}) : super(key: key);
+  final List<String> items;
+  const Earnings({Key? key, required this.items}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +75,15 @@ class Earnings extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                EarningsItem(title: "Reported EPS", value: "3.46"),
+                EarningsItem(title: "Reported EPS", value: items[0]),
                 EarningsItem(
                   title: "Next Earnings Report Date",
-                  value: "InformationTech",
+                  value: items[1],
                 ),
-                EarningsItem(title: "EPS Surprise", value: "7.45%"),
-                EarningsItem(title: "Total Revenue", value: "70.07B"),
+                EarningsItem(title: "Consensus EPS Forecast", value: items[2]),
+                EarningsItem(title: "EPS Surprise", value: items[3]),
+
+                EarningsItem(title: "Total Revenue", value: items[4]),
               ],
             ),
           ),

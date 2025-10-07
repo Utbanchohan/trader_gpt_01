@@ -8,10 +8,12 @@ import '../../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../../domain/model/analytics_model/analytics_model.dart';
 import '../../../domain/model/earnings_model/earnings_model.dart';
 import '../../../domain/model/fundamental_model/fundamental_model.dart';
+import '../../../domain/model/insider_transaction/insider_transaction_model.dart';
 import '../../../domain/model/overview_model/overview_model.dart';
 import '../../../domain/model/price_comparison_model/price_comparison_model.dart';
 import '../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
 import '../../../domain/model/share_stats/share_stats.dart';
+import '../../../domain/model/short_volume/short_volume_model.dart';
 import '../../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../../domain/repositroy/overview_repository.dart'
     show overviewRepository;
@@ -112,6 +114,24 @@ class AnalyticsProvider extends _$AnalyticsProvider {
 
   Future<EarningsModel?> earningsData(SymbolDto symbol) async {
     var res = await ref.read(overviewRepository).earningsData(symbol);
+    if (res.status == 200) {
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  Future<InsiderTransactionResponse?> insiderTrades(SymbolDto symbol) async {
+    var res = await ref.read(overviewRepository).insiderTrades(symbol);
+    if (res.data.isNotEmpty) {
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  Future<ShortVolumeModel?> shortVolumeData(SymbolDto symbol) async {
+    var res = await ref.read(overviewRepository).shortVolumeData(symbol);
     if (res.status == 200) {
       return res;
     } else {

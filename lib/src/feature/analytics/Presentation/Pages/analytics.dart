@@ -48,12 +48,14 @@ import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../domain/model/analytics_model/analytics_model.dart';
 import '../../domain/model/earnings_model/earnings_model.dart';
 import '../../domain/model/fundamental_model/fundamental_model.dart';
+import '../../domain/model/insider_transaction/insider_transaction_model.dart';
 import '../../domain/model/matrics_data_model/matrics_data_model.dart';
 import '../../domain/model/monthly_model/monthly_model.dart';
 import '../../domain/model/overview_model/overview_model.dart';
 import '../../domain/model/price_comparison_model/price_comparison_model.dart';
 import '../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
 import '../../domain/model/share_stats/share_stats.dart';
+import '../../domain/model/short_volume/short_volume_model.dart' hide ChartData;
 import '../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../domain/model/weekly_model/weekly_model.dart';
 import '../provider/monthly_data/monthly_data.dart';
@@ -88,6 +90,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   AnalystRatingResponse? analyticsRespinseData;
   CompanyData? companyModel;
   EarningsData? earningdata;
+  ShortVolumeModel? shortVolumeModel;
+  InsiderTransactionResponse? insiderTransactionResponse;
 
   getOverview(SymbolDto symbol) async {
     var res = await ref
@@ -104,6 +108,24 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         .earningsData(symbol);
     if (res != null) {
       earningdata = res.data;
+    }
+  }
+
+  insiderTrades(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .insiderTrades(symbol);
+    if (res != null) {
+      insiderTransactionResponse = res;
+    }
+  }
+
+  getShortVolumeData(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .shortVolumeData(symbol);
+    if (res != null) {
+      shortVolumeModel = res;
     }
   }
 
@@ -235,6 +257,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       getWeeklyData(widget.chatRouting!.symbol);
       getMonthlyData(widget.chatRouting!.symbol);
       getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
+      getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
 
     selectedStock =
@@ -533,72 +557,67 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 _earningsContent(),
                 _analysisContent(),
 
-                /// Company Tab Content
-                Center(
-                  child: MdSnsText("Company Content", color: AppColors.white),
-                ),
-                SizedBox(width: 12.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        MdSnsText(
-                          "#${selectedStock!.symbol}",
-                          variant: TextVariant.h2,
-                          fontWeight: TextFontWeightVariant.h1,
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Row(
+                //       children: [
+                //         MdSnsText(
+                //           "#${selectedStock!.symbol}",
+                //           variant: TextVariant.h2,
+                //           fontWeight: TextFontWeightVariant.h1,
 
-                          color: AppColors.white,
-                        ),
-                        const SizedBox(width: 4),
-                        MdSnsText(
-                          selectedStock!.companyName.split("-").first.trim(),
-                          color: AppColors.colorB2B2B7,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          color: AppColors.white,
-                          size: 20.sp,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        MdSnsText(
-                          "\$${selectedStock!.price.toStringAsFixed(2)}",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.white,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                        const SizedBox(width: 6),
-                        Icon(
-                          selectedStock!.pctChange.toString().contains("-")
-                              ? Icons.arrow_drop_down
-                              : Icons.arrow_drop_up,
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.color00FF55,
-                          size: 20,
-                        ),
-                        MdSnsText(
-                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.color00FF55,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                //           color: AppColors.white,
+                //         ),
+                //         const SizedBox(width: 4),
+                //         MdSnsText(
+                //           selectedStock!.companyName.split("-").first.trim(),
+                //           color: AppColors.colorB2B2B7,
+                //           variant: TextVariant.h4,
+                //           fontWeight: TextFontWeightVariant.h4,
+                //         ),
+                //         Icon(
+                //           Icons.keyboard_arrow_down,
+                //           color: AppColors.white,
+                //           size: 20.sp,
+                //         ),
+                //       ],
+                //     ),
+                //     Row(
+                //       children: [
+                //         MdSnsText(
+                //           "\$${selectedStock!.price.toStringAsFixed(2)}",
+                //           color:
+                //               selectedStock!.pctChange.toString().contains("-")
+                //               ? AppColors.redFF3B3B
+                //               : AppColors.white,
+                //           variant: TextVariant.h4,
+                //           fontWeight: TextFontWeightVariant.h4,
+                //         ),
+                //         const SizedBox(width: 6),
+                //         Icon(
+                //           selectedStock!.pctChange.toString().contains("-")
+                //               ? Icons.arrow_drop_down
+                //               : Icons.arrow_drop_up,
+                //           color:
+                //               selectedStock!.pctChange.toString().contains("-")
+                //               ? AppColors.redFF3B3B
+                //               : AppColors.color00FF55,
+                //           size: 20,
+                //         ),
+                //         MdSnsText(
+                //           " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
+                //           color:
+                //               selectedStock!.pctChange.toString().contains("-")
+                //               ? AppColors.redFF3B3B
+                //               : AppColors.color00FF55,
+                //           variant: TextVariant.h4,
+                //           fontWeight: TextFontWeightVariant.h4,
+                //         ),
+                //       ],
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),
@@ -1167,59 +1186,85 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                           )
                         : SizedBox(),
-                    // ProfileCardWidget(
-                    //   imagePath: "assets/images/image 263.png",
-                    //   designation: "Chairman & Ceo",
-                    //   name: "Mr. Satya Nadella",
-                    // ),
-                    // ProfileCardWidget(
-                    //   imagePath: "assets/images/image 262.png",
-                    //   designation: "Chairman & Ceo",
-                    //   name: "Mr. Bradford L. Smith",
-                    // ),
-                    // ProfileCardWidget(
-                    //   imagePath: "assets/images/image 262 (1).png",
-                    //   designation: "Chairman & Ceo",
-                    //   name: "Ms. Amy E. Hood",
-                    // ),
                   ],
                 ),
 
                 SizedBox(height: 14.h),
-                CompanyDetailsCard(
-                  items: [
-                    compactFormatter.format(
-                      companyModel!.general.SharesOutstanding ?? 0,
-                    ),
+                companyModel != null
+                    ? CompanyDetailsCard(
+                        items: [
+                          compactFormatter.format(
+                            companyModel!.general.SharesOutstanding ?? 0,
+                          ),
 
-                    companyModel!.general.PercentInstitutions.toString(),
-                    companyModel!.general.EBITDA.toString(),
-                    companyModel!.general.Exchange ?? "",
-                    companyModel!.general.Symbol ?? "",
-                    companyModel!.general.Sector ?? "",
-                    companyModel!.general.Industry ?? "",
-                    companyModel!.general.FiscalYearEnd ?? "",
-                    compactFormatter.format(
-                      companyModel!.general.MarketCapitalization ?? 0,
-                    ),
-                  ],
-                ),
+                          companyModel!.general.PercentInstitutions.toString(),
+                          companyModel!.general.EBITDA.toString(),
+                          companyModel!.general.Exchange ?? "",
+                          companyModel!.general.Symbol ?? "",
+                          companyModel!.general.Sector ?? "",
+                          companyModel!.general.Industry ?? "",
+                          companyModel!.general.FiscalYearEnd ?? "",
+                          compactFormatter.format(
+                            companyModel!.general.MarketCapitalization ?? 0,
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
                 SizedBox(height: 14.h),
-                Earnings(),
+                earningdata != null
+                    ? Earnings(
+                        items: [
+                          earningdata!.reportedEps != null
+                              ? "\$" +
+                                    earningdata!.reportedEps!.reportedEps
+                                        .toString()
+                              : "N/A",
+
+                          earningdata!.reportedEps != null &&
+                                  earningdata!
+                                          .reportedEps!
+                                          .lastEarningsAnnouncement !=
+                                      null
+                              ? earningdata!
+                                    .reportedEps!
+                                    .lastEarningsAnnouncement
+                                    .toString()
+                              : "N/A",
+                          earningdata!.reportedEps != null
+                              ? earningdata!.reportedEps!.consensusEpsForecast
+                                    .toString()
+                              : "N/A",
+                          earningdata!.reportedEps != null
+                              ? earningdata!.reportedEps!.epsSurprise.toString()
+                              : "N/A",
+                          earningdata!.reportedEps != null
+                              ? compactFormatter.format(
+                                  earningdata!.reportedRevenue!.totalRevenue ??
+                                      0,
+                                )
+                              : "N/A",
+                        ],
+                      )
+                    : SizedBox(),
                 SizedBox(height: 14.h),
-                ShortVolumeChart(
-                  data: [
-                    ChartData(DateTime(2024, 1, 1), 200, 500, 100),
-                    ChartData(DateTime(2024, 2, 1), 300, 600, 150),
-                    ChartData(DateTime(2024, 3, 1), 250, 700, 200),
-                    ChartData(DateTime(2024, 4, 1), 400, 900, 220),
-                    ChartData(DateTime(2024, 5, 1), 350, 800, 180),
-                  ],
-                ),
+                shortVolumeModel != null
+                    ? ShortVolumeChart(
+                        data: [
+                          ChartData(DateTime(2024, 1, 1), 200, 500, 100),
+                          ChartData(DateTime(2024, 2, 1), 300, 600, 150),
+                          ChartData(DateTime(2024, 3, 1), 250, 700, 200),
+                          ChartData(DateTime(2024, 4, 1), 400, 900, 220),
+                          ChartData(DateTime(2024, 5, 1), 350, 800, 180),
+                        ],
+                      )
+                    : SizedBox(),
                 SizedBox(height: 14.h),
                 OutstandingSharesChart(),
                 SizedBox(height: 14.h),
-                InsiderTraderTable(),
+                insiderTransactionResponse != null &&
+                        insiderTransactionResponse!.data.isNotEmpty
+                    ? InsiderTraderTable(data: insiderTransactionResponse!)
+                    : SizedBox(),
                 SizedBox(height: 14.h),
                 SecurityOwnershipTable(),
                 SizedBox(height: 14.h),
