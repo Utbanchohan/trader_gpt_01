@@ -169,16 +169,10 @@ class _ConversationChatAppBarState
                   children: [
                     MdSnsText(
                       liveStock != null
-<<<<<<< HEAD
                           ? "\$${liveStock.price.toStringAsFixed(2)}"
                           : "\$${widget.chatRouting!.price..toStringAsFixed(2)}",
                       variant: TextVariant.h3,
                       color: AppColors.white,
-=======
-                          ? compactFormatter.format(liveStock.price)
-                          : compactFormatter.format(widget.chatRouting!.price),
-                      style: TextStyle(color: Colors.white, fontSize: 14),
->>>>>>> master
                     ),
                     SizedBox(width: 6),
                     Icon(
