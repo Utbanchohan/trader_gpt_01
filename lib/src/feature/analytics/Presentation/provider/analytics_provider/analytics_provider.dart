@@ -6,6 +6,7 @@ import '../../../../../shared/states/app_loading_state.dart';
 import '../../../data/dto/overview_dto/overview_dto.dart';
 import '../../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../../domain/model/analytics_model/analytics_model.dart';
+import '../../../domain/model/earnings_model/earnings_model.dart';
 import '../../../domain/model/fundamental_model/fundamental_model.dart';
 import '../../../domain/model/overview_model/overview_model.dart';
 import '../../../domain/model/price_comparison_model/price_comparison_model.dart';
@@ -102,6 +103,15 @@ class AnalyticsProvider extends _$AnalyticsProvider {
 
   Future<CompanyModel?> companyData(SymbolDto symbol) async {
     var res = await ref.read(overviewRepository).companyData(symbol);
+    if (res.status == 200) {
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  Future<EarningsModel?> earningsData(SymbolDto symbol) async {
+    var res = await ref.read(overviewRepository).earningsData(symbol);
     if (res.status == 200) {
       return res;
     } else {

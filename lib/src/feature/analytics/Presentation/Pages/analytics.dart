@@ -43,6 +43,7 @@ import '../../../../core/routes/routes.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../domain/model/analytics_model/analytics_model.dart';
+import '../../domain/model/earnings_model/earnings_model.dart';
 import '../../domain/model/fundamental_model/fundamental_model.dart';
 import '../../domain/model/matrics_data_model/matrics_data_model.dart';
 import '../../domain/model/monthly_model/monthly_model.dart';
@@ -83,6 +84,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   PriceTargetMatrics? priceTargetMatrics;
   AnalystRatingResponse? analyticsRespinseData;
   CompanyData? companyModel;
+  EarningsData? earningdata;
 
   getOverview(SymbolDto symbol) async {
     var res = await ref
@@ -90,6 +92,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         .getOverview(symbol);
     if (res != null) {
       stockResponse = res;
+    }
+  }
+
+  getEarningData(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .earningsData(symbol);
+    if (res != null) {
+      earningdata = res.data;
     }
   }
 
@@ -209,6 +220,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           symbol2: "SPY",
         ),
       );
+      getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
       fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
       shares(SymbolDto(symbol: widget.chatRouting!.symbol));
       getWeeklyData(widget.chatRouting!.symbol);

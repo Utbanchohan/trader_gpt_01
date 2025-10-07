@@ -38,7 +38,7 @@ final stocksPricesProvider =
 
 typedef _$StocksPrices = Notifier<List<Stock>>;
 String _$stocksManagerHash() =>
-    r'b193ccd2cdcb60d31752046a1f6ed4b9ab140b09'; ////
+    r'34f780bcf014136e663fe2d90c1e2df769c2cd0e'; ////
 ///
 ///
 ///
