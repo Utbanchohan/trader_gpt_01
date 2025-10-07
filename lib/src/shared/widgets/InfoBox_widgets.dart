@@ -4,29 +4,34 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class InfoBoxGrid extends StatelessWidget {
-  final List<Map<String, dynamic>> items;
-  final companyImages = [
-    {
-      "image": "assets/images/4.png",
-      "title": "Headquarter",
-      "value": "One Microsoft Way",
-    },
-    {"image": "assets/images/ab-6.png", "title": "Country", "value": "US"},
-    {
-      "image": "assets/images/ab-4.png",
-      "title": "Employees",
-      "value": "228000",
-    },
-    {
-      "image": "assets/images/ab-5.png",
-      "title": "Website",
-      "value": "microsoft.com",
-    },
-  ];
+  final List<String> items;
+
   InfoBoxGrid({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
+    final companyImages = [
+      {
+        "image": "assets/images/4.png",
+        "title": "Headquarter",
+        "value": items[0],
+      },
+      {
+        "image": "assets/images/ab-6.png",
+        "title": "Country",
+        "value": items[1],
+      },
+      {
+        "image": "assets/images/ab-4.png",
+        "title": "Employees",
+        "value": items[2],
+      },
+      {
+        "image": "assets/images/ab-5.png",
+        "title": "Website",
+        "value": items[3],
+      },
+    ];
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -73,12 +78,17 @@ class InfoBoxGrid extends StatelessWidget {
                     variant: TextVariant.h2,
                     fontWeight: TextFontWeightVariant.h1,
                   ),
-                  // SizedBox(height: 6.h),
-                  MdSnsText(
-                    item["value"].toString(),
-                    color: AppColors.white,
-                    variant: TextVariant.h2,
-                    fontWeight: TextFontWeightVariant.h1,
+                  SizedBox(height: 6.h),
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width / 2.8,
+                    child: MdSnsText(
+                      item["value"].toString().replaceAll("https://", ""),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      color: AppColors.white,
+                      variant: TextVariant.h2,
+                      fontWeight: TextFontWeightVariant.h1,
+                    ),
                   ),
                   SizedBox(height: 6.h),
                 ],

@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/matrics_data_model/matrics_data_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';
 import '../../../../../shared/states/app_loading_state.dart';
@@ -92,6 +93,15 @@ class AnalyticsProvider extends _$AnalyticsProvider {
 
   Future<AnalystRatingResponse?> analyticsData(SymbolDto symbol) async {
     var res = await ref.read(overviewRepository).analyticsData(symbol);
+    if (res.status == 200) {
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  Future<CompanyModel?> companyData(SymbolDto symbol) async {
+    var res = await ref.read(overviewRepository).companyData(symbol);
     if (res.status == 200) {
       return res;
     } else {

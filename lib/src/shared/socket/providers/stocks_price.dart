@@ -169,7 +169,7 @@ class StocksManager extends _$StocksManager {
     var symbol = stockidSplit.first;
     var exchange = stockidSplit.last;
     final isCrypto = exchange == "CRYPTO";
-    print("isCrypto $isCrypto exchange $exchange symbol $symbol");
+    // print("isCrypto $isCrypto exchange $exchange symbol $symbol");
 
     List<Stock> stocks = List.from(state.values);
     if (isCrypto) {

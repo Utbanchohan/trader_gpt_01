@@ -7,6 +7,7 @@ import '../../../sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
 import '../../data/api/analysis_api/analysis_api.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../model/analytics_model/analytics_model.dart';
+import '../model/compnay_model/company_model.dart';
 import '../model/fundamental_model/fundamental_model.dart';
 import '../model/market_data_login/market_data_login.dart';
 import '../model/market_data_login_model/market_data_login_model.dart';
@@ -80,5 +81,10 @@ class OverviewApiRepository implements OverviewRepository {
   @override
   Future<AnalystRatingResponse> analyticsData(SymbolDto symbolData) async {
     return await AnalysisApi(client).analyticsData(symbolData);
+  }
+
+  @override
+  Future<CompanyModel> companyData(SymbolDto symbolData) async {
+    return await AnalysisApi(client).companyData(symbolData);
   }
 }

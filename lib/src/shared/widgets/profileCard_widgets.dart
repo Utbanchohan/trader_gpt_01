@@ -18,8 +18,8 @@ class ProfileCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 122,
-      height: 210,
+      // width: 122.w,
+      // height: 210.h,
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(10),
@@ -31,26 +31,46 @@ class ProfileCardWidget extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.asset(imagePath, height: 122.h, width: 122.w),
+            child: imagePath.isEmpty
+                ? Image.network(
+                    imagePath,
+                    height: 122.h,
+                    width: 122.w,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(
+                    "assets/images/image 263.png",
+                    height: 122.h,
+                    width: 122.w,
+                    fit: BoxFit.cover,
+                  ),
           ),
           SizedBox(height: 8),
-          MdSnsText(
-            designation,
-            textAlign: TextAlign.center,
-            color: AppColors.colorFAFAFC,
-            variant: TextVariant.h4,
-            fontWeight: TextFontWeightVariant.h4,
+          SizedBox(
+            width: 122.w,
+            child: MdSnsText(
+              designation,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+              color: AppColors.colorFAFAFC,
+              variant: TextVariant.h4,
+              fontWeight: TextFontWeightVariant.h4,
+            ),
           ),
           const SizedBox(height: 4),
-          MdSnsText(
-            name,
+          SizedBox(
+            width: 122.w,
+            child: MdSnsText(
+              name,
 
-            textAlign: TextAlign.start,
-            color: AppColors.fieldTextColor,
-            variant: TextVariant.h4,
-            fontWeight: TextFontWeightVariant.h1,
-            maxLines: 2,
-            overflow: TextOverflow.visible,
+              textAlign: TextAlign.start,
+              color: AppColors.fieldTextColor,
+              variant: TextVariant.h4,
+              fontWeight: TextFontWeightVariant.h1,
+              maxLines: 1,
+              overflow: TextOverflow.visible,
+            ),
           ),
         ],
       ),

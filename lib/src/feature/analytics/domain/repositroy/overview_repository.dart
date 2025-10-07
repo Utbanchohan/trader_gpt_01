@@ -8,6 +8,7 @@ import '../../data/dto/market_login_dto/market_login_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../model/analytics_model/analytics_model.dart';
+import '../model/compnay_model/company_model.dart';
 import '../model/fundamental_model/fundamental_model.dart';
 import '../model/market_data_login/market_data_login.dart';
 import '../model/market_data_login_model/market_data_login_model.dart';
@@ -29,6 +30,7 @@ abstract interface class OverviewRepository {
     PriceComparisonDto priceComparisonDto,
   );
   Future<WeeklyModel> weeklyData(String ticker);
+  Future<CompanyModel> companyData(SymbolDto symbolData);
   Future<ProbabilityResponse> monthlyData(String ticker);
   Future<MatricsResponse> matricsData(SymbolDto symbolData);
   Future<SharesResponse> shareStats(SymbolDto symbolData);

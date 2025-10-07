@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:trader_gpt/src/feature/analytics/data/dto/market_login_dto/market_login_dto.dart';
+import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/fundamental_model/fundamental_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/stock_price_model/stock_price_model.dart';
 import '../../../domain/model/analytics_model/analytics_model.dart';
@@ -49,6 +50,9 @@ abstract interface class AnalysisApi {
 
   @POST("api/v1/overview/fmp_analyst_rating")
   Future<AnalystRatingResponse> analyticsData(@Body() SymbolDto overview);
+
+  @POST("api/v1/company/general")
+  Future<CompanyModel> companyData(@Body() SymbolDto overview);
 
   @GET("calculate_green_day_probabilities?ticker_1={ticker}")
   Future<WeeklyModel> weeklyData(@Path('ticker') String ticker);

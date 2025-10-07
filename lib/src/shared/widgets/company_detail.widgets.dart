@@ -36,7 +36,8 @@ class CompanyDetailsItem extends StatelessWidget {
 }
 
 class CompanyDetailsCard extends StatelessWidget {
-  const CompanyDetailsCard({Key? key}) : super(key: key);
+  final List<String> items;
+  const CompanyDetailsCard({Key? key, required this.items}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,25 +70,22 @@ class CompanyDetailsCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CompanyDetailsItem(title: "Industry", value: "Technology"),
                 CompanyDetailsItem(
-                  title: "Sector",
-                  value: "Information Technology",
+                  title: "OUTSTANDING SHARES",
+                  value: items[0],
                 ),
-                CompanyDetailsItem(title: "Employees", value: "10,000"),
+
                 CompanyDetailsItem(
-                  title: "Headquarters",
-                  value: "San Francisco, CA",
+                  title: "INSTITUTIONAL OWNERSHIP",
+                  value: items[1],
                 ),
-                CompanyDetailsItem(title: "Founded", value: "MSFT"),
-                CompanyDetailsItem(title: "MARKET CAP", value: "Technology"),
-                CompanyDetailsItem(
-                  title: "FISCAL YEAR END",
-                  value: "Software-Internet",
-                ),
-                CompanyDetailsItem(title: "INDUSTRY", value: "1998"),
-                CompanyDetailsItem(title: "SELECTOR", value: "June"),
-                CompanyDetailsItem(title: "SYMBOL", value: "3820.20B"),
+                CompanyDetailsItem(title: "EBITA", value: items[2]),
+                CompanyDetailsItem(title: "EXCHANGE", value: items[3]),
+                CompanyDetailsItem(title: "SYMBOL", value: items[4]),
+                CompanyDetailsItem(title: "Sector", value: items[5]),
+                CompanyDetailsItem(title: "INDUSTRY", value: items[6]),
+                CompanyDetailsItem(title: "FISCAL YEAR END", value: items[7]),
+                CompanyDetailsItem(title: "MARKET CAP", value: items[8]),
               ],
             ),
           ),
