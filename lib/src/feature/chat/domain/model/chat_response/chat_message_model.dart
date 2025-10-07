@@ -16,37 +16,28 @@ abstract class ChatMessageModel with _$ChatMessageModel {
     String? followup,
     String? feedback,
     @Default('') String runId,
-    String? tempMessageId, 
+    String? tempMessageId,
     String? symbol,
     @Default("Pending") String status,
-   Displayable? displayable,
+    Displayable? displayable,
     dynamic tracing,
     List<dynamic>? updates,
-
   }) = _ChatMessageModel;
 
   factory ChatMessageModel.fromJson(Map<String, dynamic> json) =>
       _$ChatMessageModelFromJson(json);
 }
 
-
-
-
 @freezed
 abstract class Displayable with _$Displayable {
   const factory Displayable({
     @Default([]) List<String> Worker,
     @Default([]) List<String> Display,
-
-    
-    
   }) = _Displayable;
 
   factory Displayable.fromJson(Map<String, dynamic> json) =>
       _$DisplayableFromJson(json);
 }
-
-
 
 // @freezed
 // class StockData with _$StockData {
@@ -68,7 +59,7 @@ abstract class Displayable with _$Displayable {
 @freezed
 abstract class DisplayData with _$DisplayData {
   const factory DisplayData({
-    @JsonKey(name: "chart_type") required String chartType,
+    @JsonKey(name: "chart_type") String? chartType,
     @JsonKey(name: "sub_type") String? subType,
     required String type,
     required String title,

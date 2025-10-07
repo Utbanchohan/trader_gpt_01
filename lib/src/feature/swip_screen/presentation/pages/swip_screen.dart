@@ -43,20 +43,17 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
 
   getChats() async {
     var res = await ref.read(chatRepository).chats();
-    if (res.isSuccess != null && res.isSuccess!) return false;
+    if (res.isSuccess != null && res.isSuccess!) {
+      // make a set of existing symbols for O(1) lookup
 
-    // make a set of existing symbols for O(1) lookup
-    final existingSymbols = convo.map((e) => e.symbol).toSet();
-
-    for (final chat in res.data!.results) {
-      if (chat.symbol.toLowerCase() != "tdgpt" &&
-          !existingSymbols.contains(chat.symbol)) {
-        convo.add(chat);
-        existingSymbols.add(chat.symbol); // keep set in sync
+      for (final chat in res.data!.results) {
+        if (chat.symbol.toLowerCase() != "tdgpt") {
+          convo.add(chat);
+        }
       }
-    }
 
-    setState(() {});
+      setState(() {});
+    }
   }
 
   getStocks() async {
