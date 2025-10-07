@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/base_model/base_model.dart';
@@ -24,7 +25,7 @@ class SignUp extends _$SignUp {
     try {
       final response = await ref
           .read(authRepository)
-          .signUp(SignUpDto(email: email));
+          .signUp(SignUpDto(email: email.toLowerCase()));
       if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
         return response.data;
@@ -32,8 +33,19 @@ class SignUp extends _$SignUp {
         $showMessage(response.message, isError: true);
       }
       state = AppLoadingState();
-    } catch (e) {
-      $showMessage(e.toString(), isError: true);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 409) {
+        try {
+          $showMessage(e.response!.data!['message'], isError: true);
+        } catch (e) {
+          $showMessage("Something went wrong", isError: true);
+        }
+      } else if (e.type == DioExceptionType.connectionError) {
+        print('❌ Network error');
+      } else {
+        print('❌ Unknown error: ${e.message}');
+      }
+
       state = AppLoadingState();
       debugPrint("errror $e");
     }

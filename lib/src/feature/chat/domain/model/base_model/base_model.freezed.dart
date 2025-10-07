@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BaseModel<T> {
 
- String get message;@JsonKey(name: 'success') bool? get isSuccess; T? get data;
+ String get message; String? get error; int? get statusCode;@JsonKey(name: 'success') bool? get isSuccess; T? get data;
 /// Create a copy of BaseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $BaseModelCopyWith<T, BaseModel<T>> get copyWith => _$BaseModelCopyWithImpl<T, B
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BaseModel<T>&&(identical(other.message, message) || other.message == message)&&(identical(other.isSuccess, isSuccess) || other.isSuccess == isSuccess)&&const DeepCollectionEquality().equals(other.data, data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BaseModel<T>&&(identical(other.message, message) || other.message == message)&&(identical(other.error, error) || other.error == error)&&(identical(other.statusCode, statusCode) || other.statusCode == statusCode)&&(identical(other.isSuccess, isSuccess) || other.isSuccess == isSuccess)&&const DeepCollectionEquality().equals(other.data, data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,message,isSuccess,const DeepCollectionEquality().hash(data));
+int get hashCode => Object.hash(runtimeType,message,error,statusCode,isSuccess,const DeepCollectionEquality().hash(data));
 
 @override
 String toString() {
-  return 'BaseModel<$T>(message: $message, isSuccess: $isSuccess, data: $data)';
+  return 'BaseModel<$T>(message: $message, error: $error, statusCode: $statusCode, isSuccess: $isSuccess, data: $data)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $BaseModelCopyWith<T,$Res>  {
   factory $BaseModelCopyWith(BaseModel<T> value, $Res Function(BaseModel<T>) _then) = _$BaseModelCopyWithImpl;
 @useResult
 $Res call({
- String message,@JsonKey(name: 'success') bool? isSuccess, T? data
+ String message, String? error, int? statusCode,@JsonKey(name: 'success') bool? isSuccess, T? data
 });
 
 
@@ -65,10 +65,12 @@ class _$BaseModelCopyWithImpl<T,$Res>
 
 /// Create a copy of BaseModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? message = null,Object? isSuccess = freezed,Object? data = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? message = null,Object? error = freezed,Object? statusCode = freezed,Object? isSuccess = freezed,Object? data = freezed,}) {
   return _then(_self.copyWith(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,isSuccess: freezed == isSuccess ? _self.isSuccess : isSuccess // ignore: cast_nullable_to_non_nullable
+as String,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String?,statusCode: freezed == statusCode ? _self.statusCode : statusCode // ignore: cast_nullable_to_non_nullable
+as int?,isSuccess: freezed == isSuccess ? _self.isSuccess : isSuccess // ignore: cast_nullable_to_non_nullable
 as bool?,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as T?,
   ));
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String message, @JsonKey(name: 'success')  bool? isSuccess,  T? data)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String message,  String? error,  int? statusCode, @JsonKey(name: 'success')  bool? isSuccess,  T? data)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BaseModel() when $default != null:
-return $default(_that.message,_that.isSuccess,_that.data);case _:
+return $default(_that.message,_that.error,_that.statusCode,_that.isSuccess,_that.data);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.message,_that.isSuccess,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String message, @JsonKey(name: 'success')  bool? isSuccess,  T? data)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String message,  String? error,  int? statusCode, @JsonKey(name: 'success')  bool? isSuccess,  T? data)  $default,) {final _that = this;
 switch (_that) {
 case _BaseModel():
-return $default(_that.message,_that.isSuccess,_that.data);case _:
+return $default(_that.message,_that.error,_that.statusCode,_that.isSuccess,_that.data);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.message,_that.isSuccess,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String message, @JsonKey(name: 'success')  bool? isSuccess,  T? data)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String message,  String? error,  int? statusCode, @JsonKey(name: 'success')  bool? isSuccess,  T? data)?  $default,) {final _that = this;
 switch (_that) {
 case _BaseModel() when $default != null:
-return $default(_that.message,_that.isSuccess,_that.data);case _:
+return $default(_that.message,_that.error,_that.statusCode,_that.isSuccess,_that.data);case _:
   return null;
 
 }
@@ -211,10 +213,12 @@ return $default(_that.message,_that.isSuccess,_that.data);case _:
 @JsonSerializable(genericArgumentFactories: true)
 
 class _BaseModel<T> implements BaseModel<T> {
-  const _BaseModel({required this.message, @JsonKey(name: 'success') this.isSuccess, this.data});
+  const _BaseModel({required this.message, this.error, this.statusCode, @JsonKey(name: 'success') this.isSuccess, this.data});
   factory _BaseModel.fromJson(Map<String, dynamic> json,T Function(Object?) fromJsonT) => _$BaseModelFromJson(json,fromJsonT);
 
 @override final  String message;
+@override final  String? error;
+@override final  int? statusCode;
 @override@JsonKey(name: 'success') final  bool? isSuccess;
 @override final  T? data;
 
@@ -231,16 +235,16 @@ Map<String, dynamic> toJson(Object? Function(T) toJsonT) {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BaseModel<T>&&(identical(other.message, message) || other.message == message)&&(identical(other.isSuccess, isSuccess) || other.isSuccess == isSuccess)&&const DeepCollectionEquality().equals(other.data, data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BaseModel<T>&&(identical(other.message, message) || other.message == message)&&(identical(other.error, error) || other.error == error)&&(identical(other.statusCode, statusCode) || other.statusCode == statusCode)&&(identical(other.isSuccess, isSuccess) || other.isSuccess == isSuccess)&&const DeepCollectionEquality().equals(other.data, data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,message,isSuccess,const DeepCollectionEquality().hash(data));
+int get hashCode => Object.hash(runtimeType,message,error,statusCode,isSuccess,const DeepCollectionEquality().hash(data));
 
 @override
 String toString() {
-  return 'BaseModel<$T>(message: $message, isSuccess: $isSuccess, data: $data)';
+  return 'BaseModel<$T>(message: $message, error: $error, statusCode: $statusCode, isSuccess: $isSuccess, data: $data)';
 }
 
 
@@ -251,7 +255,7 @@ abstract mixin class _$BaseModelCopyWith<T,$Res> implements $BaseModelCopyWith<T
   factory _$BaseModelCopyWith(_BaseModel<T> value, $Res Function(_BaseModel<T>) _then) = __$BaseModelCopyWithImpl;
 @override @useResult
 $Res call({
- String message,@JsonKey(name: 'success') bool? isSuccess, T? data
+ String message, String? error, int? statusCode,@JsonKey(name: 'success') bool? isSuccess, T? data
 });
 
 
@@ -268,10 +272,12 @@ class __$BaseModelCopyWithImpl<T,$Res>
 
 /// Create a copy of BaseModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? message = null,Object? isSuccess = freezed,Object? data = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? message = null,Object? error = freezed,Object? statusCode = freezed,Object? isSuccess = freezed,Object? data = freezed,}) {
   return _then(_BaseModel<T>(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,isSuccess: freezed == isSuccess ? _self.isSuccess : isSuccess // ignore: cast_nullable_to_non_nullable
+as String,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String?,statusCode: freezed == statusCode ? _self.statusCode : statusCode // ignore: cast_nullable_to_non_nullable
+as int?,isSuccess: freezed == isSuccess ? _self.isSuccess : isSuccess // ignore: cast_nullable_to_non_nullable
 as bool?,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as T?,
   ));

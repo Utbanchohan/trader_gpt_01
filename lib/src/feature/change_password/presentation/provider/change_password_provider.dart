@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/feature/change_password/presentation/pages/change_password.dart';
@@ -37,8 +38,19 @@ class ChangePasswordProvider extends _$ChangePasswordProvider {
         $showMessage(response.message, isError: true);
       }
       state = AppLoadingState();
-    } catch (e) {
-      $showMessage(e.toString(), isError: true);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        try {
+          $showMessage(e.response!.data!['message'], isError: true);
+        } catch (e) {
+          $showMessage("Something went wrong", isError: true);
+        }
+      } else if (e.type == DioExceptionType.connectionError) {
+        print('❌ Network error');
+      } else {
+        print('❌ Unknown error: ${e.message}');
+      }
+
       state = AppLoadingState();
       debugPrint("errror $e");
     }

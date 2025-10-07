@@ -11,6 +11,8 @@ _BaseModel<T> _$BaseModelFromJson<T>(
   T Function(Object? json) fromJsonT,
 ) => _BaseModel<T>(
   message: json['message'] as String,
+  error: json['error'] as String?,
+  statusCode: (json['statusCode'] as num?)?.toInt(),
   isSuccess: json['success'] as bool?,
   data: _$nullableGenericFromJson(json['data'], fromJsonT),
 );
@@ -20,6 +22,8 @@ Map<String, dynamic> _$BaseModelToJson<T>(
   Object? Function(T value) toJsonT,
 ) => <String, dynamic>{
   'message': instance.message,
+  'error': instance.error,
+  'statusCode': instance.statusCode,
   'success': instance.isSuccess,
   'data': _$nullableGenericToJson(instance.data, toJsonT),
 };

@@ -7,6 +7,8 @@ part 'base_model.freezed.dart';
 abstract class BaseModel<T> with _$BaseModel<T> {
   const factory BaseModel({
     required String message,
+    String? error,
+    int? statusCode,
     @JsonKey(name: 'success') bool? isSuccess,
     T? data,
   }) = _BaseModel<T>;
