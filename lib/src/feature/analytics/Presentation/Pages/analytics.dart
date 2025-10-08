@@ -1014,6 +1014,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 : SizedBox(),
 
             SizedBox(height: 20.h),
+
             sharesResponse != null &&
                     sharesResponse!.data.PercentInsiders != null
                 ? ShareStructureCard(

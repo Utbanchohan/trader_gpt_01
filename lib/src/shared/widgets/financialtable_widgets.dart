@@ -116,7 +116,6 @@ class FinancialTable extends StatelessWidget {
 
                   Container(
                     color: AppColors.white,
-
                     // clear visible line
                     // margin: const EdgeInsets.symmetric(horizontal: 6),
                   ),
