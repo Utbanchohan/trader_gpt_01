@@ -14,11 +14,8 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/earn
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
-<<<<<<< HEAD
 import 'package:trader_gpt/src/feature/analytics/domain/model/company_detail/company_detail_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
-=======
->>>>>>> ad10f6037b421654afa3977bf872c64170e27461
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/chart/lin_chart.dart';
 import 'package:trader_gpt/src/shared/chart/performance_table.dart';
@@ -54,12 +51,8 @@ import '../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../domain/model/analytics_model/analytics_model.dart';
-<<<<<<< HEAD
 import '../../domain/model/earning_chart_model/earning_chart_model.dart';
 import '../../domain/model/earning_report_model/earning_report_model.dart';
-=======
-import '../../domain/model/compnay_model/company_model.dart';
->>>>>>> ad10f6037b421654afa3977bf872c64170e27461
 import '../../domain/model/earnings_model/earnings_model.dart';
 import '../../domain/model/esg_score_model/esg_score_model.dart';
 import '../../domain/model/fundamental_model/fundamental_model.dart';
@@ -245,12 +238,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
-<<<<<<< HEAD
   earningChartData(String symbol) async {
     final now = DateTime.now().toUtc();
 
     // Subtract 2 years for startDate
-    final endDate = DateTime.utc(
+    final startDate = DateTime.utc(
       now.year - 2,
       now.month,
       now.day,
@@ -259,11 +251,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       now.second,
       now.millisecond,
     );
+    final endDateString = now.toIso8601String();
+    final startDateString = startDate.toIso8601String();
     ChartRequestDto overview = ChartRequestDto(
       symbol: "NDAQ",
-      interval: "quarterly",
-      startDate: "2025-10-08T16:03:48.882Z",
-      endDate: "2023-10-08T16:03:48.882Z",
+      interval: IntervalEnum.quarterly.value,
+      startDate: startDateString,
+      endDate: endDateString,
     );
     var res = await ref
         .read(analyticsProviderProvider.notifier)
@@ -277,7 +271,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     final now = DateTime.now().toUtc();
 
     // Subtract 2 years for startDate
-    final endDate = DateTime.utc(
+    final startDate = DateTime.utc(
       now.year - 2,
       now.month,
       now.day,
@@ -286,11 +280,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       now.second,
       now.millisecond,
     );
+    final endDateString = now.toIso8601String();
+    final startDateString = startDate.toIso8601String();
     ChartRequestDto overview = ChartRequestDto(
       symbol: symbol,
       interval: IntervalEnum.quarterly.value,
-      startDate: "2025-10-08T16:03:48.882Z",
-      endDate: "2023-10-08T16:03:48.882Z",
+      startDate: startDateString,
+      endDate: endDateString,
     );
     var res = await ref
         .read(analyticsProviderProvider.notifier)
@@ -305,7 +301,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       earningReportData(widget.chatRouting!.symbol);
     }
     if (earningChartModel == null) {
-      // earningChartData(widget.chatRouting!.symbol);
+      earningChartData(widget.chatRouting!.symbol);
     }
     if (companyDetailModel == null) {
       getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
@@ -320,8 +316,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     "Balance Sheet",
     "Cash Flow",
   ];
-=======
->>>>>>> ad10f6037b421654afa3977bf872c64170e27461
   final List<String> categories = [
     "Overview",
     "Company",
@@ -388,21 +382,39 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   }
 
   firstIndexData() {
-    getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
-    getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
-    priceTargetMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
-    analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
-    priceComparison(
-      PriceComparisonDto(
-        daysBack: 365,
-        symbol1: widget.chatRouting!.symbol,
-        symbol2: "SPY",
-      ),
-    );
-    fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
-    shares(SymbolDto(symbol: widget.chatRouting!.symbol));
-    getWeeklyData(widget.chatRouting!.symbol);
-    getMonthlyData(widget.chatRouting!.symbol);
+    if (stockResponse == null) {
+      getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+    if (matricData == null) {
+      getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+    if (priceTargetMatrics == null) {
+      priceTargetMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+    if (analyticsRespinseData == null) {
+      analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+    if (priceComparisonModel == null) {
+      priceComparison(
+        PriceComparisonDto(
+          daysBack: 365,
+          symbol1: widget.chatRouting!.symbol,
+          symbol2: "SPY",
+        ),
+      );
+    }
+    if (fundamentalResponse == null) {
+      fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+    if (sharesResponse == null) {
+      shares(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+    if (weeklyData == null) {
+      getWeeklyData(widget.chatRouting!.symbol);
+    }
+    if (monthlyData == null) {
+      getMonthlyData(widget.chatRouting!.symbol);
+    }
   }
 
   @override
@@ -708,69 +720,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 _financialContent(),
                 _earningsContent(),
                 _analysisContent(),
-
-                /// Company Tab Content
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        MdSnsText(
-                          "#${selectedStock!.symbol}",
-                          variant: TextVariant.h2,
-                          fontWeight: TextFontWeightVariant.h1,
-
-                          color: AppColors.white,
-                        ),
-                        const SizedBox(width: 4),
-                        MdSnsText(
-                          selectedStock!.companyName.split("-").first.trim(),
-                          color: AppColors.colorB2B2B7,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          color: AppColors.white,
-                          size: 20.sp,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        MdSnsText(
-                          "\$${selectedStock!.price.toStringAsFixed(2)}",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.white,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                        const SizedBox(width: 6),
-                        Icon(
-                          selectedStock!.pctChange.toString().contains("-")
-                              ? Icons.arrow_drop_down
-                              : Icons.arrow_drop_up,
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.color00FF55,
-                          size: 20,
-                        ),
-                        MdSnsText(
-                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.color00FF55,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
@@ -1265,34 +1214,34 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   fontWeight: TextFontWeightVariant.h1,
                 ),
                 SizedBox(height: 14.h),
+                companyModel != null &&
+                        companyModel!.general.Description != null
+                    ? ReadMoreText(
+                        companyModel!.general.Description!,
+                        trimLines: 2,
+                        trimMode: TrimMode.Line,
+                        trimCollapsedText: 'Read More',
+                        trimExpandedText: 'Read Less',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.white,
+                        ),
+                      )
+                    : SizedBox(),
 
-                ReadMoreText(
-                  "Lorem ipsum dolor sit amet consectetur. Ultrices consectetur turpis egestas faucibus. "
-                  "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-                  trimLines: 2,
-                  trimMode: TrimMode.Line,
-                  trimCollapsedText: '',
-                  trimExpandedText: '',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.white,
-                  ),
-                ),
                 SizedBox(height: 14.h),
-                GestureDetector(
-                  onTap: () {},
-                  child: MdSnsText(
-                    "Read more",
-                    variant: TextVariant.h3,
-                    fontWeight: TextFontWeightVariant.h1,
-
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
+                companyModel != null && companyModel!.general.Address != null
+                    ? InfoBoxGrid(
+                        items: [
+                          companyModel!.general.Address ?? "",
+                          companyModel!.general.Country ?? "",
+                          "${companyModel!.general.FullTimeEmployees ?? 0}",
+                          companyModel!.general.WebURL ?? "",
+                        ],
+                      )
+                    : SizedBox(),
                 SizedBox(height: 14.h),
-                InfoBoxGrid(items: []),
-                SizedBox(height: 10.h),
                 companyModel != null &&
                         companyModel!.general.Officers != null &&
                         companyModel!.general.Officers!.isNotEmpty
@@ -1312,7 +1261,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             companyModel!.general.Officers != null &&
                             companyModel!.general.Officers!.isNotEmpty
                         ? SizedBox(
-                            height: 220.h,
+                            height: 170.h,
                             width: MediaQuery.sizeOf(context).width / 1.1,
                             child: ListView.separated(
                               shrinkWrap: true,
@@ -1718,7 +1667,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 15),
-              EarningsChart(),
 
               earningChartModel != null && earningChartModel!.data.isNotEmpty
                   ? QuarterlyPerformanceChart(data: earningChartModel!.data)

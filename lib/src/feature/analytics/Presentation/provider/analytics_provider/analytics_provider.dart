@@ -205,7 +205,7 @@ class AnalyticsProvider extends _$AnalyticsProvider {
       var res = await ref
           .read(overviewRepositoryNrm)
           .earningChartData(overview);
-      if (res.status == 200) {
+      if (res.msg == "Success") {
         return res;
       } else {
         return null;
@@ -234,7 +234,7 @@ class AnalyticsProvider extends _$AnalyticsProvider {
       var res = await ref
           .read(overviewRepositoryNrm)
           .earningReportData(overview);
-      if (res.status == 200) {
+      if (res.msg == "Success") {
         return res;
       } else {
         return null;

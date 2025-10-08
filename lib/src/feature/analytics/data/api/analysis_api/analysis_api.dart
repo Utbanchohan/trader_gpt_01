@@ -104,10 +104,6 @@ abstract interface class AnalysisApi {
   Future<EarningReportsModel> earningReportData(
     @Body() ChartRequestDto overview,
   );
-
-  // @POST("api/v1/earning/chart")
-  // Future<EarningChartModel> earningChartData(@Body() ChartRequestDto overview);
-
   @GET("calculate_green_day_probabilities?ticker_1={ticker}")
   Future<WeeklyModel> weeklyData(@Path('ticker') String ticker);
 

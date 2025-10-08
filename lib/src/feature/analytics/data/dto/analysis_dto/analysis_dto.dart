@@ -6,8 +6,8 @@ part 'analysis_dto.g.dart';
 @freezed
 abstract class ChartRequestDto with _$ChartRequestDto {
   const factory ChartRequestDto({
-    @JsonKey(name: 'symbol') required String symbol,
-    @JsonKey(name: 'interval') required String interval,
+    required String symbol,
+    required String interval,
     @JsonKey(name: 'start_date') required String startDate,
     @JsonKey(name: 'end_date') required String endDate,
   }) = _ChartRequestDto;

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChartRequestDto {
 
-@JsonKey(name: 'symbol') String get symbol;@JsonKey(name: 'interval') String get interval;@JsonKey(name: 'start_date') String get startDate;@JsonKey(name: 'end_date') String get endDate;
+ String get symbol; String get interval;@JsonKey(name: 'start_date') String get startDate;@JsonKey(name: 'end_date') String get endDate;
 /// Create a copy of ChartRequestDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ChartRequestDtoCopyWith<$Res>  {
   factory $ChartRequestDtoCopyWith(ChartRequestDto value, $Res Function(ChartRequestDto) _then) = _$ChartRequestDtoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'symbol') String symbol,@JsonKey(name: 'interval') String interval,@JsonKey(name: 'start_date') String startDate,@JsonKey(name: 'end_date') String endDate
+ String symbol, String interval,@JsonKey(name: 'start_date') String startDate,@JsonKey(name: 'end_date') String endDate
 });
 
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'symbol')  String symbol, @JsonKey(name: 'interval')  String interval, @JsonKey(name: 'start_date')  String startDate, @JsonKey(name: 'end_date')  String endDate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String symbol,  String interval, @JsonKey(name: 'start_date')  String startDate, @JsonKey(name: 'end_date')  String endDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChartRequestDto() when $default != null:
 return $default(_that.symbol,_that.interval,_that.startDate,_that.endDate);case _:
@@ -177,7 +177,7 @@ return $default(_that.symbol,_that.interval,_that.startDate,_that.endDate);case 
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'symbol')  String symbol, @JsonKey(name: 'interval')  String interval, @JsonKey(name: 'start_date')  String startDate, @JsonKey(name: 'end_date')  String endDate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String symbol,  String interval, @JsonKey(name: 'start_date')  String startDate, @JsonKey(name: 'end_date')  String endDate)  $default,) {final _that = this;
 switch (_that) {
 case _ChartRequestDto():
 return $default(_that.symbol,_that.interval,_that.startDate,_that.endDate);case _:
@@ -197,7 +197,7 @@ return $default(_that.symbol,_that.interval,_that.startDate,_that.endDate);case 
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'symbol')  String symbol, @JsonKey(name: 'interval')  String interval, @JsonKey(name: 'start_date')  String startDate, @JsonKey(name: 'end_date')  String endDate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String symbol,  String interval, @JsonKey(name: 'start_date')  String startDate, @JsonKey(name: 'end_date')  String endDate)?  $default,) {final _that = this;
 switch (_that) {
 case _ChartRequestDto() when $default != null:
 return $default(_that.symbol,_that.interval,_that.startDate,_that.endDate);case _:
@@ -212,11 +212,11 @@ return $default(_that.symbol,_that.interval,_that.startDate,_that.endDate);case 
 @JsonSerializable()
 
 class _ChartRequestDto implements ChartRequestDto {
-  const _ChartRequestDto({@JsonKey(name: 'symbol') required this.symbol, @JsonKey(name: 'interval') required this.interval, @JsonKey(name: 'start_date') required this.startDate, @JsonKey(name: 'end_date') required this.endDate});
+  const _ChartRequestDto({required this.symbol, required this.interval, @JsonKey(name: 'start_date') required this.startDate, @JsonKey(name: 'end_date') required this.endDate});
   factory _ChartRequestDto.fromJson(Map<String, dynamic> json) => _$ChartRequestDtoFromJson(json);
 
-@override@JsonKey(name: 'symbol') final  String symbol;
-@override@JsonKey(name: 'interval') final  String interval;
+@override final  String symbol;
+@override final  String interval;
 @override@JsonKey(name: 'start_date') final  String startDate;
 @override@JsonKey(name: 'end_date') final  String endDate;
 
@@ -253,7 +253,7 @@ abstract mixin class _$ChartRequestDtoCopyWith<$Res> implements $ChartRequestDto
   factory _$ChartRequestDtoCopyWith(_ChartRequestDto value, $Res Function(_ChartRequestDto) _then) = __$ChartRequestDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'symbol') String symbol,@JsonKey(name: 'interval') String interval,@JsonKey(name: 'start_date') String startDate,@JsonKey(name: 'end_date') String endDate
+ String symbol, String interval,@JsonKey(name: 'start_date') String startDate,@JsonKey(name: 'end_date') String endDate
 });
 
 
