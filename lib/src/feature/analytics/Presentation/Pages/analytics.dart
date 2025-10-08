@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
@@ -14,7 +13,6 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/anal
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
-import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/chart/lin_chart.dart';
 import 'package:trader_gpt/src/shared/chart/performance_table.dart';
@@ -49,6 +47,7 @@ import '../../../../shared/widgets/split_dividend.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../domain/model/analytics_model/analytics_model.dart';
+import '../../domain/model/compnay_model/company_model.dart';
 import '../../domain/model/earnings_model/earnings_model.dart';
 import '../../domain/model/esg_score_model/esg_score_model.dart';
 import '../../domain/model/fundamental_model/fundamental_model.dart';
@@ -65,12 +64,6 @@ import '../../domain/model/short_volume/short_volume_model.dart' hide ChartData;
 import '../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../domain/model/weekly_model/weekly_model.dart';
 import '../provider/monthly_data/monthly_data.dart';
-
-final compactFormatter = NumberFormat.compactCurrency(
-  locale: "en",
-  symbol: "\$",
-  decimalDigits: 2,
-);
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
@@ -228,14 +221,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
-  late TabController _tabController;
-
-  final List<String> _tabs = [
-    "Summary",
-    "Income Statement",
-    "Balance Sheet",
-    "Cash Flow",
-  ];
   final List<String> categories = [
     "Overview",
     "Company",
@@ -428,6 +413,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     indicatorPadding: EdgeInsets.zero,
                     labelPadding: EdgeInsets.symmetric(horizontal: 8),
                     labelColor: Colors.white,
+                    unselectedLabelColor: Color(0xFFB2B2B7),
                     tabs: [
                       // ---- First Tab (with icon + text) ----
                       Tab(
@@ -613,6 +599,69 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 _financialContent(),
                 _earningsContent(),
                 _analysisContent(),
+
+                /// Company Tab Content
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        MdSnsText(
+                          "#${selectedStock!.symbol}",
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h1,
+
+                          color: AppColors.white,
+                        ),
+                        const SizedBox(width: 4),
+                        MdSnsText(
+                          selectedStock!.companyName.split("-").first.trim(),
+                          color: AppColors.colorB2B2B7,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.white,
+                          size: 20.sp,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        MdSnsText(
+                          "\$${selectedStock!.price.toStringAsFixed(2)}",
+                          color:
+                              selectedStock!.pctChange.toString().contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.white,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          selectedStock!.pctChange.toString().contains("-")
+                              ? Icons.arrow_drop_down
+                              : Icons.arrow_drop_up,
+                          color:
+                              selectedStock!.pctChange.toString().contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          size: 20,
+                        ),
+                        MdSnsText(
+                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
+                          color:
+                              selectedStock!.pctChange.toString().contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -1108,44 +1157,32 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 ),
                 SizedBox(height: 14.h),
 
-                companyModel != null &&
-                        companyModel!.general.Description != null
-                    ? ReadMoreText(
-                        companyModel!.general.Description!,
-                        trimLines: 2,
-                        trimMode: TrimMode.Line,
-                        trimCollapsedText: 'Show More',
-                        trimExpandedText: 'Show Less',
-                        moreStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.secondaryColor,
-                        ),
-                        lessStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.secondaryColor,
-                        ),
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.white,
-                        ),
-                      )
-                    : SizedBox(),
+                ReadMoreText(
+                  "Lorem ipsum dolor sit amet consectetur. Ultrices consectetur turpis egestas faucibus. "
+                  "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+                  trimLines: 2,
+                  trimMode: TrimMode.Line,
+                  trimCollapsedText: '',
+                  trimExpandedText: '',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.white,
+                  ),
+                ),
                 SizedBox(height: 14.h),
+                GestureDetector(
+                  onTap: () {},
+                  child: MdSnsText(
+                    "Read more",
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h1,
 
+                    color: AppColors.secondaryColor,
+                  ),
+                ),
                 SizedBox(height: 14.h),
-                companyModel != null
-                    ? InfoBoxGrid(
-                        items: [
-                          companyModel!.general.Address ?? "",
-                          companyModel!.general.Country ?? "",
-                          companyModel!.general.FullTimeEmployees.toString(),
-                          companyModel!.general.WebURL ?? "",
-                        ],
-                      )
-                    : SizedBox(),
+                InfoBoxGrid(items: []),
                 SizedBox(height: 10.h),
                 companyModel != null &&
                         companyModel!.general.Officers != null &&
@@ -1365,7 +1402,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       ),
                       labelColor: Colors.white,
                       labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      unselectedLabelColor: AppColors.colorB2B2B7,
+                      unselectedLabelColor: const Color(0xFFB2B2B7),
                       dividerColor: Colors.transparent,
                       tabs: [
                         Tab(
@@ -1383,9 +1420,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Summary",
-                              color: AppColors.white,
-                              variant: TextVariant.h2,
-                              fontWeight: TextFontWeightVariant.h1,
+                              // color: AppColors.white,
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ),
                         ),
@@ -1404,7 +1441,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Income Statement",
-                              color: AppColors.white,
+                              // color: AppColors.white,
                               variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
                             ),
@@ -1425,7 +1462,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Balance Sheet",
-                              color: AppColors.white,
+                              // color: AppColors.white,
                               variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
                             ),
