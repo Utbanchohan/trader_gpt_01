@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/analytics/domain/model/analysis_data/analysis_data_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-import '../../feature/analytics/domain/model/insider_transaction/insider_transaction_model.dart'
-    show InsiderTransactionResponse;
+class AnalysisTable extends StatelessWidget {
+  final String title;
+  final Map<String, EodData>? eodData;
 
-class InsiderTraderTable extends StatelessWidget {
-  final InsiderTransactionResponse data;
-  const InsiderTraderTable({super.key, required this.data});
+  const AnalysisTable({super.key, required this.title, required this.eodData});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class InsiderTraderTable extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             child: MdSnsText(
-              "Insider Trader",
+              title.toString(),
               color: AppColors.color9EAAC0,
               fontWeight: TextFontWeightVariant.h4,
               variant: TextVariant.h3,
@@ -43,7 +42,7 @@ class InsiderTraderTable extends StatelessWidget {
               columns: [
                 DataColumn(
                   label: MdSnsText(
-                    "Name",
+                    "Date",
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -51,7 +50,7 @@ class InsiderTraderTable extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Form Type',
+                    'Open',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -59,7 +58,7 @@ class InsiderTraderTable extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'File Date',
+                    'High',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -67,7 +66,7 @@ class InsiderTraderTable extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Transaction',
+                    'Low',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -75,7 +74,16 @@ class InsiderTraderTable extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Code',
+                    'Close',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.white,
+                  ),
+                ),
+
+                DataColumn(
+                  label: MdSnsText(
+                    'Volume',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -83,7 +91,7 @@ class InsiderTraderTable extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Shares',
+                    "Change %",
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -91,7 +99,7 @@ class InsiderTraderTable extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Values',
+                    'Change \$',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -99,19 +107,30 @@ class InsiderTraderTable extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'SEC Link',
+                    'VWAP',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
                   ),
                 ),
               ],
-              rows: data.data.take(6).map((item) {
+              rows: eodData!.entries.map((item) {
                 return DataRow(
                   cells: [
                     DataCell(
                       MdSnsText(
-                        item.name,
+                        _formatDate(item.key),
+                        variant: TextVariant.h4,
+                        fontWeight: TextFontWeightVariant.h4,
+                        color: AppColors.color046297,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    DataCell(
+                      MdSnsText(
+                        item.value.open != null
+                            ? item.value.open!.toStringAsFixed(2)
+                            : "N/A",
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
                         color: AppColors.white,
@@ -120,7 +139,31 @@ class InsiderTraderTable extends StatelessWidget {
                     ),
                     DataCell(
                       MdSnsText(
-                        item.formType,
+                        item.value.high != null
+                            ? item.value.high!.toStringAsFixed(2)
+                            : "N/A",
+                        variant: TextVariant.h4,
+                        fontWeight: TextFontWeightVariant.h4,
+                        color: AppColors.color06D54E,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    DataCell(
+                      MdSnsText(
+                        item.value.low != null
+                            ? item.value.low!.toStringAsFixed(2)
+                            : "N/A",
+                        variant: TextVariant.h4,
+                        fontWeight: TextFontWeightVariant.h4,
+                        color: AppColors.color0xFFCD3438,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    DataCell(
+                      MdSnsText(
+                        item.value.close != null
+                            ? item.value.close!.toStringAsFixed(2)
+                            : "N/A",
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
                         color: AppColors.white,
@@ -129,7 +172,9 @@ class InsiderTraderTable extends StatelessWidget {
                     ),
                     DataCell(
                       MdSnsText(
-                        _formatDate(item.fileDate),
+                        item.value.volume != null
+                            ? formatNumbers(item.value.volume!)
+                            : "N/A",
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
                         color: AppColors.white,
@@ -138,64 +183,41 @@ class InsiderTraderTable extends StatelessWidget {
                     ),
                     DataCell(
                       MdSnsText(
-                        _formatDate(item.transactionDate),
+                        item.value.changepercent != null
+                            ? item.value.changepercent!.toStringAsFixed(2)
+                            : "N/A",
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
-                        color: AppColors.white,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                        color:
+                            item.value.changepercent == null ||
+                                item.value.changepercent! < 0
+                            ? AppColors.color0xFFCD3438
+                            : AppColors.color06D54E,
 
-                    DataCell(
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 0,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: AppColors.color00FF55,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.transparent,
-                        ),
-                        child: MdSnsText(
-                          item.code,
-                          textAlign: TextAlign.center,
-                          color: AppColors.color00FF55,
-                          variant: TextVariant.h5,
-                          fontWeight: TextFontWeightVariant.h2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                    DataCell(
-                      MdSnsText(
-                        item.shares.toString(),
-                        variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
-                        color: AppColors.color0098E4,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     DataCell(
                       MdSnsText(
-                        item.value.toString(),
-                        variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
-                        color: AppColors.color0xFFFFB21D,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    DataCell(
-                      MdSnsText(
-                        item.link,
+                        item.value.change != null
+                            ? item.value.change!.toStringAsFixed(2)
+                            : "N/A",
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
                         color: AppColors.white,
+
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    DataCell(
+                      MdSnsText(
+                        item.value.vwap != null
+                            ? item.value.vwap!.toStringAsFixed(2)
+                            : "N/A",
+                        variant: TextVariant.h4,
+                        fontWeight: TextFontWeightVariant.h4,
+                        color: AppColors.white,
+
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -208,14 +230,17 @@ class InsiderTraderTable extends StatelessWidget {
       ),
     );
   }
+}
 
-  String _formatDate(String date) {
-    try {
-      return DateFormat('MM/dd/yyyy').format(DateTime.parse(date));
-    } catch (_) {
-      return '-';
-    }
+String formatNumbers(num number) {
+  String formatted = NumberFormat.decimalPattern().format(number);
+  return formatted;
+}
+
+String _formatDate(String date) {
+  try {
+    return DateFormat('MM/dd/yyyy').format(DateTime.parse(date));
+  } catch (_) {
+    return '-';
   }
-
-  /// 🔹 Row Builder
 }

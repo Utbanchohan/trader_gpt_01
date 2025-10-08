@@ -2,13 +2,21 @@ import 'package:dio/dio.dart';
 import 'package:trader_gpt/src/feature/analytics/data/dto/market_login_dto/market_login_dto.dart';
 import 'package:trader_gpt/src/feature/analytics/data/dto/price_comparison_dto/price_comparison_dto.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/repositroy/overview_repository.dart';
+import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
+import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_up_dto/sign_up.dart';
 
 import '../../../sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
 import '../../data/api/analysis_api/analysis_api.dart';
+import '../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../data/dto/esg_score_dto/esg_score_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
+import '../model/analysis_data/analysis_data_model.dart';
 import '../model/analytics_model/analytics_model.dart';
+import '../model/company_detail/company_detail_model.dart'
+    show CompanyDetailModel;
 import '../model/compnay_model/company_model.dart';
+import '../model/earning_chart_model/earning_chart_model.dart';
+import '../model/earning_report_model/earning_report_model.dart';
 import '../model/earnings_model/earnings_model.dart';
 import '../model/esg_score_model/esg_score_model.dart';
 import '../model/fundamental_model/fundamental_model.dart';
@@ -51,6 +59,11 @@ class OverviewApiRepository implements OverviewRepository {
   @override
   Future<MarketDataLoginModel> marketDataLogin(MarketLoginDto signin) async {
     return await AnalysisApi(client).marketDataLogin(signin);
+  }
+
+  @override
+  Future<MarketDataLogin> marketData2Login(SignIn signin) async {
+    return await AnalysisApi(client).marketData2Login(signin);
   }
 
   @override
@@ -123,5 +136,27 @@ class OverviewApiRepository implements OverviewRepository {
   @override
   Future<EsgScoreModel> esgScore(EsgDto overview) async {
     return await AnalysisApi(client).esgScore(overview);
+  }
+
+  @override
+  Future<CompanyDetailModel> companyDetail(SymbolDto overview) async {
+    return await AnalysisApi(client).companyDetail(overview);
+  }
+
+  @override
+  Future<AnalysisDataModel> analysisData(ChartRequestDto overview) async {
+    return await AnalysisApi(client).analysisData(overview);
+  }
+
+  @override
+  Future<EarningChartModel> earningChartData(ChartRequestDto overview) async {
+    return await AnalysisApi(client).earningChartData(overview);
+  }
+
+  @override
+  Future<EarningReportsModel> earningReportData(
+    ChartRequestDto overview,
+  ) async {
+    return await AnalysisApi(client).earningReportData(overview);
   }
 }

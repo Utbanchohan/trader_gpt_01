@@ -4,11 +4,47 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../feature/analytics/domain/model/company_detail/company_detail_model.dart';
+
 class OutstandingSharesChart extends StatelessWidget {
-  const OutstandingSharesChart({super.key});
+  final List<FundamentalsOutstandingSharesQuarter>?
+  fundamentalsOutstandingShares;
+
+  const OutstandingSharesChart({
+    super.key,
+    required this.fundamentalsOutstandingShares,
+  });
+
+  double parseDateToDouble(dynamic date) {
+    if (date is num) {
+      return date.toDouble();
+    } else if (date is String) {
+      // 👇 Try parsing the string
+      try {
+        final parsed = DateTime.parse(date);
+        // Convert to fractional year, e.g., 2024.25 for March
+        return parsed.year + (parsed.month - 1) / 12;
+      } catch (e) {
+        // Fallback: try to parse only the year part
+        final yearMatch = RegExp(r'\d{4}').firstMatch(date);
+        if (yearMatch != null) {
+          return double.parse(yearMatch.group(0)!);
+        }
+      }
+    }
+    // Default fallback
+    return 0;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final List<FlSpot> spots = fundamentalsOutstandingShares!.map((item) {
+      double date = parseDateToDouble(item.Date);
+      print(date.toString());
+      final x = (date as num).toDouble();
+      final y = (item.sharesMillion as num).toDouble();
+      return FlSpot(x, y);
+    }).toList();
     return Container(
       decoration: BoxDecoration(
         // color: AppColors.white,
@@ -52,14 +88,13 @@ class OutstandingSharesChart extends StatelessWidget {
                     child: LineChart(
                       LineChartData(
                         gridData: FlGridData(
+                          horizontalInterval: 10,
                           show: true,
                           drawVerticalLine: false,
                           getDrawingHorizontalLine: (value) => FlLine(
                             color: AppColors.color0x0x1AB3B3B3,
                             strokeWidth: 1,
                           ),
-                          horizontalInterval:
-                              0.05, // 👈 y-axis ke range ke hisaab se adjust karo
                         ),
                         titlesData: FlTitlesData(
                           leftTitles: AxisTitles(
@@ -68,7 +103,7 @@ class OutstandingSharesChart extends StatelessWidget {
                               reservedSize: 45,
                               getTitlesWidget: (value, meta) {
                                 return MdSnsText(
-                                  "\$${value.toStringAsFixed(2)}B",
+                                  "\$${value.toStringAsFixed(0)}M",
                                   fontWeight: TextFontWeightVariant.h4,
                                   variant: TextVariant.h8,
                                   color: AppColors.color0xB3FFFFFF,
@@ -121,18 +156,11 @@ class OutstandingSharesChart extends StatelessWidget {
                         ),
                         minX: 2020,
                         maxX: 2025,
-                        minY: 7.45,
-                        maxY: 7.65,
+                        minY: 100,
+                        maxY: 590,
                         lineBarsData: [
                           LineChartBarData(
-                            spots: const [
-                              FlSpot(2020, 7.65),
-                              FlSpot(2021, 7.60),
-                              FlSpot(2022, 7.50),
-                              FlSpot(2023, 7.49),
-                              FlSpot(2024, 7.48),
-                              FlSpot(2025, 7.47),
-                            ],
+                            spots: spots,
                             isCurved: false,
                             color: Colors.blueAccent,
                             barWidth: 3,
