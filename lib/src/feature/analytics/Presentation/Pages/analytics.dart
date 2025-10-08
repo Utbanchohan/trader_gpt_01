@@ -1206,26 +1206,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         ],
                       )
                     : SizedBox(),
-                SizedBox(height: 10.h),
-                MdSnsText(
-                  "Key Executives",
-                  color: AppColors.fieldTextColor,
-                  variant: TextVariant.h2,
-                  fontWeight: TextFontWeightVariant.h1,
-                ),
-                SizedBox(height: 14.h),
-                GestureDetector(
-                  onTap: () {},
-                  child: MdSnsText(
-                    "Read more",
-                    variant: TextVariant.h3,
-                    fontWeight: TextFontWeightVariant.h1,
 
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
-                SizedBox(height: 14.h),
-                InfoBoxGrid(items: []),
                 SizedBox(height: 10.h),
                 companyModel != null &&
                         companyModel!.general.Officers != null &&
@@ -1285,7 +1266,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   ],
                 ),
 
-                SizedBox(height: 14.h),
+                // SizedBox(height: 14.h),
                 companyModel != null
                     ? CompanyDetailsCard(
                         items: [

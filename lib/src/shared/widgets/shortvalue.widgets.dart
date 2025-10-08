@@ -100,78 +100,110 @@ class ShortVolumeChart extends StatelessWidget {
     // bottom x-axis date labels
     final dates = series.first.points.map((e) => e.date).toList();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.all(10),
-          height: 300,
-          child: LineChart(
-            LineChartData(
-              minY: 0,
-              maxY: maxY * 1.1,
-              gridData: FlGridData(show: false, drawVerticalLine: false),
-              borderData: FlBorderData(show: false),
-              titlesData: FlTitlesData(
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false, reservedSize: 40),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (x, meta) {
-                      final index = x.toInt();
-                      if (index % 10 != 0 || index >= dates.length) {
-                        return const SizedBox.shrink();
-                      }
-                      final date = dates[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: MdSnsText(
-                          dateFormat.format(date),
-
-                          variant: TextVariant.h5,
-                          color: Colors.white70,
-                        ),
-                      );
-                    },
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        // color: AppColors.white,
+        border: Border.all(color: AppColors.color0x0x1AB3B3B3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              MdSnsText(
+                "Short Volume",
+                color: AppColors.fieldTextColor,
+                fontWeight: TextFontWeightVariant.h4,
+                variant: TextVariant.h3,
+              ),
+              MdSnsText(
+                "Shel",
+                color: AppColors.fieldTextColor,
+                fontWeight: TextFontWeightVariant.h4,
+                variant: TextVariant.h3,
+              ),
+            ],
+          ),
+          Container(
+            height: 300,
+            child: LineChart(
+              LineChartData(
+                minY: 0,
+                maxY: maxY * 1.1,
+                gridData: FlGridData(show: false, drawVerticalLine: false),
+                borderData: FlBorderData(show: false),
+                titlesData: FlTitlesData(
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false, reservedSize: 40),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (x, meta) {
+                        final index = x.toInt();
+                        if (index % 10 != 0 || index >= dates.length) {
+                          return const SizedBox.shrink();
+                        }
+                        final date = dates[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 25),
+                          child: MdSnsText(
+                            dateFormat.format(date),
+                            fontWeight: TextFontWeightVariant.h4,
+                            variant: TextVariant.h5,
+                            color: Colors.white70,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
                   ),
                 ),
-                rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
+                lineBarsData: lineBars,
               ),
-              lineBarsData: lineBars,
             ),
           ),
-        ),
-        const SizedBox(height: 10),
-        // simple legend
-        Wrap(
-          spacing: 12,
-          children: series.map((s) {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(width: 10, height: 10, color: _getColor(s.name)),
-                const SizedBox(width: 4),
-                MdSnsText(
-                  s.name == "shortParQuantity"
-                      ? "Short Par Quantity"
-                      : s.name == "shortExemptParQuantity"
-                      ? "Short Exempt Par Quantity"
-                      : "Total Par Quantity",
-                  color: AppColors.white,
-                  variant: TextVariant.h4,
-                ),
-              ],
-            );
-          }).toList(),
-        ),
-      ],
+          const SizedBox(height: 10),
+          // simple legend
+          Wrap(
+            spacing: 12,
+            children: series.map((s) {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: _getColor(s.name),
+                      shape: BoxShape.circle,
+                    ),
+                    width: 10,
+                    height: 10,
+                  ),
+                  const SizedBox(width: 4),
+                  MdSnsText(
+                    s.name == "shortParQuantity"
+                        ? "Short Par Quantity"
+                        : s.name == "shortExemptParQuantity"
+                        ? "Short Exempt Par Quantity"
+                        : "Total Par Quantity",
+                    color: AppColors.white,
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
+        ],
+      ),
     );
   }
 

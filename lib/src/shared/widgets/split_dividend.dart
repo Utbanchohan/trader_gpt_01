@@ -25,7 +25,7 @@ class SplitDividend extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             child: MdSnsText(
               "Split Dividends",
-              color: AppColors.color9EAAC0,
+              color: AppColors.fieldTextColor,
               fontWeight: TextFontWeightVariant.h4,
               variant: TextVariant.h3,
             ),
