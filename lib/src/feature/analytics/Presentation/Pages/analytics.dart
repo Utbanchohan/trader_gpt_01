@@ -25,6 +25,7 @@ import 'package:trader_gpt/src/shared/widgets/EarningsTrend_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/InfoBox_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/cashdebt_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/company_detail.widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/earning_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/earning_wigdets.dart'
     hide CompanyDetailsCard;
 import 'package:trader_gpt/src/shared/widgets/earningsTable_widgets.dart';
@@ -1304,7 +1305,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           ),
                         ],
                       )
-                    : SizedBox(),
+                    : EarningsShimmer(),
                 SizedBox(height: 14.h),
                 earningdata != null
                     ? Earnings(
@@ -1340,7 +1341,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                               : "N/A",
                         ],
                       )
-                    : SizedBox(),
+                    : EarningsShimmer(),
                 SizedBox(height: 14.h),
                 shortVolumeModel != null &&
                         shortVolumeModel!.data!.Charts.length > 0
