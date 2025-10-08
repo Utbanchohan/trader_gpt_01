@@ -11,6 +11,10 @@ class BaseUrl {
     return 'https://marketsdata-prod-ff.traderverse.io/';
   }
 
+  static String get marketData {
+    return 'https://marketsdata-prod.traderverse.io/';
+  }
+
   static String get etlDataUrl {
     return 'https://etl-payload.traderverse.io/';
   }

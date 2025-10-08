@@ -11,9 +11,11 @@ import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analytics_widget.dart'
     show AnalyticsWidget;
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/earning_chart.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
+import 'package:trader_gpt/src/feature/analytics/domain/model/company_detail/company_detail_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/chart/lin_chart.dart';
@@ -46,9 +48,12 @@ import '../../../../shared/widgets/security_short_widgets.dart';
 import '../../../../shared/widgets/securityownership_widgets.dart';
 import '../../../../shared/widgets/shortvalue.widgets.dart';
 import '../../../../shared/widgets/split_dividend.dart';
+import '../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../domain/model/analytics_model/analytics_model.dart';
+import '../../domain/model/earning_chart_model/earning_chart_model.dart';
+import '../../domain/model/earning_report_model/earning_report_model.dart';
 import '../../domain/model/earnings_model/earnings_model.dart';
 import '../../domain/model/esg_score_model/esg_score_model.dart';
 import '../../domain/model/fundamental_model/fundamental_model.dart';
@@ -101,6 +106,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   SecurityOwnershipResponse? securityOwnership;
   ShortSecurityResponse? securityShortVolume;
   EsgScoreModel? esgScoreData;
+  CompanyDetailModel? companyDetailModel;
+  EarningChartModel? earningChartModel;
+  EarningReportsModel? earningReportsModel;
 
   getOverview(SymbolDto symbol) async {
     var res = await ref
@@ -108,6 +116,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         .getOverview(symbol);
     if (res != null) {
       stockResponse = res;
+    }
+  }
+
+  getCompanyDetail(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .companyDetail(symbol);
+    if (res != null) {
+      companyDetailModel = res;
     }
   }
 
@@ -228,6 +245,72 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
+  earningChartData(String symbol) async {
+    final now = DateTime.now().toUtc();
+
+    // Subtract 2 years for startDate
+    final endDate = DateTime.utc(
+      now.year - 2,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute,
+      now.second,
+      now.millisecond,
+    );
+    ChartRequestDto overview = ChartRequestDto(
+      symbol: "NDAQ",
+      interval: "quarterly",
+      startDate: "2025-10-08T16:03:48.882Z",
+      endDate: "2023-10-08T16:03:48.882Z",
+    );
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .earningChartData(overview);
+    if (res != null) {
+      earningChartModel = res;
+    }
+  }
+
+  earningReportData(String symbol) async {
+    final now = DateTime.now().toUtc();
+
+    // Subtract 2 years for startDate
+    final endDate = DateTime.utc(
+      now.year - 2,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute,
+      now.second,
+      now.millisecond,
+    );
+    ChartRequestDto overview = ChartRequestDto(
+      symbol: symbol,
+      interval: IntervalEnum.quarterly.value,
+      startDate: "2025-10-08T16:03:48.882Z",
+      endDate: "2023-10-08T16:03:48.882Z",
+    );
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .earningReportData(overview);
+    if (res != null) {
+      earningReportsModel = res;
+    }
+  }
+
+  fourthTap() {
+    if (earningReportsModel == null) {
+      earningReportData(widget.chatRouting!.symbol);
+    }
+    if (earningChartModel == null) {
+      // earningChartData(widget.chatRouting!.symbol);
+    }
+    if (companyDetailModel == null) {
+      getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+  }
+
   late TabController _tabController;
 
   final List<String> _tabs = [
@@ -273,24 +356,30 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   final TextEditingController search = TextEditingController();
   int selectedIndex = -1;
   secondIndexData() {
-    if (companyModel != null) {
+    if (companyModel == null) {
       getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
-    if (insiderTransactionResponse != null) {
+    if (insiderTransactionResponse == null) {
       insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
-    if (shortVolumeModel != null) {
+    if (shortVolumeModel == null) {
       getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
 
-    if (securityOwnership != null) {
+    if (securityOwnership == null) {
       getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
-    if (securityShortVolume != null) {
+    if (securityShortVolume == null) {
       getSecurityShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
-    if (esgScoreData != null) {
+    if (esgScoreData == null) {
       esgScore(widget.chatRouting!.symbol);
+    }
+    if (earningdata == null) {
+      getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+    if (companyDetailModel == null) {
+      getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
     setState(() {});
   }
@@ -307,7 +396,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         symbol2: "SPY",
       ),
     );
-    getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
     fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
     shares(SymbolDto(symbol: widget.chatRouting!.symbol));
     getWeeklyData(widget.chatRouting!.symbol);
@@ -562,6 +650,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               onTap: (val) {
                 if (val == 1) {
                   secondIndexData();
+                }
+                if (val == 3) {
+                  fourthTap();
                 }
               },
               tabs: List.generate(
@@ -1268,7 +1359,21 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     ? ShortVolumeChart(data: shortVolumeModel!.data!.Charts)
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                OutstandingSharesChart(),
+                companyDetailModel != null &&
+                        companyDetailModel!
+                                .data
+                                .fundamentalsOutstandingShares !=
+                            null &&
+                        companyDetailModel!
+                            .data
+                            .fundamentalsOutstandingSharesQuarter!
+                            .isNotEmpty
+                    ? OutstandingSharesChart(
+                        fundamentalsOutstandingShares: companyDetailModel!
+                            .data
+                            .fundamentalsOutstandingSharesQuarter,
+                      )
+                    : SizedBox(),
                 SizedBox(height: 14.h),
                 esgScoreData != null && esgScoreData!.data != null
                     ? EsgScoreTable(data: esgScoreData!.data)
@@ -1559,10 +1664,23 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             children: [
               SizedBox(height: 15),
               EarningsChart(),
+
+              earningChartModel != null && earningChartModel!.data.isNotEmpty
+                  ? QuarterlyPerformanceChart(data: earningChartModel!.data)
+                  : SizedBox(),
               SizedBox(height: 20),
-              EarningsTable(),
+              earningReportsModel != null &&
+                      earningReportsModel!.data.isNotEmpty
+                  ? EarningsTable(data: earningReportsModel!.data)
+                  : SizedBox(),
               SizedBox(height: 20),
-              EarningsTrend(title: "Earnings Trend"),
+              companyDetailModel != null &&
+                      companyDetailModel!.data.fundamentalsEarningsTrend != null
+                  ? EarningsTrend(
+                      title: "Earnings Trend",
+                      data: companyDetailModel!.data.fundamentalsEarningsTrend,
+                    )
+                  : SizedBox(),
             ],
           ),
         ),
@@ -1585,49 +1703,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 areaColor: Colors.purple,
               ),
               SizedBox(height: 20),
-              EarningsTrend(title: "Earnings Trend"),
+              // EarningsTrend(title: "Earnings Trend"),
             ],
           ),
         ),
       ),
     );
   }
-
-  Widget _buildTab({
-    required bool isSelected,
-    required String title,
-    required String iconPath,
-  }) {
-    return Container(
-      height: 45,
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? AppColors.color091224 : Colors.transparent,
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            iconPath,
-            height: 20,
-            width: 20,
-            color: isSelected ? AppColors.color00FF55 : Colors.white,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Custom Chip Widget
-Widget _chip(String label, {bool isSelected = false}) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    decoration: BoxDecoration(
-      color: isSelected ? Colors.blueAccent : const Color(0xFF142233),
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: MdSnsText(label, color: AppColors.white, variant: TextVariant.h3),
-  );
 }

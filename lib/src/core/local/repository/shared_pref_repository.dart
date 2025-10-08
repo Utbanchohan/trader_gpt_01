@@ -15,6 +15,7 @@ class SharedPreferencesService implements SharedPrefService {
   final userNameKey = "user-name";
   final stocksKey = "stocks";
   final _marketAccessToken = "metaAccessToken";
+  final _marketAccessTokenNew = "metaAccessTokenNew";
 
   @override
   String? get accessToken => sharedPreferences.getString(_tokenKey);
@@ -22,6 +23,10 @@ class SharedPreferencesService implements SharedPrefService {
   @override
   String? get marketAccessToken =>
       sharedPreferences.getString(_marketAccessToken);
+
+  @override
+  String? get marketAccessTokenNew =>
+      sharedPreferences.getString(_marketAccessTokenNew);
 
   @override
   String? get getUserName => sharedPreferences.getString(userNameKey);
@@ -34,6 +39,11 @@ class SharedPreferencesService implements SharedPrefService {
   @override
   Future<bool> setAccessTokenMarket(String token) async {
     return await sharedPreferences.setString(_marketAccessToken, token);
+  }
+
+  @override
+  Future<bool> setAccessTokenMarketNew(String token) async {
+    return await sharedPreferences.setString(_marketAccessTokenNew, token);
   }
 
   @override
