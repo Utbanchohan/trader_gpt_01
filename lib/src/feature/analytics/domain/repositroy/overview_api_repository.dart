@@ -5,10 +5,12 @@ import 'package:trader_gpt/src/feature/analytics/domain/repositroy/overview_repo
 
 import '../../../sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
 import '../../data/api/analysis_api/analysis_api.dart';
+import '../../data/dto/esg_score_dto/esg_score_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../model/analytics_model/analytics_model.dart';
 import '../model/compnay_model/company_model.dart';
 import '../model/earnings_model/earnings_model.dart';
+import '../model/esg_score_model/esg_score_model.dart';
 import '../model/fundamental_model/fundamental_model.dart';
 import '../model/insider_transaction/insider_transaction_model.dart';
 import '../model/market_data_login/market_data_login.dart';
@@ -19,6 +21,8 @@ import '../model/overview_model/overview_model.dart';
 import '../model/price_comparison_model/price_comparison_model.dart';
 import '../model/price_target_matrics_model/price_target_matrics_model.dart'
     show PriceTargetMatrics;
+import '../model/security_ownership_model/security_ownership_model.dart';
+import '../model/security_short/short_security_model.dart';
 import '../model/share_stats/share_stats.dart';
 import '../model/short_volume/short_volume_model.dart';
 import '../model/stock_price_model/stock_price_model.dart';
@@ -97,6 +101,16 @@ class OverviewApiRepository implements OverviewRepository {
   }
 
   @override
+  Future<ShortSecurityResponse> securityShortVolume(SymbolDto overview) async {
+    return await AnalysisApi(client).securityShortVolume(overview);
+  }
+
+  @override
+  Future<SecurityOwnershipResponse> shortOwnership(SymbolDto overview) async {
+    return await AnalysisApi(client).shortOwnership(overview);
+  }
+
+  @override
   Future<EarningsModel> earningsData(SymbolDto overview) async {
     return await AnalysisApi(client).earningsData(overview);
   }
@@ -104,5 +118,10 @@ class OverviewApiRepository implements OverviewRepository {
   @override
   Future<InsiderTransactionResponse> insiderTrades(SymbolDto overview) async {
     return await AnalysisApi(client).insiderTrades(overview);
+  }
+
+  @override
+  Future<EsgScoreModel> esgScore(EsgDto overview) async {
+    return await AnalysisApi(client).esgScore(overview);
   }
 }

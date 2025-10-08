@@ -344,6 +344,60 @@ class _AnalysisApi implements AnalysisApi {
   }
 
   @override
+  Future<ShortSecurityResponse> securityShortVolume(SymbolDto overview) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = overview;
+    final _options = _setStreamType<ShortSecurityResponse>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'api/v1/company/web_premium_table/security_short_vol',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ShortSecurityResponse _value;
+    try {
+      _value = ShortSecurityResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<SecurityOwnershipResponse> shortOwnership(SymbolDto overview) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = overview;
+    final _options = _setStreamType<SecurityOwnershipResponse>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'api/v1/company/web_premium_table/security_ownership',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late SecurityOwnershipResponse _value;
+    try {
+      _value = SecurityOwnershipResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<InsiderTransactionResponse> insiderTrades(SymbolDto overview) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -363,6 +417,33 @@ class _AnalysisApi implements AnalysisApi {
     late InsiderTransactionResponse _value;
     try {
       _value = InsiderTransactionResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<EsgScoreModel> esgScore(EsgDto overview) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = overview;
+    final _options = _setStreamType<EsgScoreModel>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'api/v1/company/fmp_esg_score',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late EsgScoreModel _value;
+    try {
+      _value = EsgScoreModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

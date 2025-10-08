@@ -1,8 +1,11 @@
+import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
+import 'package:trader_gpt/src/feature/analytics/domain/model/esg_score_model/esg_score_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/matrics_data_model/matrics_data_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';
 import '../../../../../shared/states/app_loading_state.dart';
+import '../../../data/dto/esg_score_dto/esg_score_dto.dart';
 import '../../../data/dto/overview_dto/overview_dto.dart';
 import '../../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../../domain/model/analytics_model/analytics_model.dart';
@@ -12,6 +15,8 @@ import '../../../domain/model/insider_transaction/insider_transaction_model.dart
 import '../../../domain/model/overview_model/overview_model.dart';
 import '../../../domain/model/price_comparison_model/price_comparison_model.dart';
 import '../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
+import '../../../domain/model/security_ownership_model/security_ownership_model.dart';
+import '../../../domain/model/security_short/short_security_model.dart';
 import '../../../domain/model/share_stats/share_stats.dart';
 import '../../../domain/model/short_volume/short_volume_model.dart';
 import '../../../domain/model/stock_price_model/stock_price_model.dart';
@@ -132,6 +137,47 @@ class AnalyticsProvider extends _$AnalyticsProvider {
 
   Future<ShortVolumeModel?> shortVolumeData(SymbolDto symbol) async {
     var res = await ref.read(overviewRepository).shortVolumeData(symbol);
+    if (res.status == 200) {
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  Future<ShortSecurityResponse?> securityShortVolume(SymbolDto symbol) async {
+    var res = await ref.read(overviewRepository).securityShortVolume(symbol);
+    if (res.status == 200) {
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  Future<SecurityOwnershipResponse?> shortOwnership(SymbolDto symbol) async {
+    var res = await ref.read(overviewRepository).shortOwnership(symbol);
+    if (res.status == 200) {
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  Future<EsgScoreModel?> esgScore(String symbol) async {
+    final now = DateTime.now().toUtc();
+
+    // Subtract 2 years for startDate
+    final endDate = DateTime.utc(
+      now.year - 2,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute,
+      now.second,
+      now.millisecond,
+    );
+
+    EsgDto esgDto = EsgDto(symbol: symbol, startDate: now, endDate: endDate);
+    var res = await ref.read(overviewRepository).esgScore(esgDto);
     if (res.status == 200) {
       return res;
     } else {

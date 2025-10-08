@@ -1,43 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-class SecurityShortVolume extends StatelessWidget {
-  final List<Map<String, String>> data = [
-    {
-      "date": "09/26/2025",
-      "shortVolume": "1,393,125",
-      "totalVolume": "11,863,341",
-      "ratio": "0.12",
-    },
-    {
-      "date": "09/25/2025",
-      "shortVolume": "1,394,100",
-      "totalVolume": "11,661,936",
-      "ratio": "0.12",
-    },
-    {
-      "date": "09/24/2025",
-      "shortVolume": "1,053,360",
-      "totalVolume": "9,710,734",
-      "ratio": "0.11",
-    },
-    {
-      "date": "09/23/2025",
-      "shortVolume": "1,865,733",
-      "totalVolume": "13,593,342",
-      "ratio": "0.14",
-    },
-    {
-      "date": "09/22/2025",
-      "shortVolume": "2,425,448",
-      "totalVolume": "14,252,374",
-      "ratio": "0.17",
-    },
-  ];
+import '../../feature/analytics/domain/model/security_short/short_security_model.dart';
 
-  SecurityShortVolume({super.key});
+class SecurityShortVolume extends StatelessWidget {
+  final List<ShortSecurity>? data;
+
+  SecurityShortVolume({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -88,19 +60,28 @@ class SecurityShortVolume extends StatelessWidget {
               ),
 
               /// Data Rows
-              ...data.map(
-                (row) => TableRow(
+              ...data!.take(6).map((item) {
+                return TableRow(
                   children: [
-                    _buildDataCell(row["date"]!, AppColors.white),
                     _buildDataCell(
-                      row["shortVolume"]!,
+                      _formatDate(item.marketDate),
+                      AppColors.white,
+                    ),
+                    _buildDataCell(
+                      formatNumbers(item.shortVolume),
                       AppColors.color0xFFCD3438,
                     ),
-                    _buildDataCell(row["totalVolume"]!, AppColors.color0098E4),
-                    _buildDataCell(row["ratio"]!, AppColors.white),
+                    _buildDataCell(
+                      formatNumbers(item.totalVolume),
+                      AppColors.color0098E4,
+                    ),
+                    _buildDataCell(
+                      item.shortVolumeRatio.toString(),
+                      AppColors.white,
+                    ),
                   ],
-                ),
-              ),
+                );
+              }),
             ],
           ),
         ],
@@ -140,4 +121,17 @@ class SecurityShortVolume extends StatelessWidget {
       ),
     );
   }
+}
+
+String _formatDate(String date) {
+  try {
+    return DateFormat('MM/dd/yyyy').format(DateTime.parse(date));
+  } catch (_) {
+    return '-';
+  }
+}
+
+String formatNumbers(int number) {
+  String formatted = NumberFormat.decimalPattern().format(number);
+  return formatted;
 }

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
@@ -14,7 +13,6 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/anal
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
-import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/chart/lin_chart.dart';
 import 'package:trader_gpt/src/shared/chart/performance_table.dart';
@@ -42,13 +40,18 @@ import 'package:trader_gpt/utils/constant.dart';
 
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/routes/routes.dart';
+import '../../../../shared/widgets/esg_score_table.dart';
+import '../../../../shared/widgets/price_card_shimmer.dart';
 import '../../../../shared/widgets/security_short_widgets.dart';
 import '../../../../shared/widgets/securityownership_widgets.dart';
 import '../../../../shared/widgets/shortvalue.widgets.dart';
+import '../../../../shared/widgets/split_dividend.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../domain/model/analytics_model/analytics_model.dart';
+import '../../domain/model/compnay_model/company_model.dart';
 import '../../domain/model/earnings_model/earnings_model.dart';
+import '../../domain/model/esg_score_model/esg_score_model.dart';
 import '../../domain/model/fundamental_model/fundamental_model.dart';
 import '../../domain/model/insider_transaction/insider_transaction_model.dart';
 import '../../domain/model/matrics_data_model/matrics_data_model.dart';
@@ -56,17 +59,13 @@ import '../../domain/model/monthly_model/monthly_model.dart';
 import '../../domain/model/overview_model/overview_model.dart';
 import '../../domain/model/price_comparison_model/price_comparison_model.dart';
 import '../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
+import '../../domain/model/security_ownership_model/security_ownership_model.dart';
+import '../../domain/model/security_short/short_security_model.dart';
 import '../../domain/model/share_stats/share_stats.dart';
 import '../../domain/model/short_volume/short_volume_model.dart' hide ChartData;
 import '../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../domain/model/weekly_model/weekly_model.dart';
 import '../provider/monthly_data/monthly_data.dart';
-
-final compactFormatter = NumberFormat.compactCurrency(
-  locale: "en",
-  symbol: "\$",
-  decimalDigits: 2,
-);
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
@@ -94,6 +93,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   EarningsData? earningdata;
   ShortVolumeModel? shortVolumeModel;
   InsiderTransactionResponse? insiderTransactionResponse;
+  SecurityOwnershipResponse? securityOwnership;
+  ShortSecurityResponse? securityShortVolume;
+  EsgScoreModel? esgScoreData;
 
   getOverview(SymbolDto symbol) async {
     var res = await ref
@@ -113,12 +115,39 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
+  esgScore(String symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .esgScore(symbol);
+    if (res != null) {
+      esgScoreData = res;
+    }
+  }
+
   insiderTrades(SymbolDto symbol) async {
     var res = await ref
         .read(analyticsProviderProvider.notifier)
         .insiderTrades(symbol);
     if (res != null) {
       insiderTransactionResponse = res;
+    }
+  }
+
+  getSecurityShortVolumeData(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .securityShortVolume(symbol);
+    if (res != null) {
+      securityShortVolume = res;
+    }
+  }
+
+  getShortOwnership(SymbolDto symbol) async {
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .shortOwnership(symbol);
+    if (res != null) {
+      securityOwnership = res;
     }
   }
 
@@ -194,14 +223,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
-  late TabController _tabController;
-
-  final List<String> _tabs = [
-    "Summary",
-    "Income Statement",
-    "Balance Sheet",
-    "Cash Flow",
-  ];
   final List<String> categories = [
     "Overview",
     "Company",
@@ -238,29 +259,53 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
   final TextEditingController search = TextEditingController();
   int selectedIndex = -1;
+  secondIndexData() {
+    if (companyModel != null) {
+      getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+    if (insiderTransactionResponse != null) {
+      insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+    if (shortVolumeModel != null) {
+      getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+
+    if (securityOwnership != null) {
+      getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+    if (securityShortVolume != null) {
+      getSecurityShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+    if (esgScoreData != null) {
+      esgScore(widget.chatRouting!.symbol);
+    }
+    setState(() {});
+  }
+
+  firstIndexData() {
+    getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
+    getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+    priceTargetMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+    analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+    priceComparison(
+      PriceComparisonDto(
+        daysBack: 365,
+        symbol1: widget.chatRouting!.symbol,
+        symbol2: "SPY",
+      ),
+    );
+    getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
+    fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
+    shares(SymbolDto(symbol: widget.chatRouting!.symbol));
+    getWeeklyData(widget.chatRouting!.symbol);
+    getMonthlyData(widget.chatRouting!.symbol);
+  }
+
   @override
   void initState() {
     super.initState();
     if (widget.chatRouting != null) {
-      getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
-      getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      priceTargetMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      priceComparison(
-        PriceComparisonDto(
-          daysBack: 365,
-          symbol1: widget.chatRouting!.symbol,
-          symbol2: "SPY",
-        ),
-      );
-      getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
-      shares(SymbolDto(symbol: widget.chatRouting!.symbol));
-      getWeeklyData(widget.chatRouting!.symbol);
-      getMonthlyData(widget.chatRouting!.symbol);
-      getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
-      getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      firstIndexData();
     }
 
     selectedStock =
@@ -279,14 +324,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           )
         : emptyStock();
   }
-
-  final List<ChartData> chartData = [
-    ChartData(DateTime(2024, 1, 1), 200, 500, 100),
-    ChartData(DateTime(2024, 2, 1), 300, 600, 150),
-    ChartData(DateTime(2024, 3, 1), 250, 700, 200),
-    ChartData(DateTime(2024, 4, 1), 400, 900, 220),
-    ChartData(DateTime(2024, 5, 1), 350, 800, 180),
-  ];
 
   final List<Map<String, dynamic>> priceData = [
     {
@@ -378,6 +415,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     indicatorPadding: EdgeInsets.zero,
                     labelPadding: EdgeInsets.symmetric(horizontal: 8),
                     labelColor: Colors.white,
+                    unselectedLabelColor: Color(0xFFB2B2B7),
                     tabs: [
                       // ---- First Tab (with icon + text) ----
                       Tab(
@@ -509,6 +547,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
               unselectedLabelColor: AppColors.colorB2B2B7,
               dividerColor: Colors.transparent,
+              onTap: (val) {
+                if (val == 1) {
+                  secondIndexData();
+                }
+              },
               tabs: List.generate(
                 categories.length,
                 (index) => Tab(
@@ -559,67 +602,68 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 _earningsContent(),
                 _analysisContent(),
 
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: [
-                //     Row(
-                //       children: [
-                //         MdSnsText(
-                //           "#${selectedStock!.symbol}",
-                //           variant: TextVariant.h2,
-                //           fontWeight: TextFontWeightVariant.h1,
+                /// Company Tab Content
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        MdSnsText(
+                          "#${selectedStock!.symbol}",
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h1,
 
-                //           color: AppColors.white,
-                //         ),
-                //         const SizedBox(width: 4),
-                //         MdSnsText(
-                //           selectedStock!.companyName.split("-").first.trim(),
-                //           color: AppColors.colorB2B2B7,
-                //           variant: TextVariant.h4,
-                //           fontWeight: TextFontWeightVariant.h4,
-                //         ),
-                //         Icon(
-                //           Icons.keyboard_arrow_down,
-                //           color: AppColors.white,
-                //           size: 20.sp,
-                //         ),
-                //       ],
-                //     ),
-                //     Row(
-                //       children: [
-                //         MdSnsText(
-                //           "\$${selectedStock!.price.toStringAsFixed(2)}",
-                //           color:
-                //               selectedStock!.pctChange.toString().contains("-")
-                //               ? AppColors.redFF3B3B
-                //               : AppColors.white,
-                //           variant: TextVariant.h4,
-                //           fontWeight: TextFontWeightVariant.h4,
-                //         ),
-                //         const SizedBox(width: 6),
-                //         Icon(
-                //           selectedStock!.pctChange.toString().contains("-")
-                //               ? Icons.arrow_drop_down
-                //               : Icons.arrow_drop_up,
-                //           color:
-                //               selectedStock!.pctChange.toString().contains("-")
-                //               ? AppColors.redFF3B3B
-                //               : AppColors.color00FF55,
-                //           size: 20,
-                //         ),
-                //         MdSnsText(
-                //           " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
-                //           color:
-                //               selectedStock!.pctChange.toString().contains("-")
-                //               ? AppColors.redFF3B3B
-                //               : AppColors.color00FF55,
-                //           variant: TextVariant.h4,
-                //           fontWeight: TextFontWeightVariant.h4,
-                //         ),
-                //       ],
-                //     ),
-                //   ],
-                // ),
+                          color: AppColors.white,
+                        ),
+                        const SizedBox(width: 4),
+                        MdSnsText(
+                          selectedStock!.companyName.split("-").first.trim(),
+                          color: AppColors.colorB2B2B7,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.white,
+                          size: 20.sp,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        MdSnsText(
+                          "\$${selectedStock!.price.toStringAsFixed(2)}",
+                          color:
+                              selectedStock!.pctChange.toString().contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.white,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          selectedStock!.pctChange.toString().contains("-")
+                              ? Icons.arrow_drop_down
+                              : Icons.arrow_drop_up,
+                          color:
+                              selectedStock!.pctChange.toString().contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          size: 20,
+                        ),
+                        MdSnsText(
+                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
+                          color:
+                              selectedStock!.pctChange.toString().contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -758,91 +802,113 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             ),
             AppSpacing.h10,
 
-            Visibility(
-              visible:
-                  stockResponse != null &&
-                  stockResponse!.data.previousClose != null,
-              child: SizedBox(
-                height: 122.h,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal, // Horizontal scrolling
-                  // padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  itemCount: 5,
-                  physics: const BouncingScrollPhysics(), // Smooth scrolling
-                  itemBuilder: (context, index) {
-                    final item = priceData[0];
-                    return index == 0
-                        ? PriceCardWidget(
-                            firstColor: AppColors.white,
-                            secondColor: AppColors.color0xFFFFB21D,
-                            firstHeading: "PREVIOUSLY CLOSE PRICE",
-                            secondHeading: "AFTER HOURS",
-                            previousPrice: stockResponse!.data.previousClose
-                                .toString(),
-                            afterHoursPrice: stockResponse!.data.AfterHours
-                                .toString(),
-                            percentage: item["percentage"],
-                          )
-                        : index == 1
-                        ? PriceCardWidget(
-                            secondColor: AppColors.white,
-                            firstColor: AppColors.color046297,
-                            firstHeading: "MARKET CAPITILIZATION",
-                            secondHeading: "OUTSTANDING SHARES",
-                            previousPrice: stockResponse!
-                                .data
-                                .MarketCapitalization
-                                .toString(),
-                            afterHoursPrice: stockResponse!
-                                .data
-                                .SharesOutstanding
-                                .toString(),
-                            percentage: item["percentage"],
-                          )
-                        : index == 2
-                        ? PriceCardWidget(
-                            firstColor: AppColors.white,
-                            secondColor: AppColors.white,
+            stockResponse != null && stockResponse!.data.previousClose != null
+                ? SizedBox(
+                    height: 122.h,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal, // Horizontal scrolling
+                      // padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      itemCount: 5,
+                      physics:
+                          const BouncingScrollPhysics(), // Smooth scrolling
+                      itemBuilder: (context, index) {
+                        final item = priceData[0];
+                        return index == 0
+                            ? PriceCardWidget(
+                                firstColor: AppColors.white,
+                                secondColor: AppColors.color0xFFFFB21D,
+                                firstHeading: "PREVIOUSLY CLOSE PRICE",
+                                secondHeading: "AFTER HOURS",
+                                previousPrice: stockResponse!.data.previousClose
+                                    .toString(),
+                                afterHoursPrice: stockResponse!.data.AfterHours
+                                    .toString(),
+                                percentage: item["percentage"],
+                              )
+                            : index == 1
+                            ? PriceCardWidget(
+                                secondColor: AppColors.white,
+                                firstColor: AppColors.color046297,
+                                firstHeading: "MARKET CAPITILIZATION",
+                                secondHeading: "OUTSTANDING SHARES",
+                                previousPrice: stockResponse!
+                                    .data
+                                    .MarketCapitalization
+                                    .toString(),
+                                afterHoursPrice: stockResponse!
+                                    .data
+                                    .SharesOutstanding
+                                    .toString(),
+                                percentage: item["percentage"],
+                              )
+                            : index == 2
+                            ? PriceCardWidget(
+                                firstColor: AppColors.white,
+                                secondColor: AppColors.white,
 
-                            firstHeading: "TOTAL VOLUME",
-                            secondHeading: "AVERAGE VOLUME(3M)",
-                            previousPrice: stockResponse!.data.TotalVolume
-                                .toString(),
-                            afterHoursPrice: stockResponse!.data.AverageVolume
-                                .toString(),
-                            percentage: item["percentage"],
-                          )
-                        : index == 3
-                        ? PriceCardWidget(
-                            firstColor: AppColors.color00FF55,
-                            secondColor: AppColors.colorab75b8,
-                            firstHeading: "EXCHANGE",
-                            secondHeading: "MARKET CAPTILIZATION",
-                            previousPrice: stockResponse!.data.Exchange
-                                .toString(),
-                            afterHoursPrice: stockResponse!
-                                .data
-                                .MarketCapClassification
-                                .toString(),
-                            percentage: item["percentage"],
-                          )
-                        : PriceCardWidget(
-                            firstColor: AppColors.white,
-                            secondColor: AppColors.white,
-                            firstHeading: "SECTOR",
-                            secondHeading: "INDUSTRY",
-                            previousPrice: stockResponse!.data.Sector
-                                .toString(),
-                            afterHoursPrice: stockResponse!.data.Industry
-                                .toString(),
-                            percentage: item["percentage"],
-                          );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(width: 20.w);
-                  },
-                ),
-              ),
+                                firstHeading: "TOTAL VOLUME",
+                                secondHeading: "AVERAGE VOLUME(3M)",
+                                previousPrice: stockResponse!.data.TotalVolume
+                                    .toString(),
+                                afterHoursPrice: stockResponse!
+                                    .data
+                                    .AverageVolume
+                                    .toString(),
+                                percentage: item["percentage"],
+                              )
+                            : index == 3
+                            ? PriceCardWidget(
+                                firstColor: AppColors.color00FF55,
+                                secondColor: AppColors.colorab75b8,
+                                firstHeading: "EXCHANGE",
+                                secondHeading: "MARKET CAPTILIZATION",
+                                previousPrice: stockResponse!.data.Exchange
+                                    .toString(),
+                                afterHoursPrice: stockResponse!
+                                    .data
+                                    .MarketCapClassification
+                                    .toString(),
+                                percentage: item["percentage"],
+                              )
+                            : PriceCardWidget(
+                                firstColor: AppColors.white,
+                                secondColor: AppColors.white,
+                                firstHeading: "SECTOR",
+                                secondHeading: "INDUSTRY",
+                                previousPrice: stockResponse!.data.Sector
+                                    .toString(),
+                                afterHoursPrice: stockResponse!.data.Industry
+                                    .toString(),
+                                percentage: item["percentage"],
+                              );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(width: 20.w);
+                      },
+                    ),
+                  )
+                : SizedBox(
+                    height: 122.h,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal, // Horizontal scrolling
+                      // padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      itemCount: 5,
+                      physics:
+                          const BouncingScrollPhysics(), // Smooth scrolling
+                      itemBuilder: (context, index) {
+                        return PriceCardShimmer();
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(width: 20.w);
+                      },
+                    ),
+                  ),
+
+            // : PriceCardShimmer(),
+            SizedBox(height: 20.h),
+            CustomLineChart(
+              lineColor: Colors.green,
+              areaColor: Colors.greenAccent,
             ),
 
             SizedBox(height: 20.h),
@@ -1145,6 +1211,30 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   variant: TextVariant.h2,
                   fontWeight: TextFontWeightVariant.h1,
                 ),
+                SizedBox(height: 14.h),
+                GestureDetector(
+                  onTap: () {},
+                  child: MdSnsText(
+                    "Read more",
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h1,
+
+                    color: AppColors.secondaryColor,
+                  ),
+                ),
+                SizedBox(height: 14.h),
+                InfoBoxGrid(items: []),
+                SizedBox(height: 10.h),
+                companyModel != null &&
+                        companyModel!.general.Officers != null &&
+                        companyModel!.general.Officers!.isNotEmpty
+                    ? MdSnsText(
+                        "Key Executives",
+                        color: AppColors.fieldTextColor,
+                        variant: TextVariant.h2,
+                        fontWeight: TextFontWeightVariant.h1,
+                      )
+                    : SizedBox(),
                 SizedBox(height: 10.h),
 
                 Row(
@@ -1251,28 +1341,34 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                shortVolumeModel != null
-                    ? ShortVolumeChart(
-                        data: [
-                          ChartData(DateTime(2024, 1, 1), 200, 500, 100),
-                          ChartData(DateTime(2024, 2, 1), 300, 600, 150),
-                          ChartData(DateTime(2024, 3, 1), 250, 700, 200),
-                          ChartData(DateTime(2024, 4, 1), 400, 900, 220),
-                          ChartData(DateTime(2024, 5, 1), 350, 800, 180),
-                        ],
-                      )
+                shortVolumeModel != null &&
+                        shortVolumeModel!.data!.Charts.length > 0
+                    ? ShortVolumeChart(data: shortVolumeModel!.data!.Charts)
                     : SizedBox(),
                 SizedBox(height: 14.h),
                 OutstandingSharesChart(),
+                SizedBox(height: 14.h),
+                esgScoreData != null && esgScoreData!.data != null
+                    ? EsgScoreTable(data: esgScoreData!.data)
+                    : SizedBox(),
+                SizedBox(height: 14.h),
+
+                SplitDividend(),
                 SizedBox(height: 14.h),
                 insiderTransactionResponse != null &&
                         insiderTransactionResponse!.data.isNotEmpty
                     ? InsiderTraderTable(data: insiderTransactionResponse!)
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                SecurityOwnershipTable(),
+                securityOwnership != null &&
+                        securityOwnership!.data != null &&
+                        securityOwnership!.data!.isNotEmpty
+                    ? SecurityOwnershipTable(data: securityOwnership!.data!)
+                    : SizedBox(),
                 SizedBox(height: 14.h),
-                SecurityShortVolume(),
+                securityShortVolume != null && securityShortVolume!.data != null
+                    ? SecurityShortVolume(data: securityShortVolume!.data)
+                    : SizedBox(),
               ],
             ),
 
@@ -1347,7 +1443,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       ),
                       labelColor: Colors.white,
                       labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      unselectedLabelColor: AppColors.colorB2B2B7,
+                      unselectedLabelColor: const Color(0xFFB2B2B7),
                       dividerColor: Colors.transparent,
                       tabs: [
                         Tab(
@@ -1386,7 +1482,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Income Statement",
-                              color: AppColors.white,
+                              // color: AppColors.white,
                               variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
                             ),
@@ -1407,7 +1503,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Balance Sheet",
-                              color: AppColors.white,
+                              // color: AppColors.white,
                               variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
                             ),
