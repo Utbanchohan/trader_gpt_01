@@ -4,12 +4,14 @@ import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_in_dto/sign_in_dto.
 
 import '../../../../core/api_client/client.dart' show client, marketDataClient;
 import '../../../../shared/flavours.dart';
+import '../../data/dto/esg_score_dto/esg_score_dto.dart';
 import '../../data/dto/market_login_dto/market_login_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../model/analytics_model/analytics_model.dart';
 import '../model/compnay_model/company_model.dart';
 import '../model/earnings_model/earnings_model.dart';
+import '../model/esg_score_model/esg_score_model.dart';
 import '../model/fundamental_model/fundamental_model.dart';
 import '../model/insider_transaction/insider_transaction_model.dart';
 import '../model/market_data_login/market_data_login.dart';
@@ -46,6 +48,7 @@ abstract interface class OverviewRepository {
   Future<SecurityOwnershipResponse> shortOwnership(SymbolDto overview);
   Future<InsiderTransactionResponse> insiderTrades(SymbolDto overview);
   Future<ShortSecurityResponse> securityShortVolume(SymbolDto overview);
+  Future<EsgScoreModel> esgScore(EsgDto overview);
 }
 
 final overviewRepository = Provider<OverviewRepository>(
