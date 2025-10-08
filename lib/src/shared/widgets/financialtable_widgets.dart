@@ -81,10 +81,10 @@ class FinancialTable extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  buildHeaderCell("Values in USD", width: 157),
-                  buildHeaderCell("Jun31,24", width: 81),
+                  buildHeaderCell("Values in USD", width: 152),
+                  buildHeaderCell("Jun31,24", width: 80),
                   buildHeaderCell("Jun30,23", width: 80),
-                  buildHeaderCell("Jun30,22", width: 70),
+                  buildHeaderCell("Jun30,22", width: 79),
                   buildHeaderCell("Jun30,21", width: 90),
                 ],
               ),
@@ -100,13 +100,14 @@ class FinancialTable extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 6,
-                      horizontal: 6,
+                      horizontal: 0,
                     ),
                     child: buildRow(
                       color: row["color"] as Color,
                       title: row["title"] as String,
                       values: List<String>.from(row["values"] as List),
                       growth: List<String>.from(row["growth"] as List),
+
                       growthColors: List<Color>.from(
                         row["growthColors"] as List,
                       ),
@@ -114,13 +115,10 @@ class FinancialTable extends StatelessWidget {
                   ),
 
                   Container(
-                    height: 1,
-                    color: AppColors.colorB3B3B3,
-                    margin: EdgeInsets.only(
-                      left: 6,
-                      right: 6,
-                      bottom: isLast ? 6 : 0, // small padding for bottom edge
-                    ),
+                    color: AppColors.white,
+
+                    // clear visible line
+                    // margin: const EdgeInsets.symmetric(horizontal: 6),
                   ),
                 ],
               );
