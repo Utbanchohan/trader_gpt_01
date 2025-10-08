@@ -1136,8 +1136,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     data: ProbabilityResponse(),
                   )
                 : SizedBox(),
-            SizedBox(height: 20.h),
 
+            SizedBox(height: 20.h),
             analyticsRespinseData != null &&
                     analyticsRespinseData!.data.isNotEmpty
                 ? AnalyticsWidget(data: analyticsRespinseData!.data)
