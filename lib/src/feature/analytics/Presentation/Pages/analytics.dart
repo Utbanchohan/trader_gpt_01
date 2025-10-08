@@ -1483,7 +1483,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Income Statement",
-                              // color: AppColors.white,
+                              color: AppColors.white,
                               variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
                             ),
@@ -1504,7 +1504,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ),
                             child: MdSnsText(
                               "Balance Sheet",
-                              // color: AppColors.white,
+                              color: AppColors.white,
                               variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
                             ),
