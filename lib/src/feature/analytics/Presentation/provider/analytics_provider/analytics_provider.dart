@@ -12,6 +12,7 @@ import '../../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../../data/dto/esg_score_dto/esg_score_dto.dart';
 import '../../../data/dto/overview_dto/overview_dto.dart';
 import '../../../data/dto/price_comparison_dto/price_comparison_dto.dart';
+import '../../../domain/model/analysis_data/analysis_data_model.dart';
 import '../../../domain/model/analytics_model/analytics_model.dart';
 import '../../../domain/model/earning_chart_model/earning_chart_model.dart';
 import '../../../domain/model/earning_report_model/earning_report_model.dart';
@@ -197,6 +198,31 @@ class AnalyticsProvider extends _$AnalyticsProvider {
       return res;
     } else {
       return null;
+    }
+  }
+
+  Future<AnalysisDataModel?> analysisData(ChartRequestDto overview) async {
+    try {
+      var res = await ref.read(overviewRepositoryNrm).analysisData(overview);
+      if (res.msg == "Success") {
+        return res;
+      } else {
+        return null;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        try {
+          $showMessage(e.response!.data!['message'], isError: true);
+        } catch (e) {
+          $showMessage("Something went wrong", isError: true);
+        }
+      } else if (e.type == DioExceptionType.connectionError) {
+        print('❌ Network error');
+      } else {
+        print('❌ Unknown error: ${e.message}');
+      }
+
+      state = AppLoadingState();
     }
   }
 

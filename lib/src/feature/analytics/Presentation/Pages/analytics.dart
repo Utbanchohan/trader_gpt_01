@@ -8,6 +8,7 @@ import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analysis_table.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analytics_widget.dart'
     show AnalyticsWidget;
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/earning_chart.dart';
@@ -50,6 +51,7 @@ import '../../../../shared/widgets/split_dividend.dart';
 import '../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
+import '../../domain/model/analysis_data/analysis_data_model.dart';
 import '../../domain/model/analytics_model/analytics_model.dart';
 import '../../domain/model/earning_chart_model/earning_chart_model.dart';
 import '../../domain/model/earning_report_model/earning_report_model.dart';
@@ -69,6 +71,7 @@ import '../../domain/model/short_volume/short_volume_model.dart' hide ChartData;
 import '../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../domain/model/weekly_model/weekly_model.dart';
 import '../provider/monthly_data/monthly_data.dart';
+import 'widgets/analytics_candle_stick_chart.dart';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
@@ -102,6 +105,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   CompanyDetailModel? companyDetailModel;
   EarningChartModel? earningChartModel;
   EarningReportsModel? earningReportsModel;
+  AnalysisDataModel? analysisDataModel;
 
   getOverview(SymbolDto symbol) async {
     var res = await ref
@@ -296,6 +300,35 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
+  getAnalysisData(String symbol, IntervalEnum interval) async {
+    final now = DateTime.now().toUtc();
+
+    // Subtract 2 years for startDate
+    final startDate = DateTime.utc(
+      now.year - 10,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute,
+      now.second,
+      now.millisecond,
+    );
+    final endDateString = now.toIso8601String();
+    final startDateString = startDate.toIso8601String();
+    ChartRequestDto overview = ChartRequestDto(
+      symbol: symbol,
+      interval: interval.value,
+      startDate: startDateString,
+      endDate: endDateString,
+    );
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .analysisData(overview);
+    if (res != null) {
+      analysisDataModel = res;
+    }
+  }
+
   fourthTap() {
     if (earningReportsModel == null) {
       earningReportData(widget.chatRouting!.symbol);
@@ -305,6 +338,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
     if (companyDetailModel == null) {
       getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+    }
+  }
+
+  fifthTap() {
+    if (analysisDataModel == null) {
+      getAnalysisData(widget.chatRouting!.symbol, IntervalEnum.daily);
     }
   }
 
@@ -666,9 +705,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               onTap: (val) {
                 if (val == 1) {
                   secondIndexData();
-                }
-                if (val == 3) {
+                } else if (val == 3) {
                   fourthTap();
+                } else if (val == 4) {
+                  fifthTap();
                 }
               },
               tabs: List.generate(
@@ -1701,12 +1741,29 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 10),
-              CustomLineChart(
-                lineColor: Colors.purpleAccent,
-                areaColor: Colors.purple,
-              ),
+              analysisDataModel != null &&
+                      analysisDataModel!.data != null &&
+                      analysisDataModel!.data!.chart != null
+                  ? CustomCandleChart(
+                      data: analysisDataModel!.data!.chart!,
+                      onPressed: () async {
+                        await getAnalysisData(
+                          widget.chatRouting!.symbol,
+                          IntervalEnum.monthly,
+                        );
+                      },
+                    )
+                  : SizedBox(),
+
               SizedBox(height: 20),
-              // EarningsTrend(title: "Earnings Trend"),
+              analysisDataModel != null &&
+                      analysisDataModel!.data != null &&
+                      analysisDataModel!.data!.eodData != null
+                  ? AnalysisTable(
+                      title: "Earnings Trend",
+                      eodData: analysisDataModel!.data!.eodData,
+                    )
+                  : SizedBox(),
             ],
           ),
         ),
