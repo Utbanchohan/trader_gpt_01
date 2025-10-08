@@ -39,7 +39,7 @@ class ProfileCardWidget extends StatelessWidget {
                     fit: BoxFit.cover,
                   )
                 : Image.asset(
-                    "assets/images/image 263.png",
+                    "assets/images/Placeholderimage.png",
                     height: 122.h,
                     width: 122.w,
                     fit: BoxFit.cover,

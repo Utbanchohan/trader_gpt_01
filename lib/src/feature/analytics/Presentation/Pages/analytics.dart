@@ -32,9 +32,11 @@ import 'package:trader_gpt/src/shared/widgets/earning_wigdets.dart'
 import 'package:trader_gpt/src/shared/widgets/earningsTable_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/financialtable_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/insiderTrader_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/matrics_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/outstanding_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/price_card_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/profileCard_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/profile_card_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:trader_gpt/utils/constant.dart';
 
@@ -1023,7 +1025,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     shareData: sharesResponse!.data,
                     heading: Headings.shareStructure,
                   )
-                : SizedBox(),
+                : MetricsShimmer(),
             SizedBox(height: 20.h),
             fundamentalResponse != null &&
                     fundamentalResponse!
@@ -1037,7 +1039,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     shareData: null,
                     heading: Headings.fundamental,
                   )
-                : SizedBox(),
+                : MetricsShimmer(),
             SizedBox(height: 20.h),
 
             matricData != null &&
@@ -1049,7 +1051,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     shareData: null,
                     heading: Headings.matrics,
                   )
-                : SizedBox(),
+                : MetricsShimmer(),
             SizedBox(height: 20.h),
             monthlyData != null
                 ? WeeklySeasonalityChart(
@@ -1187,7 +1189,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                   },
                             ),
                           )
-                        : SizedBox(),
+                        : ProfileCardShimmer(),
                   ],
                 ),
 
