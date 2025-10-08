@@ -4,50 +4,76 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 
 class ProfileCardShimmer extends StatelessWidget {
-  const ProfileCardShimmer({super.key});
+  final String? imagePath; // <-- optional image path
+
+  const ProfileCardShimmer({super.key, this.imagePath});
 
   @override
   Widget build(BuildContext context) {
+    final bool hasImage = imagePath != null && imagePath!.isNotEmpty;
+
     return Container(
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
-        color: AppColors.color091224,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.color1B254B),
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Placeholder image with shimmer effect
+          // Image or placeholder
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              "assets/images/Placeholderimage.png",
-              height: 122.h,
-              width: 122.w,
-              fit: BoxFit.cover,
-            ),
+            child: hasImage
+                ? Image.network(
+                    imagePath!,
+                    height: 122.h,
+                    width: 122.w,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Image.asset(
+                      "assets/images/Placeholderimage.png",
+                      height: 122.h,
+                      width: 122.w,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : Image.asset(
+                    "assets/images/Placeholderimage.png",
+                    height: 122.h,
+                    width: 122.w,
+                    fit: BoxFit.cover,
+                  ),
           ),
           SizedBox(height: 8.h),
 
-          // Shimmer bar for designation
-          Container(
-            height: 14.h,
-            width: 100.w,
-            decoration: BoxDecoration(
-              color: AppColors.bluishgrey404F81,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-          SizedBox(height: 6.h),
+          // ✨ Shimmer for text placeholders only
+          Shimmer.fromColors(
+            baseColor: AppColors.color1B254B.withOpacity(0.3),
+            highlightColor: AppColors.colorB3B3B3.withOpacity(0.1),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Designation shimmer bar
+                Container(
+                  height: 14.h,
+                  width: 100.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                SizedBox(height: 6.h),
 
-          // Shimmer bar for name
-          Container(
-            height: 14.h,
-            width: 80.w,
-            decoration: BoxDecoration(
-              color: AppColors.bluishgrey404F81,
-              borderRadius: BorderRadius.circular(4),
+                // Name shimmer bar
+                Container(
+                  height: 14.h,
+                  width: 80.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

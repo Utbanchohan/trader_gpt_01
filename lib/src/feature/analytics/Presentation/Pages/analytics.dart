@@ -41,7 +41,8 @@ import 'package:trader_gpt/utils/constant.dart';
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../shared/widgets/esg_score_table.dart';
-import '../../../../shared/widgets/price_card_shimmer.dart';
+import '../../../../shared/widgets/price_card_shimmer.dart'
+    hide ProfileCardShimmer;
 import '../../../../shared/widgets/security_short_widgets.dart';
 import '../../../../shared/widgets/securityownership_widgets.dart';
 import '../../../../shared/widgets/shortvalue.widgets.dart';
@@ -260,23 +261,23 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   final TextEditingController search = TextEditingController();
   int selectedIndex = -1;
   secondIndexData() {
-    if (companyModel != null) {
+    if (companyModel == null) {
       getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
-    if (insiderTransactionResponse != null) {
+    if (insiderTransactionResponse == null) {
       insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
-    if (shortVolumeModel != null) {
+    if (shortVolumeModel == null) {
       getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
 
-    if (securityOwnership != null) {
+    if (securityOwnership == null) {
       getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
-    if (securityShortVolume != null) {
+    if (securityShortVolume == null) {
       getSecurityShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
-    if (esgScoreData != null) {
+    if (esgScoreData == null) {
       esgScore(widget.chatRouting!.symbol);
     }
     setState(() {});

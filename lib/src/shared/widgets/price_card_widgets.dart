@@ -28,10 +28,10 @@ class PriceCardWidget extends StatelessWidget {
     return Container(
       width: 220.w,
       // height: 137.h,
-      padding: EdgeInsets.all(8.w),
+      padding: EdgeInsets.all(10.w),
       decoration: BoxDecoration(
         color: AppColors.primaryColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.color1AB3B3B3),
       ),
 
@@ -51,10 +51,9 @@ class PriceCardWidget extends StatelessWidget {
             color: firstColor,
 
             variant: TextVariant.h4,
-
-            fontWeight: TextFontWeightVariant.h4,
+            fontWeight: TextFontWeightVariant.h1,
           ),
-          SizedBox(height: 15.h),
+          SizedBox(height: 10.h),
 
           // --- After Hours ---
           MdSnsText(
@@ -73,16 +72,6 @@ class PriceCardWidget extends StatelessWidget {
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h1,
               ),
-              // SizedBox(width: 8.w),
-              // MdSnsText(
-              //   percentage,
-              //   color: percentage.startsWith('-')
-              //       ? Colors
-              //             .red // Negative percentage red
-              //       : AppColors.color0xFF28CF62, // Positive green
-              //   variant: TextVariant.h4,
-              //   fontWeight: TextFontWeightVariant.h1,
-              // ),
             ],
           ),
         ],

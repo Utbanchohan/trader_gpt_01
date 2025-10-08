@@ -15,22 +15,22 @@ class InfoBoxGrid extends StatelessWidget {
       {
         "image": "assets/images/4.png",
         "title": "Headquarter",
-        "value": items[0],
+        "value": items.isNotEmpty ? items[0] : "",
       },
       {
         "image": "assets/images/ab-6.png",
         "title": "Country",
-        "value": items[1],
+        "value": items.isNotEmpty ? items[1] : "",
       },
       {
         "image": "assets/images/ab-4.png",
         "title": "Employees",
-        "value": items[2],
+        "value": items.isNotEmpty ? items[2] : "",
       },
       {
         "image": "assets/images/ab-5.png",
         "title": "Website",
-        "value": items[3],
+        "value": items.isNotEmpty ? items[3] : "",
       },
     ];
     return GridView.builder(
@@ -94,7 +94,7 @@ class InfoBoxGrid extends StatelessWidget {
                               height: 16,
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color: AppColors.bluishgrey404F81,
+                                color: AppColors.fieldTextColor,
                                 borderRadius: BorderRadius.circular(4),
                               ),
                             ),

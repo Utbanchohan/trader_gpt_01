@@ -26,11 +26,11 @@ class MetricsShimmer extends StatelessWidget {
                 Row(
                   children: [
                     _shimmerBox(width: 120, height: 14),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     _shimmerBox(width: 14, height: 14, isCircle: true),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 _shimmerBox(width: 160, height: 10),
               ],
             ),
