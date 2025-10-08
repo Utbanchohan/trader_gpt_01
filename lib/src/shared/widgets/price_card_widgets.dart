@@ -28,10 +28,10 @@ class PriceCardWidget extends StatelessWidget {
     return Container(
       width: 220.w,
       // height: 137.h,
-      padding: EdgeInsets.all(10.w),
+      padding: EdgeInsets.all(8.w),
       decoration: BoxDecoration(
         color: AppColors.primaryColor,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColors.color1AB3B3B3),
       ),
 
@@ -51,7 +51,8 @@ class PriceCardWidget extends StatelessWidget {
             color: firstColor,
 
             variant: TextVariant.h4,
-            fontWeight: TextFontWeightVariant.h1,
+
+            fontWeight: TextFontWeightVariant.h4,
           ),
           SizedBox(height: 15.h),
 

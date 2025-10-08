@@ -205,7 +205,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     "Company",
     "Financial",
     "Earning",
-    "Analytics",
+    "analysis",
   ];
   final companyInfo = [
     {"icon": Icons.home, "title": "Headquarter", "value": "One Microsoft Way"},
@@ -842,64 +842,64 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 20.h),
-            CustomLineChart(
-              lineColor: Colors.green,
-              areaColor: Colors.greenAccent,
-            ),
 
             SizedBox(height: 20.h),
             priceTargetMatrics != null && priceTargetMatrics!.data.length > 0
                 ? PriceTargetWidget(data: priceTargetMatrics!.data)
                 : SizedBox(),
-            SizedBox(height: 20.h),
-            RevenueAnalysisChart(),
-            SizedBox(height: 20.h),
+            // SizedBox(height: 20.h),
 
-            // // ---------- PERFORMANCE OVERVIEW ----------
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.colorB3B3B3),
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      MdSnsText(
-                        "Performance Overview",
-                        color: AppColors.white,
-                        variant: TextVariant.h3,
-                        fontWeight: TextFontWeightVariant.h4,
-                      ),
-                      Row(
-                        children: [
-                          Image.asset(
-                            Assets.images.textalignJustifycenter.path,
-                            height: 14.h,
-                            width: 16.55.w,
-                          ),
-                          SizedBox(width: 10.w),
-                          Image.asset(
-                            Assets.images.chart.path,
-                            height: 14.h,
-                            width: 14.w,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  PerformanceTable(),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.h),
-
+            // CustomLineChart(
+            //   title: "Price Target",
+            //   lineColor: Colors.green,
+            //   areaColor: Colors.greenAccent,
+            // ),
+            // SizedBox(height: 20.h),
+            // RevenueAnalysisChart(),
+            // SizedBox(height: 20.h),
+            // // // ---------- PERFORMANCE OVERVIEW ----------
+            // Container(
+            //   padding: const EdgeInsets.all(16),
+            //   decoration: BoxDecoration(
+            //     border: Border.all(color: AppColors.colorB3B3B3),
+            //     color: AppColors.primaryColor,
+            //     borderRadius: BorderRadius.circular(12),
+            //   ),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           MdSnsText(
+            //             "Performance Overview",
+            //             color: AppColors.white,
+            //             variant: TextVariant.h3,
+            //             fontWeight: TextFontWeightVariant.h4,
+            //           ),
+            //           Row(
+            //             children: [
+            //               Image.asset(
+            //                 Assets.images.textalignJustifycenter.path,
+            //                 height: 14.h,
+            //                 width: 16.55.w,
+            //               ),
+            //               SizedBox(width: 10.w),
+            //               Image.asset(
+            //                 Assets.images.chart.path,
+            //                 height: 14.h,
+            //                 width: 14.w,
+            //               ),
+            //             ],
+            //           ),
+            //         ],
+            //       ),
+            //       SizedBox(height: 12.h),
+            //       PerformanceTable(),
+            //     ],
+            //   ),
+            // ),
+            // SizedBox(height: 20.h),
             priceComparisonModel != null &&
                     priceComparisonModel!.data.MSFT != null &&
                     priceComparisonModel!.data.SPY != null
@@ -1094,7 +1094,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   variant: TextVariant.h2,
                   fontWeight: TextFontWeightVariant.h1,
                 ),
-                SizedBox(height: 14.h),
+                SizedBox(height: 6.h),
 
                 companyModel != null &&
                         companyModel!.general.Description != null
@@ -1102,8 +1102,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         companyModel!.general.Description!,
                         trimLines: 2,
                         trimMode: TrimMode.Line,
-                        trimCollapsedText: 'Show More',
+                        trimCollapsedText: 'Read More',
                         trimExpandedText: 'Show Less',
+
                         moreStyle: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
@@ -1362,8 +1363,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             child: MdSnsText(
                               "Summary",
                               color: AppColors.white,
-                              variant: TextVariant.h2,
-                              fontWeight: TextFontWeightVariant.h1,
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h4,
                             ),
                           ),
                         ),

@@ -122,10 +122,15 @@ class _WeeklySeasonalityChartState
           ];
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: const Color(0xFF0B132B),
+
       elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.colorB3B3B3),
+          color: AppColors.color091224,
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -137,9 +142,9 @@ class _WeeklySeasonalityChartState
                   widget.isWeekly
                       ? "Weekly Seasonality"
                       : "Monthly Seasonality",
-                  variant: TextVariant.h1,
+                  variant: TextVariant.h3,
                   color: AppColors.fieldTextColor,
-                  fontWeight: TextFontWeightVariant.h1,
+                  fontWeight: TextFontWeightVariant.h4,
                 ),
 
                 Container(

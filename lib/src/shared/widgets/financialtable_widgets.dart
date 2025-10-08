@@ -81,10 +81,10 @@ class FinancialTable extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  buildHeaderCell("Values in USD", width: 150),
-                  buildHeaderCell("Jun31,24", width: 90),
+                  buildHeaderCell("Values in USD", width: 157),
+                  buildHeaderCell("Jun31,24", width: 81),
                   buildHeaderCell("Jun30,23", width: 80),
-                  buildHeaderCell("Jun30,22", width: 75),
+                  buildHeaderCell("Jun30,22", width: 70),
                   buildHeaderCell("Jun30,21", width: 90),
                 ],
               ),
@@ -113,7 +113,6 @@ class FinancialTable extends StatelessWidget {
                     ),
                   ),
 
-                  // 👇 Divider under every row (including the last one)
                   Container(
                     height: 1,
                     color: AppColors.colorB3B3B3,
@@ -176,7 +175,6 @@ class FinancialTable extends StatelessWidget {
           ),
         ),
 
-        // Values + growth
         ...List.generate(values.length, (i) {
           return SizedBox(
             width: 80,

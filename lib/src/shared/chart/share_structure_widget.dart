@@ -64,17 +64,23 @@ class ShareStructureCard extends StatelessWidget {
     ];
 
     return Container(
+      // decoration: BoxDecoration(
+      //   borderRadius: BorderRadius.circular(20),
+      //   // color: AppColors.color091224,
+      //   border: Border(bottom: BorderSide(color: AppColors.color1B254B)),
+      // ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(_radius),
+        borderRadius: BorderRadius.circular(20.0),
 
-        color: AppColors.color091224,
-        border: Border.all(color: Colors.black12),
+        border: Border.all(color: AppColors.colorB3B3B3),
+        color: AppColors.primaryColor,
       ),
+      // ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -84,16 +90,16 @@ class ShareStructureCard extends StatelessWidget {
                   children: [
                     MdSnsText(
                       heading.value,
-                      variant: TextVariant.h7,
+                      variant: TextVariant.h3,
                       fontWeight: TextFontWeightVariant.h4,
 
-                      color: AppColors.white,
+                      color: AppColors.fieldTextColor,
                     ),
-                    SizedBox(width: 10.w),
+                    SizedBox(width: 5.w),
                     Icon(
                       Icons.info_outline,
                       size: 14.sp,
-                      color: AppColors.colorB2B2B7,
+                      color: AppColors.fieldTextColor,
                     ),
                   ],
                 ),
@@ -101,8 +107,9 @@ class ShareStructureCard extends StatelessWidget {
                 MdSnsText(
                   'Data delayed by 15 minutes',
                   variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h4,
 
-                  color: Color(0xFF9AA6B2),
+                  color: AppColors.fieldTextColor,
                 ),
               ],
             ),
@@ -128,7 +135,7 @@ class ShareStructureCard extends StatelessWidget {
                       return Container(
                         color: rowColor,
                         padding: EdgeInsets.symmetric(
-                          horizontal: 18,
+                          horizontal: 12,
                           vertical: 10,
                         ),
                         child: Row(
@@ -149,18 +156,19 @@ class ShareStructureCard extends StatelessWidget {
                                     .join(" "),
                                 maxLines: 1,
 
-                                variant: TextVariant.h2,
-                                color: Color(0xFF9AA6B2),
+                                variant: TextVariant.h4,
+                                fontWeight: TextFontWeightVariant.h4,
+                                color: AppColors.white,
                               ),
                             ),
 
                             MdSnsText(
                               // item['value'].toString(),
                               compactFormatter.format(item['value']),
-                              variant: TextVariant.h2,
+                              variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h1,
                               color: valueIsHighlighted
-                                  ? Colors.white
+                                  ? AppColors.color147EE8
                                   : Colors.white,
                             ),
                           ],
@@ -181,13 +189,12 @@ class ShareStructureCard extends StatelessWidget {
                         ? AppColors.bubbleColor
                         : Colors.transparent;
 
-                    // Right side numeric color (blue-ish) for some rows
                     final valueIsHighlighted =
                         index == 0 || index == 1 || index == 5;
                     return Container(
                       color: rowColor,
                       padding: EdgeInsets.symmetric(
-                        horizontal: 18,
+                        horizontal: 12,
                         vertical: 10,
                       ),
                       child: Row(
@@ -198,9 +205,9 @@ class ShareStructureCard extends StatelessWidget {
                             child: MdSnsText(
                               shareStats[index],
                               maxLines: 1,
-
-                              variant: TextVariant.h2,
-                              color: Color(0xFF9AA6B2),
+                              fontWeight: TextFontWeightVariant.h4,
+                              variant: TextVariant.h4,
+                              color: AppColors.white,
                             ),
                           ),
 
@@ -222,7 +229,7 @@ class ShareStructureCard extends StatelessWidget {
                                 : compactFormatter.format(
                                     shareData!.SharesFloat ?? 0,
                                   ),
-                            variant: TextVariant.h2,
+                            variant: TextVariant.h4,
                             fontWeight: TextFontWeightVariant.h1,
                             color: valueIsHighlighted
                                 ? Colors.white
@@ -250,7 +257,7 @@ class ShareStructureCard extends StatelessWidget {
                     return Container(
                       color: rowColor,
                       padding: EdgeInsets.symmetric(
-                        horizontal: 18,
+                        horizontal: 12,
                         vertical: 10,
                       ),
                       child: Row(
@@ -261,9 +268,9 @@ class ShareStructureCard extends StatelessWidget {
                             child: MdSnsText(
                               shareStats[index],
                               maxLines: 1,
-
-                              variant: TextVariant.h2,
-                              color: Color(0xFF9AA6B2),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
                             ),
                           ),
 
@@ -281,10 +288,11 @@ class ShareStructureCard extends StatelessWidget {
                                       .fundamentals
                                       .shortPercentOfFloat
                                 : fundamentalData!.fundamentals.daysToCover,
-                            variant: TextVariant.h2,
+                            variant: TextVariant.h4,
                             fontWeight: TextFontWeightVariant.h1,
+
                             color: valueIsHighlighted
-                                ? Colors.white
+                                ? Colors.blue
                                 : Colors.white,
                           ),
                         ],
@@ -318,6 +326,7 @@ enum Headings {
   shareStructure('Share Structure');
 
   final String value;
+
   const Headings(this.value);
 
   /// Optional: reverse lookup

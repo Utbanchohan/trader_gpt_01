@@ -15,23 +15,22 @@ class AnalyticsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: const Color(0xFF0B132B),
       elevation: 2,
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
+          border: Border.all(color: AppColors.colorB3B3B3),
+          color: AppColors.color091224,
           borderRadius: BorderRadius.circular(16),
-          color: const Color(0xFF0B132B),
-          border: Border.all(color: Colors.black12),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             MdSnsText(
               'ANALYST RATINGS',
-              variant: TextVariant.h7,
+              variant: TextVariant.h3,
+              color: AppColors.fieldTextColor,
               fontWeight: TextFontWeightVariant.h4,
-              color: AppColors.white,
             ),
             SizedBox(height: 10.h),
             Row(
