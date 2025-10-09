@@ -16,6 +16,8 @@ import '../../../domain/model/company_detail/company_detail_model.dart';
 import '../../../domain/model/earning_chart_model/earning_chart_model.dart'
     show EarningChartModel;
 import '../../../domain/model/earning_report_model/earning_report_model.dart';
+import '../../../domain/model/financial_chart_data/financial_chart_data_model.dart';
+import '../../../domain/model/financial_data_model/financial_data_model.dart';
 import '../../../domain/model/insider_transaction/insider_transaction_model.dart';
 import '../../../domain/model/market_data_login/market_data_login.dart';
 import '../../../domain/model/market_data_login_model/market_data_login_model.dart';
@@ -29,6 +31,7 @@ import '../../../domain/model/share_stats/share_stats.dart';
 import '../../../domain/model/weekly_model/weekly_model.dart';
 import '../../dto/analysis_dto/analysis_dto.dart';
 import '../../dto/esg_score_dto/esg_score_dto.dart';
+import '../../dto/financial_dto/financial_dto.dart';
 import '../../dto/overview_dto/overview_dto.dart';
 import '../../dto/price_comparison_dto/price_comparison_dto.dart';
 
@@ -104,6 +107,13 @@ abstract interface class AnalysisApi {
   Future<EarningReportsModel> earningReportData(
     @Body() ChartRequestDto overview,
   );
+
+  @POST("api/v1/financial/details")
+  Future<FinancialResponse> financialData(@Body() PriceRequestDto overview);
+
+  @POST("api/v1/financial/summary/charts")
+  Future<FinanceDataResponse> financialCharts(@Body() SymbolDto symbol);
+
   @GET("calculate_green_day_probabilities?ticker_1={ticker}")
   Future<WeeklyModel> weeklyData(@Path('ticker') String ticker);
 

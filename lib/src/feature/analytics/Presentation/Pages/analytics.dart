@@ -49,6 +49,7 @@ import '../../../../shared/widgets/securityownership_widgets.dart';
 import '../../../../shared/widgets/shortvalue.widgets.dart';
 import '../../../../shared/widgets/split_dividend.dart';
 import '../../data/dto/analysis_dto/analysis_dto.dart';
+import '../../data/dto/financial_dto/financial_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../domain/model/analysis_data/analysis_data_model.dart';
@@ -57,6 +58,8 @@ import '../../domain/model/earning_chart_model/earning_chart_model.dart';
 import '../../domain/model/earning_report_model/earning_report_model.dart';
 import '../../domain/model/earnings_model/earnings_model.dart';
 import '../../domain/model/esg_score_model/esg_score_model.dart';
+import '../../domain/model/financial_chart_data/financial_chart_data_model.dart';
+import '../../domain/model/financial_data_model/financial_data_model.dart';
 import '../../domain/model/fundamental_model/fundamental_model.dart';
 import '../../domain/model/insider_transaction/insider_transaction_model.dart';
 import '../../domain/model/matrics_data_model/matrics_data_model.dart';
@@ -72,6 +75,7 @@ import '../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../domain/model/weekly_model/weekly_model.dart';
 import '../provider/monthly_data/monthly_data.dart';
 import 'widgets/analytics_candle_stick_chart.dart';
+import 'widgets/operating_cash_flow.dart';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
@@ -106,6 +110,28 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   EarningChartModel? earningChartModel;
   EarningReportsModel? earningReportsModel;
   AnalysisDataModel? analysisDataModel;
+  FinancialResponse? financialResponse;
+  FinanceDataResponse? financeChartsDataModel;
+
+  financialData(String symbol) async {
+    PriceRequestDto overview = PriceRequestDto(symbol: symbol, isYearly: true);
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .financialData(overview);
+    if (res != null) {
+      financialResponse = res;
+    }
+  }
+
+  financialCharts(String symbol) async {
+    SymbolDto symbols = SymbolDto(symbol: symbol);
+    var res = await ref
+        .read(analyticsProviderProvider.notifier)
+        .financialCharts(symbols);
+    if (res != null) {
+      financeChartsDataModel = res;
+    }
+  }
 
   getOverview(SymbolDto symbol) async {
     var res = await ref
@@ -340,6 +366,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
     if (companyDetailModel == null) {
       await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
+    }
+  }
+
+  thirdTap() async {
+    // if (financialResponse == null) {
+    //   await financialData(widget.chatRouting!.symbol);
+    //   setState(() {});
+    // }
+    if (financeChartsDataModel == null) {
+      await financialCharts(widget.chatRouting!.symbol);
       setState(() {});
     }
   }
@@ -727,6 +764,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   firstIndexData();
                 } else if (val == 4) {
                   fifthTap();
+                } else if (val == 2) {
+                  thirdTap();
                 }
               },
               tabs: List.generate(
@@ -1513,7 +1552,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               ],
             ),
             SizedBox(height: 6),
-            // ---- Sub text ----
+
             MdSnsText(
               "Last Updated: 01-19-2023 10:30:33 EST",
               variant: TextVariant.h3,
@@ -1637,29 +1676,186 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           SingleChildScrollView(
                             child: Column(
                               children: [
-                                CashdebtWidgets(
-                                  title: "Cash and Debt",
-                                  cash: "Cash",
-                                  debt: "Debt",
-                                ),
+                                financeChartsDataModel != null &&
+                                        financeChartsDataModel!
+                                                .data
+                                                .cashAndDebt
+                                                .yearly !=
+                                            null &&
+                                        financeChartsDataModel!
+                                            .data
+                                            .cashAndDebt
+                                            .yearly!
+                                            .metrics
+                                            .isNotEmpty
+                                    ? CashdebtWidgets(
+                                        title: "Cash and Debt",
+                                        cash: "Cash",
+                                        debt: "Debt",
+                                        rawCash:
+                                            financeChartsDataModel!
+                                                .data
+                                                .cashAndDebt
+                                                .yearly!
+                                                .metrics['Cash'] ??
+                                            [],
+                                        rawDebt:
+                                            financeChartsDataModel!
+                                                .data
+                                                .cashAndDebt
+                                                .yearly!
+                                                .metrics['Debt'] ??
+                                            [],
+                                      )
+                                    : SizedBox(),
                                 SizedBox(height: 20),
-                                CashdebtWidgets(
-                                  title: "Assets and Stockholders",
-                                  cash: "Total Assets",
-                                  debt: "Total StackHolder",
-                                ),
+                                financeChartsDataModel != null &&
+                                        financeChartsDataModel!
+                                                .data
+                                                .assetsAndStockHolders
+                                                .yearly !=
+                                            null &&
+                                        financeChartsDataModel!
+                                            .data
+                                            .assetsAndStockHolders
+                                            .yearly!
+                                            .metrics
+                                            .isNotEmpty
+                                    ? CashdebtWidgets(
+                                        title: "Assets and Stockholders",
+                                        cash: "Total Assets",
+                                        debt: "Total StackHolder",
+                                        rawCash:
+                                            financeChartsDataModel!
+                                                .data
+                                                .assetsAndStockHolders
+                                                .yearly!
+                                                .metrics["Total Assets"] ??
+                                            [],
+                                        rawDebt:
+                                            financeChartsDataModel!
+                                                .data
+                                                .assetsAndStockHolders
+                                                .yearly!
+                                                .metrics["Total StockHolder"] ??
+                                            [],
+                                      )
+                                    : SizedBox(),
                                 SizedBox(height: 20),
-                                CashdebtWidgets(
-                                  title: "Outstanding Shares & Buypack",
-                                  cash: "Outstanding Shares",
-                                  debt: "Stock Buyback Percentage",
-                                ),
+
+                                financeChartsDataModel != null &&
+                                        financeChartsDataModel!
+                                                .data
+                                                .outstandingSharesBuyback
+                                                .yearly !=
+                                            null &&
+                                        financeChartsDataModel!
+                                            .data
+                                            .outstandingSharesBuyback
+                                            .yearly!
+                                            .metrics
+                                            .isNotEmpty
+                                    ? CashdebtWidgets(
+                                        title: "Outstanding Shares & Buypack",
+                                        cash: "Outstanding Shares",
+                                        debt: "Stock Buyback Percentage",
+                                        rawCash:
+                                            financeChartsDataModel!
+                                                .data
+                                                .outstandingSharesBuyback
+                                                .yearly!
+                                                .metrics["Outstanding Shares"] ??
+                                            [],
+                                        rawDebt:
+                                            financeChartsDataModel!
+                                                .data
+                                                .outstandingSharesBuyback
+                                                .yearly!
+                                                .metrics["Stock Buyback Percentage"] ??
+                                            [],
+                                      )
+                                    : SizedBox(),
                                 SizedBox(height: 20),
-                                CashdebtWidgets(
-                                  title: "Revenue and Income",
-                                  cash: "Total Assets",
-                                  debt: "Total StackHolder",
-                                ),
+                                financeChartsDataModel != null &&
+                                        financeChartsDataModel!
+                                                .data
+                                                .revenueAndIncome
+                                                .yearly !=
+                                            null &&
+                                        financeChartsDataModel!
+                                            .data
+                                            .revenueAndIncome
+                                            .yearly!
+                                            .metrics
+                                            .isNotEmpty
+                                    ? CashdebtWidgets(
+                                        title: "Revenue and Income",
+                                        cash: "Total Assets",
+                                        debt: "Total StackHolder",
+                                        rawCash:
+                                            financeChartsDataModel!
+                                                .data
+                                                .revenueAndIncome
+                                                .yearly!
+                                                .metrics["Revenue"] ??
+                                            [],
+                                        rawDebt:
+                                            financeChartsDataModel!
+                                                .data
+                                                .revenueAndIncome
+                                                .yearly!
+                                                .metrics["Income"] ??
+                                            [],
+                                      )
+                                    : SizedBox(),
+                                SizedBox(height: 20),
+                                financeChartsDataModel != null &&
+                                        financeChartsDataModel!
+                                                .data
+                                                .cashFlowData
+                                                .yearly !=
+                                            null &&
+                                        financeChartsDataModel!
+                                            .data
+                                            .cashFlowData
+                                            .yearly!
+                                            .metrics
+                                            .isNotEmpty
+                                    ? OperatingCashFlow(
+                                        title: "Cash Flow Data",
+                                        // cash: "Operating Cash Flow",
+                                        // debt: "Free Cash Flow",
+                                        rawCash:
+                                            financeChartsDataModel!
+                                                .data
+                                                .cashFlowData
+                                                .yearly!
+                                                .metrics["Operating Cash Flow"] ??
+                                            [],
+                                        rawDebt:
+                                            financeChartsDataModel!
+                                                .data
+                                                .cashFlowData
+                                                .yearly!
+                                                .metrics["Free Cash Flow"] ??
+                                            [],
+                                        rawAssets:
+                                            financeChartsDataModel!
+                                                .data
+                                                .cashFlowData
+                                                .yearly!
+                                                .metrics["Net Income"] ??
+                                            [],
+                                        rawEquity:
+                                            financeChartsDataModel!
+                                                .data
+                                                .cashFlowData
+                                                .yearly!
+                                                .metrics["Cash Flow Dividends"] ??
+                                            [],
+                                      )
+                                    : SizedBox(),
+                                SizedBox(height: 20),
                               ],
                             ),
                           ),

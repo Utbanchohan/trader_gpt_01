@@ -10,6 +10,7 @@ import '../../../../../shared/custom_message.dart';
 import '../../../../../shared/states/app_loading_state.dart';
 import '../../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../../data/dto/esg_score_dto/esg_score_dto.dart';
+import '../../../data/dto/financial_dto/financial_dto.dart';
 import '../../../data/dto/overview_dto/overview_dto.dart';
 import '../../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../../domain/model/analysis_data/analysis_data_model.dart';
@@ -17,6 +18,8 @@ import '../../../domain/model/analytics_model/analytics_model.dart';
 import '../../../domain/model/earning_chart_model/earning_chart_model.dart';
 import '../../../domain/model/earning_report_model/earning_report_model.dart';
 import '../../../domain/model/earnings_model/earnings_model.dart';
+import '../../../domain/model/financial_chart_data/financial_chart_data_model.dart';
+import '../../../domain/model/financial_data_model/financial_data_model.dart';
 import '../../../domain/model/fundamental_model/fundamental_model.dart';
 import '../../../domain/model/insider_transaction/insider_transaction_model.dart';
 import '../../../domain/model/overview_model/overview_model.dart';
@@ -117,6 +120,24 @@ class AnalyticsProvider extends _$AnalyticsProvider {
 
   Future<CompanyModel?> companyData(SymbolDto symbol) async {
     var res = await ref.read(overviewRepository).companyData(symbol);
+    if (res.status == 200) {
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  Future<FinancialResponse?> financialData(PriceRequestDto overview) async {
+    var res = await ref.read(overviewRepository).financialData(overview);
+    if (res.status == 200) {
+      return res;
+    } else {
+      return null;
+    }
+  }
+
+  Future<FinanceDataResponse?> financialCharts(SymbolDto symbol) async {
+    var res = await ref.read(overviewRepository).financialCharts(symbol);
     if (res.status == 200) {
       return res;
     } else {
