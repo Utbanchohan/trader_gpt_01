@@ -1049,6 +1049,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             //   lineColor: Colors.green,
             //   areaColor: Colors.greenAccent,
             // ),
+            SizedBox(height: 20.h),
             monthlyData != null
                 ? WeeklySeasonalityChart(
                     data: monthlyData!,
@@ -1112,6 +1113,44 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             //   ),
             // ),
             // SizedBox(height: 20.h),
+
+            // SizedBox(height: 20.h),
+            sharesResponse != null &&
+                    sharesResponse!.data.PercentInsiders != null
+                ? ShareStructureCard(
+                    matrics: null,
+                    fundamentalData: null,
+                    shareData: sharesResponse!.data,
+                    heading: Headings.shareStructure,
+                  )
+                : MetricsShimmer(),
+            SizedBox(height: 20.h),
+            fundamentalResponse != null &&
+                    fundamentalResponse!
+                        .data
+                        .fundamentals
+                        .annualIncome
+                        .isNotEmpty
+                ? ShareStructureCard(
+                    matrics: null,
+                    fundamentalData: fundamentalResponse!.data,
+                    shareData: null,
+                    heading: Headings.fundamental,
+                  )
+                : MetricsShimmer(),
+            SizedBox(height: 20.h),
+
+            matricData != null &&
+                    matricData!.data != null &&
+                    matricData!.data!.isNotEmpty
+                ? ShareStructureCard(
+                    matrics: matricData!.data,
+                    fundamentalData: null,
+                    shareData: null,
+                    heading: Headings.matrics,
+                  )
+                : MetricsShimmer(),
+            SizedBox(height: 20.h),
             priceComparisonModel != null &&
                     priceComparisonModel!
                             .data
@@ -1121,11 +1160,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 ? Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.colorB3B3B3),
                       color: AppColors.color091224,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         MdSnsText(
                           "Price Comparison",
@@ -1151,7 +1191,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                       getDrawingHorizontalLine: (value) =>
                                           FlLine(
                                             color: AppColors.color1B254B,
-                                            strokeWidth: 3,
+                                            strokeWidth: 1,
                                           ),
                                       getDrawingVerticalLine: (value) => FlLine(
                                         color: Colors.transparent,
@@ -1206,8 +1246,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                               .data['${widget.chatRouting!.symbol}']!,
                                         ),
                                         isCurved: true,
-                                        color: AppColors.color0098E4,
-                                        barWidth: 3,
+                                        color: AppColors.color01B254B,
+                                        barWidth: 2,
                                         dotData: FlDotData(show: false),
                                       ),
                                       LineChartBarData(
@@ -1217,8 +1257,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                               .data['SPY']!,
                                         ),
                                         isCurved: true,
-                                        color: AppColors.color06D54E,
-                                        barWidth: 3,
+                                        color: AppColors.color9EAAC0,
+                                        barWidth: 2,
                                         dotData: FlDotData(show: false),
                                       ),
                                     ],
@@ -1235,42 +1275,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   )
                 : SizedBox(),
 
-            // SizedBox(height: 20.h),
-            sharesResponse != null &&
-                    sharesResponse!.data.PercentInsiders != null
-                ? ShareStructureCard(
-                    matrics: null,
-                    fundamentalData: null,
-                    shareData: sharesResponse!.data,
-                    heading: Headings.shareStructure,
-                  )
-                : MetricsShimmer(),
-            SizedBox(height: 20.h),
-            fundamentalResponse != null &&
-                    fundamentalResponse!
-                        .data
-                        .fundamentals
-                        .annualIncome
-                        .isNotEmpty
-                ? ShareStructureCard(
-                    matrics: null,
-                    fundamentalData: fundamentalResponse!.data,
-                    shareData: null,
-                    heading: Headings.fundamental,
-                  )
-                : MetricsShimmer(),
-            SizedBox(height: 20.h),
-
-            matricData != null &&
-                    matricData!.data != null &&
-                    matricData!.data!.isNotEmpty
-                ? ShareStructureCard(
-                    matrics: matricData!.data,
-                    fundamentalData: null,
-                    shareData: null,
-                    heading: Headings.matrics,
-                  )
-                : MetricsShimmer(),
             SizedBox(height: 20.h),
 
             analyticsRespinseData != null &&
