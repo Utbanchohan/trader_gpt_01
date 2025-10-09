@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
@@ -11,6 +12,7 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analysis_table.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analytics_widget.dart'
     show AnalyticsWidget;
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/date_picker_widgets.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/earning_chart.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
@@ -1246,7 +1248,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                               .data['${widget.chatRouting!.symbol}']!,
                                         ),
                                         isCurved: true,
-                                        color: AppColors.color01B254B,
+                                        color: AppColors.color0098E4,
                                         barWidth: 2,
                                         dotData: FlDotData(show: false),
                                       ),
@@ -1257,7 +1259,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                               .data['SPY']!,
                                         ),
                                         isCurved: true,
-                                        color: AppColors.color9EAAC0,
+                                        color: AppColors.color1B254B,
                                         barWidth: 2,
                                         dotData: FlDotData(show: false),
                                       ),
@@ -1820,6 +1822,27 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DateRangePickerWidget(
+                      onShowPressed: (from, to) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: MdSnsText(
+                              'From: ${from != null ? DateFormat('MM/dd/yyyy').format(from) : '—'}'
+                              '   To: ${to != null ? DateFormat('MM/dd/yyyy').format(to) : '—'}',
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
               SizedBox(height: 10),
               analysisDataModel != null &&
                       analysisDataModel!.data != null &&

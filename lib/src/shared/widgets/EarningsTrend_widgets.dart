@@ -68,7 +68,7 @@ class EarningsTrend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Earnings Estimate Avg',
+                    'Earnings\nEstimate Avg',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -76,48 +76,7 @@ class EarningsTrend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Earnings Estimate Low',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
-                  ),
-                ),
-
-                DataColumn(
-                  label: MdSnsText(
-                    'Earnings Estimate High',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
-                  ),
-                ),
-                DataColumn(
-                  label: MdSnsText(
-                    "Earnings Estimate Year Ago Eps",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
-                  ),
-                ),
-                DataColumn(
-                  label: MdSnsText(
-                    'Earnings Estimate Number Of Analysts',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
-                  ),
-                ),
-                DataColumn(
-                  label: MdSnsText(
-                    'Earnings Estimate Growth',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
-                  ),
-                ),
-                DataColumn(
-                  label: MdSnsText(
-                    'Revenue Estimate Avg',
+                    'Earnings\nEstimate Low',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -126,7 +85,7 @@ class EarningsTrend extends StatelessWidget {
 
                 DataColumn(
                   label: MdSnsText(
-                    'Revenue Estimate Low',
+                    'Earnings\nEstimate High',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -134,7 +93,7 @@ class EarningsTrend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Revenue Estimate High',
+                    "Earnings\nEstimate Year Ago Eps",
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -142,7 +101,7 @@ class EarningsTrend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Revenue Estimate Year Ago Eps',
+                    'Earnings\nEstimate Number Of Analysts',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -150,7 +109,7 @@ class EarningsTrend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Revenue Estimate Number Of Analysts',
+                    'Earnings\nEstimate Growth',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -158,48 +117,7 @@ class EarningsTrend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Revenue Estimate Growth',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
-                  ),
-                ),
-
-                DataColumn(
-                  label: MdSnsText(
-                    'eps Trend Current',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
-                  ),
-                ),
-                DataColumn(
-                  label: MdSnsText(
-                    'eps Trend 7 days Ago',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
-                  ),
-                ),
-                DataColumn(
-                  label: MdSnsText(
-                    'eps Trend 30 days Ago',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
-                  ),
-                ),
-                DataColumn(
-                  label: MdSnsText(
-                    'eps Trend 60 days Ago',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                    color: AppColors.white,
-                  ),
-                ),
-                DataColumn(
-                  label: MdSnsText(
-                    'eps Trend 90 days Ago',
+                    'Revenue\nEstimate Avg',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -208,7 +126,7 @@ class EarningsTrend extends StatelessWidget {
 
                 DataColumn(
                   label: MdSnsText(
-                    'eps Revisions Up Last 7 days',
+                    'Revenue\nEstimate Low',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -216,7 +134,7 @@ class EarningsTrend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'eps Revisions Up Last 30 days',
+                    'Revenue\nEstimate High',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -224,7 +142,7 @@ class EarningsTrend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'eps Revisions Down Last 7 days',
+                    'Revenue\nEstimate Year Ago Eps',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -232,7 +150,89 @@ class EarningsTrend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'eps Revisions Down Last 30 days',
+                    'Revenue\nEstimate Number Of Analysts',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.white,
+                  ),
+                ),
+                DataColumn(
+                  label: MdSnsText(
+                    'Revenue\nEstimate Growth',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.white,
+                  ),
+                ),
+
+                DataColumn(
+                  label: MdSnsText(
+                    'Eps\nTrend Current',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.white,
+                  ),
+                ),
+                DataColumn(
+                  label: MdSnsText(
+                    'Eps Trend\n7 days Ago',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.white,
+                  ),
+                ),
+                DataColumn(
+                  label: MdSnsText(
+                    'Eps Trend\n30 days Ago',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.white,
+                  ),
+                ),
+                DataColumn(
+                  label: MdSnsText(
+                    'Eps Trend\n60 days Ago',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.white,
+                  ),
+                ),
+                DataColumn(
+                  label: MdSnsText(
+                    'Eps Trend\n90 days Ago',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.white,
+                  ),
+                ),
+
+                DataColumn(
+                  label: MdSnsText(
+                    'Eps Revisions\nUp Last 7 days',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.white,
+                  ),
+                ),
+                DataColumn(
+                  label: MdSnsText(
+                    'Eps Revisions\nUp Last 30 days',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.white,
+                  ),
+                ),
+                DataColumn(
+                  label: MdSnsText(
+                    'Eps Revisions\nDown Last 7 days',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.white,
+                  ),
+                ),
+                DataColumn(
+                  label: MdSnsText(
+                    'Eps Revisions\nDown Last 30 days',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,

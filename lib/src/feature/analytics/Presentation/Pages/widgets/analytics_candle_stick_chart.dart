@@ -107,7 +107,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
 
     return Container(
       alignment: Alignment.center,
-      height: 360.h,
+      height: 350.h,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.colorB3B3B3),
@@ -130,13 +130,13 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                   duration: const Duration(milliseconds: 200),
                   margin: const EdgeInsets.symmetric(horizontal: 4),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 8,
+                    horizontal: 8,
+                    vertical: 4,
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? AppColors.color0E1738
-                        : AppColors.colo2C3754,
+                        ? AppColors.colo2C3754
+                        : AppColors.fieldColor,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: MdSnsText(
@@ -150,62 +150,78 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
               );
             }),
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 10.h),
           SizedBox(
             height: 280.h,
-            child: BarChart(
-              BarChartData(
-                backgroundColor: Colors.transparent, // Dark background
-                alignment: BarChartAlignment.spaceAround,
-
-                // Grid and Titles Configuration (similar to previous solution)
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: false,
-                  horizontalInterval: 20, // Match Y-axis interval
-                  getDrawingHorizontalLine: (value) =>
-                      FlLine(color: Colors.white10, strokeWidth: 1),
-                ),
-                titlesData: FlTitlesData(
-                  show: true,
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  leftTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  rightTitles: AxisTitles(
-                    // Y-axis on the right
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 40,
-                      interval: 10,
-                      getTitlesWidget: (value, meta) {
-                        return Text(
-                          value.toStringAsFixed(2),
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 10,
+            child: Stack(
+              children: [
+                // 📊 Chart itself
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 6,
+                  ), // 👈 spacing top/bottom
+                  child: BarChart(
+                    BarChartData(
+                      backgroundColor: Colors.transparent,
+                      alignment: BarChartAlignment.spaceAround,
+                      gridData: FlGridData(
+                        show: true,
+                        drawVerticalLine: false,
+                        horizontalInterval: 5,
+                        getDrawingHorizontalLine: (value) => FlLine(
+                          color: AppColors.colorB3B3B3,
+                          strokeWidth: 1,
+                        ),
+                      ),
+                      titlesData: FlTitlesData(
+                        show: true,
+                        topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        leftTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        rightTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 40,
+                            interval: 10,
+                            getTitlesWidget: (value, meta) {
+                              return Text(
+                                value.toStringAsFixed(2),
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 10,
+                                ),
+                                textAlign: TextAlign.left,
+                              );
+                            },
                           ),
-                          textAlign: TextAlign.left,
-                        );
-                      },
+                        ),
+                        bottomTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                      ),
+                      borderData: FlBorderData(show: false),
+                      barGroups: getBarGroups(),
+                      maxY: 100.0,
+                      minY: 20.0,
                     ),
                   ),
-                  bottomTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
                 ),
 
-                borderData: FlBorderData(show: false),
-
-                // Bar Groups Data
-                barGroups: getBarGroups(),
-
-                // Axis Ranges
-                maxY: 100.0,
-                minY: 20.0,
-              ),
+                // ⚪ Vertical white line with spacing
+                Positioned(
+                  right: 50, // 👈 thoda andar
+                  top: 10, // 👈 same as chart top padding
+                  bottom: 10, // 👈 same as chart bottom padding
+                  child: Container(
+                    width: 0.5,
+                    color: Colors.white.withOpacity(0.7),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

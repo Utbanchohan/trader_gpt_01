@@ -160,7 +160,7 @@ class _AnalysisTableState extends State<AnalysisTable> {
                         _formatDate(item.key),
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
-                        color: AppColors.color046297,
+                        color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -270,49 +270,53 @@ class _AnalysisTableState extends State<AnalysisTable> {
           Card(
             elevation: 2,
             child: Container(
-              // The dark background from your image
-              color: AppColors
-                  .color091224, // A dark blue/gray color for the background
+              width: double.infinity, // 👈 ensures full width
+              color: AppColors.color091224,
               padding: const EdgeInsets.symmetric(
                 vertical: 8.0,
                 horizontal: 16.0,
               ),
-              child: Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.end, // Aligns content to the right
-                children: [
-                  // 1. The Display Text
-                  MdSnsText(
-                    displayText,
-                    color: AppColors.white,
-                    variant: TextVariant.h3,
-                  ),
+              child: Align(
+                alignment:
+                    Alignment.centerRight, // 👈 moves whole row to right side
+                child: Row(
+                  mainAxisSize:
+                      MainAxisSize.min, // 👈 keeps row as compact as needed
+                  children: [
+                    // 1. The Display Text
+                    MdSnsText(
+                      displayText,
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h4,
+                      color: AppColors.white,
+                    ),
 
-                  const SizedBox(width: 20), // Spacer
-                  // 2. Go to First Page (<<)
-                  _buildControlIcon(
-                    Icons.first_page,
-                    isFirstPage ? null : goToFirstPage,
-                  ),
+                    const SizedBox(width: 15), // Spacer
+                    // 2. Go to First Page (<<)
+                    _buildControlIcon(
+                      Icons.first_page,
+                      isFirstPage ? null : goToFirstPage,
+                    ),
 
-                  // 3. Go to Previous Page (<)
-                  _buildControlIcon(
-                    Icons.chevron_left,
-                    isFirstPage ? null : goToPrevPage,
-                  ),
+                    // 3. Go to Previous Page (<)
+                    _buildControlIcon(
+                      Icons.chevron_left,
+                      isFirstPage ? null : goToPrevPage,
+                    ),
 
-                  // 4. Go to Next Page (>)
-                  _buildControlIcon(
-                    Icons.chevron_right,
-                    isLastPage ? null : goToNextPage,
-                  ),
+                    // 4. Go to Next Page (>)
+                    _buildControlIcon(
+                      Icons.chevron_right,
+                      isLastPage ? null : goToNextPage,
+                    ),
 
-                  // 5. Go to Last Page (>>)
-                  _buildControlIcon(
-                    Icons.last_page,
-                    isLastPage ? null : goToLastPage,
-                  ),
-                ],
+                    // 5. Go to Last Page (>>)
+                    _buildControlIcon(
+                      Icons.last_page,
+                      isLastPage ? null : goToLastPage,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -323,10 +327,10 @@ class _AnalysisTableState extends State<AnalysisTable> {
 
   Widget _buildControlIcon(IconData icon, VoidCallback? onPressed) {
     return IconButton(
-      icon: Icon(icon, color: Colors.white70, size: 20),
+      icon: Icon(icon, color: Colors.white70, size: 16),
       onPressed: onPressed,
       // Add padding or a Material to get the hover/splash effect
-      padding: EdgeInsets.symmetric(horizontal: 4),
+      // padding: EdgeInsets.symmetric(horizontal: 4),
       splashRadius: 20,
     );
   }
@@ -393,12 +397,14 @@ class _PaginationWidgetState extends State<PaginationWidget> {
         mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
         children: [
           // 1. The Display Text
-          Text(
+          MdSnsText(
             displayText,
-            style: TextStyle(color: Colors.white70, fontSize: 14),
+            variant: TextVariant.h4,
+            fontWeight: TextFontWeightVariant.h4,
+            color: AppColors.white,
           ),
 
-          const SizedBox(width: 20), // Spacer
+          const SizedBox(width: 15), // Spacer
           // 2. Go to First Page (<<)
           _buildControlIcon(
             Icons.first_page,
@@ -426,11 +432,11 @@ class _PaginationWidgetState extends State<PaginationWidget> {
 
   Widget _buildControlIcon(IconData icon, VoidCallback? onPressed) {
     return IconButton(
-      icon: Icon(icon, color: Colors.white70, size: 20),
+      icon: Icon(icon, color: Colors.white70, size: 16),
       onPressed: onPressed,
       // Add padding or a Material to get the hover/splash effect
-      padding: EdgeInsets.symmetric(horizontal: 4),
-      splashRadius: 20,
+      // padding: EdgeInsets.symmetric(horizontal: 4),
+      // splashRadius: 10,
     );
   }
 }
