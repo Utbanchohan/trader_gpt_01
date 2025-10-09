@@ -2105,7 +2105,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 ],
               ),
 
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               analysisDataModel != null &&
                       analysisDataModel!.data != null &&
                       analysisDataModel!.data!.chart != null
