@@ -329,21 +329,25 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
-  fourthTap() {
+  fourthTap() async {
     if (earningReportsModel == null) {
-      earningReportData(widget.chatRouting!.symbol);
+      await earningReportData(widget.chatRouting!.symbol);
+      setState(() {});
     }
     if (earningChartModel == null) {
-      earningChartData(widget.chatRouting!.symbol);
+      await earningChartData(widget.chatRouting!.symbol);
+      setState(() {});
     }
     if (companyDetailModel == null) {
-      getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
   }
 
-  fifthTap() {
+  fifthTap() async {
     if (analysisDataModel == null) {
-      getAnalysisData(widget.chatRouting!.symbol, IntervalEnum.daily);
+      await getAnalysisData(widget.chatRouting!.symbol, IntervalEnum.daily);
+      setState(() {});
     }
   }
 
@@ -391,50 +395,62 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
   final TextEditingController search = TextEditingController();
   int selectedIndex = -1;
-  secondIndexData() {
+  secondIndexTap() async {
     if (companyModel == null) {
-      getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
     if (insiderTransactionResponse == null) {
-      insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
     if (shortVolumeModel == null) {
-      getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
 
     if (securityOwnership == null) {
-      getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
     if (securityShortVolume == null) {
-      getSecurityShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await getSecurityShortVolumeData(
+        SymbolDto(symbol: widget.chatRouting!.symbol),
+      );
+      setState(() {});
     }
     if (esgScoreData == null) {
-      esgScore(widget.chatRouting!.symbol);
+      await esgScore(widget.chatRouting!.symbol);
+      setState(() {});
     }
     if (earningdata == null) {
-      getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
     if (companyDetailModel == null) {
-      getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
     setState(() {});
   }
 
-  firstIndexData() {
+  firstIndexData() async {
     if (stockResponse == null) {
-      getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
     if (matricData == null) {
-      getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
     if (priceTargetMatrics == null) {
-      priceTargetMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await priceTargetMatricsData(
+        SymbolDto(symbol: widget.chatRouting!.symbol),
+      );
     }
     if (analyticsRespinseData == null) {
       analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
     if (priceComparisonModel == null) {
-      priceComparison(
+      await priceComparison(
         PriceComparisonDto(
           daysBack: 365,
           symbol1: widget.chatRouting!.symbol,
@@ -443,16 +459,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       );
     }
     if (fundamentalResponse == null) {
-      fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
     if (sharesResponse == null) {
-      shares(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await shares(SymbolDto(symbol: widget.chatRouting!.symbol));
     }
     if (weeklyData == null) {
-      getWeeklyData(widget.chatRouting!.symbol);
+      await getWeeklyData(widget.chatRouting!.symbol);
     }
     if (monthlyData == null) {
-      getMonthlyData(widget.chatRouting!.symbol);
+      await getMonthlyData(widget.chatRouting!.symbol);
     }
   }
 
@@ -704,9 +720,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               dividerColor: Colors.transparent,
               onTap: (val) {
                 if (val == 1) {
-                  secondIndexData();
+                  secondIndexTap();
                 } else if (val == 3) {
                   fourthTap();
+                } else if (val == 0) {
+                  firstIndexData();
                 } else if (val == 4) {
                   fifthTap();
                 }
@@ -1060,8 +1078,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             SizedBox(height: 20.h),
 
             priceComparisonModel != null &&
-                    priceComparisonModel!.data.MSFT != null &&
-                    priceComparisonModel!.data.SPY != null
+                    priceComparisonModel!
+                            .data
+                            .data['${widget.chatRouting!.symbol}'] !=
+                        null &&
+                    priceComparisonModel!.data.data['SPY'] != null
                 ? Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -1080,8 +1101,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         ),
                         SizedBox(height: 16.h),
                         priceComparisonModel != null &&
-                                priceComparisonModel!.data.MSFT != null &&
-                                priceComparisonModel!.data.SPY != null
+                                priceComparisonModel!
+                                        .data
+                                        .data['${widget.chatRouting!.symbol}'] !=
+                                    null &&
+                                priceComparisonModel!.data.data['SPY'] != null
                             ? SizedBox(
                                 height: 180,
                                 child: LineChart(
@@ -1142,7 +1166,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                     lineBarsData: [
                                       LineChartBarData(
                                         spots: buildSpots(
-                                          priceComparisonModel!.data.MSFT!,
+                                          priceComparisonModel!
+                                              .data
+                                              .data['${widget.chatRouting!.symbol}']!,
                                         ),
                                         isCurved: true,
                                         color: AppColors.color0098E4,
@@ -1151,7 +1177,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                       ),
                                       LineChartBarData(
                                         spots: buildSpots(
-                                          priceComparisonModel!.data.SPY!,
+                                          priceComparisonModel!
+                                              .data
+                                              .data['SPY']!,
                                         ),
                                         isCurved: true,
                                         color: AppColors.color06D54E,

@@ -305,7 +305,7 @@ $PriceComparisonDataCopyWith<$Res> get data {
 /// @nodoc
 mixin _$PriceComparisonData {
 
- Map<String, double>? get MSFT; Map<String, double>? get SPY;
+@_DynamicSymbolsConverter() Map<String, Map<String, double>> get data;
 /// Create a copy of PriceComparisonData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -318,16 +318,16 @@ $PriceComparisonDataCopyWith<PriceComparisonData> get copyWith => _$PriceCompari
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PriceComparisonData&&const DeepCollectionEquality().equals(other.MSFT, MSFT)&&const DeepCollectionEquality().equals(other.SPY, SPY));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PriceComparisonData&&const DeepCollectionEquality().equals(other.data, data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(MSFT),const DeepCollectionEquality().hash(SPY));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data));
 
 @override
 String toString() {
-  return 'PriceComparisonData(MSFT: $MSFT, SPY: $SPY)';
+  return 'PriceComparisonData(data: $data)';
 }
 
 
@@ -338,7 +338,7 @@ abstract mixin class $PriceComparisonDataCopyWith<$Res>  {
   factory $PriceComparisonDataCopyWith(PriceComparisonData value, $Res Function(PriceComparisonData) _then) = _$PriceComparisonDataCopyWithImpl;
 @useResult
 $Res call({
- Map<String, double>? MSFT, Map<String, double>? SPY
+@_DynamicSymbolsConverter() Map<String, Map<String, double>> data
 });
 
 
@@ -355,11 +355,10 @@ class _$PriceComparisonDataCopyWithImpl<$Res>
 
 /// Create a copy of PriceComparisonData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? MSFT = freezed,Object? SPY = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? data = null,}) {
   return _then(_self.copyWith(
-MSFT: freezed == MSFT ? _self.MSFT : MSFT // ignore: cast_nullable_to_non_nullable
-as Map<String, double>?,SPY: freezed == SPY ? _self.SPY : SPY // ignore: cast_nullable_to_non_nullable
-as Map<String, double>?,
+data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as Map<String, Map<String, double>>,
   ));
 }
 
@@ -444,10 +443,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Map<String, double>? MSFT,  Map<String, double>? SPY)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@_DynamicSymbolsConverter()  Map<String, Map<String, double>> data)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PriceComparisonData() when $default != null:
-return $default(_that.MSFT,_that.SPY);case _:
+return $default(_that.data);case _:
   return orElse();
 
 }
@@ -465,10 +464,10 @@ return $default(_that.MSFT,_that.SPY);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Map<String, double>? MSFT,  Map<String, double>? SPY)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@_DynamicSymbolsConverter()  Map<String, Map<String, double>> data)  $default,) {final _that = this;
 switch (_that) {
 case _PriceComparisonData():
-return $default(_that.MSFT,_that.SPY);case _:
+return $default(_that.data);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -485,10 +484,10 @@ return $default(_that.MSFT,_that.SPY);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Map<String, double>? MSFT,  Map<String, double>? SPY)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@_DynamicSymbolsConverter()  Map<String, Map<String, double>> data)?  $default,) {final _that = this;
 switch (_that) {
 case _PriceComparisonData() when $default != null:
-return $default(_that.MSFT,_that.SPY);case _:
+return $default(_that.data);case _:
   return null;
 
 }
@@ -500,25 +499,14 @@ return $default(_that.MSFT,_that.SPY);case _:
 @JsonSerializable()
 
 class _PriceComparisonData implements PriceComparisonData {
-  const _PriceComparisonData({final  Map<String, double>? MSFT, final  Map<String, double>? SPY}): _MSFT = MSFT,_SPY = SPY;
+  const _PriceComparisonData({@_DynamicSymbolsConverter() required final  Map<String, Map<String, double>> data}): _data = data;
   factory _PriceComparisonData.fromJson(Map<String, dynamic> json) => _$PriceComparisonDataFromJson(json);
 
- final  Map<String, double>? _MSFT;
-@override Map<String, double>? get MSFT {
-  final value = _MSFT;
-  if (value == null) return null;
-  if (_MSFT is EqualUnmodifiableMapView) return _MSFT;
+ final  Map<String, Map<String, double>> _data;
+@override@_DynamicSymbolsConverter() Map<String, Map<String, double>> get data {
+  if (_data is EqualUnmodifiableMapView) return _data;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableMapView(value);
-}
-
- final  Map<String, double>? _SPY;
-@override Map<String, double>? get SPY {
-  final value = _SPY;
-  if (value == null) return null;
-  if (_SPY is EqualUnmodifiableMapView) return _SPY;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableMapView(value);
+  return EqualUnmodifiableMapView(_data);
 }
 
 
@@ -535,16 +523,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PriceComparisonData&&const DeepCollectionEquality().equals(other._MSFT, _MSFT)&&const DeepCollectionEquality().equals(other._SPY, _SPY));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PriceComparisonData&&const DeepCollectionEquality().equals(other._data, _data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_MSFT),const DeepCollectionEquality().hash(_SPY));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data));
 
 @override
 String toString() {
-  return 'PriceComparisonData(MSFT: $MSFT, SPY: $SPY)';
+  return 'PriceComparisonData(data: $data)';
 }
 
 
@@ -555,7 +543,7 @@ abstract mixin class _$PriceComparisonDataCopyWith<$Res> implements $PriceCompar
   factory _$PriceComparisonDataCopyWith(_PriceComparisonData value, $Res Function(_PriceComparisonData) _then) = __$PriceComparisonDataCopyWithImpl;
 @override @useResult
 $Res call({
- Map<String, double>? MSFT, Map<String, double>? SPY
+@_DynamicSymbolsConverter() Map<String, Map<String, double>> data
 });
 
 
@@ -572,11 +560,10 @@ class __$PriceComparisonDataCopyWithImpl<$Res>
 
 /// Create a copy of PriceComparisonData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? MSFT = freezed,Object? SPY = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? data = null,}) {
   return _then(_PriceComparisonData(
-MSFT: freezed == MSFT ? _self._MSFT : MSFT // ignore: cast_nullable_to_non_nullable
-as Map<String, double>?,SPY: freezed == SPY ? _self._SPY : SPY // ignore: cast_nullable_to_non_nullable
-as Map<String, double>?,
+data: null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as Map<String, Map<String, double>>,
   ));
 }
 
