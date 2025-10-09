@@ -1508,6 +1508,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
                 SplitDividend(),
                 SizedBox(height: 14.h),
+                securityShortVolume != null && securityShortVolume!.data != null
+                    ? SecurityShortVolume(data: securityShortVolume!.data)
+                    : SizedBox(),
+                SizedBox(height: 14.h),
                 insiderTransactionResponse != null &&
                         insiderTransactionResponse!.data.isNotEmpty
                     ? InsiderTraderTable(data: insiderTransactionResponse!)
@@ -1519,9 +1523,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     ? SecurityOwnershipTable(data: securityOwnership!.data!)
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                securityShortVolume != null && securityShortVolume!.data != null
-                    ? SecurityShortVolume(data: securityShortVolume!.data)
-                    : SizedBox(),
               ],
             ),
 
