@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -81,14 +82,31 @@ class InfoBoxGrid extends StatelessWidget {
                   SizedBox(height: 6.h),
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width / 2.8,
-                    child: MdSnsText(
-                      item["value"].toString().replaceAll("https://", ""),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      color: AppColors.white,
-                      variant: TextVariant.h2,
-                      fontWeight: TextFontWeightVariant.h1,
-                    ),
+                    child:
+                        (item["value"] == null ||
+                            item["value"].toString().isEmpty)
+                        ? Shimmer.fromColors(
+                            baseColor: AppColors.color1B254B.withOpacity(0.3),
+                            highlightColor: AppColors.colorB3B3B3.withOpacity(
+                              0.1,
+                            ),
+                            child: Container(
+                              height: 16,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: AppColors.fieldTextColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          )
+                        : MdSnsText(
+                            item["value"].toString().replaceAll("https://", ""),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            color: AppColors.white,
+                            variant: TextVariant.h2,
+                            fontWeight: TextFontWeightVariant.h1,
+                          ),
                   ),
                   SizedBox(height: 6.h),
                 ],

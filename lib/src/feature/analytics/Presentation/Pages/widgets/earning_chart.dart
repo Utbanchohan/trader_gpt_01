@@ -23,32 +23,28 @@ class QuarterlyPerformanceChart extends StatelessWidget {
         quarter: "$x0\n$x1",
         actual: y0,
         estimate: y1,
-        isBeat: y0 >= y1, // 👈 automatic beat check
+        isBeat: y0 >= y1,
       );
     }).toList();
 
     return Container(
       decoration: BoxDecoration(
-        // color: Colors.amber,
         border: Border.all(color: AppColors.color0x0x1AB3B3B3),
-
         borderRadius: BorderRadius.circular(20),
       ),
       child: Container(
         height: 260,
-        padding: const EdgeInsets.all(10),
+        // 👇 Yahan top padding add kar di (20 pixels)
+        padding: const EdgeInsets.only(top: 20, left: 8, right: 8, bottom: 10),
+
         child: LineChart(
           LineChartData(
-            // 1. Grid and Background Styling
-            backgroundColor: Colors.transparent, // Dark background
+            backgroundColor: Colors.transparent,
             gridData: FlGridData(
               show: true,
               drawVerticalLine: false,
               getDrawingHorizontalLine: (value) {
-                return const FlLine(
-                  color: Color(0xFF3B3D40), // Subtle horizontal lines
-                  strokeWidth: 1,
-                );
+                return FlLine(color: AppColors.colorB3B3B3, strokeWidth: 1);
               },
             ),
             titlesData: FlTitlesData(
@@ -59,13 +55,10 @@ class QuarterlyPerformanceChart extends StatelessWidget {
                   reservedSize: 35,
                   interval: 0.05,
                   getTitlesWidget: (value, meta) {
-                    // Custom formatting for the Y-axis (e.g., $0.60)
                     return MdSnsText(
                       '\$${value.toStringAsFixed(1)}',
-
                       color: AppColors.color0xB3FFFFFF,
                       variant: TextVariant.h5,
-
                       textAlign: TextAlign.right,
                     );
                   },
@@ -77,28 +70,31 @@ class QuarterlyPerformanceChart extends StatelessWidget {
                   reservedSize: 45,
                   interval: 1,
                   getTitlesWidget: (value, meta) {
-                    // Custom formatting for the X-axis (Q4-2023, BEAT, etc.)
                     final dataIndex = value.toInt();
                     if (dataIndex >= 0 && dataIndex < chartData.length) {
                       final parts = chartData[dataIndex].quarter.split('\n');
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 4),
-                          MdSnsText(
-                            parts[0].toString().split("-")[1],
-
-                            color: AppColors.color0xB3FFFFFF,
-                            variant: TextVariant.h8,
+                          const SizedBox(height: 10),
+                          Container(
+                            margin: const EdgeInsets.only(right: 25),
+                            child: MdSnsText(
+                              parts[0].toString().split("-")[1],
+                              color: AppColors.color0xB3FFFFFF,
+                              variant: TextVariant.h8,
+                            ),
                           ),
-                          MdSnsText(
-                            parts[1].capitalize(),
-
-                            color: chartData[dataIndex].isBeat
-                                ? AppColors.color00FF55
-                                : AppColors.color0xFFCD3438,
-                            variant: TextVariant.h8,
-                            fontWeight: TextFontWeightVariant.h2,
+                          Container(
+                            margin: const EdgeInsets.only(right: 25),
+                            child: MdSnsText(
+                              parts[1].capitalize(),
+                              color: chartData[dataIndex].isBeat
+                                  ? const Color(0xFF4EEB9E)
+                                  : AppColors.color0xFFCD3438,
+                              variant: TextVariant.h8,
+                              fontWeight: TextFontWeightVariant.h2,
+                            ),
                           ),
                         ],
                       );
@@ -114,19 +110,20 @@ class QuarterlyPerformanceChart extends StatelessWidget {
                 sideTitles: SideTitles(showTitles: false),
               ),
             ),
-            borderData: FlBorderData(show: false), // No chart border
-            // 2. Plotting the Data Points
+            borderData: FlBorderData(show: false),
             lineBarsData: [
-              // This is a trick to plot points without connecting lines.
-              // We'll create two 'lines': one for 'Actual' and one for 'Estimate'.
-
-              // Actual Points (Colored Green/Red)
+              // Actual Points
               LineChartBarData(
-                spots: chartData.asMap().entries.map((entry) {
-                  return FlSpot(entry.key.toDouble(), entry.value.actual);
-                }).toList(),
+                spots: chartData
+                    .asMap()
+                    .entries
+                    .map(
+                      (entry) =>
+                          FlSpot(entry.key.toDouble(), entry.value.actual),
+                    )
+                    .toList(),
                 isCurved: false,
-                color: Colors.transparent, // No connecting line
+                color: Colors.transparent,
                 dotData: FlDotData(
                   show: true,
                   getDotPainter: (spot, percent, barData, index) {
@@ -145,35 +142,35 @@ class QuarterlyPerformanceChart extends StatelessWidget {
                 ),
               ),
 
-              // Estimate Points (Hollow Circles)
+              // Estimate Points
               LineChartBarData(
-                spots: chartData.asMap().entries.map((entry) {
-                  return FlSpot(entry.key.toDouble(), entry.value.estimate);
-                }).toList(),
+                spots: chartData
+                    .asMap()
+                    .entries
+                    .map(
+                      (entry) =>
+                          FlSpot(entry.key.toDouble(), entry.value.estimate),
+                    )
+                    .toList(),
                 isCurved: false,
-                color: Colors.transparent, // No connecting line
+                color: Colors.transparent,
                 dotData: FlDotData(
                   show: true,
                   getDotPainter: (spot, percent, barData, index) {
                     return FlDotCirclePainter(
                       radius: 5,
-                      color: Colors.transparent, // Inner fill is transparent
+                      color: Colors.transparent,
                       strokeWidth: 1.5,
-                      strokeColor: Colors.white70, // White outline
+                      strokeColor: Colors.white70,
                     );
                   },
                 ),
               ),
             ],
-
-            // 3. View Window Configuration
             minX: -0.5,
-            maxX:
-                chartData.length - 0.5, // Provide a little padding on the sides
+            maxX: chartData.length - 0.5,
             minY: 0.60,
             maxY: 0.80,
-
-            // Tooltip (optional, for interactivity)
             lineTouchData: const LineTouchData(enabled: false),
           ),
         ),
@@ -186,7 +183,7 @@ class QuarterlyData {
   final String quarter;
   final double actual;
   final double estimate;
-  final bool isBeat; // true for Beat, false for Missed
+  final bool isBeat;
 
   QuarterlyData({
     required this.quarter,

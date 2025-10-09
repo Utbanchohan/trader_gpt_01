@@ -25,7 +25,7 @@ class SplitDividend extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             child: MdSnsText(
               "Split Dividends",
-              color: AppColors.color9EAAC0,
+              color: AppColors.fieldTextColor,
               fontWeight: TextFontWeightVariant.h4,
               variant: TextVariant.h3,
             ),
@@ -41,7 +41,7 @@ class SplitDividend extends StatelessWidget {
               columns: [
                 DataColumn(
                   label: MdSnsText(
-                    "Forward Annual Dividend Rate",
+                    "Forward Annual\nDividend Rate",
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -49,7 +49,7 @@ class SplitDividend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Forward Annual Dividend Yield',
+                    'Forward Annual\nDividend Yield',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,

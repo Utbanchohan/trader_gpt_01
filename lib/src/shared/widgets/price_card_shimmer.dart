@@ -30,7 +30,7 @@ class PriceCardShimmer extends StatelessWidget {
 
             // --- Previous Price shimmer ---
             shimmerBox(width: 70.w, height: 18.h),
-            SizedBox(height: 15.h),
+            SizedBox(height: 10.h),
 
             // --- Second Heading shimmer ---
             shimmerBox(width: 80.w, height: 14.h),
@@ -40,9 +40,8 @@ class PriceCardShimmer extends StatelessWidget {
             Row(
               children: [
                 shimmerBox(width: 70.w, height: 18.h),
-                SizedBox(width: 8.w),
+
                 // Optional percentage shimmer
-                shimmerBox(width: 40.w, height: 16.h),
               ],
             ),
           ],

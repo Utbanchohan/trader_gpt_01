@@ -22,7 +22,7 @@ class PriceTargetWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             child: Column(
               children: [
                 Row(
@@ -37,16 +37,16 @@ class PriceTargetWidget extends StatelessWidget {
                           children: [
                             MdSnsText(
                               "Price Target",
-                              variant: TextVariant.h7,
+                              variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
 
-                              color: AppColors.white,
+                              color: AppColors.fieldTextColor,
                             ),
-                            SizedBox(width: 10.w),
+                            SizedBox(width: 5.w),
                             Icon(
                               Icons.info_outline,
                               size: 14.sp,
-                              color: AppColors.colorB2B2B7,
+                              color: AppColors.fieldTextColor,
                             ),
                           ],
                         ),
@@ -54,8 +54,9 @@ class PriceTargetWidget extends StatelessWidget {
                         MdSnsText(
                           'Description about price target',
                           variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
 
-                          color: Color(0xFF9AA6B2),
+                          color: AppColors.fieldTextColor,
                         ),
 
                         const SizedBox(height: 10),
@@ -64,7 +65,7 @@ class PriceTargetWidget extends StatelessWidget {
                           "\$${data[0].high.toString()}",
 
                           color: AppColors.color00FF55,
-                          variant: TextVariant.h7,
+                          variant: TextVariant.h1,
 
                           fontWeight: TextFontWeightVariant.h2,
                         ),
@@ -73,8 +74,8 @@ class PriceTargetWidget extends StatelessWidget {
                     // The circular icon on the top right
                     SvgPicture.network(
                       'https://stage.tradersgpt.io/img/dollar.aa601f2d.svg',
-                      height: 50, // 👈 set your desired size
-                      width: 50,
+                      height: 56, // 👈 set your desired size
+                      width: 56,
                       fit: BoxFit.contain,
                     ),
                   ],
@@ -85,6 +86,7 @@ class PriceTargetWidget extends StatelessWidget {
                 // --- High Target Bar ---
                 buildPriceTargetBar(
                   'High',
+
                   "\$${data[0].high.toString()}",
                   data[0].highPercentage ?? 0,
                   AppColors.color00FF55,
@@ -92,7 +94,7 @@ class PriceTargetWidget extends StatelessWidget {
 
                 // --- Median Target Bar ---
                 buildPriceTargetBar(
-                  'Median',
+                  'Medium',
                   "\$${data[0].median.toString()}",
                   data[0].medianPercentage ?? 0,
                   AppColors.color00FF55,
@@ -132,8 +134,18 @@ Widget buildPriceTargetBar(
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            MdSnsText(label, color: AppColors.white, variant: TextVariant.h5),
-            MdSnsText(price, color: AppColors.white, variant: TextVariant.h5),
+            MdSnsText(
+              label,
+              color: AppColors.white,
+              variant: TextVariant.h3,
+              fontWeight: TextFontWeightVariant.h4,
+            ),
+            MdSnsText(
+              price,
+              color: AppColors.white,
+              variant: TextVariant.h2,
+              fontWeight: TextFontWeightVariant.h4,
+            ),
           ],
         ),
         const SizedBox(height: 6),
@@ -167,7 +179,8 @@ Widget buildPriceTargetBar(
                 '${percentage.toStringAsFixed(2)}%',
 
                 color: AppColors.white,
-                variant: TextVariant.h8,
+                variant: TextVariant.h3,
+                fontWeight: TextFontWeightVariant.h1,
               ),
             ),
           ],

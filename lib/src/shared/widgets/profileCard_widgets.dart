@@ -19,7 +19,7 @@ class ProfileCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // width: 122.w,
-      // height: 210.h,
+      height: 210.h,
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(10),
@@ -31,7 +31,7 @@ class ProfileCardWidget extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: imagePath.isEmpty
+            child: imagePath.isNotEmpty
                 ? Image.network(
                     imagePath,
                     height: 122.h,
@@ -39,7 +39,7 @@ class ProfileCardWidget extends StatelessWidget {
                     fit: BoxFit.cover,
                   )
                 : Image.asset(
-                    "assets/images/image 263.png",
+                    "assets/images/Placeholderimage.png",
                     height: 122.h,
                     width: 122.w,
                     fit: BoxFit.cover,

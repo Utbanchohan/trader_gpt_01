@@ -53,7 +53,7 @@ class PriceCardWidget extends StatelessWidget {
             variant: TextVariant.h4,
             fontWeight: TextFontWeightVariant.h1,
           ),
-          SizedBox(height: 15.h),
+          SizedBox(height: 10.h),
 
           // --- After Hours ---
           MdSnsText(
@@ -72,16 +72,6 @@ class PriceCardWidget extends StatelessWidget {
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h1,
               ),
-              // SizedBox(width: 8.w),
-              // MdSnsText(
-              //   percentage,
-              //   color: percentage.startsWith('-')
-              //       ? Colors
-              //             .red // Negative percentage red
-              //       : AppColors.color0xFF28CF62, // Positive green
-              //   variant: TextVariant.h4,
-              //   fontWeight: TextFontWeightVariant.h1,
-              // ),
             ],
           ),
         ],

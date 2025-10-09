@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
@@ -11,6 +12,7 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analysis_table.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analytics_widget.dart'
     show AnalyticsWidget;
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/date_picker_widgets.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/earning_chart.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
@@ -31,21 +33,25 @@ import 'package:trader_gpt/src/shared/widgets/EarningsTrend_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/InfoBox_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/cashdebt_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/company_detail.widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/earning_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/earning_wigdets.dart'
     hide CompanyDetailsCard;
 import 'package:trader_gpt/src/shared/widgets/earningsTable_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/financialtable_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/insiderTrader_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/matrics_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/outstanding_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/price_card_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/profileCard_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/profile_card_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:trader_gpt/utils/constant.dart';
 
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../shared/widgets/esg_score_table.dart';
-import '../../../../shared/widgets/price_card_shimmer.dart';
+import '../../../../shared/widgets/price_card_shimmer.dart'
+    hide ProfileCardShimmer;
 import '../../../../shared/widgets/security_short_widgets.dart';
 import '../../../../shared/widgets/securityownership_widgets.dart';
 import '../../../../shared/widgets/shortvalue.widgets.dart';
@@ -383,7 +389,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     "Company",
     "Financial",
     "Earning",
-    "Analytics",
+    "Analysis",
   ];
   final companyInfo = [
     {"icon": Icons.home, "title": "Headquarter", "value": "One Microsoft Way"},
@@ -969,18 +975,28 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
                           color: AppColors.white,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 6),
+                        Container(
+                          width: 5, // dot size
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: AppColors.colorB2B2B7,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+
+                        SizedBox(width: 6),
                         MdSnsText(
                           selectedStock!.companyName.split("-").first.trim(),
                           color: AppColors.colorB2B2B7,
                           variant: TextVariant.h4,
                           fontWeight: TextFontWeightVariant.h4,
                         ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          color: AppColors.white,
-                          size: 20.sp,
-                        ),
+                        // Icon(
+                        //   Icons.keyboard_arrow_down,
+                        //   color: AppColors.white,
+                        //   size: 20.sp,
+                        // ),
                       ],
                     ),
                     Row(
@@ -1048,7 +1064,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ? PriceCardWidget(
                                 secondColor: AppColors.white,
                                 firstColor: AppColors.color046297,
-                                firstHeading: "MARKET CAPITILIZATION",
+                                firstHeading: "MARKET CAPITAILIZATION",
                                 secondHeading: "OUTSTANDING SHARES",
                                 previousPrice: stockResponse!
                                     .data
@@ -1130,6 +1146,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   // chartLoader
                   //       ?
                   CustomCandleChart(
+                    name: "OHLC/V Candlestick Chart",
                     data: buildChartSpots(overviewCandleChartModel!),
                     onPressed: (val) async {
                       await getOverviewCandleChart(
@@ -1156,54 +1173,115 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             priceTargetMatrics != null && priceTargetMatrics!.data.length > 0
                 ? PriceTargetWidget(data: priceTargetMatrics!.data)
                 : SizedBox(),
+            sharesResponse != null &&
+                    sharesResponse!.data.PercentInsiders != null
+                ? ShareStructureCard(
+                    matrics: null,
+                    fundamentalData: null,
+                    shareData: sharesResponse!.data,
+                    heading: Headings.shareStructure,
+                  )
+                : MetricsShimmer(),
             SizedBox(height: 20.h),
-            RevenueAnalysisChart(),
-            SizedBox(height: 20.h),
-
-            // // ---------- PERFORMANCE OVERVIEW ----------
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.colorB3B3B3),
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      MdSnsText(
-                        "Performance Overview",
-                        color: AppColors.white,
-                        variant: TextVariant.h3,
-                        fontWeight: TextFontWeightVariant.h4,
-                      ),
-                      Row(
-                        children: [
-                          Image.asset(
-                            Assets.images.textalignJustifycenter.path,
-                            height: 14.h,
-                            width: 16.55.w,
-                          ),
-                          SizedBox(width: 10.w),
-                          Image.asset(
-                            Assets.images.chart.path,
-                            height: 14.h,
-                            width: 14.w,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  PerformanceTable(),
-                ],
-              ),
-            ),
+            fundamentalResponse != null &&
+                    fundamentalResponse!
+                        .data
+                        .fundamentals
+                        .annualIncome
+                        .isNotEmpty
+                ? ShareStructureCard(
+                    matrics: null,
+                    fundamentalData: fundamentalResponse!.data,
+                    shareData: null,
+                    heading: Headings.fundamental,
+                  )
+                : MetricsShimmer(),
             SizedBox(height: 20.h),
 
+            matricData != null &&
+                    matricData!.data != null &&
+                    matricData!.data!.isNotEmpty
+                ? ShareStructureCard(
+                    matrics: matricData!.data,
+                    fundamentalData: null,
+                    shareData: null,
+                    heading: Headings.matrics,
+                  )
+                : MetricsShimmer(),
+            // SizedBox(height: 20.h),
+            // CustomLineChart(
+            //   title: "Price Target",
+            //   lineColor: Colors.green,
+            //   areaColor: Colors.greenAccent,
+            // ),
+            SizedBox(height: 20.h),
+            monthlyData != null
+                ? WeeklySeasonalityChart(
+                    data: monthlyData!,
+                    isWeekly: false,
+                    weeklyModel: WeeklyModel(),
+                  )
+                : SizedBox(),
+            SizedBox(height: 20.h),
+            weeklyData != null
+                ? WeeklySeasonalityChart(
+                    weeklyModel: weeklyData!,
+                    isWeekly: true,
+                    data: ProbabilityResponse(),
+                  )
+                : SizedBox(),
+
+            SizedBox(height: 20.h),
+
+            // SizedBox(height: 20.h),
+            // RevenueAnalysisChart(),
+            // SizedBox(height: 20.h),
+            // // // ---------- PERFORMANCE OVERVIEW ----------
+            // Container(
+            //   padding: const EdgeInsets.all(16),
+            //   decoration: BoxDecoration(
+            //     border: Border.all(color: AppColors.colorB3B3B3),
+            //     color: AppColors.primaryColor,
+            //     borderRadius: BorderRadius.circular(12),
+            //   ),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           MdSnsText(
+            //             "Performance Overview",
+            //             color: AppColors.white,
+            //             variant: TextVariant.h3,
+            //             fontWeight: TextFontWeightVariant.h4,
+            //           ),
+            //           Row(
+            //             children: [
+            //               Image.asset(
+            //                 Assets.images.textalignJustifycenter.path,
+            //                 height: 14.h,
+            //                 width: 16.55.w,
+            //               ),
+            //               SizedBox(width: 10.w),
+            //               Image.asset(
+            //                 Assets.images.chart.path,
+            //                 height: 14.h,
+            //                 width: 14.w,
+            //               ),
+            //             ],
+            //           ),
+            //         ],
+            //       ),
+            //       SizedBox(height: 12.h),
+            //       PerformanceTable(),
+            //     ],
+            //   ),
+            // ),
+            // SizedBox(height: 20.h),
+
+            // SizedBox(height: 20.h),
+            SizedBox(height: 20.h),
             priceComparisonModel != null &&
                     priceComparisonModel!
                             .data
@@ -1213,11 +1291,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 ? Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.colorB3B3B3),
                       color: AppColors.color091224,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         MdSnsText(
                           "Price Comparison",
@@ -1243,7 +1322,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                       getDrawingHorizontalLine: (value) =>
                                           FlLine(
                                             color: AppColors.color1B254B,
-                                            strokeWidth: 3,
+                                            strokeWidth: 1,
                                           ),
                                       getDrawingVerticalLine: (value) => FlLine(
                                         color: Colors.transparent,
@@ -1299,7 +1378,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                         ),
                                         isCurved: true,
                                         color: AppColors.color0098E4,
-                                        barWidth: 3,
+                                        barWidth: 2,
                                         dotData: FlDotData(show: false),
                                       ),
                                       LineChartBarData(
@@ -1309,8 +1388,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                               .data['SPY']!,
                                         ),
                                         isCurved: true,
-                                        color: AppColors.color06D54E,
-                                        barWidth: 3,
+                                        color: AppColors.color1B254B,
+                                        barWidth: 2,
                                         dotData: FlDotData(show: false),
                                       ),
                                     ],
@@ -1327,58 +1406,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   )
                 : SizedBox(),
 
-            SizedBox(height: 20.h),
-            sharesResponse != null &&
-                    sharesResponse!.data.PercentInsiders != null
-                ? ShareStructureCard(
-                    matrics: null,
-                    fundamentalData: null,
-                    shareData: sharesResponse!.data,
-                    heading: Headings.shareStructure,
-                  )
-                : SizedBox(),
-            SizedBox(height: 20.h),
-            fundamentalResponse != null &&
-                    fundamentalResponse!
-                        .data
-                        .fundamentals
-                        .annualIncome
-                        .isNotEmpty
-                ? ShareStructureCard(
-                    matrics: null,
-                    fundamentalData: fundamentalResponse!.data,
-                    shareData: null,
-                    heading: Headings.fundamental,
-                  )
-                : SizedBox(),
-            SizedBox(height: 20.h),
-
-            matricData != null &&
-                    matricData!.data != null &&
-                    matricData!.data!.isNotEmpty
-                ? ShareStructureCard(
-                    matrics: matricData!.data,
-                    fundamentalData: null,
-                    shareData: null,
-                    heading: Headings.matrics,
-                  )
-                : SizedBox(),
-            SizedBox(height: 20.h),
-            monthlyData != null
-                ? WeeklySeasonalityChart(
-                    data: monthlyData!,
-                    isWeekly: false,
-                    weeklyModel: WeeklyModel(),
-                  )
-                : SizedBox(),
-            SizedBox(height: 20.h),
-            weeklyData != null
-                ? WeeklySeasonalityChart(
-                    weeklyModel: weeklyData!,
-                    isWeekly: true,
-                    data: ProbabilityResponse(),
-                  )
-                : SizedBox(),
             SizedBox(height: 20.h),
 
             analyticsRespinseData != null &&
@@ -1408,7 +1435,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   variant: TextVariant.h2,
                   fontWeight: TextFontWeightVariant.h1,
                 ),
-                SizedBox(height: 14.h),
+                SizedBox(height: 6.h),
+
                 companyModel != null &&
                         companyModel!.general.Description != null
                     ? ReadMoreText(
@@ -1416,7 +1444,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         trimLines: 2,
                         trimMode: TrimMode.Line,
                         trimCollapsedText: 'Read More',
-                        trimExpandedText: 'Read Less',
+                        trimExpandedText: 'Show Less',
+
+                        moreStyle: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.secondaryColor,
+                        ),
+                        lessStyle: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.secondaryColor,
+                        ),
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
@@ -1425,18 +1464,35 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       )
                     : SizedBox(),
 
+                // SizedBox(height: 14.h),
+                // companyModel != null &&
+                //         companyModel!.general.Description != null
+                //     ? ReadMoreText(
+                //         companyModel!.general.Description!,
+                //         trimLines: 2,
+                //         trimMode: TrimMode.Line,
+                //         trimCollapsedText: 'Read More',
+                //         trimExpandedText: 'Read Less',
+                //         style: TextStyle(
+                //           fontSize: 14.sp,
+                //           fontWeight: FontWeight.w400,
+                //           color: AppColors.white,
+                //         ),
+                //       )
+                //     : SizedBox(),
                 SizedBox(height: 14.h),
                 companyModel != null && companyModel!.general.Address != null
                     ? InfoBoxGrid(
                         items: [
                           companyModel!.general.Address ?? "",
                           companyModel!.general.Country ?? "",
+                          companyModel!.general.FullTimeEmployees.toString(),
                           "${companyModel!.general.FullTimeEmployees ?? 0}",
-                          companyModel!.general.WebURL ?? "",
                         ],
                       )
                     : SizedBox(),
-                SizedBox(height: 14.h),
+
+                SizedBox(height: 10.h),
                 companyModel != null &&
                         companyModel!.general.Officers != null &&
                         companyModel!.general.Officers!.isNotEmpty
@@ -1456,7 +1512,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             companyModel!.general.Officers != null &&
                             companyModel!.general.Officers!.isNotEmpty
                         ? SizedBox(
-                            height: 170.h,
+                            height: 180.h,
                             width: MediaQuery.sizeOf(context).width / 1.1,
                             child: ListView.separated(
                               shrinkWrap: true,
@@ -1491,11 +1547,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                   },
                             ),
                           )
-                        : SizedBox(),
+                        : ProfileCardShimmer(),
                   ],
                 ),
 
-                SizedBox(height: 14.h),
+                // SizedBox(height: 14.h),
                 companyModel != null
                     ? CompanyDetailsCard(
                         items: [
@@ -1515,7 +1571,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           ),
                         ],
                       )
-                    : SizedBox(),
+                    : EarningsShimmer(),
                 SizedBox(height: 14.h),
                 earningdata != null
                     ? Earnings(
@@ -1551,7 +1607,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                               : "N/A",
                         ],
                       )
-                    : SizedBox(),
+                    : EarningsShimmer(),
                 SizedBox(height: 14.h),
                 shortVolumeModel != null &&
                         shortVolumeModel!.data!.Charts.length > 0
@@ -1581,6 +1637,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
                 SplitDividend(),
                 SizedBox(height: 14.h),
+                securityShortVolume != null && securityShortVolume!.data != null
+                    ? SecurityShortVolume(data: securityShortVolume!.data)
+                    : SizedBox(),
+                SizedBox(height: 14.h),
                 insiderTransactionResponse != null &&
                         insiderTransactionResponse!.data.isNotEmpty
                     ? InsiderTraderTable(data: insiderTransactionResponse!)
@@ -1592,9 +1652,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     ? SecurityOwnershipTable(data: securityOwnership!.data!)
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                securityShortVolume != null && securityShortVolume!.data != null
-                    ? SecurityShortVolume(data: securityShortVolume!.data)
-                    : SizedBox(),
               ],
             ),
 
@@ -1617,7 +1674,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 15),
+            // SizedBox(height: 15),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -1648,123 +1705,103 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
               color: AppColors.white,
             ),
+            SizedBox(height: 15),
 
             // SizedBox(height: 20),
             DefaultTabController(
               length: 4,
-              child: Expanded(
-                child: Column(
-                  children: [
-                    TabBar(
-                      isScrollable: true,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      tabAlignment: TabAlignment.start,
-                      indicator: BoxDecoration(
-                        color: const Color(0xFF1B254B),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      indicatorPadding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 7,
-                      ),
-                      labelColor: Colors.white,
-                      labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      unselectedLabelColor: const Color(0xFFB2B2B7),
-                      dividerColor: Colors.transparent,
-                      tabs: [
-                        Tab(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: const Color(0xFFB2B2B7).withOpacity(0.4),
-                                width: 1,
+              child: Builder(
+                builder: (context) {
+                  final TabController tabController = DefaultTabController.of(
+                    context,
+                  );
+
+                  return Expanded(
+                    child: Column(
+                      children: [
+                        AnimatedBuilder(
+                          animation: tabController.animation!,
+                          builder: (context, _) {
+                            return TabBar(
+                              controller: tabController,
+                              isScrollable: true,
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              tabAlignment: TabAlignment.start,
+
+                              // ✅ indicator ko border ke andar confine kar rahe hain
+                              indicatorPadding: const EdgeInsets.all(4),
+                              labelPadding: const EdgeInsets.symmetric(
+                                horizontal: 4,
                               ),
-                            ),
-                            child: MdSnsText(
-                              "Summary",
-                              // color: AppColors.white,
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ),
-                        ),
-                        Tab(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: const Color(0xFFB2B2B7).withOpacity(0.4),
-                                width: 1,
+                              dividerColor: Colors.transparent,
+
+                              // ✅ Indicator ke andar border + background
+                              indicator: BoxDecoration(
+                                color:
+                                    AppColors.color203063, // selected tab color
+                                borderRadius: BorderRadius.circular(50),
+                                border: Border.all(
+                                  color: AppColors
+                                      .color0x1AB3B3B3, // same as tab border
+                                  width: 1,
+                                ),
                               ),
-                            ),
-                            child: MdSnsText(
-                              "Income Statement",
-                              // color: AppColors.white,
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ),
+
+                              tabs: List.generate(4, (index) {
+                                final List<String> tabTitles = [
+                                  "Summary",
+                                  "Income Statement",
+                                  "Balance Sheet",
+                                  "Cash Flow",
+                                ];
+
+                                final bool isSelected =
+                                    tabController.index == index ||
+                                    (tabController.indexIsChanging &&
+                                        tabController.previousIndex == index);
+
+                                return Tab(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      border: Border.all(
+                                        color: AppColors.color0x1AB3B3B3,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: MdSnsText(
+                                      tabTitles[index],
+                                      color: isSelected
+                                          ? AppColors.white
+                                          : AppColors.color677FA4,
+                                      variant: isSelected
+                                          ? TextVariant.h2
+                                          : TextVariant.h3,
+                                      fontWeight: isSelected
+                                          ? TextFontWeightVariant.h1
+                                          : TextFontWeightVariant.h4,
+                                    ),
+                                  ),
+                                );
+                              }),
+                            );
+                          },
                         ),
-                        Tab(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: const Color(0xFFB2B2B7).withOpacity(0.4),
-                                width: 1,
-                              ),
-                            ),
-                            child: MdSnsText(
-                              "Balance Sheet",
-                              // color: AppColors.white,
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ),
-                        ),
-                        Tab(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: Color(0xFFB2B2B7).withOpacity(0.4),
-                                width: 1,
-                              ),
-                            ),
-                            child: MdSnsText(
-                              "Cash Flow",
-                              color: AppColors.white,
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: TabBarView(
-                        children: [
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                financeChartsDataModel != null &&
+
+                        // ✅ TabBarView below
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              // --- Tab 1 ---
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 15),
+                                    if (financeChartsDataModel != null &&
                                         financeChartsDataModel!
                                                 .data
                                                 .cashAndDebt
@@ -1775,8 +1812,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                             .cashAndDebt
                                             .yearly!
                                             .metrics
-                                            .isNotEmpty
-                                    ? CashdebtWidgets(
+                                            .isNotEmpty)
+                                      CashdebtWidgets(
                                         title: "Cash and Debt",
                                         cash: "Cash",
                                         debt: "Debt",
@@ -1794,10 +1831,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                                 .yearly!
                                                 .metrics['Debt'] ??
                                             [],
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: 20),
-                                financeChartsDataModel != null &&
+                                      ),
+                                    const SizedBox(height: 20),
+
+                                    if (financeChartsDataModel != null &&
                                         financeChartsDataModel!
                                                 .data
                                                 .assetsAndStockHolders
@@ -1808,8 +1845,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                             .assetsAndStockHolders
                                             .yearly!
                                             .metrics
-                                            .isNotEmpty
-                                    ? CashdebtWidgets(
+                                            .isNotEmpty)
+                                      CashdebtWidgets(
                                         title: "Assets and Stockholders",
                                         cash: "Total Assets",
                                         debt: "Total StackHolder",
@@ -1827,11 +1864,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                                 .yearly!
                                                 .metrics["Total StockHolder"] ??
                                             [],
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: 20),
+                                      ),
+                                    const SizedBox(height: 20),
 
-                                financeChartsDataModel != null &&
+                                    if (financeChartsDataModel != null &&
                                         financeChartsDataModel!
                                                 .data
                                                 .outstandingSharesBuyback
@@ -1842,9 +1878,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                             .outstandingSharesBuyback
                                             .yearly!
                                             .metrics
-                                            .isNotEmpty
-                                    ? CashdebtWidgets(
-                                        title: "Outstanding Shares & Buypack",
+                                            .isNotEmpty)
+                                      CashdebtWidgets(
+                                        title: "Outstanding Shares & Buyback",
                                         cash: "Outstanding Shares",
                                         debt: "Stock Buyback Percentage",
                                         rawCash:
@@ -1861,10 +1897,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                                 .yearly!
                                                 .metrics["Stock Buyback Percentage"] ??
                                             [],
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: 20),
-                                financeChartsDataModel != null &&
+                                      ),
+                                    const SizedBox(height: 20),
+
+                                    if (financeChartsDataModel != null &&
                                         financeChartsDataModel!
                                                 .data
                                                 .revenueAndIncome
@@ -1875,11 +1911,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                             .revenueAndIncome
                                             .yearly!
                                             .metrics
-                                            .isNotEmpty
-                                    ? CashdebtWidgets(
+                                            .isNotEmpty)
+                                      CashdebtWidgets(
                                         title: "Revenue and Income",
-                                        cash: "Total Assets",
-                                        debt: "Total StackHolder",
+                                        cash: "Revenue",
+                                        debt: "Income",
                                         rawCash:
                                             financeChartsDataModel!
                                                 .data
@@ -1894,10 +1930,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                                 .yearly!
                                                 .metrics["Income"] ??
                                             [],
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: 20),
-                                financeChartsDataModel != null &&
+                                      ),
+                                    const SizedBox(height: 20),
+
+                                    if (financeChartsDataModel != null &&
                                         financeChartsDataModel!
                                                 .data
                                                 .cashFlowData
@@ -1908,11 +1944,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                             .cashFlowData
                                             .yearly!
                                             .metrics
-                                            .isNotEmpty
-                                    ? OperatingCashFlow(
+                                            .isNotEmpty)
+                                      OperatingCashFlow(
                                         title: "Cash Flow Data",
-                                        // cash: "Operating Cash Flow",
-                                        // debt: "Free Cash Flow",
                                         rawCash:
                                             financeChartsDataModel!
                                                 .data
@@ -1941,66 +1975,67 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                                 .yearly!
                                                 .metrics["Cash Flow Dividends"] ??
                                             [],
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: 20),
-                              ],
-                            ),
-                          ),
-                          //tab 2
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10),
-                                CustomLineChart(
-                                  lineColor: Colors.green,
-                                  areaColor: Colors.greenAccent,
-
-                                  title: "Income Statement for MSFT",
+                                      ),
+                                    const SizedBox(height: 20),
+                                  ],
                                 ),
-                                SizedBox(height: 20),
-                                FinancialTable(),
-                              ],
-                            ),
-                          ),
-                          // tab 2
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10),
-                                CustomLineChart(
-                                  lineColor: Colors.purpleAccent,
-                                  areaColor: Colors.purple,
+                              ),
 
-                                  title: "Balance Sheet for MSFT",
+                              // --- Tab 2 ---
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    CustomLineChart(
+                                      lineColor: Colors.green,
+                                      areaColor: Colors.greenAccent,
+                                      title: "Income Statement for MSFT",
+                                    ),
+                                    const SizedBox(height: 20),
+                                    FinancialTable(),
+                                  ],
                                 ),
-                                SizedBox(height: 20),
-                                FinancialTable(),
-                              ],
-                            ),
-                          ),
-                          // 3
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10),
-                                CustomLineChart(
-                                  lineColor: Colors.purpleAccent,
-                                  areaColor: Colors.purple,
+                              ),
 
-                                  title: "Cash Flow for MSFT",
+                              // --- Tab 3 ---
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    CustomLineChart(
+                                      lineColor: Colors.purpleAccent,
+                                      areaColor: Colors.purple,
+                                      title: "Balance Sheet for MSFT",
+                                    ),
+                                    const SizedBox(height: 20),
+                                    FinancialTable(),
+                                  ],
                                 ),
-                                SizedBox(height: 20),
-                                FinancialTable(),
-                              ],
-                            ),
+                              ),
+
+                              // --- Tab 4 ---
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    CustomLineChart(
+                                      lineColor: Colors.purpleAccent,
+                                      areaColor: Colors.purple,
+                                      title: "Cash Flow for MSFT",
+                                    ),
+                                    const SizedBox(height: 20),
+                                    FinancialTable(),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(height: 20.h),
+                      ],
                     ),
-                    SizedBox(height: 20.h),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],
@@ -2052,11 +2087,33 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DateRangePickerWidget(
+                      onShowPressed: (from, to) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: MdSnsText(
+                              'From: ${from != null ? DateFormat('MM/dd/yyyy').format(from) : '—'}'
+                              '   To: ${to != null ? DateFormat('MM/dd/yyyy').format(to) : '—'}',
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
               SizedBox(height: 10),
               analysisDataModel != null &&
                       analysisDataModel!.data != null &&
                       analysisDataModel!.data!.chart != null
                   ? CustomCandleChart(
+                      name: "",
                       data: analysisDataModel!.data!.chart!,
                       onPressed: (val) async {
                         await getAnalysisData(
