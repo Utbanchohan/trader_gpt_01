@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -112,21 +113,34 @@ class ShortVolumeChart extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
             children: [
-              MdSnsText(
-                "Short Volume",
-                color: AppColors.fieldTextColor,
-                fontWeight: TextFontWeightVariant.h4,
-                variant: TextVariant.h3,
+              Row(
+                children: [
+                  MdSnsText(
+                    "SHORT VOLUME",
+                    color: AppColors.fieldTextColor,
+                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h3,
+                  ),
+                  // SizedBox(width: 8),
+                  // SvgPicture.network(
+                  //   'assets/images/bulb.svg',
+                  //   width: 50,
+                  //   height: 50,
+                  //   color: AppColors.borderColor,
+                  // ),
+                ],
               ),
               MdSnsText(
-                "Shel",
+                "SHEL",
                 color: AppColors.fieldTextColor,
                 fontWeight: TextFontWeightVariant.h4,
                 variant: TextVariant.h3,
               ),
             ],
           ),
+          SizedBox(height: 15),
           Container(
             height: 300,
             child: LineChart(
@@ -186,31 +200,88 @@ class ShortVolumeChart extends StatelessWidget {
           // simple legend
           Wrap(
             spacing: 12,
+            runSpacing: 8,
             children: series.map((s) {
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: _getColor(s.name),
-                      shape: BoxShape.circle,
+              // Conditionally stack Short Exempt + Total together
+              if (s.name == "shortExemptParQuantity") {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: _getColor(s.name),
+                            shape: BoxShape.circle,
+                          ),
+                          width: 10,
+                          height: 10,
+                        ),
+                        const SizedBox(width: 4),
+                        MdSnsText(
+                          "Short Exempt Par Quantity",
+                          color: AppColors.white,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
                     ),
-                    width: 10,
-                    height: 10,
-                  ),
-                  const SizedBox(width: 4),
-                  MdSnsText(
-                    s.name == "shortParQuantity"
-                        ? "Short Par Quantity"
-                        : s.name == "shortExemptParQuantity"
-                        ? "Short Exempt Par Quantity"
-                        : "Total Par Quantity",
-                    color: AppColors.white,
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
-                  ),
-                ],
-              );
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.orange, // color for total
+                            shape: BoxShape.circle,
+                          ),
+                          width: 10,
+                          height: 10,
+                        ),
+                        const SizedBox(width: 4),
+                        MdSnsText(
+                          "Total Par Quantity",
+                          color: AppColors.white,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }
+
+              // Normal case (Short Par Quantity only)
+              if (s.name == "shortParQuantity") {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: _getColor(s.name),
+                        shape: BoxShape.circle,
+                      ),
+                      width: 10,
+                      height: 10,
+                    ),
+                    const SizedBox(width: 4),
+                    MdSnsText(
+                      "Short Par Quantity",
+                      color: AppColors.white,
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h4,
+                    ),
+                  ],
+                );
+              }
+
+              // Skip rendering for "Total Par Quantity"
+              if (s.name == "totalParQuantity") {
+                return const SizedBox.shrink();
+              }
+
+              return const SizedBox.shrink();
             }).toList(),
           ),
         ],

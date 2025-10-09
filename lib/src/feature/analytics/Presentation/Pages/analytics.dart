@@ -871,8 +871,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         ),
                         SizedBox(width: 6),
                         Container(
-                          width: 3, // dot size
-                          height: 3,
+                          width: 5, // dot size
+                          height: 5,
                           decoration: BoxDecoration(
                             color: AppColors.colorB2B2B7,
                             shape: BoxShape.circle,

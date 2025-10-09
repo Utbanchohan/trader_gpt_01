@@ -41,7 +41,7 @@ class SplitDividend extends StatelessWidget {
               columns: [
                 DataColumn(
                   label: MdSnsText(
-                    "Forward Annual Dividend Rate",
+                    "Forward Annual\nDividend Rate",
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -49,7 +49,7 @@ class SplitDividend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Forward Annual Dividend Yield',
+                    'Forward Annual\nDividend Yield',
                     variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h4,
                     color: AppColors.white,
@@ -104,7 +104,7 @@ class SplitDividend extends StatelessWidget {
                         "1.08",
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
-                        color: AppColors.white,
+                        color: AppColors.color0xFFCD3438,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -113,7 +113,7 @@ class SplitDividend extends StatelessWidget {
                         "0.0112",
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
-                        color: AppColors.color0xFFCD3438,
+                        color: AppColors.color046297,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -122,7 +122,7 @@ class SplitDividend extends StatelessWidget {
                         "0.332",
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
-                        color: AppColors.color046297,
+                        color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

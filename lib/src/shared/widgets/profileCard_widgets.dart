@@ -31,7 +31,7 @@ class ProfileCardWidget extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: imagePath.isEmpty
+            child: imagePath.isNotEmpty
                 ? Image.network(
                     imagePath,
                     height: 122.h,

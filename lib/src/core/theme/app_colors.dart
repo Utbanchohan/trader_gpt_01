@@ -63,4 +63,5 @@ abstract final class AppColors {
   static const color0xFF3C4E8A = Color(0xFF3C4E8A);
   static const color0xFFCD3438 = Color(0xFFCD3438);
   static const color0x00071B7B = Color(0x00071B7B);
+  static const color0xFF00C5FF = Color(0xFF00C5FF);
 }
