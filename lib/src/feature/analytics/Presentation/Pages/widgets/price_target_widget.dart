@@ -94,7 +94,7 @@ class PriceTargetWidget extends StatelessWidget {
 
                 // --- Median Target Bar ---
                 buildPriceTargetBar(
-                  'Median',
+                  'Medium',
                   "\$${data[0].median.toString()}",
                   data[0].medianPercentage ?? 0,
                   AppColors.color00FF55,

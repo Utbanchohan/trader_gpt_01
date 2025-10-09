@@ -69,20 +69,20 @@ class AnalyticsWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           MdSnsText(
                             'Bearish',
                             color: AppColors.redFF3B3B,
                             variant: TextVariant.h4,
                           ),
-                          SizedBox(width: 5.w),
+                          SizedBox(width: 30.w),
                           MdSnsText(
                             'Hold',
                             color: AppColors.white,
                             variant: TextVariant.h4,
                           ),
-                          SizedBox(width: 5.w),
+                          SizedBox(width: 30.w),
                           MdSnsText(
                             'Bullish',
                             color: AppColors.color00FF55,
@@ -102,85 +102,65 @@ class AnalyticsWidget extends StatelessWidget {
   }
 }
 
-const Color bearishColor = Color(0xFFE53935); // Red
-const Color holdColor = Color(0xFFFFF176); // Yellow
-const Color bullishColor = Color(0xFF4CAF50); // Green
+const Color color1 = Color(0xFFE53935); // Red
+const Color color2 = Color(0xFFFF9800); // Orange
+const Color color3 = Color(0xFFFFF176); // Yellow
+const Color color4 = Color(0xFF81C784); // Light Green
+const Color color5 = Color(0xFF4CAF50); // Green
 
 class GaugePainter extends CustomPainter {
-  // Value from 0.0 (Bearish) to 1.0 (Bullish)
   final double ratingValue;
 
   GaugePainter({required this.ratingValue});
 
   @override
   void paint(Canvas canvas, Size size) {
-    // --- 1. Define Key Geometry ---
-
-    // The center of the circle (placed at the bottom center of the widget area)
+    // 🔽 Move the center lower to make arc taller
     final Offset center = Offset(size.width / 2, size.height);
-    // The radius is constrained by the width/2 or height
-    final double radius = min(size.width / 2, size.height) * 0.9;
-
-    // The bounding box for the arc (rectangle that would enclose the full circle)
+    final double radius = min(size.width / 2, size.height) * 1.3;
     final Rect rect = Rect.fromCircle(center: center, radius: radius);
 
-    // Starting the arc at 180 degrees (pi) and ending at 360 degrees (2*pi)
     const double startAngle = pi;
-    const double sweepAngle = pi; // 180 degrees
-
-    // --- 2. Draw the Colored Segments ---
-
-    // The arc segment size (180 degrees / 3 segments = 60 degrees/segment = pi/3 radians)
-    final double segmentAngle = pi / 3;
-    final double arcWidth = 3; // Thickness of the arc
+    const double sweepAngle = pi;
+    final int totalSegments = 5;
+    final double segmentAngle = sweepAngle / totalSegments;
+    final double arcWidth = 4;
+    final double gap = 0.05;
 
     void drawSegment(double start, double sweep, Color color) {
-      final Paint segmentPaint = Paint()
+      final Paint paint = Paint()
         ..color = color
         ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke
         ..strokeWidth = arcWidth;
 
-      canvas.drawArc(rect, start, sweep, false, segmentPaint);
+      canvas.drawArc(rect, start, sweep, false, paint);
     }
 
-    // Bearish (Red) - pi to pi + pi/3
-    drawSegment(startAngle, segmentAngle, bearishColor);
-    drawSegment(startAngle + 1, segmentAngle, bearishColor);
+    final List<Color> colors = [color1, color2, color3, color4, color5];
 
-    // Hold (Yellow/Orange) - pi + pi/3 to pi + 2*pi/3
-    drawSegment(startAngle + segmentAngle, segmentAngle, holdColor);
+    for (int i = 0; i < totalSegments; i++) {
+      final double start = startAngle + i * (segmentAngle + gap);
+      drawSegment(start, segmentAngle - gap, colors[i]);
+    }
 
-    // Bullish (Green) - pi + 2*pi/3 to 2*pi
-    drawSegment(startAngle + 2 * segmentAngle, segmentAngle, bullishColor);
-
-    // --- 3. Draw the Needle/Pointer ---
-
-    // Map the ratingValue (0.0 to 1.0) to the angular sweep (pi to 2*pi)
-    // The angle of the needle, relative to the horizontal (x-axis)
+    // 🕹️ Needle
     final double needleAngle = startAngle + (ratingValue * sweepAngle);
-
-    // Calculate the end point of the needle using polar to cartesian coordinates
-    // x = center.x + radius * cos(angle)
-    // y = center.y + radius * sin(angle)
-    final double needleRadius = radius * 0.8; // Shorter than the arc radius
+    final double needleRadius = radius * 0.8;
     final Offset needleEndPoint = Offset(
       center.dx + needleRadius * cos(needleAngle),
       center.dy + needleRadius * sin(needleAngle),
     );
 
-    // Needle Paint
     final Paint needlePaint = Paint()
       ..color = Colors.white
+      ..strokeWidth = 3.0
       ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3.0;
+      ..style = PaintingStyle.stroke;
 
-    // Draw the needle
     canvas.drawLine(center, needleEndPoint, needlePaint);
 
-    // --- 4. Draw the Center Pin (Pivot) ---
-
+    // ⚪ Center Pin
     final Paint pinPaint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
@@ -189,8 +169,6 @@ class GaugePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant GaugePainter oldDelegate) {
-    // Only repaint if the rating value changes
-    return oldDelegate.ratingValue != ratingValue;
-  }
+  bool shouldRepaint(covariant GaugePainter oldDelegate) =>
+      oldDelegate.ratingValue != ratingValue;
 }

@@ -19,7 +19,7 @@ class ProfileCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // width: 122.w,
-      // height: 210.h,
+      height: 210.h,
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(10),

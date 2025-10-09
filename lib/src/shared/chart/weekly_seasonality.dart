@@ -231,48 +231,64 @@ class _WeeklySeasonalityChartState
 
             SizedBox(height: 16),
 
-            MonthlySpiderChart(
-              isWeekly: widget.isWeekly,
-              lables: !widget.isWeekly
-                  ? [
-                      "January",
-                      "February",
-                      "March",
-                      "April",
-                      "May",
-                      "June",
-                      "July",
-                      "August",
-                      "September",
-                      "October",
-                      "November",
-                      "December",
-                    ]
-                  : ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                // Divider line behind chart
+                Positioned.fill(
+                  child: CustomPaint(painter: BackgroundDividerPainter()),
+                ),
 
-              values: widget.isWeekly
-                  ? [
-                      weeklyData[0]['value'],
-                      weeklyData[1]['value'],
-                      weeklyData[2]['value'],
-                      weeklyData[3]['value'],
-                      weeklyData[4]['value'],
-                    ]
-                  : [
-                      weeklyData[0]['value'],
-                      weeklyData[1]['value'],
-                      weeklyData[2]['value'],
-                      weeklyData[3]['value'],
-                      weeklyData[4]['value'],
-                      weeklyData[5]['value'],
-                      weeklyData[6]['value'],
-                      weeklyData[7]['value'],
-                      weeklyData[8]['value'],
-                      weeklyData[9]['value'],
-                      weeklyData[10]['value'],
-                      weeklyData[11]['value'],
-                    ], // Jan–Dec
-              maxValue: 100, // highest expected value
+                // The actual chart on top
+                MonthlySpiderChart(
+                  isWeekly: widget.isWeekly,
+                  lables: !widget.isWeekly
+                      ? [
+                          "January",
+                          "February",
+                          "March",
+                          "April",
+                          "May",
+                          "June",
+                          "July",
+                          "August",
+                          "September",
+                          "October",
+                          "November",
+                          "December",
+                        ]
+                      : [
+                          "Monday",
+                          "Tuesday",
+                          "Wednesday",
+                          "Thursday",
+                          "Friday",
+                        ],
+                  values: widget.isWeekly
+                      ? [
+                          weeklyData[0]['value'],
+                          weeklyData[1]['value'],
+                          weeklyData[2]['value'],
+                          weeklyData[3]['value'],
+                          weeklyData[4]['value'],
+                        ]
+                      : [
+                          weeklyData[0]['value'],
+                          weeklyData[1]['value'],
+                          weeklyData[2]['value'],
+                          weeklyData[3]['value'],
+                          weeklyData[4]['value'],
+                          weeklyData[5]['value'],
+                          weeklyData[6]['value'],
+                          weeklyData[7]['value'],
+                          weeklyData[8]['value'],
+                          weeklyData[9]['value'],
+                          weeklyData[10]['value'],
+                          weeklyData[11]['value'],
+                        ],
+                  maxValue: 100,
+                ),
+              ],
             ),
 
             // Chart
@@ -376,7 +392,6 @@ class _WeeklySeasonalityChartState
             // ),
             const SizedBox(height: 12),
 
-            // ✅ Neeche custom text
             Center(
               child: MdSnsText(
                 variant: TextVariant.h4,
@@ -412,6 +427,25 @@ class MonthlySpiderChart extends StatelessWidget {
       painter: _SpiderPainter(values, lables, maxValue, isWeekly!),
     );
   }
+}
+
+class BackgroundDividerPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppColors
+          .colorB3B3B3 // light line
+      ..strokeWidth = 0.8;
+
+    final double spacing = size.height / 6; // 5 lines
+    for (int i = 1; i < 6; i++) {
+      final y = spacing * i;
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _SpiderPainter extends CustomPainter {

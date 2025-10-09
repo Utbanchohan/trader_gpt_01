@@ -364,7 +364,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     "Company",
     "Financial",
     "Earning",
-    "analysis",
+    "Analysis",
   ];
   final companyInfo = [
     {"icon": Icons.home, "title": "Headquarter", "value": "One Microsoft Way"},
@@ -849,18 +849,28 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
                           color: AppColors.white,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 6),
+                        Container(
+                          width: 3, // dot size
+                          height: 3,
+                          decoration: BoxDecoration(
+                            color: AppColors.colorB2B2B7,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+
+                        SizedBox(width: 6),
                         MdSnsText(
                           selectedStock!.companyName.split("-").first.trim(),
                           color: AppColors.colorB2B2B7,
                           variant: TextVariant.h4,
                           fontWeight: TextFontWeightVariant.h4,
                         ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          color: AppColors.white,
-                          size: 20.sp,
-                        ),
+                        // Icon(
+                        //   Icons.keyboard_arrow_down,
+                        //   color: AppColors.white,
+                        //   size: 20.sp,
+                        // ),
                       ],
                     ),
                     Row(
@@ -929,7 +939,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             ? PriceCardWidget(
                                 secondColor: AppColors.white,
                                 firstColor: AppColors.color046297,
-                                firstHeading: "MARKET CAPITILIZATION",
+                                firstHeading: "MARKET CAPITAILIZATION",
                                 secondHeading: "OUTSTANDING SHARES",
                                 previousPrice: stockResponse!
                                     .data
@@ -1005,23 +1015,39 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   ),
 
             // : PriceCardShimmer(),
-            SizedBox(height: 20.h),
-            CustomLineChart(
-              lineColor: Colors.green,
-              areaColor: Colors.greenAccent,
-            ),
-
+            // SizedBox(height: 20.h),
+            // CustomLineChart(
+            //   lineColor: Colors.green,
+            //   areaColor: Colors.greenAccent,
+            // ),
             SizedBox(height: 20.h),
             priceTargetMatrics != null && priceTargetMatrics!.data.length > 0
                 ? PriceTargetWidget(data: priceTargetMatrics!.data)
                 : SizedBox(),
-            // SizedBox(height: 20.h),
 
+            // SizedBox(height: 20.h),
             // CustomLineChart(
             //   title: "Price Target",
             //   lineColor: Colors.green,
             //   areaColor: Colors.greenAccent,
             // ),
+            monthlyData != null
+                ? WeeklySeasonalityChart(
+                    data: monthlyData!,
+                    isWeekly: false,
+                    weeklyModel: WeeklyModel(),
+                  )
+                : SizedBox(),
+            SizedBox(height: 20.h),
+            weeklyData != null
+                ? WeeklySeasonalityChart(
+                    weeklyModel: weeklyData!,
+                    isWeekly: true,
+                    data: ProbabilityResponse(),
+                  )
+                : SizedBox(),
+
+            SizedBox(height: 20.h),
             // SizedBox(height: 20.h),
             // RevenueAnalysisChart(),
             // SizedBox(height: 20.h),
@@ -1181,8 +1207,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   )
                 : SizedBox(),
 
-            SizedBox(height: 20.h),
-
+            // SizedBox(height: 20.h),
             sharesResponse != null &&
                     sharesResponse!.data.PercentInsiders != null
                 ? ShareStructureCard(
@@ -1219,23 +1244,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   )
                 : MetricsShimmer(),
             SizedBox(height: 20.h),
-            monthlyData != null
-                ? WeeklySeasonalityChart(
-                    data: monthlyData!,
-                    isWeekly: false,
-                    weeklyModel: WeeklyModel(),
-                  )
-                : SizedBox(),
-            SizedBox(height: 20.h),
-            weeklyData != null
-                ? WeeklySeasonalityChart(
-                    weeklyModel: weeklyData!,
-                    isWeekly: true,
-                    data: ProbabilityResponse(),
-                  )
-                : SizedBox(),
 
-            SizedBox(height: 20.h),
             analyticsRespinseData != null &&
                     analyticsRespinseData!.data.isNotEmpty
                 ? AnalyticsWidget(data: analyticsRespinseData!.data)
@@ -1291,23 +1300,23 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         ),
                       )
                     : SizedBox(),
-                SizedBox(height: 14.h),
-                companyModel != null &&
-                        companyModel!.general.Description != null
-                    ? ReadMoreText(
-                        companyModel!.general.Description!,
-                        trimLines: 2,
-                        trimMode: TrimMode.Line,
-                        trimCollapsedText: 'Read More',
-                        trimExpandedText: 'Read Less',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.white,
-                        ),
-                      )
-                    : SizedBox(),
 
+                // SizedBox(height: 14.h),
+                // companyModel != null &&
+                //         companyModel!.general.Description != null
+                //     ? ReadMoreText(
+                //         companyModel!.general.Description!,
+                //         trimLines: 2,
+                //         trimMode: TrimMode.Line,
+                //         trimCollapsedText: 'Read More',
+                //         trimExpandedText: 'Read Less',
+                //         style: TextStyle(
+                //           fontSize: 14.sp,
+                //           fontWeight: FontWeight.w400,
+                //           color: AppColors.white,
+                //         ),
+                //       )
+                //     : SizedBox(),
                 SizedBox(height: 14.h),
                 companyModel != null && companyModel!.general.Address != null
                     ? InfoBoxGrid(
@@ -1340,7 +1349,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             companyModel!.general.Officers != null &&
                             companyModel!.general.Officers!.isNotEmpty
                         ? SizedBox(
-                            height: 170.h,
+                            height: 180.h,
                             width: MediaQuery.sizeOf(context).width / 1.1,
                             child: ListView.separated(
                               shrinkWrap: true,

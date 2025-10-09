@@ -133,11 +133,22 @@ class ShortVolumeChart extends StatelessWidget {
               LineChartData(
                 minY: 0,
                 maxY: maxY * 1.1,
-                gridData: FlGridData(show: false, drawVerticalLine: false),
+                gridData: FlGridData(
+                  show: true,
+                  drawHorizontalLine: true,
+                  drawVerticalLine: false, // ❌ No vertical lines
+                  horizontalInterval: maxY / 5, // Line gap
+                  getDrawingHorizontalLine: (value) {
+                    return FlLine(
+                      color: AppColors.colorB3B3B3,
+                      strokeWidth: 0.8,
+                    );
+                  },
+                ),
                 borderData: FlBorderData(show: false),
                 titlesData: FlTitlesData(
                   leftTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false, reservedSize: 40),
+                    sideTitles: SideTitles(showTitles: false),
                   ),
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
@@ -171,7 +182,7 @@ class ShortVolumeChart extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           // simple legend
           Wrap(
             spacing: 12,

@@ -11,10 +11,13 @@ class EarningsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 👇 yahan condition lagayi
+    // 👇 Text color condition
     Color textColor;
-    if (value.contains("+")) {
-      textColor = Colors.greenAccent;
+
+    if (title == "Reported EPS" || title == "EPS Surprise") {
+      textColor = AppColors.color06D54E;
+    } else if (value.contains("+")) {
+      textColor = AppColors.color06D54E;
     } else if (value.contains("-")) {
       textColor = Colors.redAccent;
     } else {
@@ -34,10 +37,7 @@ class EarningsItem extends StatelessWidget {
           ),
           MdSnsText(
             value,
-            color: value.contains("+")
-                ? Colors
-                      .greenAccent // 👈 agar + ho to green
-                : AppColors.white, // 👈 warna white
+            color: textColor, // ✅ Conditional color apply ho raha hai
             fontWeight: TextFontWeightVariant.h1,
             variant: TextVariant.h4,
           ),
@@ -82,7 +82,6 @@ class Earnings extends StatelessWidget {
                 ),
                 EarningsItem(title: "Consensus EPS Forecast", value: items[2]),
                 EarningsItem(title: "EPS Surprise", value: items[3]),
-
                 EarningsItem(title: "Total Revenue", value: items[4]),
               ],
             ),
