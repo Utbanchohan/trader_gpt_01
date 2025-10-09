@@ -8,7 +8,7 @@ import '../../../domain/model/analysis_data/analysis_data_model.dart';
 
 class CustomCandleChart extends StatefulWidget {
   final List<ChartData> data;
-  final VoidCallback onPressed;
+  final void Function(String id) onPressed;
   const CustomCandleChart({
     super.key,
     required this.data,
@@ -123,7 +123,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
 
               return GestureDetector(
                 onTap: () {
-                  widget.onPressed();
+                  widget.onPressed(labels[index]);
                   selectedIndex = index;
                 },
                 child: AnimatedContainer(

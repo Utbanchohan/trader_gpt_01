@@ -19,6 +19,7 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_da
 import 'package:trader_gpt/src/feature/analytics/domain/model/company_detail/company_detail_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
+import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/widget/shimmer_widget.dart';
 import 'package:trader_gpt/src/shared/chart/lin_chart.dart';
 import 'package:trader_gpt/src/shared/chart/performance_table.dart';
 import 'package:trader_gpt/src/shared/chart/revenue_analysis.dart';
@@ -115,6 +116,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   FinancialResponse? financialResponse;
   FinanceDataResponse? financeChartsDataModel;
   List<OverviewCandleChartModel>? overviewCandleChartModel;
+  bool chartLoader = false;
 
   financialData(String symbol) async {
     PriceRequestDto overview = PriceRequestDto(symbol: symbol, isYearly: true);
@@ -350,11 +352,21 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       startDate: startDateString,
       endDate: endDateString,
     );
+    setState(() {
+      chartLoader = true;
+    });
     var res = await ref
         .read(analyticsProviderProvider.notifier)
         .analysisData(overview);
     if (res != null) {
       analysisDataModel = res;
+      setState(() {
+        chartLoader = false;
+      });
+    } else {
+      setState(() {
+        chartLoader = false;
+      });
     }
   }
 
@@ -444,17 +456,21 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   firstIndexData() async {
     if (stockResponse == null) {
       await getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
     if (matricData == null) {
       await getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
     if (priceTargetMatrics == null) {
       await priceTargetMatricsData(
         SymbolDto(symbol: widget.chatRouting!.symbol),
       );
+      setState(() {});
     }
     if (analyticsRespinseData == null) {
       analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
     if (priceComparisonModel == null) {
       await priceComparison(
@@ -464,24 +480,30 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           symbol2: "SPY",
         ),
       );
+      setState(() {});
     }
     if (fundamentalResponse == null) {
       await fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
     if (sharesResponse == null) {
       await shares(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
     }
     if (weeklyData == null) {
       await getWeeklyData(widget.chatRouting!.symbol);
+      setState(() {});
     }
     if (monthlyData == null) {
       await getMonthlyData(widget.chatRouting!.symbol);
+      setState(() {});
     }
     if (overviewCandleChartModel == null) {
       await getOverviewCandleChart(
         widget.chatRouting!.symbol,
         IntervalEnum.daily,
       );
+      setState(() {});
     }
   }
 
@@ -557,16 +579,28 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     );
     final endDateString = now.toIso8601String();
     final startDateString = startDate.toIso8601String();
-    overviewCandleChartModel = await ref
-        .read(overviewCandleChartProvider.notifier)
-        .overviewCandleChart(
-          symbol,
-          interval.value,
-          startDateString,
-          endDateString,
-          "1",
-          "122",
-        );
+    setState(() {
+      chartLoader = true;
+    });
+    try {
+      overviewCandleChartModel = await ref
+          .read(overviewCandleChartProvider.notifier)
+          .overviewCandleChart(
+            symbol,
+            interval.value,
+            startDateString,
+            endDateString,
+            "1",
+            "122",
+          );
+      setState(() {
+        chartLoader = false;
+      });
+    } catch (e) {
+      setState(() {
+        chartLoader = false;
+      });
+    }
   }
 
   getWeeklyData(symbol) async {
@@ -1092,16 +1126,30 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             // : PriceCardShimmer(),
             SizedBox(height: 20.h),
             overviewCandleChartModel != null
-                ? CustomCandleChart(
+                ?
+                  // chartLoader
+                  //       ?
+                  CustomCandleChart(
                     data: buildChartSpots(overviewCandleChartModel!),
-                    onPressed: () async {
+                    onPressed: (val) async {
                       await getOverviewCandleChart(
                         widget.chatRouting!.symbol,
-                        IntervalEnum.monthly,
+                        val == 'H'
+                            ? IntervalEnum.daily
+                            : val == 'D'
+                            ? IntervalEnum.daily
+                            : val == 'W'
+                            ? IntervalEnum.daily
+                            : IntervalEnum.monthly,
                       );
                       setState(() {});
                     },
                   )
+                // : shimmerBox(
+                //     height: 360.h,
+                //     width: MediaQuery.sizeOf(context).width / 1.2,
+                //     radius: 6,
+                //   )
                 : SizedBox(),
 
             SizedBox(height: 20.h),
@@ -2010,10 +2058,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       analysisDataModel!.data!.chart != null
                   ? CustomCandleChart(
                       data: analysisDataModel!.data!.chart!,
-                      onPressed: () async {
+                      onPressed: (val) async {
                         await getAnalysisData(
                           widget.chatRouting!.symbol,
-                          IntervalEnum.monthly,
+                          val == 'H'
+                              ? IntervalEnum.daily
+                              : val == 'D'
+                              ? IntervalEnum.daily
+                              : val == 'W'
+                              ? IntervalEnum.daily
+                              : IntervalEnum.monthly,
                         );
                       },
                     )
