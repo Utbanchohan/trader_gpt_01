@@ -311,7 +311,7 @@ $AnalysisDataCopyWith<$Res>? get data {
 /// @nodoc
 mixin _$AnalysisData {
 
- List<ChartData>? get chart; List<ChartVolume>? get chartVol; Map<String, EodData>? get eodData;
+ List<ChartData>? get chart;@JsonKey(name: "chart_vol") List<ChartVolume>? get chartVol;@JsonKey(name: "eod_data") Map<dynamic, EodData>? get eodData;
 /// Create a copy of AnalysisData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -344,7 +344,7 @@ abstract mixin class $AnalysisDataCopyWith<$Res>  {
   factory $AnalysisDataCopyWith(AnalysisData value, $Res Function(AnalysisData) _then) = _$AnalysisDataCopyWithImpl;
 @useResult
 $Res call({
- List<ChartData>? chart, List<ChartVolume>? chartVol, Map<String, EodData>? eodData
+ List<ChartData>? chart,@JsonKey(name: "chart_vol") List<ChartVolume>? chartVol,@JsonKey(name: "eod_data") Map<dynamic, EodData>? eodData
 });
 
 
@@ -366,7 +366,7 @@ class _$AnalysisDataCopyWithImpl<$Res>
 chart: freezed == chart ? _self.chart : chart // ignore: cast_nullable_to_non_nullable
 as List<ChartData>?,chartVol: freezed == chartVol ? _self.chartVol : chartVol // ignore: cast_nullable_to_non_nullable
 as List<ChartVolume>?,eodData: freezed == eodData ? _self.eodData : eodData // ignore: cast_nullable_to_non_nullable
-as Map<String, EodData>?,
+as Map<dynamic, EodData>?,
   ));
 }
 
@@ -451,7 +451,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ChartData>? chart,  List<ChartVolume>? chartVol,  Map<String, EodData>? eodData)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ChartData>? chart, @JsonKey(name: "chart_vol")  List<ChartVolume>? chartVol, @JsonKey(name: "eod_data")  Map<dynamic, EodData>? eodData)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AnalysisData() when $default != null:
 return $default(_that.chart,_that.chartVol,_that.eodData);case _:
@@ -472,7 +472,7 @@ return $default(_that.chart,_that.chartVol,_that.eodData);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ChartData>? chart,  List<ChartVolume>? chartVol,  Map<String, EodData>? eodData)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ChartData>? chart, @JsonKey(name: "chart_vol")  List<ChartVolume>? chartVol, @JsonKey(name: "eod_data")  Map<dynamic, EodData>? eodData)  $default,) {final _that = this;
 switch (_that) {
 case _AnalysisData():
 return $default(_that.chart,_that.chartVol,_that.eodData);case _:
@@ -492,7 +492,7 @@ return $default(_that.chart,_that.chartVol,_that.eodData);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ChartData>? chart,  List<ChartVolume>? chartVol,  Map<String, EodData>? eodData)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ChartData>? chart, @JsonKey(name: "chart_vol")  List<ChartVolume>? chartVol, @JsonKey(name: "eod_data")  Map<dynamic, EodData>? eodData)?  $default,) {final _that = this;
 switch (_that) {
 case _AnalysisData() when $default != null:
 return $default(_that.chart,_that.chartVol,_that.eodData);case _:
@@ -507,7 +507,7 @@ return $default(_that.chart,_that.chartVol,_that.eodData);case _:
 @JsonSerializable()
 
 class _AnalysisData implements AnalysisData {
-  const _AnalysisData({required final  List<ChartData>? chart, required final  List<ChartVolume>? chartVol, required final  Map<String, EodData>? eodData}): _chart = chart,_chartVol = chartVol,_eodData = eodData;
+  const _AnalysisData({required final  List<ChartData>? chart, @JsonKey(name: "chart_vol") required final  List<ChartVolume>? chartVol, @JsonKey(name: "eod_data") required final  Map<dynamic, EodData>? eodData}): _chart = chart,_chartVol = chartVol,_eodData = eodData;
   factory _AnalysisData.fromJson(Map<String, dynamic> json) => _$AnalysisDataFromJson(json);
 
  final  List<ChartData>? _chart;
@@ -520,7 +520,7 @@ class _AnalysisData implements AnalysisData {
 }
 
  final  List<ChartVolume>? _chartVol;
-@override List<ChartVolume>? get chartVol {
+@override@JsonKey(name: "chart_vol") List<ChartVolume>? get chartVol {
   final value = _chartVol;
   if (value == null) return null;
   if (_chartVol is EqualUnmodifiableListView) return _chartVol;
@@ -528,8 +528,8 @@ class _AnalysisData implements AnalysisData {
   return EqualUnmodifiableListView(value);
 }
 
- final  Map<String, EodData>? _eodData;
-@override Map<String, EodData>? get eodData {
+ final  Map<dynamic, EodData>? _eodData;
+@override@JsonKey(name: "eod_data") Map<dynamic, EodData>? get eodData {
   final value = _eodData;
   if (value == null) return null;
   if (_eodData is EqualUnmodifiableMapView) return _eodData;
@@ -571,7 +571,7 @@ abstract mixin class _$AnalysisDataCopyWith<$Res> implements $AnalysisDataCopyWi
   factory _$AnalysisDataCopyWith(_AnalysisData value, $Res Function(_AnalysisData) _then) = __$AnalysisDataCopyWithImpl;
 @override @useResult
 $Res call({
- List<ChartData>? chart, List<ChartVolume>? chartVol, Map<String, EodData>? eodData
+ List<ChartData>? chart,@JsonKey(name: "chart_vol") List<ChartVolume>? chartVol,@JsonKey(name: "eod_data") Map<dynamic, EodData>? eodData
 });
 
 
@@ -593,7 +593,7 @@ class __$AnalysisDataCopyWithImpl<$Res>
 chart: freezed == chart ? _self._chart : chart // ignore: cast_nullable_to_non_nullable
 as List<ChartData>?,chartVol: freezed == chartVol ? _self._chartVol : chartVol // ignore: cast_nullable_to_non_nullable
 as List<ChartVolume>?,eodData: freezed == eodData ? _self._eodData : eodData // ignore: cast_nullable_to_non_nullable
-as Map<String, EodData>?,
+as Map<dynamic, EodData>?,
   ));
 }
 
@@ -1147,7 +1147,7 @@ as String?,
 /// @nodoc
 mixin _$EodData {
 
- double? get open; double? get high; double? get low; double? get close;@JsonKey(name: 'avolume') int? get volume;@JsonKey(name: 'totaltrades') String? get totalTrades; double? get change; double? get changepercent; double? get vwap;
+ double? get open; double? get high; double? get low; double? get close;@JsonKey(name: 'avolume') int? get volume;@JsonKey(name: 'totaltrades') String? get totalTrades; dynamic get change; dynamic get changepercent; double? get vwap;
 /// Create a copy of EodData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1160,12 +1160,12 @@ $EodDataCopyWith<EodData> get copyWith => _$EodDataCopyWithImpl<EodData>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EodData&&(identical(other.open, open) || other.open == open)&&(identical(other.high, high) || other.high == high)&&(identical(other.low, low) || other.low == low)&&(identical(other.close, close) || other.close == close)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.totalTrades, totalTrades) || other.totalTrades == totalTrades)&&(identical(other.change, change) || other.change == change)&&(identical(other.changepercent, changepercent) || other.changepercent == changepercent)&&(identical(other.vwap, vwap) || other.vwap == vwap));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EodData&&(identical(other.open, open) || other.open == open)&&(identical(other.high, high) || other.high == high)&&(identical(other.low, low) || other.low == low)&&(identical(other.close, close) || other.close == close)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.totalTrades, totalTrades) || other.totalTrades == totalTrades)&&const DeepCollectionEquality().equals(other.change, change)&&const DeepCollectionEquality().equals(other.changepercent, changepercent)&&(identical(other.vwap, vwap) || other.vwap == vwap));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,open,high,low,close,volume,totalTrades,change,changepercent,vwap);
+int get hashCode => Object.hash(runtimeType,open,high,low,close,volume,totalTrades,const DeepCollectionEquality().hash(change),const DeepCollectionEquality().hash(changepercent),vwap);
 
 @override
 String toString() {
@@ -1180,7 +1180,7 @@ abstract mixin class $EodDataCopyWith<$Res>  {
   factory $EodDataCopyWith(EodData value, $Res Function(EodData) _then) = _$EodDataCopyWithImpl;
 @useResult
 $Res call({
- double? open, double? high, double? low, double? close,@JsonKey(name: 'avolume') int? volume,@JsonKey(name: 'totaltrades') String? totalTrades, double? change, double? changepercent, double? vwap
+ double? open, double? high, double? low, double? close,@JsonKey(name: 'avolume') int? volume,@JsonKey(name: 'totaltrades') String? totalTrades, dynamic change, dynamic changepercent, double? vwap
 });
 
 
@@ -1206,8 +1206,8 @@ as double?,close: freezed == close ? _self.close : close // ignore: cast_nullabl
 as double?,volume: freezed == volume ? _self.volume : volume // ignore: cast_nullable_to_non_nullable
 as int?,totalTrades: freezed == totalTrades ? _self.totalTrades : totalTrades // ignore: cast_nullable_to_non_nullable
 as String?,change: freezed == change ? _self.change : change // ignore: cast_nullable_to_non_nullable
-as double?,changepercent: freezed == changepercent ? _self.changepercent : changepercent // ignore: cast_nullable_to_non_nullable
-as double?,vwap: freezed == vwap ? _self.vwap : vwap // ignore: cast_nullable_to_non_nullable
+as dynamic,changepercent: freezed == changepercent ? _self.changepercent : changepercent // ignore: cast_nullable_to_non_nullable
+as dynamic,vwap: freezed == vwap ? _self.vwap : vwap // ignore: cast_nullable_to_non_nullable
 as double?,
   ));
 }
@@ -1293,7 +1293,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? open,  double? high,  double? low,  double? close, @JsonKey(name: 'avolume')  int? volume, @JsonKey(name: 'totaltrades')  String? totalTrades,  double? change,  double? changepercent,  double? vwap)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? open,  double? high,  double? low,  double? close, @JsonKey(name: 'avolume')  int? volume, @JsonKey(name: 'totaltrades')  String? totalTrades,  dynamic change,  dynamic changepercent,  double? vwap)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EodData() when $default != null:
 return $default(_that.open,_that.high,_that.low,_that.close,_that.volume,_that.totalTrades,_that.change,_that.changepercent,_that.vwap);case _:
@@ -1314,7 +1314,7 @@ return $default(_that.open,_that.high,_that.low,_that.close,_that.volume,_that.t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? open,  double? high,  double? low,  double? close, @JsonKey(name: 'avolume')  int? volume, @JsonKey(name: 'totaltrades')  String? totalTrades,  double? change,  double? changepercent,  double? vwap)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? open,  double? high,  double? low,  double? close, @JsonKey(name: 'avolume')  int? volume, @JsonKey(name: 'totaltrades')  String? totalTrades,  dynamic change,  dynamic changepercent,  double? vwap)  $default,) {final _that = this;
 switch (_that) {
 case _EodData():
 return $default(_that.open,_that.high,_that.low,_that.close,_that.volume,_that.totalTrades,_that.change,_that.changepercent,_that.vwap);case _:
@@ -1334,7 +1334,7 @@ return $default(_that.open,_that.high,_that.low,_that.close,_that.volume,_that.t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? open,  double? high,  double? low,  double? close, @JsonKey(name: 'avolume')  int? volume, @JsonKey(name: 'totaltrades')  String? totalTrades,  double? change,  double? changepercent,  double? vwap)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? open,  double? high,  double? low,  double? close, @JsonKey(name: 'avolume')  int? volume, @JsonKey(name: 'totaltrades')  String? totalTrades,  dynamic change,  dynamic changepercent,  double? vwap)?  $default,) {final _that = this;
 switch (_that) {
 case _EodData() when $default != null:
 return $default(_that.open,_that.high,_that.low,_that.close,_that.volume,_that.totalTrades,_that.change,_that.changepercent,_that.vwap);case _:
@@ -1358,8 +1358,8 @@ class _EodData implements EodData {
 @override final  double? close;
 @override@JsonKey(name: 'avolume') final  int? volume;
 @override@JsonKey(name: 'totaltrades') final  String? totalTrades;
-@override final  double? change;
-@override final  double? changepercent;
+@override final  dynamic change;
+@override final  dynamic changepercent;
 @override final  double? vwap;
 
 /// Create a copy of EodData
@@ -1375,12 +1375,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EodData&&(identical(other.open, open) || other.open == open)&&(identical(other.high, high) || other.high == high)&&(identical(other.low, low) || other.low == low)&&(identical(other.close, close) || other.close == close)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.totalTrades, totalTrades) || other.totalTrades == totalTrades)&&(identical(other.change, change) || other.change == change)&&(identical(other.changepercent, changepercent) || other.changepercent == changepercent)&&(identical(other.vwap, vwap) || other.vwap == vwap));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EodData&&(identical(other.open, open) || other.open == open)&&(identical(other.high, high) || other.high == high)&&(identical(other.low, low) || other.low == low)&&(identical(other.close, close) || other.close == close)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.totalTrades, totalTrades) || other.totalTrades == totalTrades)&&const DeepCollectionEquality().equals(other.change, change)&&const DeepCollectionEquality().equals(other.changepercent, changepercent)&&(identical(other.vwap, vwap) || other.vwap == vwap));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,open,high,low,close,volume,totalTrades,change,changepercent,vwap);
+int get hashCode => Object.hash(runtimeType,open,high,low,close,volume,totalTrades,const DeepCollectionEquality().hash(change),const DeepCollectionEquality().hash(changepercent),vwap);
 
 @override
 String toString() {
@@ -1395,7 +1395,7 @@ abstract mixin class _$EodDataCopyWith<$Res> implements $EodDataCopyWith<$Res> {
   factory _$EodDataCopyWith(_EodData value, $Res Function(_EodData) _then) = __$EodDataCopyWithImpl;
 @override @useResult
 $Res call({
- double? open, double? high, double? low, double? close,@JsonKey(name: 'avolume') int? volume,@JsonKey(name: 'totaltrades') String? totalTrades, double? change, double? changepercent, double? vwap
+ double? open, double? high, double? low, double? close,@JsonKey(name: 'avolume') int? volume,@JsonKey(name: 'totaltrades') String? totalTrades, dynamic change, dynamic changepercent, double? vwap
 });
 
 
@@ -1421,8 +1421,8 @@ as double?,close: freezed == close ? _self.close : close // ignore: cast_nullabl
 as double?,volume: freezed == volume ? _self.volume : volume // ignore: cast_nullable_to_non_nullable
 as int?,totalTrades: freezed == totalTrades ? _self.totalTrades : totalTrades // ignore: cast_nullable_to_non_nullable
 as String?,change: freezed == change ? _self.change : change // ignore: cast_nullable_to_non_nullable
-as double?,changepercent: freezed == changepercent ? _self.changepercent : changepercent // ignore: cast_nullable_to_non_nullable
-as double?,vwap: freezed == vwap ? _self.vwap : vwap // ignore: cast_nullable_to_non_nullable
+as dynamic,changepercent: freezed == changepercent ? _self.changepercent : changepercent // ignore: cast_nullable_to_non_nullable
+as dynamic,vwap: freezed == vwap ? _self.vwap : vwap // ignore: cast_nullable_to_non_nullable
 as double?,
   ));
 }

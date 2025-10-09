@@ -20,8 +20,8 @@ abstract class AnalysisDataModel with _$AnalysisDataModel {
 abstract class AnalysisData with _$AnalysisData {
   const factory AnalysisData({
     required List<ChartData>? chart,
-    required List<ChartVolume>? chartVol,
-    required Map<String, EodData>? eodData,
+    @JsonKey(name: "chart_vol") required List<ChartVolume>? chartVol,
+    @JsonKey(name: "eod_data") required Map<dynamic, EodData>? eodData,
   }) = _AnalysisData;
 
   factory AnalysisData.fromJson(Map<String, dynamic> json) =>
@@ -58,8 +58,8 @@ abstract class EodData with _$EodData {
     double? close,
     @JsonKey(name: 'avolume') int? volume,
     @JsonKey(name: 'totaltrades') String? totalTrades,
-    double? change,
-    double? changepercent,
+    dynamic change,
+    dynamic changepercent,
     double? vwap,
   }) = _EodData;
 

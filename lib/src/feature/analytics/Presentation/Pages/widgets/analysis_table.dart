@@ -4,14 +4,52 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/analysis_data/analysis_data_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
-class AnalysisTable extends StatelessWidget {
+class AnalysisTable extends StatefulWidget {
   final String title;
-  final Map<String, EodData>? eodData;
+  final Map<dynamic, EodData>? eodData;
 
   const AnalysisTable({super.key, required this.title, required this.eodData});
 
   @override
+  State<AnalysisTable> createState() => _AnalysisTableState();
+}
+
+class _AnalysisTableState extends State<AnalysisTable> {
+  int _currentPage = 1;
+  final int _itemsPerPage = 10;
+
+  @override
   Widget build(BuildContext context) {
+    final int _totalItems = widget.eodData!.entries.length;
+    final double _totalPages = widget.eodData!.entries.length / 10;
+
+    final double startItem = ((_currentPage - 1) * _itemsPerPage) + 1;
+    final int endItem = _currentPage * _itemsPerPage > _totalItems
+        ? _totalItems
+        : _currentPage * _itemsPerPage;
+    final String displayText = '$startItem-$endItem of $_totalItems';
+
+    // Logic for navigation
+    void goToFirstPage() => setState(() => _currentPage = 1);
+    void goToPrevPage() =>
+        setState(() => _currentPage = _currentPage > 1 ? _currentPage - 1 : 1);
+    void goToNextPage() => setState(
+      () => _currentPage = _currentPage < _totalPages
+          ? _currentPage + 1
+          : _totalPages.ceil(),
+    );
+    void goToLastPage() => setState(() => _currentPage = _totalPages.ceil());
+
+    final bool isFirstPage = _currentPage == 1;
+    final bool isLastPage = _currentPage == _totalPages;
+    final int startIndex = (_currentPage - 1) * _itemsPerPage;
+
+    final List<MapEntry<dynamic, EodData>> pagedData = widget.eodData!.entries
+        .toList()
+        .skip(startIndex)
+        .take(_itemsPerPage)
+        .toList();
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.color091224,
@@ -25,7 +63,7 @@ class AnalysisTable extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             child: MdSnsText(
-              title.toString(),
+              widget.title.toString(),
               color: AppColors.color9EAAC0,
               fontWeight: TextFontWeightVariant.h4,
               variant: TextVariant.h3,
@@ -114,7 +152,7 @@ class AnalysisTable extends StatelessWidget {
                   ),
                 ),
               ],
-              rows: eodData!.entries.map((item) {
+              rows: pagedData.map((item) {
                 return DataRow(
                   cells: [
                     DataCell(
@@ -184,13 +222,15 @@ class AnalysisTable extends StatelessWidget {
                     DataCell(
                       MdSnsText(
                         item.value.changepercent != null
-                            ? item.value.changepercent!.toStringAsFixed(2)
+                            ? item.value.changepercent.toString()
                             : "N/A",
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
                         color:
                             item.value.changepercent == null ||
-                                item.value.changepercent! < 0
+                                item.value.changepercent.toString().contains(
+                                  "-",
+                                )
                             ? AppColors.color0xFFCD3438
                             : AppColors.color06D54E,
 
@@ -200,7 +240,7 @@ class AnalysisTable extends StatelessWidget {
                     DataCell(
                       MdSnsText(
                         item.value.change != null
-                            ? item.value.change!.toStringAsFixed(2)
+                            ? item.value.change!.toString()
                             : "N/A",
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
@@ -226,8 +266,68 @@ class AnalysisTable extends StatelessWidget {
               }).toList(),
             ),
           ),
+          SizedBox(height: 10),
+          Card(
+            elevation: 2,
+            child: Container(
+              // The dark background from your image
+              color: AppColors
+                  .color091224, // A dark blue/gray color for the background
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 16.0,
+              ),
+              child: Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.end, // Aligns content to the right
+                children: [
+                  // 1. The Display Text
+                  MdSnsText(
+                    displayText,
+                    color: AppColors.white,
+                    variant: TextVariant.h3,
+                  ),
+
+                  const SizedBox(width: 20), // Spacer
+                  // 2. Go to First Page (<<)
+                  _buildControlIcon(
+                    Icons.first_page,
+                    isFirstPage ? null : goToFirstPage,
+                  ),
+
+                  // 3. Go to Previous Page (<)
+                  _buildControlIcon(
+                    Icons.chevron_left,
+                    isFirstPage ? null : goToPrevPage,
+                  ),
+
+                  // 4. Go to Next Page (>)
+                  _buildControlIcon(
+                    Icons.chevron_right,
+                    isLastPage ? null : goToNextPage,
+                  ),
+
+                  // 5. Go to Last Page (>>)
+                  _buildControlIcon(
+                    Icons.last_page,
+                    isLastPage ? null : goToLastPage,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildControlIcon(IconData icon, VoidCallback? onPressed) {
+    return IconButton(
+      icon: Icon(icon, color: Colors.white70, size: 20),
+      onPressed: onPressed,
+      // Add padding or a Material to get the hover/splash effect
+      padding: EdgeInsets.symmetric(horizontal: 4),
+      splashRadius: 20,
     );
   }
 }
@@ -239,8 +339,98 @@ String formatNumbers(num number) {
 
 String _formatDate(String date) {
   try {
-    return DateFormat('MM/dd/yyyy').format(DateTime.parse(date));
+    final inputFormat = DateFormat('MM-dd-yyyy');
+    final outputFormat = DateFormat('MM/dd/yyyy');
+
+    final parsedDate = inputFormat.parse(date);
+    final formatted = outputFormat.format(parsedDate);
+    return formatted;
   } catch (_) {
     return '-';
+  }
+}
+
+class PaginationWidget extends StatefulWidget {
+  const PaginationWidget({super.key});
+
+  @override
+  State<PaginationWidget> createState() => _PaginationWidgetState();
+}
+
+class _PaginationWidgetState extends State<PaginationWidget> {
+  int _currentPage = 1;
+  int _itemsPerPage = 1;
+  int _totalItems = 500;
+  int _totalPages = 10;
+
+  @override
+  Widget build(BuildContext context) {
+    final double startItem = ((_currentPage - 1) * _itemsPerPage) + 1;
+    final int endItem = _currentPage * _itemsPerPage > _totalItems
+        ? _totalItems
+        : _currentPage * _itemsPerPage;
+    final String displayText = '$startItem-$endItem of $_totalItems';
+
+    // Logic for navigation
+    void goToFirstPage() => setState(() => _currentPage = 1);
+    void goToPrevPage() =>
+        setState(() => _currentPage = _currentPage > 1 ? _currentPage - 1 : 1);
+    void goToNextPage() => setState(
+      () => _currentPage = _currentPage < _totalPages
+          ? _currentPage + 1
+          : _totalPages,
+    );
+    void goToLastPage() => setState(() => _currentPage = _totalPages);
+
+    // Determine if buttons should be disabled (onPressed: null disables a button)
+    final bool isFirstPage = _currentPage == 1;
+    final bool isLastPage = _currentPage == _totalPages;
+    return Container(
+      // The dark background from your image
+      color: Color(0xFF1E1E2C), // A dark blue/gray color for the background
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
+        children: [
+          // 1. The Display Text
+          Text(
+            displayText,
+            style: TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+
+          const SizedBox(width: 20), // Spacer
+          // 2. Go to First Page (<<)
+          _buildControlIcon(
+            Icons.first_page,
+            isFirstPage ? null : goToFirstPage,
+          ),
+
+          // 3. Go to Previous Page (<)
+          _buildControlIcon(
+            Icons.chevron_left,
+            isFirstPage ? null : goToPrevPage,
+          ),
+
+          // 4. Go to Next Page (>)
+          _buildControlIcon(
+            Icons.chevron_right,
+            isLastPage ? null : goToNextPage,
+          ),
+
+          // 5. Go to Last Page (>>)
+          _buildControlIcon(Icons.last_page, isLastPage ? null : goToLastPage),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildControlIcon(IconData icon, VoidCallback? onPressed) {
+    return IconButton(
+      icon: Icon(icon, color: Colors.white70, size: 20),
+      onPressed: onPressed,
+      // Add padding or a Material to get the hover/splash effect
+      padding: EdgeInsets.symmetric(horizontal: 4),
+      splashRadius: 20,
+    );
   }
 }

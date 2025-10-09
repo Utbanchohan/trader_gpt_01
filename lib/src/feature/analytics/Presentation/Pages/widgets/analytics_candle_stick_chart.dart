@@ -6,16 +6,27 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/model/analysis_data/analysis_data_model.dart';
 
-class CustomCandleChart extends StatelessWidget {
+class CustomCandleChart extends StatefulWidget {
   final List<ChartData> data;
   final VoidCallback onPressed;
-  CustomCandleChart({super.key, required this.data, required this.onPressed});
+  const CustomCandleChart({
+    super.key,
+    required this.data,
+    required this.onPressed,
+  });
 
+  @override
+  State<CustomCandleChart> createState() => _CustomCandleChartState();
+}
+
+class _CustomCandleChartState extends State<CustomCandleChart> {
   final List<String> labels = ['H', 'D', 'W', 'M'];
+
   int selectedIndex = 1;
+
   @override
   Widget build(BuildContext context) {
-    final List<OhlcData> chartData = data.map((item) {
+    final List<OhlcData> chartData = widget.data.map((item) {
       final open = item.y != null && item.y!.isNotEmpty ? item.y![0] : 0.0;
       final high = item.y != null && item.y!.length > 0 ? item.y![1] : 0.0;
       final low = item.y != null && item.y!.length > 1 ? item.y![2] : 0.0;
@@ -111,7 +122,10 @@ class CustomCandleChart extends StatelessWidget {
               final isSelected = selectedIndex == index;
 
               return GestureDetector(
-                onTap: onPressed,
+                onTap: () {
+                  widget.onPressed();
+                  selectedIndex = index;
+                },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   margin: const EdgeInsets.symmetric(horizontal: 4),
