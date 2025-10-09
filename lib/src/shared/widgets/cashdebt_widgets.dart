@@ -226,12 +226,9 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
                     width: 10,
                     height: 10,
                     decoration: BoxDecoration(
-                      color: AppColors.color0xFF01507a, // Dark Blue (Debt)
+                      color: AppColors.color0xFF01507a,
                       shape: BoxShape.rectangle,
-                      border: Border.all(
-                        color: AppColors.white, // 👈 border ka color
-                        width: 1, // 👈 border ki thickness
-                      ),
+                      border: Border.all(color: AppColors.white, width: 1),
                     ),
                   ),
                   SizedBox(width: 4),
