@@ -2087,28 +2087,25 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DateRangePickerWidget(
-                      onShowPressed: (from, to) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: MdSnsText(
-                              'From: ${from != null ? DateFormat('MM/dd/yyyy').format(from) : '—'}'
-                              '   To: ${to != null ? DateFormat('MM/dd/yyyy').format(to) : '—'}',
-                            ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DateRangePickerWidget(
+                    onShowPressed: (from, to) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: MdSnsText(
+                            'From: ${from != null ? DateFormat('MM/dd/yyyy').format(from) : '—'}'
+                            '   To: ${to != null ? DateFormat('MM/dd/yyyy').format(to) : '—'}',
                           ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
 
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               analysisDataModel != null &&
                       analysisDataModel!.data != null &&
                       analysisDataModel!.data!.chart != null
