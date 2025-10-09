@@ -1044,7 +1044,41 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             priceTargetMatrics != null && priceTargetMatrics!.data.length > 0
                 ? PriceTargetWidget(data: priceTargetMatrics!.data)
                 : SizedBox(),
+            sharesResponse != null &&
+                    sharesResponse!.data.PercentInsiders != null
+                ? ShareStructureCard(
+                    matrics: null,
+                    fundamentalData: null,
+                    shareData: sharesResponse!.data,
+                    heading: Headings.shareStructure,
+                  )
+                : MetricsShimmer(),
+            SizedBox(height: 20.h),
+            fundamentalResponse != null &&
+                    fundamentalResponse!
+                        .data
+                        .fundamentals
+                        .annualIncome
+                        .isNotEmpty
+                ? ShareStructureCard(
+                    matrics: null,
+                    fundamentalData: fundamentalResponse!.data,
+                    shareData: null,
+                    heading: Headings.fundamental,
+                  )
+                : MetricsShimmer(),
+            SizedBox(height: 20.h),
 
+            matricData != null &&
+                    matricData!.data != null &&
+                    matricData!.data!.isNotEmpty
+                ? ShareStructureCard(
+                    matrics: matricData!.data,
+                    fundamentalData: null,
+                    shareData: null,
+                    heading: Headings.matrics,
+                  )
+                : MetricsShimmer(),
             // SizedBox(height: 20.h),
             // CustomLineChart(
             //   title: "Price Target",
@@ -1069,6 +1103,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 : SizedBox(),
 
             SizedBox(height: 20.h),
+
             // SizedBox(height: 20.h),
             // RevenueAnalysisChart(),
             // SizedBox(height: 20.h),
@@ -1117,41 +1152,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             // SizedBox(height: 20.h),
 
             // SizedBox(height: 20.h),
-            sharesResponse != null &&
-                    sharesResponse!.data.PercentInsiders != null
-                ? ShareStructureCard(
-                    matrics: null,
-                    fundamentalData: null,
-                    shareData: sharesResponse!.data,
-                    heading: Headings.shareStructure,
-                  )
-                : MetricsShimmer(),
-            SizedBox(height: 20.h),
-            fundamentalResponse != null &&
-                    fundamentalResponse!
-                        .data
-                        .fundamentals
-                        .annualIncome
-                        .isNotEmpty
-                ? ShareStructureCard(
-                    matrics: null,
-                    fundamentalData: fundamentalResponse!.data,
-                    shareData: null,
-                    heading: Headings.fundamental,
-                  )
-                : MetricsShimmer(),
-            SizedBox(height: 20.h),
-
-            matricData != null &&
-                    matricData!.data != null &&
-                    matricData!.data!.isNotEmpty
-                ? ShareStructureCard(
-                    matrics: matricData!.data,
-                    fundamentalData: null,
-                    shareData: null,
-                    heading: Headings.matrics,
-                  )
-                : MetricsShimmer(),
             SizedBox(height: 20.h),
             priceComparisonModel != null &&
                     priceComparisonModel!
