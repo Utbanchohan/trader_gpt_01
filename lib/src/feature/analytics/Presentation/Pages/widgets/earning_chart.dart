@@ -23,7 +23,7 @@ class QuarterlyPerformanceChart extends StatelessWidget {
         quarter: "$x0\n$x1",
         actual: y0,
         estimate: y1,
-        isBeat: y0 >= y1, // 👈 automatic beat check
+        isBeat: y0 >= y1,
       );
     }).toList();
 
@@ -36,7 +36,7 @@ class QuarterlyPerformanceChart extends StatelessWidget {
       ),
       child: Container(
         height: 260,
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(12),
         child: LineChart(
           LineChartData(
             // 1. Grid and Background Styling
@@ -45,8 +45,8 @@ class QuarterlyPerformanceChart extends StatelessWidget {
               show: true,
               drawVerticalLine: false,
               getDrawingHorizontalLine: (value) {
-                return const FlLine(
-                  color: Color(0xFF3B3D40), // Subtle horizontal lines
+                return FlLine(
+                  color: AppColors.colorB3B3B3, // Subtle horizontal lines
                   strokeWidth: 1,
                 );
               },
@@ -84,7 +84,7 @@ class QuarterlyPerformanceChart extends StatelessWidget {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 1),
                           MdSnsText(
                             parts[0].toString().split("-")[1],
 
@@ -95,7 +95,7 @@ class QuarterlyPerformanceChart extends StatelessWidget {
                             parts[1].capitalize(),
 
                             color: chartData[dataIndex].isBeat
-                                ? AppColors.color00FF55
+                                ? const Color(0xFF4EEB9E)
                                 : AppColors.color0xFFCD3438,
                             variant: TextVariant.h8,
                             fontWeight: TextFontWeightVariant.h2,

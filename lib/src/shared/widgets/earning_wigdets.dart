@@ -19,7 +19,7 @@ class EarningsItem extends StatelessWidget {
     } else if (value.contains("+")) {
       textColor = AppColors.color06D54E;
     } else if (value.contains("-")) {
-      textColor = Colors.redAccent;
+      textColor = AppColors.white;
     } else {
       textColor = AppColors.white;
     }
