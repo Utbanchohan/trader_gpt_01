@@ -18,4 +18,8 @@ class BaseUrl {
   static String get etlDataUrl {
     return 'https://etl-payload.traderverse.io/';
   }
+
+  static String get priceStreamUrl {
+    return 'https://pricestream.traderverse.io/';
+  }
 }

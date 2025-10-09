@@ -3,7 +3,7 @@ import 'package:trader_gpt/src/feature/analytics/domain/repositroy/overview_api_
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
 
 import '../../../../core/api_client/client.dart'
-    show client, marketDataClient, marketDataClientNew;
+    show client, marketDataClient, marketDataClientNew, priceStreamClientNew;
 import '../../../../shared/flavours.dart';
 import '../../../sign_in/data/dto/sign_up_dto/sign_up.dart';
 import '../../data/dto/analysis_dto/analysis_dto.dart';
@@ -28,6 +28,7 @@ import '../model/market_data_login/market_data_login.dart';
 import '../model/market_data_login_model/market_data_login_model.dart';
 import '../model/matrics_data_model/matrics_data_model.dart';
 import '../model/monthly_model/monthly_model.dart';
+import '../model/overview_candle_chart_model/overview_candle_chart_model.dart';
 import '../model/overview_model/overview_model.dart';
 import '../model/price_comparison_model/price_comparison_model.dart';
 import '../model/price_target_matrics_model/price_target_matrics_model.dart';
@@ -66,11 +67,25 @@ abstract interface class OverviewRepository {
   Future<EarningReportsModel> earningReportData(ChartRequestDto overview);
   Future<FinancialResponse> financialData(PriceRequestDto overview);
   Future<FinanceDataResponse> financialCharts(SymbolDto symbol);
+  Future<List<OverviewCandleChartModel>> overviewCandleChart(
+    String symbol,
+    String interval,
+    String start_date,
+    String end_date,
+    String sub_points,
+    String data_point,
+  );
 }
 
 final overviewRepository = Provider<OverviewRepository>(
   (ref) =>
       OverviewApiRepository(ref.read(marketDataClient(BaseUrl.marketDataUrl))),
+);
+
+final overviewRepositoryPriceStream = Provider<OverviewRepository>(
+  (ref) => OverviewApiRepository(
+    ref.read(priceStreamClientNew(BaseUrl.priceStreamUrl)),
+  ),
 );
 
 final overviewRepositoryele = Provider<OverviewRepository>(

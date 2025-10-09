@@ -28,6 +28,7 @@ import '../model/market_data_login/market_data_login.dart';
 import '../model/market_data_login_model/market_data_login_model.dart';
 import '../model/matrics_data_model/matrics_data_model.dart';
 import '../model/monthly_model/monthly_model.dart';
+import '../model/overview_candle_chart_model/overview_candle_chart_model.dart';
 import '../model/overview_model/overview_model.dart';
 import '../model/price_comparison_model/price_comparison_model.dart';
 import '../model/price_target_matrics_model/price_target_matrics_model.dart'
@@ -171,5 +172,24 @@ class OverviewApiRepository implements OverviewRepository {
   @override
   Future<FinanceDataResponse> financialCharts(SymbolDto symbol) async {
     return await AnalysisApi(client).financialCharts(symbol);
+  }
+
+  @override
+  Future<List<OverviewCandleChartModel>> overviewCandleChart(
+    String symbol,
+    String interval,
+    String start_date,
+    String end_date,
+    String sub_points,
+    String data_point,
+  ) async {
+    return await AnalysisApi(client).overviewCandleChart(
+      symbol,
+      interval,
+      start_date,
+      end_date,
+      sub_points,
+      data_point,
+    );
   }
 }

@@ -86,6 +86,31 @@ final marketDataClientNew = Provider.family<Dio, String>((ref, baseUrl) {
     ..httpClientAdapter = MarketCustomClientAdapterNew(ref);
 });
 
+final priceStreamClientNew = Provider.family<Dio, String>((ref, baseUrl) {
+  const timeOut = Duration(seconds: 120000);
+  return Dio(
+      BaseOptions(
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        baseUrl: baseUrl,
+        connectTimeout: timeOut,
+        receiveTimeout: timeOut,
+      ),
+    )
+    ..interceptors.addAll([
+      AuthorizationInterceptor(ref),
+      if (kDebugMode)
+        PrettyDioLogger(
+          requestBody: kDebugMode,
+          requestHeader: kDebugMode,
+          responseBody: kDebugMode,
+        ),
+    ])
+    ..httpClientAdapter = PriceStreamCustomClientAdapter(ref);
+});
+
 final multipartClient = Provider<Dio>((ref) {
   const timeOut = Duration(seconds: 120000);
   return Dio(
@@ -155,6 +180,42 @@ class MarketCustomClientAdapter extends IOHttpClientAdapter {
     if (token != null) {
       options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
       debugPrint('CUSTOM CLIENT ACCESS TOKEN $token');
+    }
+    return super.fetch(options, requestStream, cancelFuture);
+  }
+}
+
+class PriceStreamCustomClientAdapter extends IOHttpClientAdapter {
+  final Ref ref;
+  final bool isStripe;
+
+  PriceStreamCustomClientAdapter(this.ref, {this.isStripe = false});
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    final token = ref.read(localDataProvider).accessToken;
+    if (token != null) {
+      options.headers.addAll({
+        HttpHeaders.acceptHeader: 'application/json, text/plain, */*',
+        'referer': 'https://stage.tradersgpt.io/',
+        'sec-ch-ua':
+            '"Chromium";v="140", "Not=A?Brand";v="24", "Google Chrome";v="140"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        HttpHeaders.userAgentHeader:
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
+        'x-api-key': 'TradersGpt_api_456', //
+      });
+
+      // ✅ Optionally attach Bearer token if available
+      if (token != null && token.isNotEmpty) {
+        options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+        debugPrint('CUSTOM CLIENT ACCESS TOKEN $token');
+      }
     }
     return super.fetch(options, requestStream, cancelFuture);
   }
