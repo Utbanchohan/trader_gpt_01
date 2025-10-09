@@ -7,12 +7,15 @@ import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/model/analysis_data/analysis_data_model.dart';
 
 class CustomCandleChart extends StatefulWidget {
+  final String name;
   final List<ChartData> data;
   final void Function(String id) onPressed;
   const CustomCandleChart({
     super.key,
     required this.data,
     required this.onPressed,
+    required this.name,
+    th,
   });
 
   @override
@@ -115,40 +118,54 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: List.generate(labels.length, (index) {
-              final isSelected = selectedIndex == index;
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Left side text
+              MdSnsText(
+                widget.name ?? "",
+                color: AppColors.fieldTextColor,
+                fontWeight: TextFontWeightVariant.h4,
+                variant: TextVariant.h3,
+              ),
 
-              return GestureDetector(
-                onTap: () {
-                  widget.onPressed(labels[index]);
-                  selectedIndex = index;
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppColors.color0E1738
-                        : AppColors.colo2C3754,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: MdSnsText(
-                    labels[index],
+              // Right side buttons (wrap in Row)
+              Row(
+                children: List.generate(labels.length, (index) {
+                  final isSelected = selectedIndex == index;
 
-                    color: isSelected ? Colors.white : Colors.white70,
-                    variant: TextVariant.h5,
-                    fontWeight: TextFontWeightVariant.h2,
-                  ),
-                ),
-              );
-            }),
+                  return GestureDetector(
+                    onTap: () {
+                      widget.onPressed(labels[index]);
+                      selectedIndex = index;
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal:
+                            10, // (aap yahan width/height adjust kar sakte ho)
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.color0E1738
+                            : AppColors.colo2C3754,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: MdSnsText(
+                        labels[index],
+                        color: isSelected ? Colors.white : Colors.white70,
+                        variant: TextVariant.h5,
+                        fontWeight: TextFontWeightVariant.h2,
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ],
           ),
           SizedBox(height: 20.h),
           SizedBox(

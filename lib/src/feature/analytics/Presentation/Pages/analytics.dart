@@ -1146,6 +1146,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   // chartLoader
                   //       ?
                   CustomCandleChart(
+                    name: "OHLC/V Candlestick Chart",
                     data: buildChartSpots(overviewCandleChartModel!),
                     onPressed: (val) async {
                       await getOverviewCandleChart(
@@ -2112,6 +2113,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       analysisDataModel!.data != null &&
                       analysisDataModel!.data!.chart != null
                   ? CustomCandleChart(
+                      name: "",
                       data: analysisDataModel!.data!.chart!,
                       onPressed: (val) async {
                         await getAnalysisData(
