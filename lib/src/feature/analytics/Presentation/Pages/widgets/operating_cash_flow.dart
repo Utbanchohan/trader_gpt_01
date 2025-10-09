@@ -45,7 +45,7 @@ class _OperatingCashFlowState extends State<OperatingCashFlow> {
     _prepareData();
 
     return Container(
-      height: 420,
+      height: 400,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.color0x0x1AB3B3B3),
@@ -108,15 +108,36 @@ class _OperatingCashFlowState extends State<OperatingCashFlow> {
                           ),
                         ),
                       ),
+                      //      Container(
+                      //   width: 10,
+                      //   height: 10,
+                      //   decoration: BoxDecoration(
+                      //     color: Color(0xFF03A9F4),
+                      //     shape: BoxShape.rectangle,
+                      //     border: Border.all(color: AppColors.white, width: 1),
+                      //   ),
+                      // ),
                       barGroups: List.generate(dates.length, (i) {
                         return BarChartGroupData(
                           x: i,
                           barsSpace: 4,
                           barRods: [
-                            _barRod(cashValues[i], AppColors.color274E87),
-                            _barRod(debtValues[i], AppColors.color0098E4),
-                            _barRod(equityValues[i], const Color(0xFFE91E63)),
-                            _barRod(assetValues[i], const Color(0xFFFFC107)),
+                            _barRod(
+                              cashValues[i],
+                              AppColors.color0xFF3372d6,
+                            ), // Operating Cash Flow
+                            _barRod(
+                              debtValues[i],
+                              AppColors.color0xFF0fa073,
+                            ), // Free Cash Flow
+                            _barRod(
+                              equityValues[i],
+                              AppColors.color0xFF01507a,
+                            ), // Net Income
+                            _barRod(
+                              assetValues[i],
+                              AppColors.color0xFF01507a6,
+                            ), // Cash Flow Dividends
                           ],
                         );
                       }),
@@ -128,18 +149,28 @@ class _OperatingCashFlowState extends State<OperatingCashFlow> {
           const SizedBox(height: 20),
 
           // 🔹 Legends
+          // 🔹 Legends (colors same as bars + white border)
           Wrap(
             alignment: WrapAlignment.center,
             spacing: 20,
             runSpacing: 10,
             children: [
-              _legend(AppColors.color274E87, widget.cashLabel ?? "Cash"),
-              _legend(AppColors.color0098E4, widget.debtLabel ?? "Debt"),
-              _legend(AppColors.color00FF55, widget.equityLabel ?? "Equity"),
               _legend(
-                AppColors.color0xFF1C2648,
-                widget.assetsLabel ?? "Assets",
-              ),
+                AppColors.color0xFF01507a,
+                widget.cashLabel ?? "Operating Cash Flow",
+              ), // dark blue
+              _legend(
+                AppColors.color0xFF0fa073,
+                widget.debtLabel ?? "Free Cash Flow",
+              ), // light blue
+              _legend(
+                AppColors.color0xFF3372d6,
+                widget.equityLabel ?? "Net Income",
+              ), // pink
+              _legend(
+                AppColors.color0xFF01507a6,
+                widget.assetsLabel ?? "Cash Flow Dividends",
+              ), // yellow
             ],
           ),
         ],
@@ -152,8 +183,16 @@ class _OperatingCashFlowState extends State<OperatingCashFlow> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(width: 10, height: 10, color: color),
-        const SizedBox(width: 6),
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: color,
+            border: Border.all(color: AppColors.white, width: 1),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        SizedBox(width: 2),
         MdSnsText(
           label,
           color: AppColors.white,

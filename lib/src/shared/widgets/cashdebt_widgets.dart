@@ -85,7 +85,7 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
     }).toList();
 
     return Container(
-      height: 370,
+      height: 300,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.color0x0x1AB3B3B3),
@@ -97,12 +97,12 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
         children: [
           MdSnsText(
             widget.title ?? "",
-            color: AppColors.color0xB3FFFFFF,
-            variant: TextVariant.h3,
+            color: AppColors.fieldTextColor,
             fontWeight: TextFontWeightVariant.h4,
+            variant: TextVariant.h3,
           ),
 
-          SizedBox(height: 40),
+          SizedBox(height: 20),
 
           Container(
             height: 200,
@@ -156,7 +156,7 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
                           barRods: [
                             BarChartRodData(
                               toY: cashValues[i],
-                              color: AppColors.color274E87,
+                              color: AppColors.color0xFF01507a,
                               width: 20.w,
                               borderRadius: const BorderRadius.vertical(
                                 top: Radius.circular(4),
@@ -164,7 +164,7 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
                             ),
                             BarChartRodData(
                               toY: debtValues[i],
-                              color: AppColors.color0098E4,
+                              color: AppColors.color0xFF3372d6,
                               width: 20.w,
                               borderRadius: const BorderRadius.vertical(
                                 top: Radius.circular(4),
@@ -193,7 +193,7 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
                 : SizedBox(),
           ),
 
-          SizedBox(height: 16),
+          // SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -204,7 +204,7 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
                     width: 10,
                     height: 10,
                     decoration: BoxDecoration(
-                      color: Color(0xFF03A9F4),
+                      color: AppColors.color0xFF3372d6,
                       shape: BoxShape.rectangle,
                       border: Border.all(color: AppColors.white, width: 1),
                     ),
@@ -226,7 +226,7 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
                     width: 10,
                     height: 10,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1976D2), // Dark Blue (Debt)
+                      color: AppColors.color0xFF01507a, // Dark Blue (Debt)
                       shape: BoxShape.rectangle,
                       border: Border.all(
                         color: AppColors.white, // 👈 border ka color
@@ -258,7 +258,7 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? Color(0xFF1C2245) : Colors.transparent,
+          color: isSelected ? AppColors.color1B254B : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: MdSnsText(

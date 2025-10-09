@@ -1584,7 +1584,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 15),
+            // SizedBox(height: 15),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -1615,123 +1615,103 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
               color: AppColors.white,
             ),
+            SizedBox(height: 15),
 
             // SizedBox(height: 20),
             DefaultTabController(
               length: 4,
-              child: Expanded(
-                child: Column(
-                  children: [
-                    TabBar(
-                      isScrollable: true,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      tabAlignment: TabAlignment.start,
-                      indicator: BoxDecoration(
-                        color: const Color(0xFF1B254B),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      indicatorPadding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 7,
-                      ),
-                      labelColor: Colors.white,
-                      labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      unselectedLabelColor: const Color(0xFFB2B2B7),
-                      dividerColor: Colors.transparent,
-                      tabs: [
-                        Tab(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: const Color(0xFFB2B2B7).withOpacity(0.4),
-                                width: 1,
+              child: Builder(
+                builder: (context) {
+                  final TabController tabController = DefaultTabController.of(
+                    context,
+                  );
+
+                  return Expanded(
+                    child: Column(
+                      children: [
+                        AnimatedBuilder(
+                          animation: tabController.animation!,
+                          builder: (context, _) {
+                            return TabBar(
+                              controller: tabController,
+                              isScrollable: true,
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              tabAlignment: TabAlignment.start,
+
+                              // ✅ indicator ko border ke andar confine kar rahe hain
+                              indicatorPadding: const EdgeInsets.all(4),
+                              labelPadding: const EdgeInsets.symmetric(
+                                horizontal: 4,
                               ),
-                            ),
-                            child: MdSnsText(
-                              "Summary",
-                              color: AppColors.white,
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ),
-                        ),
-                        Tab(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: const Color(0xFFB2B2B7).withOpacity(0.4),
-                                width: 1,
+                              dividerColor: Colors.transparent,
+
+                              // ✅ Indicator ke andar border + background
+                              indicator: BoxDecoration(
+                                color:
+                                    AppColors.color203063, // selected tab color
+                                borderRadius: BorderRadius.circular(50),
+                                border: Border.all(
+                                  color: AppColors
+                                      .color0x1AB3B3B3, // same as tab border
+                                  width: 1,
+                                ),
                               ),
-                            ),
-                            child: MdSnsText(
-                              "Income Statement",
-                              color: AppColors.white,
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ),
+
+                              tabs: List.generate(4, (index) {
+                                final List<String> tabTitles = [
+                                  "Summary",
+                                  "Income Statement",
+                                  "Balance Sheet",
+                                  "Cash Flow",
+                                ];
+
+                                final bool isSelected =
+                                    tabController.index == index ||
+                                    (tabController.indexIsChanging &&
+                                        tabController.previousIndex == index);
+
+                                return Tab(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      border: Border.all(
+                                        color: AppColors.color0x1AB3B3B3,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: MdSnsText(
+                                      tabTitles[index],
+                                      color: isSelected
+                                          ? AppColors.white
+                                          : AppColors.color677FA4,
+                                      variant: isSelected
+                                          ? TextVariant.h2
+                                          : TextVariant.h3,
+                                      fontWeight: isSelected
+                                          ? TextFontWeightVariant.h1
+                                          : TextFontWeightVariant.h4,
+                                    ),
+                                  ),
+                                );
+                              }),
+                            );
+                          },
                         ),
-                        Tab(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: const Color(0xFFB2B2B7).withOpacity(0.4),
-                                width: 1,
-                              ),
-                            ),
-                            child: MdSnsText(
-                              "Balance Sheet",
-                              color: AppColors.white,
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ),
-                        ),
-                        Tab(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: Color(0xFFB2B2B7).withOpacity(0.4),
-                                width: 1,
-                              ),
-                            ),
-                            child: MdSnsText(
-                              "Cash Flow",
-                              color: AppColors.white,
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: TabBarView(
-                        children: [
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                financeChartsDataModel != null &&
+
+                        // ✅ TabBarView below
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              // --- Tab 1 ---
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 15),
+                                    if (financeChartsDataModel != null &&
                                         financeChartsDataModel!
                                                 .data
                                                 .cashAndDebt
@@ -1742,8 +1722,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                             .cashAndDebt
                                             .yearly!
                                             .metrics
-                                            .isNotEmpty
-                                    ? CashdebtWidgets(
+                                            .isNotEmpty)
+                                      CashdebtWidgets(
                                         title: "Cash and Debt",
                                         cash: "Cash",
                                         debt: "Debt",
@@ -1761,10 +1741,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                                 .yearly!
                                                 .metrics['Debt'] ??
                                             [],
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: 20),
-                                financeChartsDataModel != null &&
+                                      ),
+                                    const SizedBox(height: 20),
+
+                                    if (financeChartsDataModel != null &&
                                         financeChartsDataModel!
                                                 .data
                                                 .assetsAndStockHolders
@@ -1775,8 +1755,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                             .assetsAndStockHolders
                                             .yearly!
                                             .metrics
-                                            .isNotEmpty
-                                    ? CashdebtWidgets(
+                                            .isNotEmpty)
+                                      CashdebtWidgets(
                                         title: "Assets and Stockholders",
                                         cash: "Total Assets",
                                         debt: "Total StackHolder",
@@ -1794,11 +1774,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                                 .yearly!
                                                 .metrics["Total StockHolder"] ??
                                             [],
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: 20),
+                                      ),
+                                    const SizedBox(height: 20),
 
-                                financeChartsDataModel != null &&
+                                    if (financeChartsDataModel != null &&
                                         financeChartsDataModel!
                                                 .data
                                                 .outstandingSharesBuyback
@@ -1809,9 +1788,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                             .outstandingSharesBuyback
                                             .yearly!
                                             .metrics
-                                            .isNotEmpty
-                                    ? CashdebtWidgets(
-                                        title: "Outstanding Shares & Buypack",
+                                            .isNotEmpty)
+                                      CashdebtWidgets(
+                                        title: "Outstanding Shares & Buyback",
                                         cash: "Outstanding Shares",
                                         debt: "Stock Buyback Percentage",
                                         rawCash:
@@ -1828,10 +1807,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                                 .yearly!
                                                 .metrics["Stock Buyback Percentage"] ??
                                             [],
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: 20),
-                                financeChartsDataModel != null &&
+                                      ),
+                                    const SizedBox(height: 20),
+
+                                    if (financeChartsDataModel != null &&
                                         financeChartsDataModel!
                                                 .data
                                                 .revenueAndIncome
@@ -1842,11 +1821,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                             .revenueAndIncome
                                             .yearly!
                                             .metrics
-                                            .isNotEmpty
-                                    ? CashdebtWidgets(
+                                            .isNotEmpty)
+                                      CashdebtWidgets(
                                         title: "Revenue and Income",
-                                        cash: "Total Assets",
-                                        debt: "Total StackHolder",
+                                        cash: "Revenue",
+                                        debt: "Income",
                                         rawCash:
                                             financeChartsDataModel!
                                                 .data
@@ -1861,10 +1840,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                                 .yearly!
                                                 .metrics["Income"] ??
                                             [],
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: 20),
-                                financeChartsDataModel != null &&
+                                      ),
+                                    const SizedBox(height: 20),
+
+                                    if (financeChartsDataModel != null &&
                                         financeChartsDataModel!
                                                 .data
                                                 .cashFlowData
@@ -1875,11 +1854,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                             .cashFlowData
                                             .yearly!
                                             .metrics
-                                            .isNotEmpty
-                                    ? OperatingCashFlow(
+                                            .isNotEmpty)
+                                      OperatingCashFlow(
                                         title: "Cash Flow Data",
-                                        // cash: "Operating Cash Flow",
-                                        // debt: "Free Cash Flow",
                                         rawCash:
                                             financeChartsDataModel!
                                                 .data
@@ -1908,66 +1885,67 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                                 .yearly!
                                                 .metrics["Cash Flow Dividends"] ??
                                             [],
-                                      )
-                                    : SizedBox(),
-                                SizedBox(height: 20),
-                              ],
-                            ),
-                          ),
-                          //tab 2
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10),
-                                CustomLineChart(
-                                  lineColor: Colors.green,
-                                  areaColor: Colors.greenAccent,
-
-                                  title: "Income Statement for MSFT",
+                                      ),
+                                    const SizedBox(height: 20),
+                                  ],
                                 ),
-                                SizedBox(height: 20),
-                                FinancialTable(),
-                              ],
-                            ),
-                          ),
-                          // tab 2
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10),
-                                CustomLineChart(
-                                  lineColor: Colors.purpleAccent,
-                                  areaColor: Colors.purple,
+                              ),
 
-                                  title: "Balance Sheet for MSFT",
+                              // --- Tab 2 ---
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    CustomLineChart(
+                                      lineColor: Colors.green,
+                                      areaColor: Colors.greenAccent,
+                                      title: "Income Statement for MSFT",
+                                    ),
+                                    const SizedBox(height: 20),
+                                    FinancialTable(),
+                                  ],
                                 ),
-                                SizedBox(height: 20),
-                                FinancialTable(),
-                              ],
-                            ),
-                          ),
-                          // 3
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10),
-                                CustomLineChart(
-                                  lineColor: Colors.purpleAccent,
-                                  areaColor: Colors.purple,
+                              ),
 
-                                  title: "Cash Flow for MSFT",
+                              // --- Tab 3 ---
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    CustomLineChart(
+                                      lineColor: Colors.purpleAccent,
+                                      areaColor: Colors.purple,
+                                      title: "Balance Sheet for MSFT",
+                                    ),
+                                    const SizedBox(height: 20),
+                                    FinancialTable(),
+                                  ],
                                 ),
-                                SizedBox(height: 20),
-                                FinancialTable(),
-                              ],
-                            ),
+                              ),
+
+                              // --- Tab 4 ---
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    CustomLineChart(
+                                      lineColor: Colors.purpleAccent,
+                                      areaColor: Colors.purple,
+                                      title: "Cash Flow for MSFT",
+                                    ),
+                                    const SizedBox(height: 20),
+                                    FinancialTable(),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(height: 20.h),
+                      ],
                     ),
-                    SizedBox(height: 20.h),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],
