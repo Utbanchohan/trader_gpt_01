@@ -14,6 +14,7 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/anal
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/earning_chart.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/overview_candle_chart/overview_candle_chart.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/company_detail/company_detail_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
@@ -64,6 +65,7 @@ import '../../domain/model/fundamental_model/fundamental_model.dart';
 import '../../domain/model/insider_transaction/insider_transaction_model.dart';
 import '../../domain/model/matrics_data_model/matrics_data_model.dart';
 import '../../domain/model/monthly_model/monthly_model.dart';
+import '../../domain/model/overview_candle_chart_model/overview_candle_chart_model.dart';
 import '../../domain/model/overview_model/overview_model.dart';
 import '../../domain/model/price_comparison_model/price_comparison_model.dart';
 import '../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
@@ -112,6 +114,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   AnalysisDataModel? analysisDataModel;
   FinancialResponse? financialResponse;
   FinanceDataResponse? financeChartsDataModel;
+  List<OverviewCandleChartModel>? overviewCandleChartModel;
 
   financialData(String symbol) async {
     PriceRequestDto overview = PriceRequestDto(symbol: symbol, isYearly: true);
@@ -355,39 +358,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
-  fourthTap() async {
-    if (earningReportsModel == null) {
-      await earningReportData(widget.chatRouting!.symbol);
-      setState(() {});
-    }
-    if (earningChartModel == null) {
-      await earningChartData(widget.chatRouting!.symbol);
-      setState(() {});
-    }
-    if (companyDetailModel == null) {
-      await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
-      setState(() {});
-    }
-  }
-
-  thirdTap() async {
-    // if (financialResponse == null) {
-    //   await financialData(widget.chatRouting!.symbol);
-    //   setState(() {});
-    // }
-    if (financeChartsDataModel == null) {
-      await financialCharts(widget.chatRouting!.symbol);
-      setState(() {});
-    }
-  }
-
-  fifthTap() async {
-    if (analysisDataModel == null) {
-      await getAnalysisData(widget.chatRouting!.symbol, IntervalEnum.daily);
-      setState(() {});
-    }
-  }
-
   late TabController _tabController;
 
   final List<String> _tabs = [
@@ -507,6 +477,45 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     if (monthlyData == null) {
       await getMonthlyData(widget.chatRouting!.symbol);
     }
+    if (overviewCandleChartModel == null) {
+      await getOverviewCandleChart(
+        widget.chatRouting!.symbol,
+        IntervalEnum.daily,
+      );
+    }
+  }
+
+  fourthTap() async {
+    if (earningReportsModel == null) {
+      await earningReportData(widget.chatRouting!.symbol);
+      setState(() {});
+    }
+    if (earningChartModel == null) {
+      await earningChartData(widget.chatRouting!.symbol);
+      setState(() {});
+    }
+    if (companyDetailModel == null) {
+      await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
+    }
+  }
+
+  thirdTap() async {
+    // if (financialResponse == null) {
+    //   await financialData(widget.chatRouting!.symbol);
+    //   setState(() {});
+    // }
+    if (financeChartsDataModel == null) {
+      await financialCharts(widget.chatRouting!.symbol);
+      setState(() {});
+    }
+  }
+
+  fifthTap() async {
+    if (analysisDataModel == null) {
+      await getAnalysisData(widget.chatRouting!.symbol, IntervalEnum.daily);
+      setState(() {});
+    }
   }
 
   @override
@@ -533,28 +542,32 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         : emptyStock();
   }
 
-  final List<Map<String, dynamic>> priceData = [
-    {
-      "previousPrice": "173.19",
-      "afterHoursPrice": "176.22",
-      "percentage": "+0.25%",
-    },
-    {
-      "previousPrice": "210.50",
-      "afterHoursPrice": "212.30",
-      "percentage": "+0.85%",
-    },
-    {
-      "previousPrice": "150.00",
-      "afterHoursPrice": "149.50",
-      "percentage": "-0.33%",
-    },
-    {
-      "previousPrice": "305.75",
-      "afterHoursPrice": "310.25",
-      "percentage": "+1.48%",
-    },
-  ];
+  getOverviewCandleChart(symbol, IntervalEnum interval) async {
+    final now = DateTime.now().toUtc();
+
+    // Subtract 2 years for startDate
+    final startDate = DateTime.utc(
+      now.year - 10,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute,
+      now.second,
+      now.millisecond,
+    );
+    final endDateString = now.toIso8601String();
+    final startDateString = startDate.toIso8601String();
+    overviewCandleChartModel = await ref
+        .read(overviewCandleChartProvider.notifier)
+        .overviewCandleChart(
+          symbol,
+          interval.value,
+          startDateString,
+          endDateString,
+          "1",
+          "122",
+        );
+  }
 
   getWeeklyData(symbol) async {
     weeklyData = await ref
@@ -850,6 +863,26 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       return spots;
     }
 
+    List<ChartData> buildChartSpots(
+      List<OverviewCandleChartModel> overviewCandle,
+    ) {
+      List<ChartData> chartDataList = [];
+
+      chartDataList = overviewCandle.map((item) {
+        return ChartData(
+          x: item.timestamp.toString(),
+          y: [
+            (item.open).toDouble(),
+            (item.high).toDouble(),
+            (item.low).toDouble(),
+            (item.close).toDouble(),
+          ],
+        );
+      }).toList();
+
+      return chartDataList;
+    }
+
     return SafeArea(
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -965,7 +998,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       physics:
                           const BouncingScrollPhysics(), // Smooth scrolling
                       itemBuilder: (context, index) {
-                        final item = priceData[0];
                         return index == 0
                             ? PriceCardWidget(
                                 firstColor: AppColors.white,
@@ -976,7 +1008,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                     .toString(),
                                 afterHoursPrice: stockResponse!.data.AfterHours
                                     .toString(),
-                                percentage: item["percentage"],
+                                percentage: "+1.48%",
                               )
                             : index == 1
                             ? PriceCardWidget(
@@ -992,7 +1024,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                     .data
                                     .SharesOutstanding
                                     .toString(),
-                                percentage: item["percentage"],
+                                percentage: "+1.48%",
                               )
                             : index == 2
                             ? PriceCardWidget(
@@ -1007,7 +1039,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                     .data
                                     .AverageVolume
                                     .toString(),
-                                percentage: item["percentage"],
+                                percentage: "+1.48%",
                               )
                             : index == 3
                             ? PriceCardWidget(
@@ -1021,7 +1053,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                     .data
                                     .MarketCapClassification
                                     .toString(),
-                                percentage: item["percentage"],
+                                percentage: "+1.48%",
                               )
                             : PriceCardWidget(
                                 firstColor: AppColors.white,
@@ -1032,7 +1064,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                     .toString(),
                                 afterHoursPrice: stockResponse!.data.Industry
                                     .toString(),
-                                percentage: item["percentage"],
+                                percentage: "+1.48%",
                               );
                       },
                       separatorBuilder: (BuildContext context, int index) {
@@ -1059,10 +1091,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
             // : PriceCardShimmer(),
             SizedBox(height: 20.h),
-            CustomLineChart(
-              lineColor: Colors.green,
-              areaColor: Colors.greenAccent,
-            ),
+            overviewCandleChartModel != null
+                ? CustomCandleChart(
+                    data: buildChartSpots(overviewCandleChartModel!),
+                    onPressed: () async {
+                      await getOverviewCandleChart(
+                        widget.chatRouting!.symbol,
+                        IntervalEnum.monthly,
+                      );
+                      setState(() {});
+                    },
+                  )
+                : SizedBox(),
 
             SizedBox(height: 20.h),
             priceTargetMatrics != null && priceTargetMatrics!.data.length > 0

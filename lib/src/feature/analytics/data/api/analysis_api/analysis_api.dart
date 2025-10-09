@@ -23,6 +23,7 @@ import '../../../domain/model/market_data_login/market_data_login.dart';
 import '../../../domain/model/market_data_login_model/market_data_login_model.dart';
 import '../../../domain/model/matrics_data_model/matrics_data_model.dart';
 import '../../../domain/model/monthly_model/monthly_model.dart';
+import '../../../domain/model/overview_candle_chart_model/overview_candle_chart_model.dart';
 import '../../../domain/model/overview_model/overview_model.dart';
 import '../../../domain/model/price_comparison_model/price_comparison_model.dart';
 import '../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
@@ -119,4 +120,16 @@ abstract interface class AnalysisApi {
 
   @GET("calculate_monthly_green_probabilities?ticker_1={ticker}")
   Future<ProbabilityResponse> monthlyData(@Path('ticker') String ticker);
+
+  @GET(
+    "chartapi/stocks?symbol={symbol}&interval={interval}&start_date={start_date}&end_date={end_date}&sub_points={sub_points}&data_point={data_point}",
+  )
+  Future<List<OverviewCandleChartModel>> overviewCandleChart(
+    @Path('symbol') String symbol,
+    @Path('interval') String interval,
+    @Path('start_date') String start_date,
+    @Path('end_date') String end_date,
+    @Path('sub_points') String sub_points,
+    @Path('data_point') String data_point,
+  );
 }

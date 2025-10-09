@@ -179,7 +179,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 40,
-                      interval: 10,
+                      interval: 20,
                       getTitlesWidget: (value, meta) {
                         return Text(
                           value.toStringAsFixed(2),
@@ -203,8 +203,16 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                 barGroups: getBarGroups(),
 
                 // Axis Ranges
-                maxY: 100.0,
-                minY: 20.0,
+                maxY: chartData.isNotEmpty
+                    ? chartData
+                          .map((e) => e.high)
+                          .reduce((a, b) => a > b ? a : b)
+                    : 0.0,
+                minY: chartData.isNotEmpty
+                    ? chartData
+                          .map((e) => e.low)
+                          .reduce((a, b) => a < b ? a : b)
+                    : 0.0,
               ),
             ),
           ),

@@ -696,6 +696,45 @@ class _AnalysisApi implements AnalysisApi {
     return _value;
   }
 
+  @override
+  Future<List<OverviewCandleChartModel>> overviewCandleChart(
+    String symbol,
+    String interval,
+    String start_date,
+    String end_date,
+    String sub_points,
+    String data_point,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<OverviewCandleChartModel>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'chartapi/stocks?symbol=${symbol}&interval=${interval}&start_date=${start_date}&end_date=${end_date}&sub_points=${sub_points}&data_point=${data_point}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<OverviewCandleChartModel> _value;
+    try {
+      _value = _result.data!
+          .map(
+            (dynamic i) =>
+                OverviewCandleChartModel.fromJson(i as Map<String, dynamic>),
+          )
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

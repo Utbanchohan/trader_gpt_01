@@ -115,8 +115,8 @@ class _OperatingCashFlowState extends State<OperatingCashFlow> {
                           barRods: [
                             _barRod(cashValues[i], AppColors.color274E87),
                             _barRod(debtValues[i], AppColors.color0098E4),
-                            _barRod(equityValues[i], const Color(0xFFE91E63)),
-                            _barRod(assetValues[i], const Color(0xFFFFC107)),
+                            _barRod(equityValues[i], AppColors.color00FF55),
+                            _barRod(assetValues[i], AppColors.color0xFF1C2648),
                           ],
                         );
                       }),
