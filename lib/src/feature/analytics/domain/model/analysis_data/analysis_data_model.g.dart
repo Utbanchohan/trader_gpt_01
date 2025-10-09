@@ -29,10 +29,10 @@ _AnalysisData _$AnalysisDataFromJson(Map<String, dynamic> json) =>
       chart: (json['chart'] as List<dynamic>?)
           ?.map((e) => ChartData.fromJson(e as Map<String, dynamic>))
           .toList(),
-      chartVol: (json['chartVol'] as List<dynamic>?)
+      chartVol: (json['chart_vol'] as List<dynamic>?)
           ?.map((e) => ChartVolume.fromJson(e as Map<String, dynamic>))
           .toList(),
-      eodData: (json['eodData'] as Map<String, dynamic>?)?.map(
+      eodData: (json['eod_data'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, EodData.fromJson(e as Map<String, dynamic>)),
       ),
     );
@@ -40,8 +40,8 @@ _AnalysisData _$AnalysisDataFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$AnalysisDataToJson(_AnalysisData instance) =>
     <String, dynamic>{
       'chart': instance.chart,
-      'chartVol': instance.chartVol,
-      'eodData': instance.eodData,
+      'chart_vol': instance.chartVol,
+      'eod_data': instance.eodData,
     };
 
 _ChartData _$ChartDataFromJson(Map<String, dynamic> json) => _ChartData(
@@ -72,8 +72,8 @@ _EodData _$EodDataFromJson(Map<String, dynamic> json) => _EodData(
   close: (json['close'] as num?)?.toDouble(),
   volume: (json['avolume'] as num?)?.toInt(),
   totalTrades: json['totaltrades'] as String?,
-  change: (json['change'] as num?)?.toDouble(),
-  changepercent: (json['changepercent'] as num?)?.toDouble(),
+  change: json['change'],
+  changepercent: json['changepercent'],
   vwap: (json['vwap'] as num?)?.toDouble(),
 );
 
