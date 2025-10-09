@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -9,7 +10,17 @@ class CashdebtWidgets extends StatefulWidget {
   String? title;
   String? cash;
   String? debt;
-  CashdebtWidgets({super.key, this.title, this.cash, this.debt});
+  final List<List<num?>> rawCash;
+  final List<List<num?>> rawDebt;
+
+  CashdebtWidgets({
+    super.key,
+    this.title,
+    this.cash,
+    this.debt,
+    required this.rawCash,
+    required this.rawDebt,
+  });
 
   @override
   State<CashdebtWidgets> createState() => _CashdebtWidgetsState();
@@ -18,21 +29,60 @@ class CashdebtWidgets extends StatefulWidget {
 class _CashdebtWidgetsState extends State<CashdebtWidgets> {
   String selectedTab = "Net Income"; // Default selected tab
 
-  final List<int> years = [2021, 2020, 2019, 2018, 2017];
-  final List<double> revenue = [180, 250, 90, 200, 120];
-  final List<double> netIncome = [120, 210, 80, 274.52, 100];
-  final List<double> eps = [2.1, 3.0, 1.2, 2.7, 1.8];
-
   @override
   Widget build(BuildContext context) {
-    List<double> values;
-    if (selectedTab == "Revenue") {
-      values = revenue;
-    } else if (selectedTab == "Net Income") {
-      values = netIncome;
-    } else {
-      values = eps;
+    List<DateTime> dates = [];
+    List<double> cashValues = [];
+    List<double> debtValues = [];
+    final rawCash = widget.rawCash;
+    final rawDebt = widget.rawDebt;
+
+    // Step 1: Group by year and keep the latest entry for each year
+    Map<int, List<dynamic>> latestCashByYear = {};
+    for (var entry in rawCash) {
+      final ts = entry[0] as int;
+      final year = DateTime.fromMillisecondsSinceEpoch(ts).year;
+      if (!latestCashByYear.containsKey(year) ||
+          ts > (latestCashByYear[year]![0] as int)) {
+        latestCashByYear[year] = entry;
+      }
     }
+
+    Map<int, List<dynamic>> latestDebtByYear = {};
+    for (var entry in rawDebt) {
+      final ts = entry[0] as int;
+      final year = DateTime.fromMillisecondsSinceEpoch(ts).year;
+      if (!latestDebtByYear.containsKey(year) ||
+          ts > (latestDebtByYear[year]![0] as int)) {
+        latestDebtByYear[year] = entry;
+      }
+    }
+
+    // Step 2: Take all years that appear in *either* cash or debt
+    final allYears = <int>{
+      ...latestCashByYear.keys,
+      ...latestDebtByYear.keys,
+    }.toList()..sort();
+
+    // Step 3: Build sorted and aligned lists, filling missing ones with 0
+    dates = allYears.map((year) {
+      // Pick timestamp from whichever exists, fallback to Jan 1 of that year
+      final ts =
+          latestCashByYear[year]?[0] ??
+          latestDebtByYear[year]?[0] ??
+          DateTime(year).millisecondsSinceEpoch;
+      return DateTime.fromMillisecondsSinceEpoch(ts);
+    }).toList();
+
+    cashValues = allYears.map((year) {
+      final entry = latestCashByYear[year];
+      return entry != null ? (entry[1] as num).toDouble() : 0.0;
+    }).toList();
+
+    debtValues = allYears.map((year) {
+      final entry = latestDebtByYear[year];
+      return entry != null ? (entry[1] as num).toDouble() : 0.0;
+    }).toList();
 
     return Container(
       height: 370,
@@ -51,83 +101,98 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
             variant: TextVariant.h3,
             fontWeight: TextFontWeightVariant.h4,
           ),
-          MdSnsText(
-            "Dummy Text",
-            color: AppColors.fieldTextColor,
-            variant: TextVariant.h4,
-            fontWeight: TextFontWeightVariant.h4,
-          ),
+
           SizedBox(height: 40),
 
-          SizedBox(
+          Container(
             height: 200,
-            child: BarChart(
-              BarChartData(
-                alignment: BarChartAlignment.spaceAround,
-                gridData: FlGridData(show: false),
-                borderData: FlBorderData(show: false),
-                titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  rightTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  topTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (value, meta) {
-                        int index = value.toInt();
-                        if (index < 0 || index >= years.length) {
-                          return const SizedBox.shrink();
-                        }
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            top: 6,
-                          ), // 👈 yahan neeche shift kiya
-                          child: MdSnsText(
-                            years[index].toString(),
-                            color: AppColors.white,
-                            variant: TextVariant.h4,
-                            fontWeight: TextFontWeightVariant.h4,
+            padding: const EdgeInsets.all(16.0),
+            child: widget.rawCash.isNotEmpty && widget.rawDebt.isNotEmpty
+                ? BarChart(
+                    BarChartData(
+                      alignment: BarChartAlignment.spaceAround,
+                      gridData: FlGridData(show: false),
+                      borderData: FlBorderData(show: false),
+                      titlesData: FlTitlesData(
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        rightTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: false,
+                            reservedSize: 40,
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                // 👇 yahan spacing remove kar diya
-                groupsSpace: 0,
-                barGroups: values.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  double val = entry.value;
+                        ),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            getTitlesWidget: (value, meta) {
+                              final index = value.toInt();
+                              if (index < 0 || index >= dates.length)
+                                return const SizedBox();
+                              final label = DateFormat(
+                                "MMM yy",
+                              ).format(dates[index]);
+                              return SideTitleWidget(
+                                meta: meta,
+                                child: MdSnsText(
+                                  label,
 
-                  return BarChartGroupData(
-                    x: index,
-                    barsSpace: 0, // 👈 rods ke beech ka gap bhi 0
-                    barRods: [
-                      BarChartRodData(
-                        toY: val,
-                        width: 30, // half width
-                        borderRadius: BorderRadius.circular(4),
-                        color: const Color(0xFF1976D2), // Dark Blue
+                                  color: Colors.white,
+                                  variant: TextVariant.h4,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                      BarChartRodData(
-                        toY: val,
-                        width: 30, // half width
-                        borderRadius: BorderRadius.circular(4),
-                        color: const Color(0xFF03A9F4), // Light Blue
+                      barGroups: List.generate(dates.length, (i) {
+                        return BarChartGroupData(
+                          x: i,
+                          barsSpace: 6,
+                          barRods: [
+                            BarChartRodData(
+                              toY: cashValues[i],
+                              color: AppColors.color274E87,
+                              width: 20.w,
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(4),
+                              ),
+                            ),
+                            BarChartRodData(
+                              toY: debtValues[i],
+                              color: AppColors.color0098E4,
+                              width: 20.w,
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(4),
+                              ),
+                            ),
+                          ],
+                          // ✅ show value labels on top
+                        );
+                      }),
+                      barTouchData: BarTouchData(
+                        enabled: false,
+                        touchTooltipData: BarTouchTooltipData(
+                          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                            return BarTooltipItem(
+                              '${rod.toY.toStringAsFixed(0)}',
+                              const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    ],
-                  );
-                }).toList(),
-              ),
-            ),
+                    ),
+                  )
+                : SizedBox(),
           ),
-          // 🔹 Chart ke neeche legend Row
+
           SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

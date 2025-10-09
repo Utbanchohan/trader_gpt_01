@@ -8,6 +8,7 @@ import '../../../../shared/flavours.dart';
 import '../../../sign_in/data/dto/sign_up_dto/sign_up.dart';
 import '../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../data/dto/esg_score_dto/esg_score_dto.dart';
+import '../../data/dto/financial_dto/financial_dto.dart';
 import '../../data/dto/market_login_dto/market_login_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
@@ -19,6 +20,8 @@ import '../model/earning_chart_model/earning_chart_model.dart';
 import '../model/earning_report_model/earning_report_model.dart';
 import '../model/earnings_model/earnings_model.dart';
 import '../model/esg_score_model/esg_score_model.dart';
+import '../model/financial_chart_data/financial_chart_data_model.dart';
+import '../model/financial_data_model/financial_data_model.dart';
 import '../model/fundamental_model/fundamental_model.dart';
 import '../model/insider_transaction/insider_transaction_model.dart';
 import '../model/market_data_login/market_data_login.dart';
@@ -61,6 +64,8 @@ abstract interface class OverviewRepository {
   Future<AnalysisDataModel> analysisData(ChartRequestDto overview);
   Future<EarningChartModel> earningChartData(ChartRequestDto overview);
   Future<EarningReportsModel> earningReportData(ChartRequestDto overview);
+  Future<FinancialResponse> financialData(PriceRequestDto overview);
+  Future<FinanceDataResponse> financialCharts(SymbolDto symbol);
 }
 
 final overviewRepository = Provider<OverviewRepository>(
