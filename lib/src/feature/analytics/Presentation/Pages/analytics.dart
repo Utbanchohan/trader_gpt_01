@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
@@ -1441,23 +1442,24 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         companyModel!.general.Description != null
                     ? ReadMoreText(
                         companyModel!.general.Description!,
+
                         trimLines: 2,
                         trimMode: TrimMode.Line,
                         trimCollapsedText: 'Read More',
                         trimExpandedText: 'Show Less',
 
-                        moreStyle: TextStyle(
+                        moreStyle: GoogleFonts.plusJakartaSans(
                           fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w400,
                           color: AppColors.secondaryColor,
                         ),
-                        lessStyle: TextStyle(
+                        lessStyle: GoogleFonts.plusJakartaSans(
                           fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w400,
                           color: AppColors.secondaryColor,
                         ),
-                        style: TextStyle(
-                          fontSize: 14.sp,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.white,
                         ),
