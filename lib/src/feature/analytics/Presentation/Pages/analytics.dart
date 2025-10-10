@@ -337,19 +337,26 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
-  getAnalysisData(String symbol, IntervalEnum interval) async {
-    final now = DateTime.now().toUtc();
+  getAnalysisData(
+    String symbol,
+    IntervalEnum interval, {
+    DateTime? now1,
+    DateTime? startDate1,
+  }) async {
+    final now = now1 != null ? now1.toUtc() : DateTime.now().toUtc();
 
     // Subtract 2 years for startDate
-    final startDate = DateTime.utc(
-      now.year - 10,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-      now.second,
-      now.millisecond,
-    );
+    final startDate = startDate1 != null
+        ? startDate1.toUtc()
+        : DateTime.utc(
+            now.year - 10,
+            now.month,
+            now.day,
+            now.hour,
+            now.minute,
+            now.second,
+            now.millisecond,
+          );
     final endDateString = now.toIso8601String();
     final startDateString = startDate.toIso8601String();
     ChartRequestDto overview = ChartRequestDto(
@@ -2079,65 +2086,61 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   }
 
   Widget _analysisContent() {
+    DateTime fromDate;
+    DateTime toDate;
     return SafeArea(
       child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DateRangePickerWidget(
-                    onShowPressed: (from, to) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: MdSnsText(
-                            'From: ${from != null ? DateFormat('MM/dd/yyyy').format(from) : '—'}'
-                            '   To: ${to != null ? DateFormat('MM/dd/yyyy').format(to) : '—'}',
-                          ),
-                        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DateRangePickerWidget(
+              isLoading: chartLoader,
+              onShowPressed: (from, to) async {
+                fromDate = from!;
+                toDate = to!;
+                await getAnalysisData(
+                  widget.chatRouting!.symbol,
+                  IntervalEnum.daily,
+                  now1: toDate,
+                  startDate1: fromDate,
+                );
+              },
+            ),
+            SizedBox(height: 20),
+            analysisDataModel != null &&
+                    analysisDataModel!.data != null &&
+                    analysisDataModel!.data!.chart != null
+                ? CustomCandleChart(
+                    name: "",
+                    data: analysisDataModel!.data!.chart!,
+                    onPressed: (val) async {
+                      await getAnalysisData(
+                        widget.chatRouting!.symbol,
+                        val == 'H'
+                            ? IntervalEnum.daily
+                            : val == 'D'
+                            ? IntervalEnum.daily
+                            : val == 'W'
+                            ? IntervalEnum.daily
+                            : IntervalEnum.monthly,
                       );
                     },
+                  )
+                : shimmerBox(
+                    height: 260.h,
+                    width: MediaQuery.sizeOf(context).width / 1.4,
                   ),
-                ],
-              ),
 
-              SizedBox(height: 20),
-              analysisDataModel != null &&
-                      analysisDataModel!.data != null &&
-                      analysisDataModel!.data!.chart != null
-                  ? CustomCandleChart(
-                      name: "",
-                      data: analysisDataModel!.data!.chart!,
-                      onPressed: (val) async {
-                        await getAnalysisData(
-                          widget.chatRouting!.symbol,
-                          val == 'H'
-                              ? IntervalEnum.daily
-                              : val == 'D'
-                              ? IntervalEnum.daily
-                              : val == 'W'
-                              ? IntervalEnum.daily
-                              : IntervalEnum.monthly,
-                        );
-                      },
-                    )
-                  : SizedBox(),
-
-              SizedBox(height: 20),
-              analysisDataModel != null &&
-                      analysisDataModel!.data != null &&
-                      analysisDataModel!.data!.eodData != null
-                  ? AnalysisTable(
-                      title: "Earnings Trend",
-                      eodData: analysisDataModel!.data!.eodData,
-                    )
-                  : SizedBox(),
-            ],
-          ),
+            SizedBox(height: 20),
+            analysisDataModel != null &&
+                    analysisDataModel!.data != null &&
+                    analysisDataModel!.data!.eodData != null
+                ? AnalysisTable(
+                    title: "Earnings Trend",
+                    eodData: analysisDataModel!.data!.eodData,
+                  )
+                : MetricsShimmer(),
+          ],
         ),
       ),
     );

@@ -3,10 +3,17 @@ import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../../../../shared/widgets/loading_widget.dart';
+
 class DateRangePickerWidget extends StatefulWidget {
+  final bool isLoading;
   final void Function(DateTime? from, DateTime? to) onShowPressed;
 
-  const DateRangePickerWidget({super.key, required this.onShowPressed});
+  const DateRangePickerWidget({
+    super.key,
+    required this.onShowPressed,
+    required this.isLoading,
+  });
 
   @override
   State<DateRangePickerWidget> createState() => _DateRangePickerWidgetState();
@@ -162,14 +169,24 @@ class _DateRangePickerWidgetState extends State<DateRangePickerWidget> {
                         ),
                         elevation: 0,
                       ),
-                      child: Text(
-                        'SHOW',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.6,
-                        ),
-                      ),
+                      child: widget.isLoading
+                          ? SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: LoadingWidget(
+                                height: 20,
+                                width: 20,
+                                color: AppColors.white,
+                              ),
+                            )
+                          : Text(
+                              'SHOW',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.6,
+                              ),
+                            ),
                     ),
                   ),
                 ],
