@@ -1641,8 +1641,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     ? EsgScoreTable(data: esgScoreData!.data)
                     : SizedBox(),
                 SizedBox(height: 14.h),
-
-                SplitDividend(),
+                companyDetailModel != null &&
+                        companyDetailModel!.data.fundamentalsSplitsDividends !=
+                            null
+                    ? SplitDividend(
+                        fundamentalsSplitsDividends: companyDetailModel!
+                            .data
+                            .fundamentalsSplitsDividends,
+                      )
+                    : SizedBox(),
                 SizedBox(height: 14.h),
                 securityShortVolume != null && securityShortVolume!.data != null
                     ? SecurityShortVolume(data: securityShortVolume!.data)
