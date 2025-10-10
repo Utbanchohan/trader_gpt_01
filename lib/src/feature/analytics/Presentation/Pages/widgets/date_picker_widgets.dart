@@ -70,7 +70,7 @@ class _DateRangePickerWidgetState extends State<DateRangePickerWidget> {
       fillColor: const Color(0xFF2A2F3B),
       suffixIcon: const Padding(
         padding: EdgeInsets.only(right: 8.0),
-        child: Icon(Icons.calendar_today, size: 20, color: AppColors.black),
+        child: Icon(Icons.calendar_today, size: 20, color: AppColors.white),
       ),
       suffixIconConstraints: const BoxConstraints(minWidth: 36, minHeight: 36),
       border: OutlineInputBorder(

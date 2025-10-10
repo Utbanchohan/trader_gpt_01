@@ -77,15 +77,16 @@ class CompanyDetailsCard extends StatelessWidget {
 
                 CompanyDetailsItem(
                   title: "INSTITUTIONAL OWNERSHIP",
-                  value: items[1],
+
+                  value: "${items[1]}%",
                 ),
                 CompanyDetailsItem(title: "EBITA", value: items[2]),
                 CompanyDetailsItem(title: "EXCHANGE", value: items[3]),
                 CompanyDetailsItem(title: "SYMBOL", value: items[4]),
-                CompanyDetailsItem(title: "Sector", value: items[5]),
+                CompanyDetailsItem(title: "SECTOR", value: items[5]),
                 CompanyDetailsItem(title: "INDUSTRY", value: items[6]),
                 CompanyDetailsItem(title: "FISCAL YEAR END", value: items[7]),
-                CompanyDetailsItem(title: "MARKET CAP", value: items[8]),
+                CompanyDetailsItem(title: "MARKET CAP", value: "\$${items[8]}"),
               ],
             ),
           ),

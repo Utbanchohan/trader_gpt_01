@@ -81,7 +81,7 @@ class Earnings extends StatelessWidget {
                   value: items[1],
                 ),
                 EarningsItem(title: "Consensus EPS Forecast", value: items[2]),
-                EarningsItem(title: "EPS Surprise", value: items[3]),
+                EarningsItem(title: "EPS Surprise", value: "${items[3]}%"),
                 EarningsItem(title: "Total Revenue", value: items[4]),
               ],
             ),
