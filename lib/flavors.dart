@@ -19,11 +19,11 @@ class F {
   static String get baseUrl {
     switch (appFlavor) {
       case Flavor.prod:
-        return 'http://api.tradersgpt.io/';
+        return 'https://api.tradersgpt.io/';
       case Flavor.dev:
-        return 'http://dev.tradersgpt.io/';
+        return 'https://dev.tradersgpt.io/';
       case Flavor.stage:
-        return 'http://stage.tradersgpt.io/';
+        return 'https://stage.tradersgpt.io/';
     }
   }
 
