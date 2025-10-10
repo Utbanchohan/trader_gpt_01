@@ -1740,9 +1740,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             return TabBar(
                               controller: tabController,
                               isScrollable: true,
+
                               indicatorSize: TabBarIndicatorSize.tab,
                               tabAlignment: TabAlignment.start,
-
+                              indicatorAnimation: TabIndicatorAnimation.elastic,
                               // ✅ indicator ko border ke andar confine kar rahe hain
                               indicatorPadding: const EdgeInsets.all(4),
                               labelPadding: const EdgeInsets.symmetric(
@@ -1997,7 +1998,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                                 [],
                                           )
                                         : CashDebtShimmer(),
-                                    const SizedBox(height: 20),
+                                    const SizedBox(height: 0),
                                   ],
                                 ),
                               ),
@@ -2078,12 +2079,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
               earningChartModel != null && earningChartModel!.data.isNotEmpty
                   ? QuarterlyPerformanceChart(data: earningChartModel!.data)
-                  : QuarterlyPerformanceChartShimmer(),
+                  : SizedBox(),
+              QuarterlyPerformanceChartShimmer(),
               SizedBox(height: 20),
               earningReportsModel != null &&
                       earningReportsModel!.data.isNotEmpty
                   ? EarningsTable(data: earningReportsModel!.data)
-                  : EarningsTableShimmer(),
+                  : SizedBox(),
+              // EarningsTableShimmer(),
               SizedBox(height: 20),
               companyDetailModel != null &&
                       companyDetailModel!.data.fundamentalsEarningsTrend != null
@@ -2091,7 +2094,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       title: "Earnings Trend",
                       data: companyDetailModel!.data.fundamentalsEarningsTrend,
                     )
-                  : EarningsTrendShimmer(),
+                  : SizedBox(),
+              // EarningsTrendShimmer(),
             ],
           ),
         ),
@@ -2102,63 +2106,48 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   Widget _analysisContent() {
     return SafeArea(
       child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [DateRangePickerWidget(onShowPressed: (from, to) {})],
+            ),
 
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DateRangePickerWidget(
-                    onShowPressed: (from, to) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: MdSnsText(
-                            'From: ${from != null ? DateFormat('MM/dd/yyyy').format(from) : '—'}'
-                            '   To: ${to != null ? DateFormat('MM/dd/yyyy').format(to) : '—'}',
-                          ),
-                        ),
+            SizedBox(height: 20),
+            analysisDataModel != null &&
+                    analysisDataModel!.data != null &&
+                    analysisDataModel!.data!.chart != null
+                ? CustomCandleChart(
+                    name: "",
+                    data: analysisDataModel!.data!.chart!,
+                    onPressed: (val) async {
+                      await getAnalysisData(
+                        widget.chatRouting!.symbol,
+                        val == 'H'
+                            ? IntervalEnum.daily
+                            : val == 'D'
+                            ? IntervalEnum.daily
+                            : val == 'W'
+                            ? IntervalEnum.daily
+                            : IntervalEnum.monthly,
                       );
                     },
-                  ),
-                ],
-              ),
+                  )
+                : SizedBox(),
 
-              SizedBox(height: 20),
-              analysisDataModel != null &&
-                      analysisDataModel!.data != null &&
-                      analysisDataModel!.data!.chart != null
-                  ? CustomCandleChart(
-                      name: "",
-                      data: analysisDataModel!.data!.chart!,
-                      onPressed: (val) async {
-                        await getAnalysisData(
-                          widget.chatRouting!.symbol,
-                          val == 'H'
-                              ? IntervalEnum.daily
-                              : val == 'D'
-                              ? IntervalEnum.daily
-                              : val == 'W'
-                              ? IntervalEnum.daily
-                              : IntervalEnum.monthly,
-                        );
-                      },
-                    )
-                  : CustomCandleChartShimmer(),
-
-              SizedBox(height: 20),
-              analysisDataModel != null &&
-                      analysisDataModel!.data != null &&
-                      analysisDataModel!.data!.eodData != null
-                  ? AnalysisTable(
-                      title: "Earnings Trend",
-                      eodData: analysisDataModel!.data!.eodData,
-                    )
-                  : AnalysisTableShimmer(),
-            ],
-          ),
+            // CustomCandleChartShimmer(),
+            SizedBox(height: 20),
+            analysisDataModel != null &&
+                    analysisDataModel!.data != null &&
+                    analysisDataModel!.data!.eodData != null
+                ? AnalysisTable(
+                    title: "Earnings Trend",
+                    eodData: analysisDataModel!.data!.eodData,
+                  )
+                : SizedBox(),
+            // AnalysisTableShimmer(),
+          ],
         ),
       ),
     );
