@@ -1180,6 +1180,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             priceTargetMatrics != null && priceTargetMatrics!.data.length > 0
                 ? PriceTargetWidget(data: priceTargetMatrics!.data)
                 : SizedBox(),
+            SizedBox(height: 20.h),
+
             sharesResponse != null &&
                     sharesResponse!.data.PercentInsiders != null
                 ? ShareStructureCard(
@@ -1215,6 +1217,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     heading: Headings.matrics,
                   )
                 : MetricsShimmer(),
+
             // SizedBox(height: 20.h),
             // CustomLineChart(
             //   title: "Price Target",
@@ -1288,7 +1291,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             // SizedBox(height: 20.h),
 
             // SizedBox(height: 20.h),
-            SizedBox(height: 20.h),
             priceComparisonModel != null &&
                     priceComparisonModel!
                             .data
@@ -1682,386 +1684,382 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   }
 
   Widget _financialContent() {
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
 
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // SizedBox(height: 15),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                MdSnsText(
-                  "Financial",
-                  variant: TextVariant.h2,
-                  fontWeight: TextFontWeightVariant.h1,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // SizedBox(height: 15),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              MdSnsText(
+                "Financial",
+                variant: TextVariant.h2,
+                fontWeight: TextFontWeightVariant.h1,
 
-                  color: AppColors.fieldTextColor,
+                color: AppColors.fieldTextColor,
+              ),
+              SizedBox(width: 5),
+              Align(
+                alignment: Alignment.center,
+                child: Image.asset(
+                  "assets/images/info-circle.png",
+                  height: 14,
+                  width: 14,
                 ),
-                SizedBox(width: 5),
-                Align(
-                  alignment: Alignment.center,
-                  child: Image.asset(
-                    "assets/images/info-circle.png",
-                    height: 14,
-                    width: 14,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 6),
+              ),
+            ],
+          ),
+          SizedBox(height: 6),
 
-            MdSnsText(
-              "Last Updated: 01-19-2023 10:30:33 EST",
-              variant: TextVariant.h3,
-              fontWeight: TextFontWeightVariant.h4,
+          MdSnsText(
+            "Last Updated: 01-19-2023 10:30:33 EST",
+            variant: TextVariant.h3,
+            fontWeight: TextFontWeightVariant.h4,
 
-              color: AppColors.white,
-            ),
-            SizedBox(height: 15),
+            color: AppColors.white,
+          ),
+          SizedBox(height: 15),
 
-            // SizedBox(height: 20),
-            DefaultTabController(
-              length: 4,
-              child: Builder(
-                builder: (context) {
-                  final TabController tabController = DefaultTabController.of(
-                    context,
-                  );
+          // SizedBox(height: 20),
+          DefaultTabController(
+            length: 4,
+            child: Builder(
+              builder: (context) {
+                final TabController tabController = DefaultTabController.of(
+                  context,
+                );
 
-                  return Expanded(
-                    child: Column(
-                      children: [
-                        AnimatedBuilder(
-                          animation: tabController.animation!,
-                          builder: (context, _) {
-                            return TabBar(
-                              controller: tabController,
-                              isScrollable: true,
+                return Expanded(
+                  child: Column(
+                    children: [
+                      AnimatedBuilder(
+                        animation: tabController.animation!,
+                        builder: (context, _) {
+                          return TabBar(
+                            controller: tabController,
+                            isScrollable: true,
 
-                              indicatorSize: TabBarIndicatorSize.tab,
-                              tabAlignment: TabAlignment.start,
-                              indicatorAnimation: TabIndicatorAnimation.elastic,
-                              // ✅ indicator ko border ke andar confine kar rahe hain
-                              indicatorPadding: const EdgeInsets.all(4),
-                              labelPadding: const EdgeInsets.symmetric(
-                                horizontal: 4,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            tabAlignment: TabAlignment.start,
+                            indicatorAnimation: TabIndicatorAnimation.elastic,
+                            // ✅ indicator ko border ke andar confine kar rahe hain
+                            indicatorPadding: const EdgeInsets.all(4),
+                            labelPadding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                            ),
+                            dividerColor: Colors.transparent,
+
+                            // ✅ Indicator ke andar border + background
+                            indicator: BoxDecoration(
+                              color:
+                                  AppColors.color203063, // selected tab color
+                              borderRadius: BorderRadius.circular(50),
+                              border: Border.all(
+                                color: AppColors
+                                    .color0x1AB3B3B3, // same as tab border
+                                width: 1,
                               ),
-                              dividerColor: Colors.transparent,
+                            ),
 
-                              // ✅ Indicator ke andar border + background
-                              indicator: BoxDecoration(
-                                color:
-                                    AppColors.color203063, // selected tab color
-                                borderRadius: BorderRadius.circular(50),
-                                border: Border.all(
-                                  color: AppColors
-                                      .color0x1AB3B3B3, // same as tab border
-                                  width: 1,
-                                ),
-                              ),
+                            tabs: List.generate(4, (index) {
+                              final List<String> tabTitles = [
+                                "Summary",
+                                "Income Statement",
+                                "Balance Sheet",
+                                "Cash Flow",
+                              ];
 
-                              tabs: List.generate(4, (index) {
-                                final List<String> tabTitles = [
-                                  "Summary",
-                                  "Income Statement",
-                                  "Balance Sheet",
-                                  "Cash Flow",
-                                ];
+                              final bool isSelected =
+                                  tabController.index == index ||
+                                  (tabController.indexIsChanging &&
+                                      tabController.previousIndex == index);
 
-                                final bool isSelected =
-                                    tabController.index == index ||
-                                    (tabController.indexIsChanging &&
-                                        tabController.previousIndex == index);
-
-                                return Tab(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 8,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      border: Border.all(
-                                        color: AppColors.color0x1AB3B3B3,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: MdSnsText(
-                                      tabTitles[index],
-                                      color: isSelected
-                                          ? AppColors.white
-                                          : AppColors.color677FA4,
-                                      variant: isSelected
-                                          ? TextVariant.h2
-                                          : TextVariant.h3,
-                                      fontWeight: isSelected
-                                          ? TextFontWeightVariant.h1
-                                          : TextFontWeightVariant.h4,
+                              return Tab(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                      color: AppColors.color0x1AB3B3B3,
+                                      width: 1,
                                     ),
                                   ),
-                                );
-                              }),
-                            );
-                          },
+                                  child: MdSnsText(
+                                    tabTitles[index],
+                                    color: isSelected
+                                        ? AppColors.white
+                                        : AppColors.color677FA4,
+                                    variant: isSelected
+                                        ? TextVariant.h2
+                                        : TextVariant.h3,
+                                    fontWeight: isSelected
+                                        ? TextFontWeightVariant.h1
+                                        : TextFontWeightVariant.h4,
+                                  ),
+                                ),
+                              );
+                            }),
+                          );
+                        },
+                      ),
+
+                      // ✅ TabBarView below
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            // --- Tab 1 ---
+                            SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 15),
+                                  financeChartsDataModel != null &&
+                                          financeChartsDataModel!
+                                                  .data
+                                                  .cashAndDebt
+                                                  .yearly !=
+                                              null &&
+                                          financeChartsDataModel!
+                                              .data
+                                              .cashAndDebt
+                                              .yearly!
+                                              .metrics
+                                              .isNotEmpty
+                                      ? CashdebtWidgets(
+                                          title: "Cash and Debt",
+                                          cash: "Cash",
+                                          debt: "Debt",
+                                          rawCash:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .cashAndDebt
+                                                  .yearly!
+                                                  .metrics['Cash'] ??
+                                              [],
+                                          rawDebt:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .cashAndDebt
+                                                  .yearly!
+                                                  .metrics['Debt'] ??
+                                              [],
+                                        )
+                                      : CashDebtShimmer(),
+                                  const SizedBox(height: 20),
+
+                                  financeChartsDataModel != null &&
+                                          financeChartsDataModel!
+                                                  .data
+                                                  .assetsAndStockHolders
+                                                  .yearly !=
+                                              null &&
+                                          financeChartsDataModel!
+                                              .data
+                                              .assetsAndStockHolders
+                                              .yearly!
+                                              .metrics
+                                              .isNotEmpty
+                                      ? CashdebtWidgets(
+                                          title: "Assets and Stockholders",
+                                          cash: "Total Assets",
+                                          debt: "Total StackHolder",
+                                          rawCash:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .assetsAndStockHolders
+                                                  .yearly!
+                                                  .metrics["Total Assets"] ??
+                                              [],
+                                          rawDebt:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .assetsAndStockHolders
+                                                  .yearly!
+                                                  .metrics["Total StockHolder"] ??
+                                              [],
+                                        )
+                                      : CashDebtShimmer(),
+                                  SizedBox(height: 20),
+
+                                  financeChartsDataModel != null &&
+                                          financeChartsDataModel!
+                                                  .data
+                                                  .outstandingSharesBuyback
+                                                  .yearly !=
+                                              null &&
+                                          financeChartsDataModel!
+                                              .data
+                                              .outstandingSharesBuyback
+                                              .yearly!
+                                              .metrics
+                                              .isNotEmpty
+                                      ? CashdebtWidgets(
+                                          title: "Outstanding Shares & Buyback",
+                                          cash: "Outstanding Shares",
+                                          debt: "Stock Buyback Percentage",
+                                          rawCash:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .outstandingSharesBuyback
+                                                  .yearly!
+                                                  .metrics["Outstanding Shares"] ??
+                                              [],
+                                          rawDebt:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .outstandingSharesBuyback
+                                                  .yearly!
+                                                  .metrics["Stock Buyback Percentage"] ??
+                                              [],
+                                        )
+                                      : CashDebtShimmer(),
+                                  const SizedBox(height: 20),
+
+                                  financeChartsDataModel != null &&
+                                          financeChartsDataModel!
+                                                  .data
+                                                  .revenueAndIncome
+                                                  .yearly !=
+                                              null &&
+                                          financeChartsDataModel!
+                                              .data
+                                              .revenueAndIncome
+                                              .yearly!
+                                              .metrics
+                                              .isNotEmpty
+                                      ? CashdebtWidgets(
+                                          title: "Revenue and Income",
+                                          cash: "Revenue",
+                                          debt: "Income",
+                                          rawCash:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .revenueAndIncome
+                                                  .yearly!
+                                                  .metrics["Revenue"] ??
+                                              [],
+                                          rawDebt:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .revenueAndIncome
+                                                  .yearly!
+                                                  .metrics["Income"] ??
+                                              [],
+                                        )
+                                      : CashDebtShimmer(),
+                                  const SizedBox(height: 20),
+
+                                  financeChartsDataModel != null &&
+                                          financeChartsDataModel!
+                                                  .data
+                                                  .cashFlowData
+                                                  .yearly !=
+                                              null &&
+                                          financeChartsDataModel!
+                                              .data
+                                              .cashFlowData
+                                              .yearly!
+                                              .metrics
+                                              .isNotEmpty
+                                      ? OperatingCashFlow(
+                                          title: "Cash Flow Data",
+                                          rawCash:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .cashFlowData
+                                                  .yearly!
+                                                  .metrics["Operating Cash Flow"] ??
+                                              [],
+                                          rawDebt:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .cashFlowData
+                                                  .yearly!
+                                                  .metrics["Free Cash Flow"] ??
+                                              [],
+                                          rawAssets:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .cashFlowData
+                                                  .yearly!
+                                                  .metrics["Net Income"] ??
+                                              [],
+                                          rawEquity:
+                                              financeChartsDataModel!
+                                                  .data
+                                                  .cashFlowData
+                                                  .yearly!
+                                                  .metrics["Cash Flow Dividends"] ??
+                                              [],
+                                        )
+                                      : CashDebtShimmer(),
+                                  const SizedBox(height: 0),
+                                ],
+                              ),
+                            ),
+
+                            // --- Tab 2 ---
+                            SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 10),
+                                  CustomLineChart(
+                                    lineColor: Colors.green,
+                                    areaColor: Colors.greenAccent,
+                                    title: "Income Statement for MSFT",
+                                  ),
+                                  const SizedBox(height: 20),
+                                  FinancialTable(),
+                                ],
+                              ),
+                            ),
+
+                            // --- Tab 3 ---
+                            SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 10),
+                                  CustomLineChart(
+                                    lineColor: Colors.purpleAccent,
+                                    areaColor: Colors.purple,
+                                    title: "Balance Sheet for MSFT",
+                                  ),
+                                  const SizedBox(height: 20),
+                                  FinancialTable(),
+                                ],
+                              ),
+                            ),
+
+                            // --- Tab 4 ---
+                            SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 10),
+                                  CustomLineChart(
+                                    lineColor: Colors.purpleAccent,
+                                    areaColor: Colors.purple,
+                                    title: "Cash Flow for MSFT",
+                                  ),
+                                  const SizedBox(height: 20),
+                                  FinancialTable(),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-
-                        // ✅ TabBarView below
-                        Expanded(
-                          child: TabBarView(
-                            children: [
-                              // --- Tab 1 ---
-                              SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: 15),
-                                    financeChartsDataModel != null &&
-                                            financeChartsDataModel!
-                                                    .data
-                                                    .cashAndDebt
-                                                    .yearly !=
-                                                null &&
-                                            financeChartsDataModel!
-                                                .data
-                                                .cashAndDebt
-                                                .yearly!
-                                                .metrics
-                                                .isNotEmpty
-                                        ? CashdebtWidgets(
-                                            title: "Cash and Debt",
-                                            cash: "Cash",
-                                            debt: "Debt",
-                                            rawCash:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .cashAndDebt
-                                                    .yearly!
-                                                    .metrics['Cash'] ??
-                                                [],
-                                            rawDebt:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .cashAndDebt
-                                                    .yearly!
-                                                    .metrics['Debt'] ??
-                                                [],
-                                          )
-                                        : CashDebtShimmer(),
-                                    const SizedBox(height: 20),
-
-                                    financeChartsDataModel != null &&
-                                            financeChartsDataModel!
-                                                    .data
-                                                    .assetsAndStockHolders
-                                                    .yearly !=
-                                                null &&
-                                            financeChartsDataModel!
-                                                .data
-                                                .assetsAndStockHolders
-                                                .yearly!
-                                                .metrics
-                                                .isNotEmpty
-                                        ? CashdebtWidgets(
-                                            title: "Assets and Stockholders",
-                                            cash: "Total Assets",
-                                            debt: "Total StackHolder",
-                                            rawCash:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .assetsAndStockHolders
-                                                    .yearly!
-                                                    .metrics["Total Assets"] ??
-                                                [],
-                                            rawDebt:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .assetsAndStockHolders
-                                                    .yearly!
-                                                    .metrics["Total StockHolder"] ??
-                                                [],
-                                          )
-                                        : CashDebtShimmer(),
-                                    const SizedBox(height: 20),
-
-                                    financeChartsDataModel != null &&
-                                            financeChartsDataModel!
-                                                    .data
-                                                    .outstandingSharesBuyback
-                                                    .yearly !=
-                                                null &&
-                                            financeChartsDataModel!
-                                                .data
-                                                .outstandingSharesBuyback
-                                                .yearly!
-                                                .metrics
-                                                .isNotEmpty
-                                        ? CashdebtWidgets(
-                                            title:
-                                                "Outstanding Shares & Buyback",
-                                            cash: "Outstanding Shares",
-                                            debt: "Stock Buyback Percentage",
-                                            rawCash:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .outstandingSharesBuyback
-                                                    .yearly!
-                                                    .metrics["Outstanding Shares"] ??
-                                                [],
-                                            rawDebt:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .outstandingSharesBuyback
-                                                    .yearly!
-                                                    .metrics["Stock Buyback Percentage"] ??
-                                                [],
-                                          )
-                                        : CashDebtShimmer(),
-                                    const SizedBox(height: 20),
-
-                                    financeChartsDataModel != null &&
-                                            financeChartsDataModel!
-                                                    .data
-                                                    .revenueAndIncome
-                                                    .yearly !=
-                                                null &&
-                                            financeChartsDataModel!
-                                                .data
-                                                .revenueAndIncome
-                                                .yearly!
-                                                .metrics
-                                                .isNotEmpty
-                                        ? CashdebtWidgets(
-                                            title: "Revenue and Income",
-                                            cash: "Revenue",
-                                            debt: "Income",
-                                            rawCash:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .revenueAndIncome
-                                                    .yearly!
-                                                    .metrics["Revenue"] ??
-                                                [],
-                                            rawDebt:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .revenueAndIncome
-                                                    .yearly!
-                                                    .metrics["Income"] ??
-                                                [],
-                                          )
-                                        : CashDebtShimmer(),
-                                    const SizedBox(height: 20),
-
-                                    financeChartsDataModel != null &&
-                                            financeChartsDataModel!
-                                                    .data
-                                                    .cashFlowData
-                                                    .yearly !=
-                                                null &&
-                                            financeChartsDataModel!
-                                                .data
-                                                .cashFlowData
-                                                .yearly!
-                                                .metrics
-                                                .isNotEmpty
-                                        ? OperatingCashFlow(
-                                            title: "Cash Flow Data",
-                                            rawCash:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .cashFlowData
-                                                    .yearly!
-                                                    .metrics["Operating Cash Flow"] ??
-                                                [],
-                                            rawDebt:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .cashFlowData
-                                                    .yearly!
-                                                    .metrics["Free Cash Flow"] ??
-                                                [],
-                                            rawAssets:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .cashFlowData
-                                                    .yearly!
-                                                    .metrics["Net Income"] ??
-                                                [],
-                                            rawEquity:
-                                                financeChartsDataModel!
-                                                    .data
-                                                    .cashFlowData
-                                                    .yearly!
-                                                    .metrics["Cash Flow Dividends"] ??
-                                                [],
-                                          )
-                                        : CashDebtShimmer(),
-                                    const SizedBox(height: 0),
-                                  ],
-                                ),
-                              ),
-
-                              // --- Tab 2 ---
-                              SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    CustomLineChart(
-                                      lineColor: Colors.green,
-                                      areaColor: Colors.greenAccent,
-                                      title: "Income Statement for MSFT",
-                                    ),
-                                    const SizedBox(height: 20),
-                                    FinancialTable(),
-                                  ],
-                                ),
-                              ),
-
-                              // --- Tab 3 ---
-                              SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    CustomLineChart(
-                                      lineColor: Colors.purpleAccent,
-                                      areaColor: Colors.purple,
-                                      title: "Balance Sheet for MSFT",
-                                    ),
-                                    const SizedBox(height: 20),
-                                    FinancialTable(),
-                                  ],
-                                ),
-                              ),
-
-                              // --- Tab 4 ---
-                              SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    CustomLineChart(
-                                      lineColor: Colors.purpleAccent,
-                                      areaColor: Colors.purple,
-                                      title: "Cash Flow for MSFT",
-                                    ),
-                                    const SizedBox(height: 20),
-                                    FinancialTable(),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 20.h),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -2085,8 +2083,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               earningReportsModel != null &&
                       earningReportsModel!.data.isNotEmpty
                   ? EarningsTable(data: earningReportsModel!.data)
-                  : SizedBox(),
-              // EarningsTableShimmer(),
+                  : EarningsTableShimmer(),
               SizedBox(height: 20),
               companyDetailModel != null &&
                       companyDetailModel!.data.fundamentalsEarningsTrend != null
@@ -2094,8 +2091,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       title: "Earnings Trend",
                       data: companyDetailModel!.data.fundamentalsEarningsTrend,
                     )
-                  : SizedBox(),
-              // EarningsTrendShimmer(),
+                  : EarningsTrendShimmer(),
             ],
           ),
         ),
@@ -2104,8 +2100,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   }
 
   Widget _analysisContent() {
-    return SafeArea(
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2134,9 +2132,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       );
                     },
                   )
-                : SizedBox(),
-
-            // CustomCandleChartShimmer(),
+                : CustomCandleChartShimmer(),
             SizedBox(height: 20),
             analysisDataModel != null &&
                     analysisDataModel!.data != null &&
@@ -2145,8 +2141,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     title: "Earnings Trend",
                     eodData: analysisDataModel!.data!.eodData,
                   )
-                : SizedBox(),
-            // AnalysisTableShimmer(),
+                : AnalysisTableShimmer(),
           ],
         ),
       ),
