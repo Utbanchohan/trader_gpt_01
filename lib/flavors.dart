@@ -70,4 +70,26 @@ class F {
         return 'https://etl-payload.traderverse.io/';
     }
   }
+
+  static String get marketData {
+    switch (appFlavor) {
+      case Flavor.prod:
+        return 'https://marketsdata-prod.traderverse.io/';
+      case Flavor.dev:
+        return 'https://marketsdata-prod.traderverse.io/';
+      case Flavor.stage:
+        return 'https://marketsdata-prod.traderverse.io/';
+    }
+  }
+
+  static String get priceStreamUrl {
+    switch (appFlavor) {
+      case Flavor.prod:
+        return 'https://pricestream.traderverse.io/';
+      case Flavor.dev:
+        return 'https://pricestream.traderverse.io/';
+      case Flavor.stage:
+        return 'https://pricestream.traderverse.io/';
+    }
+  }
 }
