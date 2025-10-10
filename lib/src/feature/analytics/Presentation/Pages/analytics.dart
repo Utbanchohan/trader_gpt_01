@@ -10,6 +10,10 @@ import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/widgets/AnalysisTableShimmer.dart';
+import 'package:trader_gpt/src/shared/widgets/EarningsTableShimmer.dart';
+import 'package:trader_gpt/src/shared/widgets/EarningsTrendShimmer.dart';
+import 'package:trader_gpt/src/shared/widgets/QuarterlyPerformanceChartShimmer.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analysis_table.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analytics_widget.dart'
     show AnalyticsWidget;
@@ -29,9 +33,11 @@ import 'package:trader_gpt/src/shared/chart/revenue_analysis.dart';
 import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/CustomCandleChartShimmer%20.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsChart_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsTrend_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/InfoBox_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/cashdebt_shimmer_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/cashdebt_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/company_detail.widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/earning_shimmer.dart';
@@ -1459,7 +1465,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           color: AppColors.secondaryColor,
                         ),
                         style: GoogleFonts.plusJakartaSans(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
                           color: AppColors.white,
                         ),
@@ -1803,181 +1809,187 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 child: Column(
                                   children: [
                                     SizedBox(height: 15),
-                                    if (financeChartsDataModel != null &&
-                                        financeChartsDataModel!
-                                                .data
-                                                .cashAndDebt
-                                                .yearly !=
-                                            null &&
-                                        financeChartsDataModel!
-                                            .data
-                                            .cashAndDebt
-                                            .yearly!
-                                            .metrics
-                                            .isNotEmpty)
-                                      CashdebtWidgets(
-                                        title: "Cash and Debt",
-                                        cash: "Cash",
-                                        debt: "Debt",
-                                        rawCash:
+                                    financeChartsDataModel != null &&
+                                            financeChartsDataModel!
+                                                    .data
+                                                    .cashAndDebt
+                                                    .yearly !=
+                                                null &&
                                             financeChartsDataModel!
                                                 .data
                                                 .cashAndDebt
                                                 .yearly!
-                                                .metrics['Cash'] ??
-                                            [],
-                                        rawDebt:
-                                            financeChartsDataModel!
-                                                .data
-                                                .cashAndDebt
-                                                .yearly!
-                                                .metrics['Debt'] ??
-                                            [],
-                                      ),
+                                                .metrics
+                                                .isNotEmpty
+                                        ? CashdebtWidgets(
+                                            title: "Cash and Debt",
+                                            cash: "Cash",
+                                            debt: "Debt",
+                                            rawCash:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .cashAndDebt
+                                                    .yearly!
+                                                    .metrics['Cash'] ??
+                                                [],
+                                            rawDebt:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .cashAndDebt
+                                                    .yearly!
+                                                    .metrics['Debt'] ??
+                                                [],
+                                          )
+                                        : CashDebtShimmer(),
                                     const SizedBox(height: 20),
 
-                                    if (financeChartsDataModel != null &&
-                                        financeChartsDataModel!
-                                                .data
-                                                .assetsAndStockHolders
-                                                .yearly !=
-                                            null &&
-                                        financeChartsDataModel!
-                                            .data
-                                            .assetsAndStockHolders
-                                            .yearly!
-                                            .metrics
-                                            .isNotEmpty)
-                                      CashdebtWidgets(
-                                        title: "Assets and Stockholders",
-                                        cash: "Total Assets",
-                                        debt: "Total StackHolder",
-                                        rawCash:
+                                    financeChartsDataModel != null &&
                                             financeChartsDataModel!
-                                                .data
-                                                .assetsAndStockHolders
-                                                .yearly!
-                                                .metrics["Total Assets"] ??
-                                            [],
-                                        rawDebt:
+                                                    .data
+                                                    .assetsAndStockHolders
+                                                    .yearly !=
+                                                null &&
                                             financeChartsDataModel!
                                                 .data
                                                 .assetsAndStockHolders
                                                 .yearly!
-                                                .metrics["Total StockHolder"] ??
-                                            [],
-                                      ),
+                                                .metrics
+                                                .isNotEmpty
+                                        ? CashdebtWidgets(
+                                            title: "Assets and Stockholders",
+                                            cash: "Total Assets",
+                                            debt: "Total StackHolder",
+                                            rawCash:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .assetsAndStockHolders
+                                                    .yearly!
+                                                    .metrics["Total Assets"] ??
+                                                [],
+                                            rawDebt:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .assetsAndStockHolders
+                                                    .yearly!
+                                                    .metrics["Total StockHolder"] ??
+                                                [],
+                                          )
+                                        : CashDebtShimmer(),
                                     const SizedBox(height: 20),
 
-                                    if (financeChartsDataModel != null &&
-                                        financeChartsDataModel!
-                                                .data
-                                                .outstandingSharesBuyback
-                                                .yearly !=
-                                            null &&
-                                        financeChartsDataModel!
-                                            .data
-                                            .outstandingSharesBuyback
-                                            .yearly!
-                                            .metrics
-                                            .isNotEmpty)
-                                      CashdebtWidgets(
-                                        title: "Outstanding Shares & Buyback",
-                                        cash: "Outstanding Shares",
-                                        debt: "Stock Buyback Percentage",
-                                        rawCash:
+                                    financeChartsDataModel != null &&
+                                            financeChartsDataModel!
+                                                    .data
+                                                    .outstandingSharesBuyback
+                                                    .yearly !=
+                                                null &&
                                             financeChartsDataModel!
                                                 .data
                                                 .outstandingSharesBuyback
                                                 .yearly!
-                                                .metrics["Outstanding Shares"] ??
-                                            [],
-                                        rawDebt:
-                                            financeChartsDataModel!
-                                                .data
-                                                .outstandingSharesBuyback
-                                                .yearly!
-                                                .metrics["Stock Buyback Percentage"] ??
-                                            [],
-                                      ),
+                                                .metrics
+                                                .isNotEmpty
+                                        ? CashdebtWidgets(
+                                            title:
+                                                "Outstanding Shares & Buyback",
+                                            cash: "Outstanding Shares",
+                                            debt: "Stock Buyback Percentage",
+                                            rawCash:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .outstandingSharesBuyback
+                                                    .yearly!
+                                                    .metrics["Outstanding Shares"] ??
+                                                [],
+                                            rawDebt:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .outstandingSharesBuyback
+                                                    .yearly!
+                                                    .metrics["Stock Buyback Percentage"] ??
+                                                [],
+                                          )
+                                        : CashDebtShimmer(),
                                     const SizedBox(height: 20),
 
-                                    if (financeChartsDataModel != null &&
-                                        financeChartsDataModel!
-                                                .data
-                                                .revenueAndIncome
-                                                .yearly !=
-                                            null &&
-                                        financeChartsDataModel!
-                                            .data
-                                            .revenueAndIncome
-                                            .yearly!
-                                            .metrics
-                                            .isNotEmpty)
-                                      CashdebtWidgets(
-                                        title: "Revenue and Income",
-                                        cash: "Revenue",
-                                        debt: "Income",
-                                        rawCash:
+                                    financeChartsDataModel != null &&
+                                            financeChartsDataModel!
+                                                    .data
+                                                    .revenueAndIncome
+                                                    .yearly !=
+                                                null &&
                                             financeChartsDataModel!
                                                 .data
                                                 .revenueAndIncome
                                                 .yearly!
-                                                .metrics["Revenue"] ??
-                                            [],
-                                        rawDebt:
-                                            financeChartsDataModel!
-                                                .data
-                                                .revenueAndIncome
-                                                .yearly!
-                                                .metrics["Income"] ??
-                                            [],
-                                      ),
+                                                .metrics
+                                                .isNotEmpty
+                                        ? CashdebtWidgets(
+                                            title: "Revenue and Income",
+                                            cash: "Revenue",
+                                            debt: "Income",
+                                            rawCash:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .revenueAndIncome
+                                                    .yearly!
+                                                    .metrics["Revenue"] ??
+                                                [],
+                                            rawDebt:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .revenueAndIncome
+                                                    .yearly!
+                                                    .metrics["Income"] ??
+                                                [],
+                                          )
+                                        : CashDebtShimmer(),
                                     const SizedBox(height: 20),
 
-                                    if (financeChartsDataModel != null &&
-                                        financeChartsDataModel!
-                                                .data
-                                                .cashFlowData
-                                                .yearly !=
-                                            null &&
-                                        financeChartsDataModel!
-                                            .data
-                                            .cashFlowData
-                                            .yearly!
-                                            .metrics
-                                            .isNotEmpty)
-                                      OperatingCashFlow(
-                                        title: "Cash Flow Data",
-                                        rawCash:
+                                    financeChartsDataModel != null &&
+                                            financeChartsDataModel!
+                                                    .data
+                                                    .cashFlowData
+                                                    .yearly !=
+                                                null &&
                                             financeChartsDataModel!
                                                 .data
                                                 .cashFlowData
                                                 .yearly!
-                                                .metrics["Operating Cash Flow"] ??
-                                            [],
-                                        rawDebt:
-                                            financeChartsDataModel!
-                                                .data
-                                                .cashFlowData
-                                                .yearly!
-                                                .metrics["Free Cash Flow"] ??
-                                            [],
-                                        rawAssets:
-                                            financeChartsDataModel!
-                                                .data
-                                                .cashFlowData
-                                                .yearly!
-                                                .metrics["Net Income"] ??
-                                            [],
-                                        rawEquity:
-                                            financeChartsDataModel!
-                                                .data
-                                                .cashFlowData
-                                                .yearly!
-                                                .metrics["Cash Flow Dividends"] ??
-                                            [],
-                                      ),
+                                                .metrics
+                                                .isNotEmpty
+                                        ? OperatingCashFlow(
+                                            title: "Cash Flow Data",
+                                            rawCash:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .cashFlowData
+                                                    .yearly!
+                                                    .metrics["Operating Cash Flow"] ??
+                                                [],
+                                            rawDebt:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .cashFlowData
+                                                    .yearly!
+                                                    .metrics["Free Cash Flow"] ??
+                                                [],
+                                            rawAssets:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .cashFlowData
+                                                    .yearly!
+                                                    .metrics["Net Income"] ??
+                                                [],
+                                            rawEquity:
+                                                financeChartsDataModel!
+                                                    .data
+                                                    .cashFlowData
+                                                    .yearly!
+                                                    .metrics["Cash Flow Dividends"] ??
+                                                [],
+                                          )
+                                        : CashDebtShimmer(),
                                     const SizedBox(height: 20),
                                   ],
                                 ),
@@ -2059,12 +2071,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
               earningChartModel != null && earningChartModel!.data.isNotEmpty
                   ? QuarterlyPerformanceChart(data: earningChartModel!.data)
-                  : SizedBox(),
+                  : QuarterlyPerformanceChartShimmer(),
               SizedBox(height: 20),
               earningReportsModel != null &&
                       earningReportsModel!.data.isNotEmpty
                   ? EarningsTable(data: earningReportsModel!.data)
-                  : SizedBox(),
+                  : EarningsTableShimmer(),
               SizedBox(height: 20),
               companyDetailModel != null &&
                       companyDetailModel!.data.fundamentalsEarningsTrend != null
@@ -2072,7 +2084,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       title: "Earnings Trend",
                       data: companyDetailModel!.data.fundamentalsEarningsTrend,
                     )
-                  : SizedBox(),
+                  : EarningsTrendShimmer(),
             ],
           ),
         ),
@@ -2127,7 +2139,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         );
                       },
                     )
-                  : SizedBox(),
+                  : CustomCandleChartShimmer(),
 
               SizedBox(height: 20),
               analysisDataModel != null &&
@@ -2137,7 +2149,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       title: "Earnings Trend",
                       eodData: analysisDataModel!.data!.eodData,
                     )
-                  : SizedBox(),
+                  : AnalysisTableShimmer(),
             ],
           ),
         ),
