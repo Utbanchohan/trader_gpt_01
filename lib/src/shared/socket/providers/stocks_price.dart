@@ -169,7 +169,7 @@ class StocksManager extends _$StocksManager {
     var symbol = stockidSplit.first;
     var exchange = stockidSplit.last;
     final isCrypto = exchange == "CRYPTO";
-    print("isCrypto $isCrypto exchange $exchange symbol $symbol");
+    // print("isCrypto $isCrypto exchange $exchange symbol $symbol");
 
     List<Stock> stocks = List.from(state.values);
     if (isCrypto) {
@@ -184,14 +184,14 @@ class StocksManager extends _$StocksManager {
           .toList();
     }
 
-    print("stocks ${stocks.length}");
+    // print("stocks ${stocks.length}");
 
     for (int index = 0; index < stocks.length; index++) {
       final stockData = state[stocks[index].stockId];
       if (stockData != null) {
-        print(
-          "priceChange ${stock.price} exchange stockData.price ${stockData.price}",
-        );
+        // print(
+        //   "priceChange ${stock.price} exchange stockData.price ${stockData.price}",
+        // );
         var priceChange =
             (((stock.price - stockData.price) / stockData.price) * 100)
                 .toPrecision(2);

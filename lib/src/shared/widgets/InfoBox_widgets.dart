@@ -1,18 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class InfoBoxGrid extends StatelessWidget {
-  final List<Map<String, dynamic>> items;
+  final List<String> items;
 
-  const InfoBoxGrid({super.key, required this.items});
+  InfoBoxGrid({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
+    final companyImages = [
+      {
+        "image": "assets/images/4.png",
+        "title": "Headquarter",
+        "value": items.isNotEmpty ? items[0] : "",
+      },
+      {
+        "image": "assets/images/ab-6.png",
+        "title": "Country",
+        "value": items.isNotEmpty ? items[1] : "",
+      },
+      {
+        "image": "assets/images/ab-4.png",
+        "title": "Employees",
+        "value": items.isNotEmpty ? items[2] : "",
+      },
+      {
+        "image": "assets/images/ab-5.png",
+        "title": "Website",
+        "value": items.isNotEmpty ? items[3] : "",
+      },
+    ];
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: items.length,
+      itemCount: companyImages.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 12.w,
@@ -20,45 +44,72 @@ class InfoBoxGrid extends StatelessWidget {
         childAspectRatio: 1.1,
       ),
       itemBuilder: (context, index) {
-        final item = items[index];
+        final item = companyImages[index];
         return Container(
           padding: EdgeInsets.all(10.w),
           decoration: BoxDecoration(
-            color: AppColors.color1B254B,
+            color: AppColors.color0xFF171E40,
             borderRadius: BorderRadius.circular(25.75.h),
           ),
           child: Column(
+            mainAxisAlignment:
+                MainAxisAlignment.spaceBetween, // 👈 image top, text bottom
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 padding: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
+                  color: AppColors.color0xFF1C2648,
                   borderRadius: BorderRadius.circular(12.r),
                 ),
-                child: Icon(
-                  item["icon"] as IconData,
-                  color: Colors.white,
-                  size: 20.sp,
+                child: Image.asset(
+                  item["image"]!,
+                  height: 24.h,
+                  width: 24.w,
+                  fit: BoxFit.contain,
                 ),
               ),
-              SizedBox(height: 12.h),
-              Text(
-                item["title"].toString(),
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey.shade400,
-                ),
-              ),
-              SizedBox(height: 6.h),
-              Text(
-                item["value"].toString(),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MdSnsText(
+                    item["title"].toString(),
+                    color: AppColors.fieldTextColor,
+                    variant: TextVariant.h2,
+                    fontWeight: TextFontWeightVariant.h1,
+                  ),
+                  SizedBox(height: 6.h),
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width / 2.8,
+                    child:
+                        (item["value"] == null ||
+                            item["value"].toString().isEmpty)
+                        ? Shimmer.fromColors(
+                            baseColor: AppColors.color1B254B.withOpacity(0.3),
+                            highlightColor: AppColors.colorB3B3B3.withOpacity(
+                              0.1,
+                            ),
+                            child: Container(
+                              height: 16,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: AppColors.fieldTextColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          )
+                        : MdSnsText(
+                            item["value"].toString().replaceAll("https://", ""),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            color: AppColors.white,
+                            variant: TextVariant.h2,
+                            fontWeight: TextFontWeightVariant.h1,
+                          ),
+                  ),
+                  SizedBox(height: 6.h),
+                ],
               ),
             ],
           ),

@@ -26,14 +26,13 @@ Map<String, dynamic> _$PriceComparisonModelToJson(
 
 _PriceComparisonData _$PriceComparisonDataFromJson(Map<String, dynamic> json) =>
     _PriceComparisonData(
-      MSFT: (json['MSFT'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, (e as num).toDouble()),
-      ),
-      SPY: (json['SPY'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, (e as num).toDouble()),
+      data: const _DynamicSymbolsConverter().fromJson(
+        json as Map<String, dynamic>,
       ),
     );
 
 Map<String, dynamic> _$PriceComparisonDataToJson(
   _PriceComparisonData instance,
-) => <String, dynamic>{'MSFT': instance.MSFT, 'SPY': instance.SPY};
+) => <String, dynamic>{
+  'data': const _DynamicSymbolsConverter().toJson(instance.data),
+};

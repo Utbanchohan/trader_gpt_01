@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
+import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_up_dto/sign_up.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';
 import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
@@ -33,8 +35,8 @@ class Login extends _$Login {
     try {
       final response = await ref
           .read(authRepository)
-          .login(SignIn(email: email, password: password));
-      if (response.isSuccess) {
+          .login(SignIn(email: email.toLowerCase(), password: password));
+      if (response.isSuccess != null && response.isSuccess!) {
         final response1 = await ref
             .read(overviewRepository)
             .marketDataLogin(
@@ -47,6 +49,19 @@ class Login extends _$Login {
           await ref
               .read(localDataProvider)
               .setAccessTokenMarket(response1.accessToken);
+        }
+        final response2 = await ref
+            .read(overviewRepositoryNrm)
+            .marketData2Login(
+              SignIn(
+                email: "traderverse_profile",
+                password: "aX2Txl2yxt1ic0xs-@wXcw-ds0at\$sa-ofZwelad",
+              ),
+            );
+        if (response2.data.accessToken.isNotEmpty) {
+          await ref
+              .read(localDataProvider)
+              .setAccessTokenMarketNew(response2.data.accessToken);
         }
 
         bool isEmailVerified = false;
@@ -100,8 +115,18 @@ class Login extends _$Login {
         $showMessage(response.message, isError: true);
       }
       state = AppLoadingState();
-    } catch (e) {
-      $showMessage("Invalid Credentials", isError: true);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        try {
+          $showMessage(e.response!.data!['message'], isError: true);
+        } catch (e) {
+          $showMessage("Something went wrong", isError: true);
+        }
+      } else if (e.type == DioExceptionType.connectionError) {
+        print('❌ Network error');
+      } else {
+        print('❌ Unknown error: ${e.message}');
+      }
 
       state = AppLoadingState();
       debugPrint("errror $e");

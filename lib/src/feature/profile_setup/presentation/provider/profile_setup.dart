@@ -43,7 +43,7 @@ class Profile extends _$Profile {
               imgUrl: imageUrl,
             ),
           );
-      if (response.isSuccess) {
+      if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
         await ref
             .read(localDataProvider)
@@ -94,8 +94,7 @@ class Profile extends _$Profile {
     return null;
   }
 
-
-Future<User?> updateProfile({
+  Future<User?> updateProfile({
     required String image,
     required String name,
   }) async {
@@ -103,16 +102,12 @@ Future<User?> updateProfile({
     try {
       final response = await ref
           .read(authRepository)
-          .updateProfile(
-            ProfileUpdateDto(imgUrl: image, name: name),
-          );
-      if (response.isSuccess) {
-                await ref
-            .read(localDataProvider)
-            .saveUserName(response.data?.name ?? '');
+          .updateProfile(ProfileUpdateDto(imgUrl: image, name: name));
+      if (response.isSuccess != null && response.isSuccess!) {
         await ref
             .read(localDataProvider)
-            .saveUser(response.data!.toJson());
+            .saveUserName(response.data?.name ?? '');
+        await ref.read(localDataProvider).saveUser(response.data!.toJson());
         state = AppLoadingState();
         return response.data;
       } else {

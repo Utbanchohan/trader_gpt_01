@@ -7,7 +7,9 @@ part 'base_model.freezed.dart';
 abstract class BaseModel<T> with _$BaseModel<T> {
   const factory BaseModel({
     required String message,
-    @JsonKey(name:'success')required bool isSuccess,
+    String? error,
+    int? statusCode,
+    @JsonKey(name: 'success') bool? isSuccess,
     T? data,
   }) = _BaseModel<T>;
 
@@ -30,7 +32,6 @@ abstract class BaseModelList<T> with _$BaseModelList<T> {
     T Function(Object? json) fromJsonT,
   ) => _$BaseModelListFromJson(json, fromJsonT);
 }
-
 
 class StringOrDoubleConverter implements JsonConverter<double, Object?> {
   const StringOrDoubleConverter();

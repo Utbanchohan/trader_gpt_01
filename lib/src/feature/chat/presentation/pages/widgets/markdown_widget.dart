@@ -57,15 +57,22 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
 
     for (final e in display) {
       final decoded = jsonDecode(e) as Map<String, dynamic>;
-      final data = DisplayData.fromJson(decoded);
+      try {
+        final data = DisplayData.fromJson(decoded);
+        if (data.chartType != null) {
+          if (data.xAxis?.data != null) {
+            addNewxAxis.addAll(
+              (data.xAxis?.data ?? []).map((e) => e.toString()),
+            );
+          }
 
-      if (data.xAxis?.data != null) {
-        addNewxAxis.addAll((data.xAxis?.data ?? []).map((e) => e.toString()));
-      }
-
-      if (data.data != null) {
-        addNewyAxis.addAll((data.data ?? []).map((e) => (e as num).toDouble()));
-      }
+          if (data.data != null) {
+            addNewyAxis.addAll(
+              (data.data ?? []).map((e) => (e as num).toDouble()),
+            );
+          }
+        }
+      } catch (e) {}
     }
 
     return ModelOfAxis(yAxis: addNewyAxis, xAxis: addNewxAxis);
@@ -172,7 +179,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                 child: MdSnsText(
                   widget.type == "user"
                       ? widget.name.capitalize()
-                      : widget.name,
+                      : "TradersGPT : #" + widget.name,
 
                   variant: TextVariant.h4,
                   fontWeight: TextFontWeightVariant.h3,
@@ -246,6 +253,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
 
                           fontWeight: FontWeight.w400,
                         ),
+                        pPadding: EdgeInsets.zero,
                         p: GoogleFonts.plusJakartaSans(
                           color: AppColors.white,
                           fontSize: 14,

@@ -19,6 +19,10 @@ abstract interface class SharedPrefService {
 
   String? get marketAccessToken;
 
+  Future<bool> setAccessTokenMarketNew(String token);
+
+  String? get marketAccessTokenNew;
+
   Future<void> setIsFirstTime(bool value);
 
   bool getIsFirstTime();

@@ -10,12 +10,14 @@ $showMessage(String message, {bool isError = false}) {
   return Fluttertoast.showToast(
     msg: message,
     toastLength: Toast.LENGTH_LONG,
-    gravity: kIsWeb ? ToastGravity.TOP : ToastGravity.TOP,
+    gravity: ToastGravity.TOP,
+    // gravity: kIsWeb ? ToastGravity.TOP : ToastGravity.TOP,
     timeInSecForIosWeb: 1,
     backgroundColor: !isError ? AppColors.primaryColor : Colors.red,
     textColor: Colors.white,
     fontSize: 16.0,
     webBgColor: !isError ? "#121521" : '#E57373',
+    webPosition: "center",
   );
 }
 

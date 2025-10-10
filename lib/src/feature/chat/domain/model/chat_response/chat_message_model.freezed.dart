@@ -633,7 +633,7 @@ as List<String>,
 /// @nodoc
 mixin _$DisplayData {
 
-@JsonKey(name: "chart_type") String get chartType;@JsonKey(name: "sub_type") String? get subType; String get type; String get title; AxisData? get xAxis; AxisData? get yAxis; List<dynamic>? get data;
+@JsonKey(name: "chart_type") String? get chartType;@JsonKey(name: "sub_type") String? get subType; String get type; String get title; AxisData? get xAxis; AxisData? get yAxis; List<dynamic>? get data;
 /// Create a copy of DisplayData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -666,7 +666,7 @@ abstract mixin class $DisplayDataCopyWith<$Res>  {
   factory $DisplayDataCopyWith(DisplayData value, $Res Function(DisplayData) _then) = _$DisplayDataCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "chart_type") String chartType,@JsonKey(name: "sub_type") String? subType, String type, String title, AxisData? xAxis, AxisData? yAxis, List<dynamic>? data
+@JsonKey(name: "chart_type") String? chartType,@JsonKey(name: "sub_type") String? subType, String type, String title, AxisData? xAxis, AxisData? yAxis, List<dynamic>? data
 });
 
 
@@ -683,10 +683,10 @@ class _$DisplayDataCopyWithImpl<$Res>
 
 /// Create a copy of DisplayData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? chartType = null,Object? subType = freezed,Object? type = null,Object? title = null,Object? xAxis = freezed,Object? yAxis = freezed,Object? data = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? chartType = freezed,Object? subType = freezed,Object? type = null,Object? title = null,Object? xAxis = freezed,Object? yAxis = freezed,Object? data = freezed,}) {
   return _then(_self.copyWith(
-chartType: null == chartType ? _self.chartType : chartType // ignore: cast_nullable_to_non_nullable
-as String,subType: freezed == subType ? _self.subType : subType // ignore: cast_nullable_to_non_nullable
+chartType: freezed == chartType ? _self.chartType : chartType // ignore: cast_nullable_to_non_nullable
+as String?,subType: freezed == subType ? _self.subType : subType // ignore: cast_nullable_to_non_nullable
 as String?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,xAxis: freezed == xAxis ? _self.xAxis : xAxis // ignore: cast_nullable_to_non_nullable
@@ -801,7 +801,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "chart_type")  String chartType, @JsonKey(name: "sub_type")  String? subType,  String type,  String title,  AxisData? xAxis,  AxisData? yAxis,  List<dynamic>? data)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "chart_type")  String? chartType, @JsonKey(name: "sub_type")  String? subType,  String type,  String title,  AxisData? xAxis,  AxisData? yAxis,  List<dynamic>? data)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DisplayData() when $default != null:
 return $default(_that.chartType,_that.subType,_that.type,_that.title,_that.xAxis,_that.yAxis,_that.data);case _:
@@ -822,7 +822,7 @@ return $default(_that.chartType,_that.subType,_that.type,_that.title,_that.xAxis
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "chart_type")  String chartType, @JsonKey(name: "sub_type")  String? subType,  String type,  String title,  AxisData? xAxis,  AxisData? yAxis,  List<dynamic>? data)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "chart_type")  String? chartType, @JsonKey(name: "sub_type")  String? subType,  String type,  String title,  AxisData? xAxis,  AxisData? yAxis,  List<dynamic>? data)  $default,) {final _that = this;
 switch (_that) {
 case _DisplayData():
 return $default(_that.chartType,_that.subType,_that.type,_that.title,_that.xAxis,_that.yAxis,_that.data);case _:
@@ -842,7 +842,7 @@ return $default(_that.chartType,_that.subType,_that.type,_that.title,_that.xAxis
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "chart_type")  String chartType, @JsonKey(name: "sub_type")  String? subType,  String type,  String title,  AxisData? xAxis,  AxisData? yAxis,  List<dynamic>? data)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "chart_type")  String? chartType, @JsonKey(name: "sub_type")  String? subType,  String type,  String title,  AxisData? xAxis,  AxisData? yAxis,  List<dynamic>? data)?  $default,) {final _that = this;
 switch (_that) {
 case _DisplayData() when $default != null:
 return $default(_that.chartType,_that.subType,_that.type,_that.title,_that.xAxis,_that.yAxis,_that.data);case _:
@@ -857,10 +857,10 @@ return $default(_that.chartType,_that.subType,_that.type,_that.title,_that.xAxis
 @JsonSerializable()
 
 class _DisplayData implements DisplayData {
-  const _DisplayData({@JsonKey(name: "chart_type") required this.chartType, @JsonKey(name: "sub_type") this.subType, required this.type, required this.title, this.xAxis, this.yAxis, final  List<dynamic>? data}): _data = data;
+  const _DisplayData({@JsonKey(name: "chart_type") this.chartType, @JsonKey(name: "sub_type") this.subType, required this.type, required this.title, this.xAxis, this.yAxis, final  List<dynamic>? data}): _data = data;
   factory _DisplayData.fromJson(Map<String, dynamic> json) => _$DisplayDataFromJson(json);
 
-@override@JsonKey(name: "chart_type") final  String chartType;
+@override@JsonKey(name: "chart_type") final  String? chartType;
 @override@JsonKey(name: "sub_type") final  String? subType;
 @override final  String type;
 @override final  String title;
@@ -909,7 +909,7 @@ abstract mixin class _$DisplayDataCopyWith<$Res> implements $DisplayDataCopyWith
   factory _$DisplayDataCopyWith(_DisplayData value, $Res Function(_DisplayData) _then) = __$DisplayDataCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "chart_type") String chartType,@JsonKey(name: "sub_type") String? subType, String type, String title, AxisData? xAxis, AxisData? yAxis, List<dynamic>? data
+@JsonKey(name: "chart_type") String? chartType,@JsonKey(name: "sub_type") String? subType, String type, String title, AxisData? xAxis, AxisData? yAxis, List<dynamic>? data
 });
 
 
@@ -926,10 +926,10 @@ class __$DisplayDataCopyWithImpl<$Res>
 
 /// Create a copy of DisplayData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? chartType = null,Object? subType = freezed,Object? type = null,Object? title = null,Object? xAxis = freezed,Object? yAxis = freezed,Object? data = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? chartType = freezed,Object? subType = freezed,Object? type = null,Object? title = null,Object? xAxis = freezed,Object? yAxis = freezed,Object? data = freezed,}) {
   return _then(_DisplayData(
-chartType: null == chartType ? _self.chartType : chartType // ignore: cast_nullable_to_non_nullable
-as String,subType: freezed == subType ? _self.subType : subType // ignore: cast_nullable_to_non_nullable
+chartType: freezed == chartType ? _self.chartType : chartType // ignore: cast_nullable_to_non_nullable
+as String?,subType: freezed == subType ? _self.subType : subType // ignore: cast_nullable_to_non_nullable
 as String?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,xAxis: freezed == xAxis ? _self.xAxis : xAxis // ignore: cast_nullable_to_non_nullable

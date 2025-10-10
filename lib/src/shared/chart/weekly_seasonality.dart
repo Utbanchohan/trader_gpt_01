@@ -1,13 +1,15 @@
-import 'package:fl_chart/fl_chart.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/weekly_model/weekly_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../feature/analytics/domain/model/monthly_model/monthly_model.dart';
+import 'dart:math';
 
-class WeeklySeasonalityChart extends StatelessWidget {
+class WeeklySeasonalityChart extends ConsumerStatefulWidget {
   final ProbabilityResponse data;
   final bool isWeekly;
   final WeeklyModel weeklyModel;
@@ -17,219 +19,379 @@ class WeeklySeasonalityChart extends StatelessWidget {
     required this.isWeekly,
     required this.weeklyModel,
   });
+  @override
+  ConsumerState<WeeklySeasonalityChart> createState() =>
+      _WeeklySeasonalityChartState();
+}
 
+class _WeeklySeasonalityChartState
+    extends ConsumerState<WeeklySeasonalityChart> {
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> weeklyData = isWeekly
+    String selectedValue = "Radar";
+
+    final List<Map<String, dynamic>> weeklyData = widget.isWeekly
         ? [
             {
               "day": "Monday",
-              "value": weeklyModel.probability!.monday! * 100,
-              "amount": weeklyModel.probability!.monday!,
+              "value": widget.weeklyModel.probability!.monday! * 100,
+              "amount": widget.weeklyModel.probability!.monday!,
             },
             {
               "day": "Tuesday",
-              "value": weeklyModel.probability!.tuesday! * 100,
-              "amount": weeklyModel.probability!.tuesday,
+              "value": widget.weeklyModel.probability!.tuesday! * 100,
+              "amount": widget.weeklyModel.probability!.tuesday,
             },
             {
               "day": "Wednesday",
-              "value": weeklyModel.probability!.wednesday! * 100,
-              "amount": weeklyModel.probability!.wednesday!,
+              "value": widget.weeklyModel.probability!.wednesday! * 100,
+              "amount": widget.weeklyModel.probability!.wednesday!,
             },
             {
               "day": "Thursday",
-              "value": weeklyModel.probability!.thursday! * 100,
-              "amount": weeklyModel.probability!.thursday,
+              "value": widget.weeklyModel.probability!.thursday! * 100,
+              "amount": widget.weeklyModel.probability!.thursday,
             },
             {
               "day": "Friday",
-              "value": weeklyModel.probability!.friday! * 100,
-              "amount": weeklyModel.probability!.friday,
+              "value": widget.weeklyModel.probability!.friday! * 100,
+              "amount": widget.weeklyModel.probability!.friday,
             },
           ]
         : [
             {
               "day": "Jan",
-              "value": data.probability!.january! * 100,
-              "amount": data.probability!.january,
+              "value": widget.data.probability!.january! * 100,
+              "amount": widget.data.probability!.january,
             },
             {
               "day": "Feb",
-              "value": data.probability!.february! * 100,
-              "amount": data.probability!.february,
+              "value": widget.data.probability!.february! * 100,
+              "amount": widget.data.probability!.february,
             },
             {
               "day": "Mar",
-              "value": data.probability!.march! * 100,
-              "amount": data.probability!.march,
+              "value": widget.data.probability!.march! * 100,
+              "amount": widget.data.probability!.march,
             },
             {
               "day": "Apr",
-              "value": data.probability!.april! * 100,
-              "amount": data.probability!.april,
+              "value": widget.data.probability!.april! * 100,
+              "amount": widget.data.probability!.april,
             },
             {
               "day": "May",
-              "value": data.probability!.may! * 100,
-              "amount": data.probability!.may,
+              "value": widget.data.probability!.may! * 100,
+              "amount": widget.data.probability!.may,
             },
             {
               "day": "Jun",
-              "value": data.probability!.june! * 100,
-              "amount": data.probability!.june,
+              "value": widget.data.probability!.june! * 100,
+              "amount": widget.data.probability!.june,
             },
             {
               "day": "Jul",
-              "value": data.probability!.july! * 100,
-              "amount": data.probability!.july,
+              "value": widget.data.probability!.july! * 100,
+              "amount": widget.data.probability!.july,
             },
             {
               "day": "Aug",
-              "value": data.probability!.august! * 100,
-              "amount": data.probability!.august,
+              "value": widget.data.probability!.august! * 100,
+              "amount": widget.data.probability!.august,
             },
             {
               "day": "Sep",
-              "value": data.probability!.september! * 100,
-              "amount": data.probability!.september,
+              "value": widget.data.probability!.september! * 100,
+              "amount": widget.data.probability!.september,
             },
             {
               "day": "Oct",
-              "value": data.probability!.october! * 100,
-              "amount": data.probability!.october,
+              "value": widget.data.probability!.october! * 100,
+              "amount": widget.data.probability!.october,
             },
             {
               "day": "Nov",
-              "value": data.probability!.november! * 100,
-              "amount": data.probability!.november,
+              "value": widget.data.probability!.november! * 100,
+              "amount": widget.data.probability!.november,
             },
             {
               "day": "Dec",
-              "value": data.probability!.december! * 100,
-              "amount": data.probability!.december,
+              "value": widget.data.probability!.december! * 100,
+              "amount": widget.data.probability!.december,
             },
           ];
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: const Color(0xFF0B132B),
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+
+      elevation: 2,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.colorB3B3B3),
+          color: AppColors.color091224,
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MdSnsText(
-              isWeekly ? "Weekly Seasonality" : "Monthly Seasonality",
-              variant: TextVariant.h1,
-              color: AppColors.fieldTextColor,
-              fontWeight: TextFontWeightVariant.h1,
-            ),
-            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Left side text
+                MdSnsText(
+                  widget.isWeekly
+                      ? "Weekly Seasonality"
+                      : "Monthly Seasonality",
+                  variant: TextVariant.h3,
+                  color: AppColors.fieldTextColor,
+                  fontWeight: TextFontWeightVariant.h4,
+                ),
 
-            // Chart
-            AspectRatio(
-              aspectRatio: 1.6,
-              child: RotatedBox(
-                quarterTurns: 1,
-                child: BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.spaceAround,
-                    minY: 0,
-                    maxY: 100,
-                    gridData: FlGridData(
-                      show: true,
-                      drawHorizontalLine: true,
-                      drawVerticalLine: false,
-                      horizontalInterval: 20,
-                      getDrawingHorizontalLine: (value) =>
-                          FlLine(color: Colors.white24, strokeWidth: 1),
+                Container(
+                  height: 30,
+                  width: 90, // increased a bit for text + arrow
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColors.fieldTextColor,
+                      width: 1.2,
                     ),
-                    titlesData: FlTitlesData(
-                      leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 80,
-                          getTitlesWidget: (value, meta) {
-                            int index = value.toInt();
-                            if (index >= 0 && index < weeklyData.length) {
-                              return Transform.rotate(
-                                angle: -1.5708,
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 30.h),
-
-                                  child: MdSnsText(
-                                    weeklyData[index]["day"],
-                                    variant: TextVariant.h4,
-                                    color: Color(0xB3FFFFFF),
-                                  ),
-                                ),
-                              );
-                            }
-                            return const SizedBox.shrink();
-                          },
-                        ),
-                      ),
-                    ),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: const Border(
-                        bottom: BorderSide(color: Colors.white30, width: 1),
-                        right: BorderSide(
-                          color: Colors.white30,
-                          width: 1,
-                        ), // ✅ right line
-                        left: BorderSide.none,
-                        top: BorderSide.none,
-                      ),
-                    ),
-                    barGroups: weeklyData.asMap().entries.map((entry) {
-                      return BarChartGroupData(
-                        x: entry.key,
-                        barRods: [
-                          BarChartRodData(
-                            toY: entry.value["value"] * 1.0,
-                            width: 10,
-                            color: Colors.blueAccent,
-                            borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<String>(
+                      isExpanded: true,
+                      value: selectedValue,
+                      // 👇 show selected text + arrow inside the same Row
+                      customButton: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: MdSnsText(
+                              selectedValue, // 👈 shows current selection beside the arrow
+                              variant: TextVariant.h5,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.fieldTextColor,
+                            ),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                            color: AppColors.fieldTextColor,
+                            size: 18,
                           ),
                         ],
-                      );
-                    }).toList(),
-                    barTouchData: BarTouchData(
-                      enabled: true,
-                      touchTooltipData: BarTouchTooltipData(
-                        tooltipMargin: 8,
-                        tooltipPadding: const EdgeInsets.all(8),
-                        getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                          final data = weeklyData[group.x.toInt()];
-                          return BarTooltipItem(
-                            '\$${data["amount"].toStringAsFixed(2)}\n${data["value"].toStringAsFixed(0)}%',
-                            const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        },
                       ),
+                      dropdownStyleData: DropdownStyleData(
+                        offset: const Offset(0, 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.zero,
+                      ),
+                      items: [
+                        DropdownMenuItem(
+                          value: "Radar",
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: MdSnsText(
+                              "Radar",
+                              variant: TextVariant.h5,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.fieldTextColor,
+                            ),
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: "Bar",
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: MdSnsText(
+                              "Bar",
+                              variant: TextVariant.h5,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.fieldTextColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            selectedValue = value;
+                          });
+                        }
+                      },
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
 
+            SizedBox(height: 16),
+
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                // Divider line behind chart
+                Positioned.fill(
+                  child: CustomPaint(painter: BackgroundDividerPainter()),
+                ),
+
+                // The actual chart on top
+                MonthlySpiderChart(
+                  isWeekly: widget.isWeekly,
+                  lables: !widget.isWeekly
+                      ? [
+                          "January",
+                          "February",
+                          "March",
+                          "April",
+                          "May",
+                          "June",
+                          "July",
+                          "August",
+                          "September",
+                          "October",
+                          "November",
+                          "December",
+                        ]
+                      : [
+                          "Monday",
+                          "Tuesday",
+                          "Wednesday",
+                          "Thursday",
+                          "Friday",
+                        ],
+                  values: widget.isWeekly
+                      ? [
+                          weeklyData[0]['value'],
+                          weeklyData[1]['value'],
+                          weeklyData[2]['value'],
+                          weeklyData[3]['value'],
+                          weeklyData[4]['value'],
+                        ]
+                      : [
+                          weeklyData[0]['value'],
+                          weeklyData[1]['value'],
+                          weeklyData[2]['value'],
+                          weeklyData[3]['value'],
+                          weeklyData[4]['value'],
+                          weeklyData[5]['value'],
+                          weeklyData[6]['value'],
+                          weeklyData[7]['value'],
+                          weeklyData[8]['value'],
+                          weeklyData[9]['value'],
+                          weeklyData[10]['value'],
+                          weeklyData[11]['value'],
+                        ],
+                  maxValue: 100,
+                ),
+              ],
+            ),
+
+            // Chart
+            // AspectRatio(
+            //   aspectRatio: 1.6,
+            //   child: RotatedBox(
+            //     quarterTurns: 1,
+            //     child: BarChart(
+            //       BarChartData(
+            //         alignment: BarChartAlignment.spaceAround,
+            //         minY: 0,
+            //         maxY: 100,
+            //         gridData: FlGridData(
+            //           show: true,
+            //           drawHorizontalLine: true,
+            //           drawVerticalLine: false,
+            //           horizontalInterval: 20,
+            //           getDrawingHorizontalLine: (value) =>
+            //               FlLine(color: Colors.white24, strokeWidth: 1),
+            //         ),
+            //         titlesData: FlTitlesData(
+            //           leftTitles: const AxisTitles(
+            //             sideTitles: SideTitles(showTitles: false),
+            //           ),
+            //           rightTitles: const AxisTitles(
+            //             sideTitles: SideTitles(showTitles: false),
+            //           ),
+            //           topTitles: const AxisTitles(
+            //             sideTitles: SideTitles(showTitles: false),
+            //           ),
+            //           bottomTitles: AxisTitles(
+            //             sideTitles: SideTitles(
+            //               showTitles: true,
+            //               reservedSize: 80,
+            //               getTitlesWidget: (value, meta) {
+            //                 int index = value.toInt();
+            //                 if (index >= 0 && index < weeklyData.length) {
+            //                   return Transform.rotate(
+            //                     angle: -1.5708,
+            //                     child: Container(
+            //                       margin: EdgeInsets.only(top: 30.h),
+
+            //                       child: MdSnsText(
+            //                         weeklyData[index]["day"],
+            //                         variant: TextVariant.h4,
+            //                         color: Color(0xB3FFFFFF),
+            //                       ),
+            //                     ),
+            //                   );
+            //                 }
+            //                 return const SizedBox.shrink();
+            //               },
+            //             ),
+            //           ),
+            //         ),
+            //         borderData: FlBorderData(
+            //           show: true,
+            //           border: const Border(
+            //             bottom: BorderSide(color: Colors.white30, width: 1),
+            //             right: BorderSide(
+            //               color: Colors.white30,
+            //               width: 1,
+            //             ), // ✅ right line
+            //             left: BorderSide.none,
+            //             top: BorderSide.none,
+            //           ),
+            //         ),
+            //         barGroups: weeklyData.asMap().entries.map((entry) {
+            //           return BarChartGroupData(
+            //             x: entry.key,
+            //             barRods: [
+            //               BarChartRodData(
+            //                 toY: entry.value["value"] * 1.0,
+            //                 width: 10,
+            //                 color: Colors.blueAccent,
+            //                 borderRadius: BorderRadius.circular(6),
+            //               ),
+            //             ],
+            //           );
+            //         }).toList(),
+            //         barTouchData: BarTouchData(
+            //           enabled: true,
+            //           touchTooltipData: BarTouchTooltipData(
+            //             tooltipMargin: 8,
+            //             tooltipPadding: const EdgeInsets.all(8),
+            //             getTooltipItem: (group, groupIndex, rod, rodIndex) {
+            //               final data = weeklyData[group.x.toInt()];
+            //               return BarTooltipItem(
+            //                 '\$${data["amount"].toStringAsFixed(2)}\n${data["value"].toStringAsFixed(0)}%',
+            //                 const TextStyle(
+            //                   color: Colors.black,
+            //                   fontWeight: FontWeight.bold,
+            //                 ),
+            //               );
+            //             },
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 12),
 
-            // ✅ Neeche custom text
             Center(
               child: MdSnsText(
                 variant: TextVariant.h4,
@@ -242,4 +404,161 @@ class WeeklySeasonalityChart extends StatelessWidget {
       ),
     );
   }
+}
+
+class MonthlySpiderChart extends StatelessWidget {
+  final List<double> values; // values for 12 months
+  final double maxValue;
+  final bool? isWeekly;
+  final List<String> lables;
+
+  const MonthlySpiderChart({
+    super.key,
+    required this.values,
+    required this.isWeekly,
+    required this.lables,
+    this.maxValue = 100.0,
+  }) : assert(values.length == lables.length);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: const Size(350, 350),
+      painter: _SpiderPainter(values, lables, maxValue, isWeekly!),
+    );
+  }
+}
+
+class BackgroundDividerPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppColors
+          .colorB3B3B3 // light line
+      ..strokeWidth = 0.8;
+
+    final double spacing = size.height / 6; // 5 lines
+    for (int i = 1; i < 6; i++) {
+      final y = spacing * i;
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _SpiderPainter extends CustomPainter {
+  final List<double> values;
+  final List<String> labels;
+  final double maxValue;
+  final bool isWeekly;
+
+  _SpiderPainter(this.values, this.labels, this.maxValue, this.isWeekly);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final sides = values.length;
+    final radius = min(size.width, size.height) / 2 - 40;
+
+    final Paint gridPaint = Paint()
+      ..color = Colors.grey.shade400
+      ..style = PaintingStyle.stroke;
+
+    final Paint dataPaint = Paint()
+      ..color = isWeekly
+          ? AppColors.color0098E4.withOpacity(0.3)
+          : AppColors.colorab75b8.withOpacity(0.3)
+      ..style = PaintingStyle.fill;
+
+    final Paint dataBorderPaint = Paint()
+      ..color = isWeekly ? AppColors.color0098E4 : AppColors.colorab75b8
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    final Paint circlePoint = Paint()
+      ..color = isWeekly
+          ? AppColors.color0098E4.withOpacity(0.3)
+          : AppColors.colorab75b8.withOpacity(0.3)
+      ..style = PaintingStyle.fill;
+
+    final Paint circleBorderPont = Paint()
+      ..color = isWeekly ? AppColors.color0098E4 : AppColors.colorab75b8
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    // --- Draw spider grid
+    for (int i = 1; i <= 5; i++) {
+      final r = radius * i / 5;
+      final path = Path();
+      for (int j = 0; j < sides; j++) {
+        final angle = (2 * pi / sides) * j - pi / 2;
+        final point = center + Offset(r * cos(angle), r * sin(angle));
+        if (j == 0) {
+          path.moveTo(point.dx, point.dy);
+        } else {
+          path.lineTo(point.dx, point.dy);
+        }
+      }
+      path.close();
+      canvas.drawPath(path, gridPaint);
+    }
+
+    // --- Draw axes + labels
+    final textPainter = TextPainter(
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+
+    for (int i = 0; i < sides; i++) {
+      final angle = (2 * pi / sides) * i - pi / 2;
+      final end = center + Offset(radius * cos(angle), radius * sin(angle));
+      canvas.drawLine(center, end, gridPaint);
+
+      // Label
+      final labelOffset =
+          center +
+          Offset((radius + 20) * cos(angle), (radius + 20) * sin(angle));
+      textPainter.text = TextSpan(
+        text: labels[i],
+        style: GoogleFonts.plusJakartaSans(
+          fontSize: 12,
+          color: AppColors.white,
+          fontWeight: FontWeight.w500,
+        ),
+      );
+      textPainter.layout();
+      textPainter.paint(
+        canvas,
+        Offset(
+          labelOffset.dx - textPainter.width / 2,
+          labelOffset.dy - textPainter.height / 2,
+        ),
+      );
+    }
+
+    // --- Draw data polygon
+    final dataPath = Path();
+    for (int i = 0; i < sides; i++) {
+      final angle = (2 * pi / sides) * i - pi / 2;
+      final r = radius * (values[i] / maxValue);
+      final point = center + Offset(r * cos(angle), r * sin(angle));
+      if (i == 0) {
+        dataPath.moveTo(point.dx, point.dy);
+      } else {
+        dataPath.lineTo(point.dx, point.dy);
+      }
+      canvas.drawCircle(point, 7, circlePoint);
+      canvas.drawCircle(point, 7, circleBorderPont);
+    }
+
+    dataPath.close();
+    canvas.drawPath(dataPath, dataPaint);
+
+    canvas.drawPath(dataPath, dataBorderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

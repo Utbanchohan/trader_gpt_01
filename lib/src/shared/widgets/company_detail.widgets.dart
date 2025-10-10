@@ -18,7 +18,7 @@ class CompanyDetailsItem extends StatelessWidget {
         children: [
           MdSnsText(
             title,
-            color: AppColors.lightTextColor,
+            color: AppColors.color9EAAC0,
             fontWeight: TextFontWeightVariant.h4,
             variant: TextVariant.h4,
           ),
@@ -26,7 +26,7 @@ class CompanyDetailsItem extends StatelessWidget {
             value,
             color: AppColors.white,
 
-            fontWeight: TextFontWeightVariant.h4,
+            fontWeight: TextFontWeightVariant.h1,
             variant: TextVariant.h4,
           ),
         ],
@@ -36,7 +36,8 @@ class CompanyDetailsItem extends StatelessWidget {
 }
 
 class CompanyDetailsCard extends StatelessWidget {
-  const CompanyDetailsCard({Key? key}) : super(key: key);
+  final List<String> items;
+  const CompanyDetailsCard({Key? key, required this.items}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,37 +58,34 @@ class CompanyDetailsCard extends StatelessWidget {
             fontWeight: TextFontWeightVariant.h4,
             variant: TextVariant.h3,
           ),
-          SizedBox(height: 16),
 
+          // SizedBox(height: 16),
           Container(
             width: double.infinity,
 
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0B1224), // background color
-            ),
+            // decoration: BoxDecoration(
+            //   color: const Color(0xFF0B1224), // background color
+            // ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CompanyDetailsItem(title: "Industry", value: "Technology"),
                 CompanyDetailsItem(
-                  title: "Sector",
-                  value: "Information Technology",
+                  title: "OUTSTANDING SHARES",
+                  value: items[0],
                 ),
-                CompanyDetailsItem(title: "Employees", value: "10,000"),
+
                 CompanyDetailsItem(
-                  title: "Headquarters",
-                  value: "San Francisco, CA",
+                  title: "INSTITUTIONAL OWNERSHIP",
+                  value: items[1],
                 ),
-                CompanyDetailsItem(title: "Founded", value: "MSFT"),
-                CompanyDetailsItem(title: "MARKET CAP", value: "Technology"),
-                CompanyDetailsItem(
-                  title: "FISCAL YEAR END",
-                  value: "Software-Internet",
-                ),
-                CompanyDetailsItem(title: "INDUSTRY", value: "1998"),
-                CompanyDetailsItem(title: "SELECTOR", value: "June"),
-                CompanyDetailsItem(title: "SYMBOL", value: "3820.20B"),
+                CompanyDetailsItem(title: "EBITA", value: items[2]),
+                CompanyDetailsItem(title: "EXCHANGE", value: items[3]),
+                CompanyDetailsItem(title: "SYMBOL", value: items[4]),
+                CompanyDetailsItem(title: "Sector", value: items[5]),
+                CompanyDetailsItem(title: "INDUSTRY", value: items[6]),
+                CompanyDetailsItem(title: "FISCAL YEAR END", value: items[7]),
+                CompanyDetailsItem(title: "MARKET CAP", value: items[8]),
               ],
             ),
           ),

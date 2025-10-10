@@ -172,7 +172,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       context,
                       Assets.images.setting2.path,
                       "Settings",
-                      "",
+                      AppRoutes.myProfileScreen.name,
                     ),
                   ],
                 ),

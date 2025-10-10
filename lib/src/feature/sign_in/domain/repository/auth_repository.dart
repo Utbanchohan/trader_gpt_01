@@ -18,7 +18,7 @@ import '../../../chat/domain/model/base_model/base_model.dart';
 
 abstract interface class AuthRepository {
   Future<BaseModel<LoginData>> login(SignIn signIn);
-  Future<BaseModel<User>> signUp(SignUpDto email);
+  Future<BaseModel<User?>> signUp(SignUpDto email);
   Future<BaseModel<LoginData>> verifyOtp(OtpRequest otp);
   Future<BaseModel<LoginData>> completeRegistration(CompleteProfileDto profile);
   Future<BaseModel> forgetPassword(SignUpDto email);

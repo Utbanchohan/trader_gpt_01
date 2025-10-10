@@ -239,7 +239,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     final data = widget.chartData.data;
 
     if (data is! List)
-      return const Center(child: Text('Invalid pie chart data'));
+      return Center(child: MdSnsText('Invalid pie chart data'));
 
     List<PieChartSectionData> sections = [];
 
@@ -280,7 +280,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     final data = widget.chartData.data;
 
     if (data is! List)
-      return const Center(child: Text('Invalid scatter chart data'));
+      return Center(child: MdSnsText('Invalid scatter chart data'));
 
     List<FlSpot> spots = [];
 
@@ -326,9 +326,10 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              getTitlesWidget: (value, meta) => Text(
+              getTitlesWidget: (value, meta) => MdSnsText(
                 value.toStringAsFixed(0),
-                style: TextStyle(color: axisColor, fontSize: 12),
+                color: axisColor,
+                variant: TextVariant.h4,
               ),
             ),
           ),
@@ -338,12 +339,13 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               getTitlesWidget: (value, meta) {
                 final index = value.toInt();
                 if (index >= 0 && index < categories.length) {
-                  return Text(
+                  return MdSnsText(
                     categories[index],
-                    style: TextStyle(color: axisColor, fontSize: 12),
+                    variant: TextVariant.h4,
+                    color: axisColor,
                   );
                 }
-                return const Text('');
+                return MdSnsText('');
               },
             ),
           ),
@@ -358,7 +360,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     final data = widget.chartData.data;
 
     if (data is! List)
-      return const Center(child: Text('Invalid bar chart data'));
+      return Center(child: MdSnsText('Invalid bar chart data'));
 
     List<BarChartGroupData> barGroups = [];
 
@@ -416,9 +418,10 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              getTitlesWidget: (value, meta) => Text(
+              getTitlesWidget: (value, meta) => MdSnsText(
                 value.toStringAsFixed(0),
-                style: TextStyle(color: axisColor, fontSize: 12),
+                variant: TextVariant.h4,
+                color: axisColor,
               ),
             ),
           ),
@@ -428,12 +431,13 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               getTitlesWidget: (value, meta) {
                 final index = value.toInt();
                 if (index >= 0 && index < categories.length) {
-                  return Text(
+                  return MdSnsText(
                     categories[index],
-                    style: TextStyle(color: axisColor, fontSize: 12),
+                    variant: TextVariant.h4,
+                    color: axisColor,
                   );
                 }
-                return const Text('');
+                return MdSnsText('');
               },
             ),
           ),
@@ -449,7 +453,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     final data = widget.chartData.data;
 
     if (data is! List)
-      return const Center(child: Text('Invalid line chart data'));
+      return Center(child: MdSnsText('Invalid line chart data'));
 
     List<LineChartBarData> lineBars = [];
 
@@ -524,9 +528,10 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                getTitlesWidget: (value, meta) => Text(
+                getTitlesWidget: (value, meta) => MdSnsText(
                   value.toStringAsFixed(0),
-                  style: TextStyle(color: axisColor, fontSize: 12),
+                  variant: TextVariant.h4,
+                  color: axisColor,
                 ),
               ),
             ),
@@ -536,12 +541,13 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
                   if (index >= 0 && index < categories.length) {
-                    return Text(
+                    return MdSnsText(
                       categories[index],
-                      style: TextStyle(color: axisColor, fontSize: 12),
+                      variant: TextVariant.h4,
+                      color: axisColor,
                     );
                   }
-                  return const Text('');
+                  return MdSnsText('');
                 },
               ),
             ),
@@ -555,7 +561,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
   /// Get color for series index
   Color _getColorForIndex(int index) {
     final colors = [
-      AppColors.color06D54E,
+      AppColors.secondaryColor,
       const Color(0xFF0098E4),
       const Color(0xFF10B981),
       const Color(0xFFEF4444),
@@ -575,40 +581,43 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
         // Dropdown for chart type selection
         if (chartTypeOptions.isNotEmpty)
           SizedBox(
-            // margin: const EdgeInsets.only(bottom: 16),
-            width: MediaQuery.sizeOf(context).width * 0.75,
-            child: DropdownButton2<String>(
-              underline: SizedBox(),
-              isExpanded: true,
-              value: selectedChartType,
-              hint: const Text('Select Chart Type'),
-              items: chartTypeOptions.map((option) {
-                return DropdownMenuItem<String>(
-                  value: option.value,
-                  child: MdSnsText(
-                    option.label,
-                    color: AppColors.white,
-                    variant: TextVariant.h8,
+            //  margin: const EdgeInsets.only(bottom: 16),
+            // width: MediaQuery.sizeOf(context).width * 0.75,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: DropdownButton2<String>(
+                underline: SizedBox(),
+                isExpanded: true,
+                value: selectedChartType,
+                hint: MdSnsText('Select Chart Type'),
+                items: chartTypeOptions.map((option) {
+                  return DropdownMenuItem<String>(
+                    value: option.value,
+                    child: MdSnsText(
+                      option.label,
+                      color: AppColors.white,
+                      variant: TextVariant.h8,
+                    ),
+                  );
+                }).toList(),
+                onChanged: _onChartTypeChange,
+                dropdownStyleData: DropdownStyleData(
+                  elevation: 1,
+                  decoration: BoxDecoration(
+                    color: gridColor,
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                );
-              }).toList(),
-              onChanged: _onChartTypeChange,
-              dropdownStyleData: DropdownStyleData(
-                elevation: 1,
-                decoration: BoxDecoration(
-                  color: gridColor,
-                  borderRadius: BorderRadius.circular(8),
                 ),
-              ),
-              buttonStyleData: ButtonStyleData(
-                elevation: 0,
-                height: 48, // 👈 give button a proper height
-                decoration: BoxDecoration(
-                  color: gridColor,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: axisColor),
+                buttonStyleData: ButtonStyleData(
+                  elevation: 0,
+                  height: 48, // 👈 give button a proper height
+                  decoration: BoxDecoration(
+                    color: gridColor,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: axisColor),
+                  ),
+                  // padding: const EdgeInsets.symmetric(horizontal: 12),
                 ),
-                // padding: const EdgeInsets.symmetric(horizontal: 12),
               ),
             ),
           ),
@@ -670,12 +679,10 @@ class ChartExample extends StatelessWidget {
                       sideTitles: SideTitles(
                         showTitles: false,
                         interval: horizontalInterval,
-                        getTitlesWidget: (value, meta) => Text(
+                        getTitlesWidget: (value, meta) => MdSnsText(
                           "${value.toInt()}",
-                          style: const TextStyle(
-                            fontSize: 9,
-                            color: Colors.white,
-                          ),
+                          variant: TextVariant.h5,
+                          color: AppColors.white,
                         ),
                       ),
                     ),
@@ -686,12 +693,12 @@ class ChartExample extends StatelessWidget {
                         getTitlesWidget: (value, meta) {
                           int index = value.toInt();
                           if (index < xAxis.length) {
-                            return Text(
+                            return MdSnsText(
                               xAxis[index],
-                              style: const TextStyle(fontSize: 9),
+                              variant: TextVariant.h5,
                             );
                           }
-                          return Text(
+                          return MdSnsText(
                             "$index",
                           ); // fallback for extra yAxis points
                         },
@@ -705,7 +712,7 @@ class ChartExample extends StatelessWidget {
                         (i) => FlSpot(i.toDouble(), data[i] / 1e9),
                       ),
                       isCurved: true,
-                      color: AppColors.color06D54E,
+                      color: AppColors.secondaryColor,
                       barWidth: 2,
 
                       isStrokeCapRound: true,

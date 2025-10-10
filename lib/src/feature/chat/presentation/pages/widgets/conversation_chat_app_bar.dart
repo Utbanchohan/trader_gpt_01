@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/symbol_image.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
@@ -31,6 +32,11 @@ class ConversationChatAppBar extends ConsumerStatefulWidget
 
 class _ConversationChatAppBarState
     extends ConsumerState<ConversationChatAppBar> {
+  final compactFormatter = NumberFormat.compactCurrency(
+    locale: "en",
+    symbol: "\$",
+    decimalDigits: 2,
+  );
   @override
   Widget build(BuildContext context) {
     final stockManagerState = ref.watch(stocksManagerProvider);
@@ -161,11 +167,12 @@ class _ConversationChatAppBarState
                 ),
                 Row(
                   children: [
-                    Text(
+                    MdSnsText(
                       liveStock != null
                           ? "\$${liveStock.price.toStringAsFixed(2)}"
                           : "\$${widget.chatRouting!.price..toStringAsFixed(2)}",
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      variant: TextVariant.h3,
+                      color: AppColors.white,
                     ),
                     SizedBox(width: 6),
                     Icon(
