@@ -258,28 +258,40 @@ class _OperatingCashFlowState extends State<OperatingCashFlow> {
 
     cashValues = sortedYears
         .map(
-          (y) => grouped['cash']![y] != null
+          (y) =>
+              grouped['cash']![y] != null &&
+                  grouped['cash']![y]!.length > 1 &&
+                  grouped['cash']![y]![1] != null
               ? (grouped['cash']![y]![1] as num).toDouble()
               : 0.0,
         )
         .toList();
     debtValues = sortedYears
         .map(
-          (y) => grouped['debt']![y] != null
+          (y) =>
+              grouped['debt']![y] != null &&
+                  grouped['debt']![y]!.length > 1 &&
+                  grouped['debt']![y]![1] != null
               ? (grouped['debt']![y]![1] as num).toDouble()
               : 0.0,
         )
         .toList();
     equityValues = sortedYears
         .map(
-          (y) => grouped['equity']![y] != null
+          (y) =>
+              grouped['equity']![y] != null &&
+                  grouped['equity']![y]!.length > 1 &&
+                  grouped['equity']![y]![1] != null
               ? (grouped['equity']![y]![1] as num).toDouble()
               : 0.0,
         )
         .toList();
     assetValues = sortedYears
         .map(
-          (y) => grouped['assets']![y] != null
+          (y) =>
+              grouped['assets']![y] != null &&
+                  grouped['assets']![y]!.length > 1 &&
+                  grouped['assets']![y]![1] != null
               ? (grouped['assets']![y]![1] as num).toDouble()
               : 0.0,
         )
