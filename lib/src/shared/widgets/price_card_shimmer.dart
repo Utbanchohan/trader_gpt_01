@@ -19,8 +19,9 @@ class PriceCardShimmer extends StatelessWidget {
         border: Border.all(color: AppColors.color1AB3B3B3),
       ),
       child: Shimmer.fromColors(
-        baseColor: AppColors.color091224,
-        highlightColor: Colors.blueGrey,
+        baseColor: AppColors.color1B254B.withOpacity(0.3),
+        highlightColor: AppColors.colorB3B3B3.withOpacity(0.1),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
