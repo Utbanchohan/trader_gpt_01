@@ -11,9 +11,7 @@ class WorkFlowProvider extends _$WorkFlowProvider {
   }
 
   Future<WorkflowsData> getWorksFlows() async {
-    final res = await ref
-        .read(chatRepository)
-        .getWorkFlows();
+    final res = await ref.read(chatPyRepository).getWorkFlows();
     return res;
   }
 }

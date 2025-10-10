@@ -16,7 +16,8 @@ class SseService {
     Map<String, dynamic> body,
     String token,
   ) async* {
-    final url = "${F.baseUrl}tgpt-python/api/user_ask_stream";
+    final url = "${F.pythonBaseUrl}tgpt-python/api/user_ask_stream";
+    print(url);
 
     final headers = {
       "accept": "text/event-stream",

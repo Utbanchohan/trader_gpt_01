@@ -32,3 +32,7 @@ abstract interface class ChatRepository {
 final chatRepository = Provider<ChatRepository>(
   (ref) => ChatApiRepository(ref.read(client(F.baseUrl))),
 );
+
+final chatPyRepository = Provider<ChatRepository>(
+  (ref) => ChatApiRepository(ref.read(client(F.pythonBaseUrl))),
+);

@@ -27,6 +27,17 @@ class F {
     }
   }
 
+  static String get pythonBaseUrl {
+    switch (appFlavor) {
+      case Flavor.prod:
+        return 'https://ai.tradersgpt.io/';
+      case Flavor.dev:
+        return 'https://dev.tradersgpt.io/';
+      case Flavor.stage:
+        return 'https://stage.tradersgpt.io/';
+    }
+  }
+
   static String get socketUrl {
     switch (appFlavor) {
       case Flavor.prod:
