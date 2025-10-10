@@ -19,7 +19,7 @@ class F {
   static String get baseUrl {
     switch (appFlavor) {
       case Flavor.prod:
-        return 'http://app.tradersgpt.io/';
+        return 'http://api.tradersgpt.io/';
       case Flavor.dev:
         return 'http://dev.tradersgpt.io/';
       case Flavor.stage:
@@ -30,7 +30,7 @@ class F {
   static String get socketUrl {
     switch (appFlavor) {
       case Flavor.prod:
-        return 'wss://app.tradersgpt.io/socket.io';
+        return 'wss://websocket.tradersgpt.io';
       case Flavor.dev:
         return 'wss://dev.tradersgpt.io/socket.io';
       case Flavor.stage:
@@ -41,7 +41,7 @@ class F {
   static String get newSocketUrl {
     switch (appFlavor) {
       case Flavor.prod:
-        return 'https://app.tradersgpt.io';
+        return 'https://websocket.tradersgpt.io';
       case Flavor.dev:
         return 'https://dev.tradersgpt.io';
       case Flavor.stage:

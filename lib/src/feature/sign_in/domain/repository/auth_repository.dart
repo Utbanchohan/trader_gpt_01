@@ -15,6 +15,7 @@ import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_api_reposi
 import 'package:trader_gpt/src/shared/flavours.dart';
 
 import '../../../chat/domain/model/base_model/base_model.dart';
+import 'package:trader_gpt/flavors.dart';
 
 abstract interface class AuthRepository {
   Future<BaseModel<LoginData>> login(SignIn signIn);
@@ -28,5 +29,5 @@ abstract interface class AuthRepository {
 }
 
 final authRepository = Provider<AuthRepository>(
-  (ref) => AuthApiRepository(ref.read(client(BaseUrl.baseUrl))),
+  (ref) => AuthApiRepository(ref.read(client(F.baseUrl))),
 );

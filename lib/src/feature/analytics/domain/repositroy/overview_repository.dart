@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trader_gpt/flavors.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/repositroy/overview_api_repository.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_in_dto/sign_in_dto.dart';
 
 import '../../../../core/api_client/client.dart'
     show client, marketDataClient, marketDataClientNew, priceStreamClientNew;
-import '../../../../shared/flavours.dart';
-import '../../../sign_in/data/dto/sign_up_dto/sign_up.dart';
+
 import '../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../data/dto/esg_score_dto/esg_score_dto.dart';
 import '../../data/dto/financial_dto/financial_dto.dart';
@@ -78,22 +78,18 @@ abstract interface class OverviewRepository {
 }
 
 final overviewRepository = Provider<OverviewRepository>(
-  (ref) =>
-      OverviewApiRepository(ref.read(marketDataClient(BaseUrl.marketDataUrl))),
+  (ref) => OverviewApiRepository(ref.read(marketDataClient(F.marketDataUrl))),
 );
 
 final overviewRepositoryPriceStream = Provider<OverviewRepository>(
-  (ref) => OverviewApiRepository(
-    ref.read(priceStreamClientNew(BaseUrl.priceStreamUrl)),
-  ),
+  (ref) =>
+      OverviewApiRepository(ref.read(priceStreamClientNew(F.priceStreamUrl))),
 );
 
 final overviewRepositoryele = Provider<OverviewRepository>(
-  (ref) =>
-      OverviewApiRepository(ref.read(marketDataClient(BaseUrl.etlDataUrl))),
+  (ref) => OverviewApiRepository(ref.read(marketDataClient(F.etlDataUrl))),
 );
 
 final overviewRepositoryNrm = Provider<OverviewRepository>(
-  (ref) =>
-      OverviewApiRepository(ref.read(marketDataClientNew(BaseUrl.marketData))),
+  (ref) => OverviewApiRepository(ref.read(marketDataClientNew(F.marketData))),
 );
