@@ -57,9 +57,9 @@ class _OperatingCashFlowState extends State<OperatingCashFlow> {
         children: [
           MdSnsText(
             widget.title ?? "Chart",
-            color: AppColors.color0xB3FFFFFF,
-            variant: TextVariant.h3,
+            color: AppColors.fieldTextColor,
             fontWeight: TextFontWeightVariant.h4,
+            variant: TextVariant.h3,
           ),
           const SizedBox(height: 40),
 

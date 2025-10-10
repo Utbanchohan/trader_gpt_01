@@ -1296,7 +1296,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         MdSnsText(
                           "Price Comparison",
