@@ -10,6 +10,7 @@ import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/highlights_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/AnalysisTableShimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsTableShimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsTrendShimmer.dart';
@@ -744,12 +745,368 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   children: [
                     _buildAnalyticsTab(),
 
-                    Center(
-                      child: MdSnsText(
-                        "History Content Here",
-                        color: AppColors.white,
+                    SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      Assets.images.frame1171275460.path,
+                                      height: 53.h,
+                                      width: 53.w,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        MdSnsText(
+                                          "BTC",
+                                          variant: TextVariant.h2,
+                                          fontWeight: TextFontWeightVariant.h1,
+
+                                          color: AppColors.white,
+                                        ),
+                                        MdSnsText(
+                                          "Bitcoin",
+                                          color: AppColors.white,
+                                          variant: TextVariant.h4,
+                                          fontWeight: TextFontWeightVariant.h4,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    MdSnsText(
+                                      "114.42",
+                                      color: AppColors.white,
+                                      variant: TextVariant.h2,
+                                      fontWeight: TextFontWeightVariant.h1,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_drop_down,
+                                          color: AppColors.redFF3B3B,
+                                          size: 20,
+                                        ),
+                                        MdSnsText(
+                                          "7.43%",
+                                          color: AppColors.redFF3B3B,
+                                          variant: TextVariant.h4,
+                                          fontWeight: TextFontWeightVariant.h4,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            SizedBox(
+                              height: 122.h,
+                              child: ListView.separated(
+                                scrollDirection:
+                                    Axis.horizontal, // Horizontal scrolling
+                                // padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                itemCount: 5,
+                                physics:
+                                    const BouncingScrollPhysics(), // Smooth scrolling
+                                itemBuilder: (context, index) {
+                                  return index == 0
+                                      ? PriceCardWidget(
+                                          firstColor: AppColors.white,
+                                          secondColor:
+                                              AppColors.color0xFFFFB21D,
+                                          firstHeading:
+                                              "PREVIOUSLY CLOSE PRICE",
+                                          secondHeading: "AFTER HOURS",
+                                          previousPrice: stockResponse!
+                                              .data
+                                              .previousClose
+                                              .toString(),
+                                          afterHoursPrice: stockResponse!
+                                              .data
+                                              .AfterHours
+                                              .toString(),
+                                          percentage: "+1.48%",
+                                        )
+                                      : index == 1
+                                      ? PriceCardWidget(
+                                          secondColor: AppColors.white,
+                                          firstColor: AppColors.color046297,
+                                          firstHeading:
+                                              "MARKET CAPITAILIZATION",
+                                          secondHeading: "OUTSTANDING SHARES",
+                                          previousPrice: stockResponse!
+                                              .data
+                                              .MarketCapitalization
+                                              .toString(),
+                                          afterHoursPrice: stockResponse!
+                                              .data
+                                              .SharesOutstanding
+                                              .toString(),
+                                          percentage: "+1.48%",
+                                        )
+                                      : index == 2
+                                      ? PriceCardWidget(
+                                          firstColor: AppColors.white,
+                                          secondColor: AppColors.white,
+
+                                          firstHeading: "TOTAL VOLUME",
+                                          secondHeading: "AVERAGE VOLUME(3M)",
+                                          previousPrice: stockResponse!
+                                              .data
+                                              .TotalVolume
+                                              .toString(),
+                                          afterHoursPrice: stockResponse!
+                                              .data
+                                              .AverageVolume
+                                              .toString(),
+                                          percentage: "+1.48%",
+                                        )
+                                      : index == 3
+                                      ? PriceCardWidget(
+                                          firstColor: AppColors.color00FF55,
+                                          secondColor: AppColors.colorab75b8,
+                                          firstHeading: "EXCHANGE",
+                                          secondHeading: "MARKET CAPTILIZATION",
+                                          previousPrice: stockResponse!
+                                              .data
+                                              .Exchange
+                                              .toString(),
+                                          afterHoursPrice: stockResponse!
+                                              .data
+                                              .MarketCapClassification
+                                              .toString(),
+                                          percentage: "+1.48%",
+                                        )
+                                      : PriceCardWidget(
+                                          firstColor: AppColors.white,
+                                          secondColor: AppColors.white,
+                                          firstHeading: "SECTOR",
+                                          secondHeading: "INDUSTRY",
+                                          previousPrice: stockResponse!
+                                              .data
+                                              .Sector
+                                              .toString(),
+                                          afterHoursPrice: stockResponse!
+                                              .data
+                                              .Industry
+                                              .toString(),
+                                          percentage: "+1.48%",
+                                        );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                      return SizedBox(width: 20.w);
+                                    },
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            MdSnsText(
+                              "Company Details",
+                              color: AppColors.fieldTextColor,
+                              variant: TextVariant.h2,
+                              fontWeight: TextFontWeightVariant.h1,
+                            ),
+                            SizedBox(height: 6.h),
+
+                            ReadMoreText(
+                              "Lorem ipsum dolor sit amet consectetur. Ultrices consectetur turpis egestas faucibus. "
+                              "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.",
+                              trimLines: 2,
+                              trimMode: TrimMode.Line,
+                              trimCollapsedText: '  Read More',
+                              trimExpandedText: '  Show Less',
+                              delimiter:
+                                  '', // 👈 ensures 'Read More' appears on next line cleanly
+                              moreStyle: GoogleFonts.plusJakartaSans(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.secondaryColor,
+                              ),
+                              lessStyle: GoogleFonts.plusJakartaSans(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.secondaryColor,
+                              ),
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.white,
+                                height: 1.4, // 👈 better line spacing
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            SizedBox(
+                              height: 370,
+                              width: double.infinity,
+                              child: CustomCandleChart(
+                                name: "OHLC/V Candlestick Chart",
+                                data: [],
+                                onPressed: (val) {},
+                              ),
+                            ),
+
+                            SizedBox(height: 20.h),
+
+                            // ShareStructureCard(
+                            //   matrics: null,
+                            //   fundamentalData: null,
+                            //   shareData: sharesResponse!.data,
+                            //   heading: Headings.shareStructure,
+                            // ),
+                            // SizedBox(height: 20.h),
+                            // ShareStructureCard(
+                            //   matrics: null,
+                            //   fundamentalData: fundamentalResponse!.data,
+                            //   shareData: null,
+                            //   heading: Headings.fundamental,
+                            // ),
+                            // SizedBox(height: 20.h),
+
+                            // ShareStructureCard(
+                            //   matrics: matricData!.data,
+                            //   fundamentalData: null,
+                            //   shareData: null,
+                            //   heading: Headings.matrics,
+                            // ),
+                            SizedBox(height: 20.h),
+
+                            // WeeklySeasonalityChart(
+                            //   data: monthlyData!,
+                            //   isWeekly: false,
+                            //   weeklyModel: WeeklyModel(),
+                            // ),
+                            // SizedBox(height: 20.h),
+                            // WeeklySeasonalityChart(
+                            //   weeklyModel: weeklyData!,
+                            //   isWeekly: true,
+                            //   data: ProbabilityResponse(),
+                            // ),
+                            SizedBox(height: 20.h),
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.colorB3B3B3,
+                                ),
+                                color: AppColors.color091224,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  MdSnsText(
+                                    "Price Comparison",
+                                    variant: TextVariant.h3,
+                                    fontWeight: TextFontWeightVariant.h4,
+
+                                    color: AppColors.fieldTextColor,
+                                  ),
+                                  SizedBox(height: 20.h),
+                                  SizedBox(
+                                    height: 180,
+                                    child: LineChart(
+                                      LineChartData(
+                                        backgroundColor: AppColors.color091224,
+                                        gridData: FlGridData(
+                                          show: true,
+                                          getDrawingHorizontalLine: (value) =>
+                                              FlLine(
+                                                color: AppColors.color1B254B,
+                                                strokeWidth: 1,
+                                              ),
+                                          getDrawingVerticalLine: (value) =>
+                                              FlLine(
+                                                color: Colors.transparent,
+                                                strokeWidth: 1,
+                                              ),
+                                        ),
+                                        titlesData: FlTitlesData(
+                                          show: true,
+                                          leftTitles: AxisTitles(
+                                            sideTitles: SideTitles(
+                                              showTitles: true,
+                                              reservedSize: 28,
+                                              interval: 100,
+                                              getTitlesWidget: (value, meta) =>
+                                                  MdSnsText(
+                                                    value.toInt().toString(),
+                                                    color: AppColors.white,
+                                                    variant: TextVariant.h5,
+                                                  ),
+                                            ),
+                                          ),
+                                          bottomTitles: AxisTitles(
+                                            sideTitles: SideTitles(
+                                              showTitles: true,
+                                              interval: 50,
+                                              getTitlesWidget: (value, meta) =>
+                                                  MdSnsText(
+                                                    value.toInt().toString(),
+                                                    color: AppColors.white,
+                                                    variant: TextVariant.h5,
+                                                  ),
+                                            ),
+                                          ),
+                                          topTitles: AxisTitles(
+                                            sideTitles: SideTitles(
+                                              showTitles: false,
+                                            ),
+                                          ),
+                                          rightTitles: AxisTitles(
+                                            sideTitles: SideTitles(
+                                              showTitles: false,
+                                            ),
+                                          ),
+                                        ),
+                                        borderData: FlBorderData(show: false),
+                                        lineBarsData: [
+                                          LineChartBarData(
+                                            isCurved: true,
+                                            color: AppColors.color0098E4,
+                                            barWidth: 2,
+                                            dotData: FlDotData(show: false),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 20.h),
+                            // AnalyticsWidget(data: analyticsRespinseData!.data),
+                            HighlightsCard(),
+                          ],
+                        ),
                       ),
                     ),
+
+                    // Column(
+                    //   children: [
+                    //     MdSnsText(
+                    //       "History Content Here",
+                    //       color: AppColors.white,
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
