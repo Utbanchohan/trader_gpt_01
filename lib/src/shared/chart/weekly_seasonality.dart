@@ -293,6 +293,7 @@ class _WeeklySeasonalityChartState
 
             // Chart
             // AspectRatio(
+
             //   aspectRatio: 1.6,
             //   child: RotatedBox(
             //     quarterTurns: 1,
