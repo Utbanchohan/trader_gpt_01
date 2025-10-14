@@ -8,6 +8,7 @@ import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sigin_up/presentation/provider/sign_up.dart';
 import 'package:trader_gpt/src/feature/verifaction/presentation/provider/verifaction_provider.dart';
+import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/mixin/form_state_mixin.dart';
 import 'package:trader_gpt/src/shared/states/app_loading_state.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
@@ -51,14 +52,14 @@ class _VerifactionState extends ConsumerState<Verifaction> with FormStateMixin {
         });
       } else {
         t.cancel();
-        //  $showMessage("Code expired, please request again.");
+        $showMessage("Code expired, please request again.");
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: MdSnsText("Code expired, please request again."),
-            backgroundColor: Colors.red,
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: MdSnsText("Code expired, please request again."),
+        //     backgroundColor: Colors.red,
+        //   ),
+        // );
       }
     });
   }

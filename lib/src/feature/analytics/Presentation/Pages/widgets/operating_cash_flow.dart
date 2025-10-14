@@ -120,7 +120,7 @@ class _OperatingCashFlowState extends State<OperatingCashFlow> {
                       barGroups: List.generate(dates.length, (i) {
                         return BarChartGroupData(
                           x: i,
-                          barsSpace: 4,
+                          barsSpace: 2,
                           barRods: [
                             _barRod(
                               cashValues[i],
@@ -148,8 +148,6 @@ class _OperatingCashFlowState extends State<OperatingCashFlow> {
 
           const SizedBox(height: 20),
 
-          // 🔹 Legends
-          // 🔹 Legends (colors same as bars + white border)
           Wrap(
             alignment: WrapAlignment.center,
             spacing: 20,
