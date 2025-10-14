@@ -10,6 +10,10 @@ import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/about_crypto/about_crypto.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/monthly_data_crypto/monthly_data_crypto.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/overview_candle_chart_crypto/overview_candle_chart_crypto.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data_crypto/weekly_data_crypto.dart';
 import 'package:trader_gpt/src/shared/widgets/AnalysisTableShimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsTableShimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsTrendShimmer.dart';
@@ -65,10 +69,14 @@ import '../../../../shared/widgets/shortvalue.widgets.dart';
 import '../../../../shared/widgets/split_dividend.dart';
 import '../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../data/dto/financial_dto/financial_dto.dart';
+import '../../data/dto/highlight_dto/highlight_dto_crypto.dart';
+import '../../data/dto/market_cap_dto/market_cap_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
 import '../../data/dto/price_comparison_dto/price_comparison_dto.dart';
+import '../../domain/model/about_crypto/about_crypto_model.dart';
 import '../../domain/model/analysis_data/analysis_data_model.dart';
 import '../../domain/model/analytics_model/analytics_model.dart';
+import '../../domain/model/crypto_market_model/crypto_market_model.dart';
 import '../../domain/model/earning_chart_model/earning_chart_model.dart';
 import '../../domain/model/earning_report_model/earning_report_model.dart';
 import '../../domain/model/earnings_model/earnings_model.dart';
@@ -76,7 +84,9 @@ import '../../domain/model/esg_score_model/esg_score_model.dart';
 import '../../domain/model/financial_chart_data/financial_chart_data_model.dart';
 import '../../domain/model/financial_data_model/financial_data_model.dart';
 import '../../domain/model/fundamental_model/fundamental_model.dart';
+import '../../domain/model/highlight_model_crypto/highlight_model_crypto.dart';
 import '../../domain/model/insider_transaction/insider_transaction_model.dart';
+import '../../domain/model/market_cap_model/market_cap_model.dart';
 import '../../domain/model/matrics_data_model/matrics_data_model.dart';
 import '../../domain/model/monthly_model/monthly_model.dart';
 import '../../domain/model/overview_candle_chart_model/overview_candle_chart_model.dart';
@@ -132,6 +142,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   FinanceDataResponse? financeChartsDataModel;
   List<OverviewCandleChartModel>? overviewCandleChartModel;
   bool chartLoader = false;
+
+  //crypto Variable start
+  List<OverviewCandleChartModel>? overviewCandleChartModelCrypto;
+  WeeklyModel? weeklyDataCrypto;
+  ProbabilityResponse? monthlyDataCrypto;
+  AboutCryptoModel? aboutCryptoModel;
+  HighlightResponse? highlightResponse;
+  MarketCapResponse? marketCapResponse;
+  CryptoMarketModel? cryptoMarketModel;
+  PriceComparisonModel? priceRatioModel;
+
+  //crypto Variable end
 
   financialData(String symbol) async {
     PriceRequestDto overview = PriceRequestDto(symbol: symbol, isYearly: true);
@@ -398,16 +420,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     "Earning",
     "Analysis",
   ];
-  final companyInfo = [
-    {"icon": Icons.home, "title": "Headquarter", "value": "One Microsoft Way"},
-    {"icon": Icons.location_on, "title": "Country", "value": "US"},
-    {"icon": Icons.groups, "title": "Employees", "value": "228000"},
-    {
-      "icon": Icons.language,
-      "title": "Website",
-      "value": "https://www.microsoft.com",
-    },
-  ];
 
   bool isTabSelected = true; // Default delivery tab selected
 
@@ -633,6 +645,181 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         .getMonthlyData(symbol);
     setState(() {});
   }
+
+  //crypto apis start
+  getWeeklyDataCrypto(symbol) async {
+    weeklyDataCrypto = await ref
+        .read(weeklyDataCryptoProvider.notifier)
+        .getWeeklyDataCrypto(symbol, 'crypto');
+  }
+
+  getMonthlyDataCrypto(symbol) async {
+    monthlyDataCrypto = await ref
+        .read(monthlyDataCryptoProvider.notifier)
+        .getMonthlyData(symbol, "crypto");
+    setState(() {});
+  }
+
+  getAboutCrypto(symbol) async {
+    aboutCryptoModel = await ref
+        .read(aboutCryptoProvider.notifier)
+        .aboutCrypto(symbol);
+    setState(() {});
+  }
+
+  getOverviewCandleChartCrypto(symbol, IntervalEnum interval) async {
+    final now = DateTime.now().toUtc();
+
+    // Subtract 2 years for startDate
+    final startDate = DateTime.utc(
+      now.year - 2,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute,
+      now.second,
+      now.millisecond,
+    );
+    final endDateString = now.toIso8601String();
+    final startDateString = startDate.toIso8601String();
+    setState(() {
+      chartLoader = true;
+    });
+    try {
+      overviewCandleChartModelCrypto = await ref
+          .read(overviewCandleChartCryptoProvider.notifier)
+          .overviewCandleChart(
+            symbol + "USD",
+            interval.value,
+            startDateString,
+            endDateString,
+            "1",
+            "732",
+          );
+      setState(() {
+        chartLoader = false;
+      });
+    } catch (e) {
+      setState(() {
+        chartLoader = false;
+      });
+    }
+  }
+
+  highlightTopRequest(HighlightRequest highlightRequest) async {
+    try {
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .highlightsTop(highlightRequest);
+
+      if (res != null) {
+        highlightResponse = res;
+      }
+    } catch (e) {}
+  }
+
+  marketCapRequest(MarketCapRequest symbol) async {
+    try {
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .marketCapChart(symbol);
+
+      if (res != null) {
+        marketCapResponse = res;
+      }
+    } catch (e) {}
+  }
+
+  cryptoMarkets(SymbolDto symbol) async {
+    try {
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .cryptoMarkets(symbol);
+
+      if (res != null) {
+        cryptoMarketModel = res;
+      }
+    } catch (e) {}
+  }
+
+  priceRatio(PriceComparisonDto symbol) async {
+    try {
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .priceRatio(symbol);
+
+      if (res != null) {
+        priceRatioModel = res;
+      }
+    } catch (e) {}
+  }
+
+  cryptoApis() async {
+    if (weeklyDataCrypto == null) {
+      getWeeklyDataCrypto(widget.chatRouting!.symbol);
+      setState(() {});
+    }
+    if (monthlyDataCrypto == null) {
+      getMonthlyDataCrypto(widget.chatRouting!.symbol);
+      setState(() {});
+    }
+    if (overviewCandleChartModelCrypto == null) {
+      getOverviewCandleChartCrypto(
+        widget.chatRouting!.symbol,
+        IntervalEnum.daily,
+      );
+      setState(() {});
+    }
+    if (aboutCryptoModel == null) {
+      getAboutCrypto(widget.chatRouting!.symbol);
+      setState(() {});
+    }
+    if (priceComparisonModel == null) {
+      await priceComparison(
+        PriceComparisonDto(
+          daysBack: 365,
+          symbol1: widget.chatRouting!.symbol,
+          symbol2: widget.chatRouting!.symbol,
+        ),
+      );
+      setState(() {});
+    }
+    if (highlightResponse == null) {
+      highlightTopRequest(
+        HighlightRequest(
+          symbol: widget.chatRouting!.symbol,
+          limit: 5,
+          sort: "desc",
+        ),
+      );
+      setState(() {});
+    }
+    if (marketCapResponse == null) {
+      marketCapRequest(
+        MarketCapRequest(
+          interval: "1 month",
+          symbol: widget.chatRouting!.symbol,
+        ),
+      );
+      setState(() {});
+    }
+    if (cryptoMarketModel == null) {
+      cryptoMarkets(SymbolDto(symbol: widget.chatRouting!.symbol));
+      setState(() {});
+    }
+    if (priceRatioModel == null) {
+      priceRatio(
+        PriceComparisonDto(
+          daysBack: 365,
+          symbol1: widget.chatRouting!.symbol,
+          symbol2: widget.chatRouting!.symbol,
+        ),
+      );
+      setState(() {});
+    }
+  }
+
+  //crypto apis end
 
   @override
   @override

@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'analytics_provider.dart';
+part of 'weekly_data_crypto.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$analyticsProviderHash() => r'a19c37b44b93a13423e3b2c7238a793c46883475';
+String _$weeklyDataCryptoHash() => r'1ec9dac443c7e80370aa519e3414c2d968ec8bce';
 
-/// See also [AnalyticsProvider].
-@ProviderFor(AnalyticsProvider)
-final analyticsProviderProvider =
-    AutoDisposeNotifierProvider<AnalyticsProvider, AppLoadingState>.internal(
-      AnalyticsProvider.new,
-      name: r'analyticsProviderProvider',
+/// See also [WeeklyDataCrypto].
+@ProviderFor(WeeklyDataCrypto)
+final weeklyDataCryptoProvider =
+    AutoDisposeAsyncNotifierProvider<WeeklyDataCrypto, WeeklyModel>.internal(
+      WeeklyDataCrypto.new,
+      name: r'weeklyDataCryptoProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$analyticsProviderHash,
+          : _$weeklyDataCryptoHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$AnalyticsProvider = AutoDisposeNotifier<AppLoadingState>;
+typedef _$WeeklyDataCrypto = AutoDisposeAsyncNotifier<WeeklyModel>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
