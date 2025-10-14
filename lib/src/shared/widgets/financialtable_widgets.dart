@@ -96,6 +96,7 @@ class FinancialTable extends StatelessWidget {
       "Change In Working Capital",
       "Stock Based Compensation",
       "Other Non Cash Items",
+      "Free Cash Flow",
     ];
 
     List<String> balanceSheet = [
@@ -193,289 +194,170 @@ class FinancialTable extends StatelessWidget {
       "Preferred Stock And Other Adjustments",
     ];
 
-    final yearlyMap2024 = data["2024-12-31"]!.toJson();
-    final yearlyMap12024 = Map.from(yearlyMap2024)
-      ..removeWhere(
-        (key, value) =>
-            value == "[null,null]" ||
-            value == "null" ||
-            value == null ||
-            value.toString().contains("null"),
-      );
-    final yearlyMap2023 = data["2023-12-31"]!.toJson();
-    final yearlyMap12023 = Map.from(yearlyMap2023)
-      ..removeWhere(
-        (key, value) =>
-            value == "[null,null]" ||
-            value == "null" ||
-            value == null ||
-            value.toString().contains("null"),
-      );
-    final yearlyMap2022 = data["2022-12-31"]!.toJson();
-    final yearlyMap12022 = Map.from(yearlyMap2022)
-      ..removeWhere(
-        (key, value) =>
-            value == "[null,null]" ||
-            value == "null" ||
-            value == null ||
-            value.toString().contains("null"),
-      );
-    final yearlyMap2021 = data["2021-12-31"]!.toJson();
-    final yearlyMap12021 = Map.from(yearlyMap2021)
-      ..removeWhere(
-        (key, value) =>
-            value == "[null,null]" ||
-            value == "null" ||
-            value == null ||
-            value.toString().contains("null"),
-      );
-    final yearlyMap2020 = data["2020-12-31"]!.toJson();
-    final yearlyMap12020 = Map.from(yearlyMap2020)
-      ..removeWhere(
-        (key, value) =>
-            value == "[null,null]" ||
-            value == "null" ||
-            value == null ||
-            value.toString().contains("null"),
-      );
-
+    final Map<String, Map<String, dynamic>> formattedData = {};
     Map<String, Map<String, dynamic>> extractIncomeData(
       Map<String, YearlyFinancialData> yearlyData,
     ) {
-      final data = {
-        "2024-12-31": {
-          "Research Development": yearlyData["2024-12-31"]!.researchDevelopment,
-          "Effect Of Accounting Charges":
-              yearlyData["2024-12-31"]!.effectOfAccountingCharges,
-          "Income Before Tax": yearlyData["2024-12-31"]!.incomeBeforeTax,
-          "Minority Interest": yearlyData["2024-12-31"]!.minorityInterest,
-          "Net Income": yearlyData["2024-12-31"]!.netIncome,
-          "Selling General Administrative":
-              yearlyData["2024-12-31"]!.sellingGeneralAdministrative,
-          "Selling And Marketing Expenses":
-              yearlyData["2024-12-31"]!.sellingAndMarketingExpenses,
-          "Gross Profit": yearlyData["2024-12-31"]!.grossProfit,
-          "Reconciled Depreciation":
-              yearlyData["2024-12-31"]!.reconciledDepreciation,
-          "Ebit": yearlyData["2024-12-31"]!.ebit,
-          "Ebitda": yearlyData["2024-12-31"]!.ebitda,
-          "Depreciation And Amortization":
-              yearlyData["2024-12-31"]!.depreciationAndAmortization,
-          "Non Operating Income Net Other":
-              yearlyData["2024-12-31"]!.nonOperatingIncomeNetOther,
-          "Operating Income": yearlyData["2024-12-31"]!.operatingIncome,
-          "Other Operating Expenses":
-              yearlyData["2024-12-31"]!.otherOperatingExpenses,
-          "Interest Expense": yearlyData["2024-12-31"]!.interestExpense,
-          "Tax Provision": yearlyData["2024-12-31"]!.taxProvision,
-          "Interest Income": yearlyData["2024-12-31"]!.interestIncome,
-          "Net Interest Income": yearlyData["2024-12-31"]!.netInterestIncome,
-          "Extraordinary Items": yearlyData["2024-12-31"]!.extraordinaryItems,
-          "Non Recurring": yearlyData["2024-12-31"]!.nonRecurring,
-          "Other Items": yearlyData["2024-12-31"]!.otherItems,
-          "Income Tax Expense": yearlyData["2024-12-31"]!.incomeTaxExpense,
-          "Total Revenue": yearlyData["2024-12-31"]!.totalRevenue,
-          "Total Operating Expenses":
-              yearlyData["2024-12-31"]!.totalOperatingExpenses,
-          "Cost Of Revenue": yearlyData["2024-12-31"]!.costOfRevenue,
-          "Total Other Income Expense Net":
-              yearlyData["2024-12-31"]!.totalOtherIncomeExpenseNet,
-          "Discontinued Operations":
-              yearlyData["2024-12-31"]!.discontinuedOperations,
-          "Net Income From Continuing Ops":
-              yearlyData["2024-12-31"]!.netIncomeFromContinuingOps,
+      yearlyData.forEach((year, data) {
+        formattedData[year] = {
+          "Research Development": data.researchDevelopment,
+          "Effect Of Accounting Charges": data.effectOfAccountingCharges,
+          "Income Before Tax": data.incomeBeforeTax,
+          "Minority Interest": data.minorityInterest,
+          "Net Income": data.netIncome,
+          "Selling General Administrative": data.sellingGeneralAdministrative,
+          "Selling And Marketing Expenses": data.sellingAndMarketingExpenses,
+          "Gross Profit": data.grossProfit,
+          "Reconciled Depreciation": data.reconciledDepreciation,
+          "Ebit": data.ebit,
+          "Ebitda": data.ebitda,
+          "Depreciation And Amortization": data.depreciationAndAmortization,
+          "Non Operating Income Net Other": data.nonOperatingIncomeNetOther,
+          "Operating Income": data.operatingIncome,
+          "Other Operating Expenses": data.otherOperatingExpenses,
+          "Interest Expense": data.interestExpense,
+          "Tax Provision": data.taxProvision,
+          "Interest Income": data.interestIncome,
+          "Net Interest Income": data.netInterestIncome,
+          "Extraordinary Items": data.extraordinaryItems,
+          "Non Recurring": data.nonRecurring,
+          "Other Items": data.otherItems,
+          "Income Tax Expense": data.incomeTaxExpense,
+          "Total Revenue": data.totalRevenue,
+          "Total Operating Expenses": data.totalOperatingExpenses,
+          "Cost Of Revenue": data.costOfRevenue,
+          "Total Other Income Expense Net": data.totalOtherIncomeExpenseNet,
+          "Discontinued Operations": data.discontinuedOperations,
+          "Net Income From Continuing Ops": data.netIncomeFromContinuingOps,
           "Net Income Applicable To Common Shares":
-              yearlyData["2024-12-31"]!.netIncomeApplicableToCommonShares,
+              data.netIncomeApplicableToCommonShares,
           "Preferred Stock And Other Adjustments":
-              yearlyData["2024-12-31"]!.preferredStockAndOtherAdjustments,
-        },
-        "2023-12-31": {
-          "Research Development": yearlyData["2023-12-31"]!.researchDevelopment,
-          "Effect Of Accounting Charges":
-              yearlyData["2023-12-31"]!.effectOfAccountingCharges,
-          "Income Before Tax": yearlyData["2023-12-31"]!.incomeBeforeTax,
-          "Minority Interest": yearlyData["2023-12-31"]!.minorityInterest,
-          "Net Income": yearlyData["2023-12-31"]!.netIncome,
-          "Selling General Administrative":
-              yearlyData["2023-12-31"]!.sellingGeneralAdministrative,
-          "Selling And Marketing Expenses":
-              yearlyData["2023-12-31"]!.sellingAndMarketingExpenses,
-          "Gross Profit": yearlyData["2023-12-31"]!.grossProfit,
-          "Reconciled Depreciation":
-              yearlyData["2023-12-31"]!.reconciledDepreciation,
-          "Ebit": yearlyData["2023-12-31"]!.ebit,
-          "Ebitda": yearlyData["2023-12-31"]!.ebitda,
-          "Depreciation And Amortization":
-              yearlyData["2023-12-31"]!.depreciationAndAmortization,
-          "Non Operating Income Net Other":
-              yearlyData["2023-12-31"]!.nonOperatingIncomeNetOther,
-          "Operating Income": yearlyData["2023-12-31"]!.operatingIncome,
-          "Other Operating Expenses":
-              yearlyData["2023-12-31"]!.otherOperatingExpenses,
-          "Interest Expense": yearlyData["2023-12-31"]!.interestExpense,
-          "Tax Provision": yearlyData["2023-12-31"]!.taxProvision,
-          "Interest Income": yearlyData["2023-12-31"]!.interestIncome,
-          "Net Interest Income": yearlyData["2023-12-31"]!.netInterestIncome,
-          "Extraordinary Items": yearlyData["2023-12-31"]!.extraordinaryItems,
-          "Non Recurring": yearlyData["2023-12-31"]!.nonRecurring,
-          "Other Items": yearlyData["2023-12-31"]!.otherItems,
-          "Income Tax Expense": yearlyData["2023-12-31"]!.incomeTaxExpense,
-          "Total Revenue": yearlyData["2023-12-31"]!.totalRevenue,
-          "Total Operating Expenses":
-              yearlyData["2023-12-31"]!.totalOperatingExpenses,
-          "Cost Of Revenue": yearlyData["2023-12-31"]!.costOfRevenue,
-          "Total Other Income Expense Net":
-              yearlyData["2023-12-31"]!.totalOtherIncomeExpenseNet,
-          "Discontinued Operations":
-              yearlyData["2023-12-31"]!.discontinuedOperations,
-          "Net Income From Continuing Ops":
-              yearlyData["2023-12-31"]!.netIncomeFromContinuingOps,
-          "Net Income Applicable To Common Shares":
-              yearlyData["2023-12-31"]!.netIncomeApplicableToCommonShares,
-          "Preferred Stock And Other Adjustments":
-              yearlyData["2023-12-31"]!.preferredStockAndOtherAdjustments,
-        },
-        "2022-12-31": {
-          "Research Development": yearlyData["2022-12-31"]!.researchDevelopment,
-          "Effect Of Accounting Charges":
-              yearlyData["2022-12-31"]!.effectOfAccountingCharges,
-          "Income Before Tax": yearlyData["2022-12-31"]!.incomeBeforeTax,
-          "Minority Interest": yearlyData["2022-12-31"]!.minorityInterest,
-          "Net Income": yearlyData["2022-12-31"]!.netIncome,
-          "Selling General Administrative":
-              yearlyData["2022-12-31"]!.sellingGeneralAdministrative,
-          "Selling And Marketing Expenses":
-              yearlyData["2022-12-31"]!.sellingAndMarketingExpenses,
-          "Gross Profit": yearlyData["2022-12-31"]!.grossProfit,
-          "Reconciled Depreciation":
-              yearlyData["2022-12-31"]!.reconciledDepreciation,
-          "Ebit": yearlyData["2022-12-31"]!.ebit,
-          "Ebitda": yearlyData["2022-12-31"]!.ebitda,
-          "Depreciation And Amortization":
-              yearlyData["2022-12-31"]!.depreciationAndAmortization,
-          "Non Operating Income Net Other":
-              yearlyData["2022-12-31"]!.nonOperatingIncomeNetOther,
-          "Operating Income": yearlyData["2022-12-31"]!.operatingIncome,
-          "Other Operating Expenses":
-              yearlyData["2022-12-31"]!.otherOperatingExpenses,
-          "Interest Expense": yearlyData["2022-12-31"]!.interestExpense,
-          "Tax Provision": yearlyData["2022-12-31"]!.taxProvision,
-          "Interest Income": yearlyData["2022-12-31"]!.interestIncome,
-          "Net Interest Income": yearlyData["2022-12-31"]!.netInterestIncome,
-          "Extraordinary Items": yearlyData["2022-12-31"]!.extraordinaryItems,
-          "Non Recurring": yearlyData["2022-12-31"]!.nonRecurring,
-          "Other Items": yearlyData["2022-12-31"]!.otherItems,
-          "Income Tax Expense": yearlyData["2022-12-31"]!.incomeTaxExpense,
-          "Total Revenue": yearlyData["2022-12-31"]!.totalRevenue,
-          "Total Operating Expenses":
-              yearlyData["2022-12-31"]!.totalOperatingExpenses,
-          "Cost Of Revenue": yearlyData["2022-12-31"]!.costOfRevenue,
-          "Total Other Income Expense Net":
-              yearlyData["2022-12-31"]!.totalOtherIncomeExpenseNet,
-          "Discontinued Operations":
-              yearlyData["2022-12-31"]!.discontinuedOperations,
-          "Net Income From Continuing Ops":
-              yearlyData["2022-12-31"]!.netIncomeFromContinuingOps,
-          "Net Income Applicable To Common Shares":
-              yearlyData["2022-12-31"]!.netIncomeApplicableToCommonShares,
-          "Preferred Stock And Other Adjustments":
-              yearlyData["2022-12-31"]!.preferredStockAndOtherAdjustments,
-        },
-        "2021-12-31": {
-          "Research Development": yearlyData["2021-12-31"]!.researchDevelopment,
-          "Effect Of Accounting Charges":
-              yearlyData["2021-12-31"]!.effectOfAccountingCharges,
-          "Income Before Tax": yearlyData["2021-12-31"]!.incomeBeforeTax,
-          "Minority Interest": yearlyData["2021-12-31"]!.minorityInterest,
-          "Net Income": yearlyData["2021-12-31"]!.netIncome,
-          "Selling General Administrative":
-              yearlyData["2021-12-31"]!.sellingGeneralAdministrative,
-          "Selling And Marketing Expenses":
-              yearlyData["2021-12-31"]!.sellingAndMarketingExpenses,
-          "Gross Profit": yearlyData["2021-12-31"]!.grossProfit,
-          "Reconciled Depreciation":
-              yearlyData["2021-12-31"]!.reconciledDepreciation,
-          "Ebit": yearlyData["2021-12-31"]!.ebit,
-          "Ebitda": yearlyData["2021-12-31"]!.ebitda,
-          "Depreciation And Amortization":
-              yearlyData["2021-12-31"]!.depreciationAndAmortization,
-          "Non Operating Income Net Other":
-              yearlyData["2021-12-31"]!.nonOperatingIncomeNetOther,
-          "Operating Income": yearlyData["2021-12-31"]!.operatingIncome,
-          "Other Operating Expenses":
-              yearlyData["2021-12-31"]!.otherOperatingExpenses,
-          "Interest Expense": yearlyData["2021-12-31"]!.interestExpense,
-          "Tax Provision": yearlyData["2021-12-31"]!.taxProvision,
-          "Interest Income": yearlyData["2021-12-31"]!.interestIncome,
-          "Net Interest Income": yearlyData["2021-12-31"]!.netInterestIncome,
-          "Extraordinary Items": yearlyData["2021-12-31"]!.extraordinaryItems,
-          "Non Recurring": yearlyData["2021-12-31"]!.nonRecurring,
-          "Other Items": yearlyData["2021-12-31"]!.otherItems,
-          "Income Tax Expense": yearlyData["2021-12-31"]!.incomeTaxExpense,
-          "Total Revenue": yearlyData["2021-12-31"]!.totalRevenue,
-          "Total Operating Expenses":
-              yearlyData["2021-12-31"]!.totalOperatingExpenses,
-          "Cost Of Revenue": yearlyData["2021-12-31"]!.costOfRevenue,
-          "Total Other Income Expense Net":
-              yearlyData["2021-12-31"]!.totalOtherIncomeExpenseNet,
-          "Discontinued Operations":
-              yearlyData["2021-12-31"]!.discontinuedOperations,
-          "Net Income From Continuing Ops":
-              yearlyData["2021-12-31"]!.netIncomeFromContinuingOps,
-          "Net Income Applicable To Common Shares":
-              yearlyData["2021-12-31"]!.netIncomeApplicableToCommonShares,
-          "Preferred Stock And Other Adjustments":
-              yearlyData["2021-12-31"]!.preferredStockAndOtherAdjustments,
-        },
-        "2020-12-31": {
-          "Research Development": yearlyData["2020-12-31"]!.researchDevelopment,
-          "Effect Of Accounting Charges":
-              yearlyData["2020-12-31"]!.effectOfAccountingCharges,
-          "Income Before Tax": yearlyData["2020-12-31"]!.incomeBeforeTax,
-          "Minority Interest": yearlyData["2020-12-31"]!.minorityInterest,
-          "Net Income": yearlyData["2020-12-31"]!.netIncome,
-          "Selling General Administrative":
-              yearlyData["2020-12-31"]!.sellingGeneralAdministrative,
-          "Selling And Marketing Expenses":
-              yearlyData["2020-12-31"]!.sellingAndMarketingExpenses,
-          "Gross Profit": yearlyData["2020-12-31"]!.grossProfit,
-          "Reconciled Depreciation":
-              yearlyData["2020-12-31"]!.reconciledDepreciation,
-          "Ebit": yearlyData["2020-12-31"]!.ebit,
-          "Ebitda": yearlyData["2020-12-31"]!.ebitda,
-          "Depreciation And Amortization":
-              yearlyData["2020-12-31"]!.depreciationAndAmortization,
-          "Non Operating Income Net Other":
-              yearlyData["2020-12-31"]!.nonOperatingIncomeNetOther,
-          "Operating Income": yearlyData["2020-12-31"]!.operatingIncome,
-          "Other Operating Expenses":
-              yearlyData["2020-12-31"]!.otherOperatingExpenses,
-          "Interest Expense": yearlyData["2020-12-31"]!.interestExpense,
-          "Tax Provision": yearlyData["2020-12-31"]!.taxProvision,
-          "Interest Income": yearlyData["2020-12-31"]!.interestIncome,
-          "Net Interest Income": yearlyData["2020-12-31"]!.netInterestIncome,
-          "Extraordinary Items": yearlyData["2020-12-31"]!.extraordinaryItems,
-          "Non Recurring": yearlyData["2020-12-31"]!.nonRecurring,
-          "Other Items": yearlyData["2020-12-31"]!.otherItems,
-          "Income Tax Expense": yearlyData["2020-12-31"]!.incomeTaxExpense,
-          "Total Revenue": yearlyData["2020-12-31"]!.totalRevenue,
-          "Total Operating Expenses":
-              yearlyData["2020-12-31"]!.totalOperatingExpenses,
-          "Cost Of Revenue": yearlyData["2020-12-31"]!.costOfRevenue,
-          "Total Other Income Expense Net":
-              yearlyData["2020-12-31"]!.totalOtherIncomeExpenseNet,
-          "Discontinued Operations":
-              yearlyData["2020-12-31"]!.discontinuedOperations,
-          "Net Income From Continuing Ops":
-              yearlyData["2020-12-31"]!.netIncomeFromContinuingOps,
-          "Net Income Applicable To Common Shares":
-              yearlyData["2020-12-31"]!.netIncomeApplicableToCommonShares,
-          "Preferred Stock And Other Adjustments":
-              yearlyData["2020-12-31"]!.preferredStockAndOtherAdjustments,
-        },
-      };
+              data.preferredStockAndOtherAdjustments,
+        };
+      });
 
-      return data;
+      return formattedData;
+    }
+
+    final Map<String, Map<String, dynamic>> formattedDataBalanceSheet = {};
+    Map<String, Map<String, dynamic>> extractBalanceSheet(
+      Map<String, YearlyFinancialData> yearlyData,
+    ) {
+      yearlyData.forEach((year, data) {
+        formattedDataBalanceSheet[year] = {
+          "Total Assets": data.totalAssets,
+          "Intangible Assets": data.intangibleAssets,
+          "Earning Assets": data.earningAssets,
+          "Other Current Assets": data.otherAssets,
+          "Total Liab": data.totalLiab,
+          "Total Stockholder Equity": data.totalStockholderEquity,
+          "Deferred Long Term Liab": data.deferredLongTermLiab,
+          "Other Current Liab": data.otherCurrentLiab,
+          "Common Stock": data.commonStock,
+          "Capital Stock": data.capitalStock,
+          "Retained Earnings": data.retainedEarnings,
+          "Other Liab": data.otherLiab,
+          "Good Will": data.goodWill,
+          "Other Assets": data.otherAssets,
+          "Cash": data.cash,
+          "Cash And Equivalents": data.cashAndEquivalents,
+          "Total Current Liabilities": data.totalCurrentLiabilities,
+          "Current Deferred Revenue": data.currentDeferredRevenue,
+          "Net Debt": data.netDebt,
+          "Short Term Debt": data.shortLongTermDebt,
+          "Property Plant Equipment": data.propertyPlantEquipment,
+          "Total Current Assets": data.totalCurrentAssets,
+          "Long Term Investments": data.longTermInvestments,
+          "Net Tangible Assets": data.netTangibleAssets,
+          "Short Term Investments": data.shortTermInvestments,
+          "Net Receivables": data.netReceivables,
+          "Long Term Debt": data.longTermDebt,
+          "Inventory": data.inventory,
+          "Accounts Payable": data.accountsPayable,
+          "Total Permanent Equity": data.totalPermanentEquity,
+          "Noncontrolling Interest In Consolidated Entity":
+              data.noncontrollingInterestInConsolidatedEntity,
+          "Temporary Equity Redeemable Noncontrolling Interests":
+              data.temporaryEquityRedeemableNoncontrollingInterests,
+          "Accumulated Other Comprehensive Income":
+              data.accumulatedOtherComprehensiveIncome,
+          "Additional Paid In Capital": data.additionalPaidInCapital,
+          "Common Stock Total Equity": data.commonStockTotalEquity,
+          "Preferred Stock Total Equity": data.preferredStockTotalEquity,
+          "Retained Earnings Total Equity": data.retainedEarningsTotalEquity,
+          "Treasury Stock": data.treasuryStock,
+          "Accumulated Amortization": data.accumulatedAmortization,
+          "Non Current Assets Other": data.nonCurrrentAssetsOther,
+          "Deferred Long Term Asset Charges": data.deferredLongTermAssetCharges,
+          "Non Current Assets Total": data.nonCurrentAssetsTotal,
+          "Capital Lease Obligations": data.capitalLeaseObligations,
+          "Long Term Debt Total": data.longTermDebtTotal,
+          "Non Current Liabilities Other": data.nonCurrentLiabilitiesOther,
+          "Non Current Liabilities Total": data.nonCurrentLiabilitiesTotal,
+          "Negative Goodwill": data.negativeGoodwill,
+          "Warrants": data.warrants,
+          "Preferred Stock Redeemable": data.preferredStockRedeemable,
+          "Capital Surplus": data.capitalSurpluse,
+          "Liabilities And Stockholders Equity":
+              data.liabilitiesAndStockholdersEquity,
+          "Cash And Short Term Investments": data.cashAndShortTermInvestments,
+          "Property Plant And Equipment Gross":
+              data.propertyPlantAndEquipmentGross,
+          "Property Plant And Equipment Net": data.propertyPlantAndEquipmentNet,
+          "Accumulated Depreciation": data.accumulatedDepreciation,
+          "Net Working Capital": data.netWorkingCapital,
+          "Net Invested Capital": data.netInvestedCapital,
+          "Common Stock Shares Outstanding": data.commonStockSharesOutstanding,
+        };
+      });
+
+      return formattedDataBalanceSheet;
+    }
+
+    final Map<String, Map<String, dynamic>> formattedDataCashFLow = {};
+    Map<String, Map<String, dynamic>> extractCashFlow(
+      Map<String, YearlyFinancialData> yearlyData,
+    ) {
+      yearlyData.forEach((year, data) {
+        formattedDataCashFLow[year] = {
+          "Investments": data.investments,
+          "Change To Liabilities": data.changeToLiabilities,
+          "Total Cashflows From Investing Activities":
+              data.totalCashflowsFromInvestingActivities,
+          "Net Borrowings": data.netBorrowings,
+          "Total Cash From Financing Activities":
+              data.totalCashFromFinancingActivities,
+          "Change To Operating Activities": data.changeToOperatingActivities,
+          "Net Income": data.netIncome,
+          "Change In Cash": data.changeInCash,
+          "Begin Period Cash Flow": data.beginPeriodCashFlow,
+          "End Period Cash Flow": data.endPeriodCashFlow,
+          "Total Cash From Operating Activities":
+              data.totalCashFromOperatingActivities,
+          "Issuance Of Capital Stock": data.issuanceOfCapitalStock,
+          "Depreciation": data.depreciation,
+          "Other Cashflows From Investing Activities":
+              data.otherCashflowsFromFinancingActivities,
+          "Dividends Paid": data.dividendsPaid,
+          "Change To Inventory": data.changeToInventory,
+          "Change To Account Receivables": data.changeToAccountReceivables,
+          "Sale Purchase Of Stock": data.salePurchaseOfStock,
+          "Other Cashflows From Financing Activities":
+              data.otherCashflowsFromFinancingActivities,
+          "Change To Netincome": data.changeToNetincome,
+          "Capital Expenditures": data.capitalExpenditures,
+          "Change Receivables": data.changeReceivables,
+          "Cash Flows Other Operating": data.cashFlowsOtherOperating,
+          "Exchange Rate Changes": data.exchangeRateChanges,
+          "Cash And Cash Equivalents Changes": data.changeInWorkingCapital,
+          "Change In Working Capital": data.changeInWorkingCapital,
+          "Stock Based Compensation": data.stockBasedCompensation,
+          "Other Non Cash Items": data.otherNonCashItems,
+          "Free Cash Flow": data.freeCashFlow,
+        };
+      });
+
+      return formattedDataCashFLow;
     }
 
     return Container(
@@ -602,53 +484,204 @@ class FinancialTable extends StatelessWidget {
                       ),
                       DataCell(
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MdSnsText(
-                              "",
+                              formatNumbers(
+                                extractCashFlow(data)["2024-12-31"]![item][0],
+                              ),
                               variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractCashFlow(
+                                      data,
+                                    )["2024-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractCashFlow(
+                                            data,
+                                          )["2024-12-31"]![item][1] !=
+                                          null &&
+                                      extractCashFlow(
+                                            data,
+                                          )["2024-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          "",
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.white,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractCashFlow(data)["2023-12-31"]![item][0],
+                              ),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractCashFlow(
+                                      data,
+                                    )["2023-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractCashFlow(
+                                            data,
+                                          )["2023-12-31"]![item][1] !=
+                                          null &&
+                                      extractCashFlow(
+                                            data,
+                                          )["2023-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          "",
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.white,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractCashFlow(data)["2022-12-31"]![item][0],
+                              ),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractCashFlow(
+                                      data,
+                                    )["2022-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractCashFlow(
+                                            data,
+                                          )["2022-12-31"]![item][1] !=
+                                          null &&
+                                      extractCashFlow(
+                                            data,
+                                          )["2022-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
 
                       DataCell(
-                        MdSnsText(
-                          "",
-                          textAlign: TextAlign.center,
-                          color: AppColors.color00FF55,
-                          variant: TextVariant.h5,
-                          fontWeight: TextFontWeightVariant.h2,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractCashFlow(data)["2021-12-31"]![item][0],
+                              ),
+                              textAlign: TextAlign.center,
+                              color: AppColors.white,
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractCashFlow(
+                                      data,
+                                    )["2021-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractCashFlow(
+                                            data,
+                                          )["2021-12-31"]![item][1] !=
+                                          null &&
+                                      extractCashFlow(
+                                            data,
+                                          )["2021-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          "",
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.color0098E4,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractCashFlow(data)["2022-12-31"]![item][0],
+                              ),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractCashFlow(
+                                      data,
+                                    )["2020-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractCashFlow(
+                                            data,
+                                          )["2020-12-31"]![item][1] !=
+                                          null &&
+                                      extractCashFlow(
+                                            data,
+                                          )["2020-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       DataCell(
@@ -687,6 +720,7 @@ class FinancialTable extends StatelessWidget {
                                 fontWeight: TextFontWeightVariant.h4,
                                 color: AppColors.white,
                                 overflow: TextOverflow.ellipsis,
+                                maxLines: 3,
                               ),
                               SizedBox(height: 2.h),
                               MdSnsText(
@@ -703,60 +737,205 @@ class FinancialTable extends StatelessWidget {
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          formatNumbers(
-                            extractIncomeData(data)["2024-12-31"]![item][0],
-                          ),
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.white,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractIncomeData(data)["2024-12-31"]![item][0],
+                              ),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractIncomeData(
+                                      data,
+                                    )["2024-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractIncomeData(
+                                            data,
+                                          )["2024-12-31"]![item][1] !=
+                                          null &&
+                                      extractIncomeData(
+                                            data,
+                                          )["2024-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          formatNumbers(
-                            extractIncomeData(data)["2023-12-31"]![item][0],
-                          ),
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.white,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractIncomeData(data)["2023-12-31"]![item][0],
+                              ),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractIncomeData(
+                                      data,
+                                    )["2023-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractIncomeData(
+                                            data,
+                                          )["2023-12-31"]![item][1] !=
+                                          null &&
+                                      extractIncomeData(
+                                            data,
+                                          )["2023-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          formatNumbers(
-                            extractIncomeData(data)["2022-12-31"]![item][0],
-                          ),
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.white,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractIncomeData(data)["2022-12-31"]![item][0],
+                              ),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractIncomeData(
+                                      data,
+                                    )["2022-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractIncomeData(
+                                            data,
+                                          )["2022-12-31"]![item][1] !=
+                                          null &&
+                                      extractIncomeData(
+                                            data,
+                                          )["2022-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
 
                       DataCell(
-                        MdSnsText(
-                          formatNumbers(
-                            extractIncomeData(data)["2021-12-31"]![item][0],
-                          ),
-                          textAlign: TextAlign.center,
-                          color: AppColors.color00FF55,
-                          variant: TextVariant.h5,
-                          fontWeight: TextFontWeightVariant.h2,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractIncomeData(data)["2021-12-31"]![item][0],
+                              ),
+                              textAlign: TextAlign.center,
+                              color: AppColors.white,
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractIncomeData(
+                                      data,
+                                    )["2021-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractIncomeData(
+                                            data,
+                                          )["2021-12-31"]![item][1] !=
+                                          null &&
+                                      extractIncomeData(
+                                            data,
+                                          )["2021-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          formatNumbers(
-                            extractIncomeData(data)["2020-12-31"]![item][0],
-                          ),
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.color0098E4,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractIncomeData(data)["2020-12-31"]![item][0],
+                              ),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractIncomeData(
+                                      data,
+                                    )["2020-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractIncomeData(
+                                            data,
+                                          )["2020-12-31"]![item][1] !=
+                                          null &&
+                                      extractIncomeData(
+                                            data,
+                                          )["2020-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       DataCell(
@@ -771,12 +950,7 @@ class FinancialTable extends StatelessWidget {
                     ],
                   );
                 }).toList()
-              : yearlyMap12024.entries.map((item) {
-                  List<dynamic> dataList = jsonDecode(item.value.toString());
-                  yearlyMap12024.entries.toList();
-                  // Access first and second values
-                  var firstItem = dataList[0];
-                  var secondItem = dataList[1];
+              : balanceSheet.map((item) {
                   return DataRow(
                     cells: [
                       DataCell(
@@ -794,10 +968,11 @@ class FinancialTable extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               MdSnsText(
-                                item.key,
+                                item,
                                 variant: TextVariant.h4,
                                 fontWeight: TextFontWeightVariant.h4,
                                 color: AppColors.white,
+                                maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               SizedBox(height: 2.h),
@@ -815,50 +990,215 @@ class FinancialTable extends StatelessWidget {
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          firstItem.toString(),
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.white,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractBalanceSheet(
+                                  data,
+                                )["2024-12-31"]![item][0],
+                              ),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractBalanceSheet(
+                                      data,
+                                    )["2024-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractBalanceSheet(
+                                            data,
+                                          )["2024-12-31"]![item][1] !=
+                                          null &&
+                                      extractBalanceSheet(
+                                            data,
+                                          )["2024-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          "",
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.white,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractBalanceSheet(
+                                  data,
+                                )["2023-12-31"]![item][0],
+                              ),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractBalanceSheet(
+                                      data,
+                                    )["2023-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractBalanceSheet(
+                                            data,
+                                          )["2023-12-31"]![item][1] !=
+                                          null &&
+                                      extractBalanceSheet(
+                                            data,
+                                          )["2023-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          "",
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.white,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractBalanceSheet(
+                                  data,
+                                )["2022-12-31"]![item][0],
+                              ),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractBalanceSheet(
+                                      data,
+                                    )["2022-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractBalanceSheet(
+                                            data,
+                                          )["2022-12-31"]![item][1] !=
+                                          null &&
+                                      extractBalanceSheet(
+                                            data,
+                                          )["2022-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
 
                       DataCell(
-                        MdSnsText(
-                          "",
-                          textAlign: TextAlign.center,
-                          color: AppColors.color00FF55,
-                          variant: TextVariant.h5,
-                          fontWeight: TextFontWeightVariant.h2,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractBalanceSheet(
+                                  data,
+                                )["2021-12-31"]![item][0],
+                              ),
+                              textAlign: TextAlign.center,
+                              color: AppColors.white,
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractBalanceSheet(
+                                      data,
+                                    )["2021-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractBalanceSheet(
+                                            data,
+                                          )["2021-12-31"]![item][1] !=
+                                          null &&
+                                      extractBalanceSheet(
+                                            data,
+                                          )["2021-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          "",
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.color0098E4,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MdSnsText(
+                              formatNumbers(
+                                extractBalanceSheet(
+                                  data,
+                                )["2020-12-31"]![item][0],
+                              ),
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              formatNumbers(
+                                    extractBalanceSheet(
+                                      data,
+                                    )["2020-12-31"]![item][1],
+                                  ) +
+                                  "%",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color:
+                                  extractBalanceSheet(
+                                            data,
+                                          )["2020-12-31"]![item][1] !=
+                                          null &&
+                                      extractBalanceSheet(
+                                            data,
+                                          )["2020-12-31"]![item][1] >
+                                          0
+                                  ? AppColors.color00FF55
+                                  : AppColors.redFF3B3B,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       DataCell(
@@ -893,7 +1233,11 @@ enum FinancialTableEnum {
   }
 }
 
-String formatNumbers(num number) {
-  String formatted = NumberFormat.decimalPattern().format(number);
-  return formatted;
+String formatNumbers(num? number) {
+  if (number != null) {
+    String formatted = NumberFormat.decimalPattern().format(number);
+    return formatted;
+  } else {
+    return "0";
+  }
 }

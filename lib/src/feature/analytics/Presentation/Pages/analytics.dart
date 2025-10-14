@@ -2010,11 +2010,24 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
-                                  CustomLineChart(
-                                    lineColor: Colors.green,
-                                    areaColor: Colors.greenAccent,
-                                    title: "Income Statement for MSFT",
-                                  ),
+                                  financialResponse != null &&
+                                          financialResponse!
+                                                  .data
+                                                  .financialsIncomeStatement
+                                                  .chart
+                                                  .researchDevelopment !=
+                                              null
+                                      ? CustomLineChart(
+                                          lineColor: Colors.green,
+                                          areaColor: Colors.greenAccent,
+                                          title: "Income Statement for MSFT",
+                                          chartData: financialResponse!
+                                              .data
+                                              .financialsIncomeStatement
+                                              .chart
+                                              .researchDevelopment!,
+                                        )
+                                      : SizedBox(),
                                   const SizedBox(height: 20),
                                   financialResponse != null &&
                                           financialResponse!
@@ -2039,11 +2052,24 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
-                                  CustomLineChart(
-                                    lineColor: Colors.purpleAccent,
-                                    areaColor: Colors.purple,
-                                    title: "Balance Sheet for MSFT",
-                                  ),
+                                  financialResponse != null &&
+                                          financialResponse!
+                                                  .data
+                                                  .financialsBalanceSheet
+                                                  .chart
+                                                  .totalAssets !=
+                                              null
+                                      ? CustomLineChart(
+                                          lineColor: Colors.purpleAccent,
+                                          areaColor: Colors.purple,
+                                          title: "Balance Sheet for MSFT",
+                                          chartData: financialResponse!
+                                              .data
+                                              .financialsBalanceSheet
+                                              .chart
+                                              .totalAssets!,
+                                        )
+                                      : SizedBox(),
                                   const SizedBox(height: 20),
                                   financialResponse != null &&
                                           financialResponse!
@@ -2068,11 +2094,24 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
-                                  CustomLineChart(
-                                    lineColor: Colors.purpleAccent,
-                                    areaColor: Colors.purple,
-                                    title: "Cash Flow for MSFT",
-                                  ),
+                                  financialResponse != null &&
+                                          financialResponse!
+                                                  .data
+                                                  .financialsCashFlow
+                                                  .chart
+                                                  .investments !=
+                                              null
+                                      ? CustomLineChart(
+                                          lineColor: Colors.purpleAccent,
+                                          areaColor: Colors.purple,
+                                          title: "Cash Flow for MSFT",
+                                          chartData: financialResponse!
+                                              .data
+                                              .financialsCashFlow
+                                              .chart
+                                              .investments!,
+                                        )
+                                      : SizedBox(),
                                   const SizedBox(height: 20),
                                   financialResponse != null &&
                                           financialResponse!
