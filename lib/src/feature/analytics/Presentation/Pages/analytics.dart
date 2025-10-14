@@ -1639,12 +1639,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             null &&
                         companyDetailModel!
                             .data
-                            .fundamentalsOutstandingSharesQuarter!
+                            .fundamentalsOutstandingShares!
                             .isNotEmpty
                     ? OutstandingSharesChart(
                         fundamentalsOutstandingShares: companyDetailModel!
                             .data
-                            .fundamentalsOutstandingSharesQuarter,
+                            .fundamentalsOutstandingShares,
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),

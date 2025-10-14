@@ -7,8 +7,7 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 import '../../feature/analytics/domain/model/company_detail/company_detail_model.dart';
 
 class OutstandingSharesChart extends StatelessWidget {
-  final List<FundamentalsOutstandingSharesQuarter>?
-  fundamentalsOutstandingShares;
+  final List<FundamentalsOutstandingShares>? fundamentalsOutstandingShares;
 
   const OutstandingSharesChart({
     super.key,
@@ -45,6 +44,7 @@ class OutstandingSharesChart extends StatelessWidget {
       final y = (item.sharesMillion as num).toDouble();
       return FlSpot(x, y);
     }).toList();
+    print(spots.toString());
     return Container(
       decoration: BoxDecoration(
         // color: AppColors.white,
@@ -86,6 +86,9 @@ class OutstandingSharesChart extends StatelessWidget {
                   SizedBox(
                     height: 210,
                     child: LineChart(
+                      duration: Duration(milliseconds: 1200),
+
+                      curve: Curves.easeInOutCubic,
                       LineChartData(
                         gridData: FlGridData(
                           horizontalInterval: 10,
@@ -156,7 +159,7 @@ class OutstandingSharesChart extends StatelessWidget {
                         ),
                         minX: 2020,
                         maxX: 2025,
-                        minY: 100,
+                        minY: 500,
                         maxY: 590,
                         lineBarsData: [
                           LineChartBarData(
