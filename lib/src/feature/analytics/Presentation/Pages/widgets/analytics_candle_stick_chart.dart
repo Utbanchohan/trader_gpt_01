@@ -171,6 +171,9 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
           SizedBox(
             height: 280.h,
             child: BarChart(
+              duration: Duration(milliseconds: 1200),
+
+              curve: Curves.easeInOutCubic,
               BarChartData(
                 backgroundColor: Colors.transparent, // Dark background
                 alignment: BarChartAlignment.spaceAround,

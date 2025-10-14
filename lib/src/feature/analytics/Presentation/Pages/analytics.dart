@@ -103,8 +103,10 @@ class AnalyticsScreen extends ConsumerStatefulWidget {
   ConsumerState<AnalyticsScreen> createState() => _AnalyticsScreenState();
 }
 
-class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
+class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
+    with TickerProviderStateMixin {
   late TabController tabController;
+  late TabController financeialTabController;
   StockPriceModel? stockPrices;
   StockResponse? stockResponse;
   PriceComparisonModel? priceComparisonModel;
@@ -384,9 +386,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
-  late TabController _tabController;
-
-  final List<String> _tabs = [
+  final List<String> financialtabs = [
     "Summary",
     "Income Statement",
     "Balance Sheet",
@@ -536,14 +536,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
-  thirdTap() async {
-    // if (financialResponse == null) {
-    //   await financialData(widget.chatRouting!.symbol);
-    //   setState(() {});
-    // }
-    if (financeChartsDataModel == null) {
-      await financialCharts(widget.chatRouting!.symbol);
-      setState(() {});
+  thirdTap(int val) async {
+    if (val == 0) {
+      if (financeChartsDataModel == null) {
+        await financialCharts(widget.chatRouting!.symbol);
+        setState(() {});
+      }
+    } else {
+      if (financialResponse == null) {
+        await financialData(widget.chatRouting!.symbol);
+        setState(() {});
+      }
     }
   }
 
@@ -557,6 +560,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   @override
   void initState() {
     super.initState();
+    tabController = TabController(length: 5, vsync: this);
+
     if (widget.chatRouting != null) {
       firstIndexData();
     }
@@ -801,6 +806,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             margin: EdgeInsets.only(left: 10.w),
 
             child: TabBar(
+              controller: tabController,
               isScrollable: true,
               indicatorSize: TabBarIndicatorSize.tab,
               tabAlignment: TabAlignment.start,
@@ -826,7 +832,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 } else if (val == 4) {
                   fifthTap();
                 } else if (val == 2) {
-                  thirdTap();
+                  thirdTap(0);
                 }
               },
               tabs: List.generate(
@@ -869,6 +875,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           /// 🔹 Nested TabBarView
           Expanded(
             child: TabBarView(
+              controller: tabController,
+
               physics: NeverScrollableScrollPhysics(),
 
               children: [
@@ -1675,12 +1683,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             null &&
                         companyDetailModel!
                             .data
-                            .fundamentalsOutstandingSharesQuarter!
+                            .fundamentalsOutstandingShares!
                             .isNotEmpty
                     ? OutstandingSharesChart(
                         fundamentalsOutstandingShares: companyDetailModel!
                             .data
-                            .fundamentalsOutstandingSharesQuarter,
+                            .fundamentalsOutstandingShares,
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
@@ -1772,54 +1780,48 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             length: 4,
             child: Builder(
               builder: (context) {
-                final TabController tabController = DefaultTabController.of(
-                  context,
-                );
+                final TabController financeialTabController =
+                    DefaultTabController.of(context);
 
                 return Expanded(
                   child: Column(
                     children: [
                       AnimatedBuilder(
-                        animation: tabController.animation!,
+                        animation: financeialTabController.animation!,
                         builder: (context, _) {
                           return TabBar(
-                            controller: tabController,
+                            controller: financeialTabController,
                             isScrollable: true,
-
                             indicatorSize: TabBarIndicatorSize.tab,
                             tabAlignment: TabAlignment.start,
                             indicatorAnimation: TabIndicatorAnimation.elastic,
-                            // ✅ indicator ko border ke andar confine kar rahe hain
+                            onTap: (val) {
+                              thirdTap(val);
+                            },
+
                             indicatorPadding: const EdgeInsets.all(4),
                             labelPadding: const EdgeInsets.symmetric(
                               horizontal: 4,
                             ),
                             dividerColor: Colors.transparent,
 
-                            // ✅ Indicator ke andar border + background
                             indicator: BoxDecoration(
-                              color:
-                                  AppColors.color203063, // selected tab color
+                              color: AppColors.color203063,
                               borderRadius: BorderRadius.circular(50),
                               border: Border.all(
-                                color: AppColors
-                                    .color0x1AB3B3B3, // same as tab border
+                                color: AppColors.color0x1AB3B3B3,
                                 width: 1,
                               ),
                             ),
 
                             tabs: List.generate(4, (index) {
-                              final List<String> tabTitles = [
-                                "Summary",
-                                "Income Statement",
-                                "Balance Sheet",
-                                "Cash Flow",
-                              ];
+                              final List<String> tabTitles = financialtabs;
 
                               final bool isSelected =
-                                  tabController.index == index ||
-                                  (tabController.indexIsChanging &&
-                                      tabController.previousIndex == index);
+                                  financeialTabController.index == index ||
+                                  (financeialTabController.indexIsChanging &&
+                                      financeialTabController.previousIndex ==
+                                          index);
 
                               return Tab(
                                 child: Container(
@@ -1856,8 +1858,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       // ✅ TabBarView below
                       Expanded(
                         child: TabBarView(
+                          physics: NeverScrollableScrollPhysics(),
+                          controller: financeialTabController,
                           children: [
-                            // --- Tab 1 ---
                             SingleChildScrollView(
                               child: Column(
                                 children: [
@@ -2047,50 +2050,127 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                               ),
                             ),
 
-                            // --- Tab 2 ---
                             SingleChildScrollView(
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
-                                  CustomLineChart(
-                                    lineColor: Colors.green,
-                                    areaColor: Colors.greenAccent,
-                                    title: "Income Statement for MSFT",
-                                  ),
+                                  financialResponse != null &&
+                                          financialResponse!
+                                                  .data
+                                                  .financialsIncomeStatement
+                                                  .chart
+                                                  .researchDevelopment !=
+                                              null
+                                      ? CustomLineChart(
+                                          lineColor: Colors.green,
+                                          areaColor: Colors.greenAccent,
+                                          title: "Income Statement for MSFT",
+                                          chartData: financialResponse!
+                                              .data
+                                              .financialsIncomeStatement
+                                              .chart
+                                              .researchDevelopment!,
+                                        )
+                                      : SizedBox(),
                                   const SizedBox(height: 20),
-                                  FinancialTable(),
+                                  financialResponse != null &&
+                                          financialResponse!
+                                              .data
+                                              .financialsIncomeStatement
+                                              .data
+                                              .isNotEmpty
+                                      ? FinancialTable(
+                                          data: financialResponse!
+                                              .data
+                                              .financialsIncomeStatement
+                                              .data,
+                                          itemName: FinancialTableEnum
+                                              .incomeStatement,
+                                        )
+                                      : SizedBox(),
                                 ],
                               ),
                             ),
 
-                            // --- Tab 3 ---
                             SingleChildScrollView(
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
-                                  CustomLineChart(
-                                    lineColor: Colors.purpleAccent,
-                                    areaColor: Colors.purple,
-                                    title: "Balance Sheet for MSFT",
-                                  ),
+                                  financialResponse != null &&
+                                          financialResponse!
+                                                  .data
+                                                  .financialsBalanceSheet
+                                                  .chart
+                                                  .totalAssets !=
+                                              null
+                                      ? CustomLineChart(
+                                          lineColor: Colors.purpleAccent,
+                                          areaColor: Colors.purple,
+                                          title: "Balance Sheet for MSFT",
+                                          chartData: financialResponse!
+                                              .data
+                                              .financialsBalanceSheet
+                                              .chart
+                                              .totalAssets!,
+                                        )
+                                      : SizedBox(),
                                   const SizedBox(height: 20),
-                                  FinancialTable(),
+                                  financialResponse != null &&
+                                          financialResponse!
+                                              .data
+                                              .financialsBalanceSheet
+                                              .data
+                                              .isNotEmpty
+                                      ? FinancialTable(
+                                          data: financialResponse!
+                                              .data
+                                              .financialsBalanceSheet
+                                              .data,
+                                          itemName:
+                                              FinancialTableEnum.balanceSheet,
+                                        )
+                                      : SizedBox(),
                                 ],
                               ),
                             ),
 
-                            // --- Tab 4 ---
                             SingleChildScrollView(
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
-                                  CustomLineChart(
-                                    lineColor: Colors.purpleAccent,
-                                    areaColor: Colors.purple,
-                                    title: "Cash Flow for MSFT",
-                                  ),
+                                  financialResponse != null &&
+                                          financialResponse!
+                                                  .data
+                                                  .financialsCashFlow
+                                                  .chart
+                                                  .investments !=
+                                              null
+                                      ? CustomLineChart(
+                                          lineColor: Colors.purpleAccent,
+                                          areaColor: Colors.purple,
+                                          title: "Cash Flow for MSFT",
+                                          chartData: financialResponse!
+                                              .data
+                                              .financialsCashFlow
+                                              .chart
+                                              .investments!,
+                                        )
+                                      : SizedBox(),
                                   const SizedBox(height: 20),
-                                  FinancialTable(),
+                                  financialResponse != null &&
+                                          financialResponse!
+                                              .data
+                                              .financialsCashFlow
+                                              .data
+                                              .isNotEmpty
+                                      ? FinancialTable(
+                                          data: financialResponse!
+                                              .data
+                                              .financialsCashFlow
+                                              .data,
+                                          itemName: FinancialTableEnum.cashFlow,
+                                        )
+                                      : SizedBox(),
                                 ],
                               ),
                             ),
