@@ -73,17 +73,23 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: SvgPicture.network(
-                    getItemImage(
-                      widget.stocks.type == "stock"
-                          ? ImageType.stock
-                          : ImageType.crypto,
-                      widget.stock.symbol,
-                    ),
-                    fit: BoxFit.cover,
-                    placeholderBuilder: (context) =>
-                        SizedBox(height: 41, width: 42, child: SizedBox()),
-                  ),
+                  child: widget.stock.type.toLowerCase() == "crypto"
+                      ? Image.network(
+                          getItemImage(ImageType.crypto, widget.stock.symbol),
+                          fit: BoxFit.cover,
+                        )
+                      : SvgPicture.network(
+                          getItemImage(ImageType.stock, widget.stock.symbol),
+                          fit: BoxFit.cover,
+                          placeholderBuilder: (context) => SizedBox(
+                            height: 41,
+                            width: 42,
+                            child: SvgPicture.network(
+                              "https://cdn-images.traderverse.io/stock_dummy.svg",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                 ),
               ),
 

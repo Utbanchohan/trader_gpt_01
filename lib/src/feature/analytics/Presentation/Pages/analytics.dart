@@ -1103,20 +1103,29 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
-                        child: SvgPicture.network(
-                          getItemImage(
-                            selectedStock!.type.toLowerCase() == "stock"
-                                ? ImageType.stock
-                                : ImageType.crypto,
-                            selectedStock!.symbol,
-                          ),
-                          fit: BoxFit.cover,
-                          placeholderBuilder: (context) => SizedBox(
-                            height: 26.h,
-                            width: 26.w,
-                            child: SizedBox(),
-                          ),
-                        ),
+                        child: selectedStock!.type.toLowerCase() == "crypto"
+                            ? Image.network(
+                                getItemImage(
+                                  ImageType.crypto,
+                                  selectedStock!.symbol,
+                                ),
+                                fit: BoxFit.cover,
+                              )
+                            : SvgPicture.network(
+                                getItemImage(
+                                  ImageType.stock,
+                                  selectedStock!.symbol,
+                                ),
+                                fit: BoxFit.cover,
+                                placeholderBuilder: (context) => SizedBox(
+                                  height: 26.h,
+                                  width: 26.w,
+                                  child: SvgPicture.network(
+                                    "https://cdn-images.traderverse.io/stock_dummy.svg",
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
                     SizedBox(width: 10),
@@ -1950,20 +1959,30 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
-                    child: SvgPicture.network(
-                      getItemImage(
-                        selectedStock!.type.toLowerCase() == "stock"
-                            ? ImageType.stock
-                            : ImageType.crypto,
-                        selectedStock!.symbol,
-                      ),
-                      fit: BoxFit.cover,
-                      placeholderBuilder: (context) => SizedBox(
-                        height: 26.h,
-                        width: 26.w,
-                        child: SizedBox(),
-                      ),
-                    ),
+                    child: selectedStock!.type.toLowerCase() == "crypto"
+                        ? Image.network(
+                            getItemImage(
+                              ImageType.crypto,
+                              selectedStock!.symbol,
+                            ),
+                            fit: BoxFit.cover,
+                          )
+                        : SvgPicture.network(
+                            getItemImage(
+                              ImageType.stock,
+
+                              selectedStock!.symbol,
+                            ),
+                            fit: BoxFit.cover,
+                            placeholderBuilder: (context) => SizedBox(
+                              height: 26.h,
+                              width: 26.w,
+                              child: SvgPicture.network(
+                                "https://cdn-images.traderverse.io/stock_dummy.svg",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
                 SizedBox(width: 10),

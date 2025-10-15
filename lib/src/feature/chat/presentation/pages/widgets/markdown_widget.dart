@@ -162,15 +162,23 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
-                        child: SvgPicture.network(
-                          getItemImage(ImageType.stock, widget.name),
-                          fit: BoxFit.cover,
-                          placeholderBuilder: (context) => SizedBox(
-                            height: 20.h,
-                            width: 20.w,
-                            child: SizedBox(),
-                          ),
-                        ),
+                        child: widget.type.toLowerCase() == "crypto"
+                            ? Image.network(
+                                getItemImage(ImageType.crypto, widget.name),
+                                fit: BoxFit.cover,
+                              )
+                            : SvgPicture.network(
+                                getItemImage(ImageType.stock, widget.name),
+                                fit: BoxFit.cover,
+                                placeholderBuilder: (context) => SizedBox(
+                                  height: 20.h,
+                                  width: 20.w,
+                                  child: SvgPicture.network(
+                                    "https://cdn-images.traderverse.io/stock_dummy.svg",
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
               SizedBox(width: 6),

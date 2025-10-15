@@ -127,12 +127,29 @@ class _ConversationChatAppBarState
                 height: 35,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: SvgPicture.network(
-                    getItemImage(ImageType.stock, widget.chatRouting!.symbol),
-                    fit: BoxFit.cover,
-                    placeholderBuilder: (context) =>
-                        SizedBox(width: 35, height: 35),
-                  ),
+                  child: widget.chatRouting!.type.toLowerCase() == "crypto"
+                      ? Image.network(
+                          getItemImage(
+                            ImageType.crypto,
+                            widget.chatRouting!.symbol,
+                          ),
+                          fit: BoxFit.cover,
+                        )
+                      : SvgPicture.network(
+                          getItemImage(
+                            ImageType.stock,
+                            widget.chatRouting!.symbol,
+                          ),
+                          fit: BoxFit.cover,
+                          placeholderBuilder: (context) => SizedBox(
+                            width: 35,
+                            height: 35,
+                            child: SvgPicture.network(
+                              "https://cdn-images.traderverse.io/stock_dummy.svg",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                 ),
               ),
             ),
