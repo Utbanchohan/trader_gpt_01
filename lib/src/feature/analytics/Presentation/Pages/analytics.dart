@@ -938,7 +938,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   physics: NeverScrollableScrollPhysics(),
 
                   children: [
-                    _buildAnalyticsTab(),
+                    widget.chatRouting != null &&
+                            widget.chatRouting!.type.toLowerCase() == "crypto"
+                        ? _buildCryptoTab()
+                        : _buildAnalyticsTab(),
 
                     Center(
                       child: MdSnsText(
@@ -954,6 +957,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         ),
       ),
     );
+  }
+
+  Widget _buildCryptoTab() {
+    return Container(color: Colors.red, height: 400, width: 500);
   }
 
   /// Analytics Tab Content
