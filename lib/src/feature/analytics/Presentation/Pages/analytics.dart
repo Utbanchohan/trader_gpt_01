@@ -574,7 +574,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     tabController = TabController(length: 5, vsync: this);
 
     if (widget.chatRouting != null) {
-      firstIndexData();
+      if (widget.chatRouting!.type.toLowerCase() == "crypto") {
+        cryptoApis();
+      } else {
+        firstIndexData();
+      }
     }
 
     selectedStock =

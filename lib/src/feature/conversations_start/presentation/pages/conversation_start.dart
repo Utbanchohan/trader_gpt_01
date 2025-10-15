@@ -444,6 +444,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     "chatRouting": ChatRouting(
                                       previousClose:
                                           stocks[stockIndex].previousClose,
+                                      type: stocks[stockIndex].type,
                                       chatId: convo[index].id,
                                       symbol: convo[index].symbol,
 
@@ -570,6 +571,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       chatId: convo[index].id,
                                       symbol: convo[index].symbol,
                                       image: "",
+                                      type: stocks[stockIndex].type,
                                       companyName: convo[index].companyName,
                                       price: stocks[stockIndex].price,
                                       changePercentage:
@@ -709,6 +711,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       image: "",
                                       companyName: convo[index].companyName,
                                       price: stocks[stockIndex].price,
+                                      type: stocks[stockIndex].type,
                                       changePercentage:
                                           stocks[stockIndex].pctChange,
                                       trendChart:
