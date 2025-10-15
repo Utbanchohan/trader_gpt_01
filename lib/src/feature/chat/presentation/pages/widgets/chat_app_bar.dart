@@ -33,14 +33,14 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
         height: 35.h,
       ),
       actions: [
-        Container(
-          margin: EdgeInsets.only(right: 20),
-          child: Image.asset(
-            Assets.images.searchNormal.path,
-            width: 20,
-            height: 20,
-          ),
-        ),
+        // Container(
+        //   margin: EdgeInsets.only(right: 20),
+        //   child: Image.asset(
+        //     Assets.images.searchNormal.path,
+        //     width: 20,
+        //     height: 20,
+        //   ),
+        // ),
       ],
     );
   }

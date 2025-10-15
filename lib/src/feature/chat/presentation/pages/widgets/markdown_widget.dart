@@ -237,71 +237,74 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                   selectable: true,
                   styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
                       .copyWith(
-                        blockquotePadding: EdgeInsets.all(0),
-                        blockquoteDecoration: BoxDecoration(
+                        blockquotePadding: EdgeInsets.zero,
+                        blockquoteDecoration: const BoxDecoration(
                           color: Colors.transparent,
+                          border: Border(),
                         ),
-                        code: GoogleFonts.plusJakartaSans(
-                          color: AppColors.white,
-                          fontSize: 16,
 
-                          fontWeight: FontWeight.w600,
+                        horizontalRuleDecoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: Colors.transparent,
+                              width: 0,
+                            ),
+                          ),
                         ),
-                        tableBody: GoogleFonts.plusJakartaSans(
-                          color: AppColors.white,
-                          fontSize: 14,
 
-                          fontWeight: FontWeight.w400,
-                        ),
                         pPadding: EdgeInsets.zero,
                         p: GoogleFonts.plusJakartaSans(
                           color: AppColors.white,
                           fontSize: 14,
-
                           fontWeight: FontWeight.w400,
                         ),
+
                         h1: GoogleFonts.plusJakartaSans(
                           color: AppColors.white,
                           fontSize: 16,
-
                           fontWeight: FontWeight.w600,
                         ),
                         h2: GoogleFonts.plusJakartaSans(
                           color: AppColors.white,
                           fontSize: 14,
-
                           fontWeight: FontWeight.w600,
                         ),
                         h3: GoogleFonts.plusJakartaSans(
                           color: AppColors.white,
                           fontSize: 12,
-
                           fontWeight: FontWeight.w600,
                         ),
                         h4: GoogleFonts.plusJakartaSans(
                           color: AppColors.white,
                           fontSize: 12,
-
                           fontWeight: FontWeight.w600,
                         ),
                         h5: GoogleFonts.plusJakartaSans(
                           color: AppColors.white,
                           fontSize: 12,
-
                           fontWeight: FontWeight.w600,
                         ),
                         h6: GoogleFonts.plusJakartaSans(
                           color: AppColors.white,
                           fontSize: 12,
-
                           fontWeight: FontWeight.w600,
                         ),
 
-                        blockquote: const TextStyle(color: AppColors.white),
+                        code: GoogleFonts.plusJakartaSans(
+                          color: AppColors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+
+                        tableBody: GoogleFonts.plusJakartaSans(
+                          color: AppColors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                   onTapLink: (text, href, title) {
                     if (href != null) {
-                      launchUrl(Uri.parse(href)); // needs url_launcher
+                      launchUrl(Uri.parse(href));
                     }
                   },
                 ),

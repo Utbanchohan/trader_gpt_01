@@ -40,6 +40,7 @@ import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.
 import 'package:trader_gpt/src/shared/widgets/CustomCandleChartShimmer%20.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsTrend_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/InfoBox_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/WeeklyBarChart_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/cashdebt_shimmer_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/cashdebt_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/company_detail.widgets.dart';
@@ -2291,10 +2292,161 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             .data['${widget.chatRouting!.symbol}'] !=
                         null &&
                     priceComparisonModel!.data.data['SPY'] != null
+<<<<<<< HEAD
                 ? PriceComparisonChart(
                     priceComparisonModel: priceComparisonModel,
                     symbol: widget.chatRouting!.symbol,
                     twoCharts: true,
+=======
+                ? Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.colorB3B3B3),
+                      color: AppColors.color091224,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        MdSnsText(
+                          "Price Comparison",
+                          variant: TextVariant.h3,
+                          fontWeight: TextFontWeightVariant.h4,
+                          color: AppColors.fieldTextColor,
+                        ),
+                        SizedBox(height: 16.h),
+
+                        // Chart
+                        SizedBox(
+                          height: 180,
+                          child: LineChart(
+                            LineChartData(
+                              backgroundColor: AppColors.color091224,
+                              gridData: FlGridData(
+                                show: true,
+                                getDrawingHorizontalLine: (value) => FlLine(
+                                  color: AppColors.color1B254B,
+                                  strokeWidth: 1,
+                                ),
+                                getDrawingVerticalLine: (value) => FlLine(
+                                  color: Colors.transparent,
+                                  strokeWidth: 1,
+                                ),
+                              ),
+                              titlesData: FlTitlesData(
+                                show: true,
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 28,
+                                    interval: 100,
+                                    getTitlesWidget: (value, meta) => MdSnsText(
+                                      value.toInt().toString(),
+                                      color: AppColors.white,
+                                      variant: TextVariant.h5,
+                                    ),
+                                  ),
+                                ),
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    interval: 50,
+                                    getTitlesWidget: (value, meta) => MdSnsText(
+                                      value.toInt().toString(),
+                                      color: AppColors.white,
+                                      variant: TextVariant.h5,
+                                    ),
+                                  ),
+                                ),
+                                topTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                rightTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                              ),
+                              borderData: FlBorderData(show: false),
+                              lineBarsData: [
+                                LineChartBarData(
+                                  spots: buildSpots(
+                                    priceComparisonModel!
+                                        .data
+                                        .data['${widget.chatRouting!.symbol}']!,
+                                  ),
+                                  isCurved: true,
+                                  color: AppColors.color0xFF5F5EDE,
+                                  barWidth: 2,
+                                  dotData: FlDotData(show: false),
+                                ),
+                                LineChartBarData(
+                                  spots: buildSpots(
+                                    priceComparisonModel!.data.data['SPY']!,
+                                  ),
+                                  isCurved: true,
+                                  color: AppColors.color0xFFc0c0c8,
+                                  barWidth: 2,
+                                  dotData: FlDotData(show: false),
+                                ),
+                              ],
+                              minX: 1,
+                              maxX: maxX ?? 10000,
+                              minY: 0,
+                              maxY: maxY ?? 10000,
+                            ),
+                          ),
+                        ),
+
+                        // 👇 Bordered text below chart
+                        SizedBox(height: 16.h),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 15.h,
+                                width: 15.w,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.color0xFF5F5EDE,
+                                  border: Border.all(
+                                    color: AppColors.white,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 2.w),
+                              MdSnsText(
+                                "MSFT",
+                                color: AppColors.white,
+                                variant: TextVariant.h5,
+                                fontWeight: TextFontWeightVariant.h4,
+                              ),
+                              SizedBox(width: 10.w),
+                              Container(
+                                height: 15.h,
+                                width: 15.w,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.color0xFFc0c0c8,
+                                  border: Border.all(
+                                    color: AppColors.white,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 2.w),
+                              MdSnsText(
+                                "SPY",
+                                color: AppColors.white,
+                                variant: TextVariant.h5,
+                                fontWeight: TextFontWeightVariant.h4,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+>>>>>>> master
                   )
                 : SizedBox(),
 
@@ -2380,7 +2532,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                           companyModel!.general.Address ?? "",
                           companyModel!.general.Country ?? "",
                           companyModel!.general.FullTimeEmployees.toString(),
-                          "${companyModel!.general.FullTimeEmployees ?? 0}",
+                          "${companyModel!.general.WebURL ?? 0}",
                         ],
                       )
                     : SizedBox(),
@@ -2485,19 +2637,29 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                     .lastEarningsAnnouncement
                                     .toString()
                               : "N/A",
+
                           earningdata!.reportedEps != null
-                              ? earningdata!.reportedEps!.consensusEpsForecast
-                                    .toString()
-                              : "N/A",
+                              ? "\$" +
+                                    compactFormatter.format(
+                                      earningdata!
+                                              .reportedEps!
+                                              .consensusEpsForecast ??
+                                          0,
+                                    )
+                              : "0",
                           earningdata!.reportedEps != null
                               ? earningdata!.reportedEps!.epsSurprise.toString()
                               : "N/A",
+
                           earningdata!.reportedEps != null
-                              ? compactFormatter.format(
-                                  earningdata!.reportedRevenue!.totalRevenue ??
-                                      0,
-                                )
-                              : "N/A",
+                              ? "\$" +
+                                    compactFormatter.format(
+                                      earningdata!
+                                              .reportedRevenue!
+                                              .totalRevenue ??
+                                          0,
+                                    )
+                              : "0",
                         ],
                       )
                     : EarningsShimmer(),

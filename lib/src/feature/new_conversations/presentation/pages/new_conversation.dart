@@ -392,9 +392,10 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                   borderRadius: BorderRadius.circular(6),
                   child: SvgPicture.network(
                     getItemImage(
-                      widget.image.toLowerCase() == "stock"
-                          ? ImageType.stock
-                          : ImageType.crypto,
+                      // widget.image.toLowerCase() == "stock"
+                      //     ?
+                      ImageType.stock,
+                      // : ImageType.crypto,
                       widget.symbol,
                     ),
                     fit: BoxFit.cover,

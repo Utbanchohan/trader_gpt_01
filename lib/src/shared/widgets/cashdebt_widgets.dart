@@ -152,7 +152,7 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
                       barGroups: List.generate(dates.length, (i) {
                         return BarChartGroupData(
                           x: i,
-                          barsSpace: 6,
+                          barsSpace: 0,
                           barRods: [
                             BarChartRodData(
                               toY: cashValues[i],

@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:trader_gpt/src/feature/analytics/data/dto/market_login_dto/market_login_dto.dart';
+import 'package:trader_gpt/src/feature/analytics/domain/repositroy/overview_repository.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/base_model/base_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/complete_profile/complete_profile_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/profile_update_dto/profile_update_dto.dart';
@@ -45,6 +47,32 @@ class Profile extends _$Profile {
           );
       if (response.isSuccess != null && response.isSuccess!) {
         state = AppLoadingState();
+        final response1 = await ref
+            .read(overviewRepository)
+            .marketDataLogin(
+              MarketLoginDto(
+                username: "traderverse_profile",
+                password: "aX2Txl2yxt1ic0xs-@wXcw-ds0at\$sa-ofZwelad",
+              ),
+            );
+        if (response1.accessToken.isNotEmpty) {
+          await ref
+              .read(localDataProvider)
+              .setAccessTokenMarket(response1.accessToken);
+        }
+        final response2 = await ref
+            .read(overviewRepositoryNrm)
+            .marketData2Login(
+              SignIn(
+                email: "traderverse_profile",
+                password: "aX2Txl2yxt1ic0xs-@wXcw-ds0at\$sa-ofZwelad",
+              ),
+            );
+        if (response2.data.accessToken.isNotEmpty) {
+          await ref
+              .read(localDataProvider)
+              .setAccessTokenMarketNew(response2.data.accessToken);
+        }
         await ref
             .read(localDataProvider)
             .setAccessToken(response.data?.accessToken ?? '');
@@ -109,6 +137,32 @@ class Profile extends _$Profile {
             .saveUserName(response.data?.name ?? '');
         await ref.read(localDataProvider).saveUser(response.data!.toJson());
         state = AppLoadingState();
+        final response1 = await ref
+            .read(overviewRepository)
+            .marketDataLogin(
+              MarketLoginDto(
+                username: "traderverse_profile",
+                password: "aX2Txl2yxt1ic0xs-@wXcw-ds0at\$sa-ofZwelad",
+              ),
+            );
+        if (response1.accessToken.isNotEmpty) {
+          await ref
+              .read(localDataProvider)
+              .setAccessTokenMarket(response1.accessToken);
+        }
+        final response2 = await ref
+            .read(overviewRepositoryNrm)
+            .marketData2Login(
+              SignIn(
+                email: "traderverse_profile",
+                password: "aX2Txl2yxt1ic0xs-@wXcw-ds0at\$sa-ofZwelad",
+              ),
+            );
+        if (response2.data.accessToken.isNotEmpty) {
+          await ref
+              .read(localDataProvider)
+              .setAccessTokenMarketNew(response2.data.accessToken);
+        }
         return response.data;
       } else {
         $showMessage(response.message, isError: true);
