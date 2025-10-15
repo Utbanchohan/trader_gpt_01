@@ -230,7 +230,7 @@ final routerConfigProvider = Provider((ref) {
                   trendChart: FiveDayTrend(data: []),
                 );
 
-          return ChatConversation(chatRouting: chatRouting);
+          return ChatConversation(chatRouting: chatRouting, initialMessage: '');
         },
         routes: [],
       ),

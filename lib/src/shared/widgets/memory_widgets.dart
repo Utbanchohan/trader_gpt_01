@@ -45,10 +45,7 @@ class MemoryWidgets extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: onClear,
-                  child: Icon(
-                    Icons.close,
-                    size: 15.w,
-                  )
+                  child: Icon(Icons.close, size: 15.w),
                 ),
               ],
             ),
