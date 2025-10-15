@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CryptoMarketModel {
 
- List<ExchangeData> get data; String? get msg; String? get status; String? get errors;
+ List<ExchangeData> get data; String? get msg; int? get status; String? get errors;
 /// Create a copy of CryptoMarketModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $CryptoMarketModelCopyWith<$Res>  {
   factory $CryptoMarketModelCopyWith(CryptoMarketModel value, $Res Function(CryptoMarketModel) _then) = _$CryptoMarketModelCopyWithImpl;
 @useResult
 $Res call({
- List<ExchangeData> data, String? msg, String? status, String? errors
+ List<ExchangeData> data, String? msg, int? status, String? errors
 });
 
 
@@ -70,7 +70,7 @@ class _$CryptoMarketModelCopyWithImpl<$Res>
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<ExchangeData>,msg: freezed == msg ? _self.msg : msg // ignore: cast_nullable_to_non_nullable
 as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String?,errors: freezed == errors ? _self.errors : errors // ignore: cast_nullable_to_non_nullable
+as int?,errors: freezed == errors ? _self.errors : errors // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ExchangeData> data,  String? msg,  String? status,  String? errors)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ExchangeData> data,  String? msg,  int? status,  String? errors)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CryptoMarketModel() when $default != null:
 return $default(_that.data,_that.msg,_that.status,_that.errors);case _:
@@ -177,7 +177,7 @@ return $default(_that.data,_that.msg,_that.status,_that.errors);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ExchangeData> data,  String? msg,  String? status,  String? errors)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ExchangeData> data,  String? msg,  int? status,  String? errors)  $default,) {final _that = this;
 switch (_that) {
 case _CryptoMarketModel():
 return $default(_that.data,_that.msg,_that.status,_that.errors);case _:
@@ -197,7 +197,7 @@ return $default(_that.data,_that.msg,_that.status,_that.errors);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ExchangeData> data,  String? msg,  String? status,  String? errors)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ExchangeData> data,  String? msg,  int? status,  String? errors)?  $default,) {final _that = this;
 switch (_that) {
 case _CryptoMarketModel() when $default != null:
 return $default(_that.data,_that.msg,_that.status,_that.errors);case _:
@@ -223,7 +223,7 @@ class _CryptoMarketModel implements CryptoMarketModel {
 }
 
 @override final  String? msg;
-@override final  String? status;
+@override final  int? status;
 @override final  String? errors;
 
 /// Create a copy of CryptoMarketModel
@@ -259,7 +259,7 @@ abstract mixin class _$CryptoMarketModelCopyWith<$Res> implements $CryptoMarketM
   factory _$CryptoMarketModelCopyWith(_CryptoMarketModel value, $Res Function(_CryptoMarketModel) _then) = __$CryptoMarketModelCopyWithImpl;
 @override @useResult
 $Res call({
- List<ExchangeData> data, String? msg, String? status, String? errors
+ List<ExchangeData> data, String? msg, int? status, String? errors
 });
 
 
@@ -281,7 +281,7 @@ class __$CryptoMarketModelCopyWithImpl<$Res>
 data: null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
 as List<ExchangeData>,msg: freezed == msg ? _self.msg : msg // ignore: cast_nullable_to_non_nullable
 as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String?,errors: freezed == errors ? _self.errors : errors // ignore: cast_nullable_to_non_nullable
+as int?,errors: freezed == errors ? _self.errors : errors // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

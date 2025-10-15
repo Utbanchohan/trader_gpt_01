@@ -234,6 +234,7 @@ class OverviewApiRepository implements OverviewRepository {
     );
   }
 
+  @override
   Future<ProbabilityResponse> monthlyDataCrypto(
     String ticker,
     String asset_type,
@@ -245,16 +246,19 @@ class OverviewApiRepository implements OverviewRepository {
     return await AnalysisApi(client).weeklyDataCrypto(ticker, asset_type);
   }
 
+  @override
   Future<HighlightResponse> highlightTop(
     HighlightRequest highlightRequest,
   ) async {
     return await AnalysisApi(client).highlightTop(highlightRequest);
   }
 
+  @override
   Future<InfoCryptoResponse> infoCrypto(String symbol) async {
     return await AnalysisApi(client).infoCrypto(symbol);
   }
 
+  @override
   Future<CryptoMarketModel> cryptoMarkets(SymbolDto symbol) async {
     return await AnalysisApi(client).cryptoMarkets(symbol);
   }

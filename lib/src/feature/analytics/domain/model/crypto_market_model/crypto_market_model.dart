@@ -8,7 +8,7 @@ abstract class CryptoMarketModel with _$CryptoMarketModel {
   const factory CryptoMarketModel({
     required List<ExchangeData> data,
     String? msg,
-    String? status,
+    int? status,
     String? errors,
   }) = _CryptoMarketModel;
 

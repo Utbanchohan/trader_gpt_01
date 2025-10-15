@@ -12,7 +12,7 @@ _CryptoMarketModel _$CryptoMarketModelFromJson(Map<String, dynamic> json) =>
           .map((e) => ExchangeData.fromJson(e as Map<String, dynamic>))
           .toList(),
       msg: json['msg'] as String?,
-      status: json['status'] as String?,
+      status: (json['status'] as num?)?.toInt(),
       errors: json['errors'] as String?,
     );
 

@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'analytics_provider.dart';
+part of 'info_crypto.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$analyticsProviderHash() => r'ba8c3c08249cd8e48322afaaa8aa7e9a5fc26062';
+String _$infoCryptoHash() => r'19778d1f7aa93266d40f24e3238afad0637d09b6';
 
-/// See also [AnalyticsProvider].
-@ProviderFor(AnalyticsProvider)
-final analyticsProviderProvider =
-    AutoDisposeNotifierProvider<AnalyticsProvider, AppLoadingState>.internal(
-      AnalyticsProvider.new,
-      name: r'analyticsProviderProvider',
+/// See also [InfoCrypto].
+@ProviderFor(InfoCrypto)
+final infoCryptoProvider =
+    AutoDisposeAsyncNotifierProvider<InfoCrypto, InfoCryptoResponse>.internal(
+      InfoCrypto.new,
+      name: r'infoCryptoProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$analyticsProviderHash,
+          : _$infoCryptoHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$AnalyticsProvider = AutoDisposeNotifier<AppLoadingState>;
+typedef _$InfoCrypto = AutoDisposeAsyncNotifier<InfoCryptoResponse>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
