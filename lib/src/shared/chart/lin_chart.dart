@@ -1,20 +1,18 @@
 import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-
 import '../../feature/analytics/domain/model/financial_data_model/financial_data_model.dart';
 
 class CustomLineChart extends StatelessWidget {
-  String? title;
-  Color lineColor;
-  Color areaColor;
+  final String? title;
+  final Color lineColor;
+  final Color areaColor;
   final List<FinancialDataPoint> chartData;
 
-  CustomLineChart({
+  const CustomLineChart({
     super.key,
     this.title,
     required this.lineColor,
@@ -24,15 +22,18 @@ class CustomLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final compactFormatter = NumberFormat.compact();
+
+    if (chartData.isEmpty) {
+      return const Center(child: Text("No Data"));
+    }
+
     final yValues = chartData.map((e) => (e.y as num).toDouble()).toList();
-    final minY = chartData.isNotEmpty
-        ? chartData.map((e) => e.y).reduce((a, b) => a > b ? a : b).toDouble()
-        : 0.0;
-    final maxY = chartData.isNotEmpty
-        ? chartData.map((e) => e.y).reduce((a, b) => a < b ? a : b).toDouble()
-        : 0.0;
+    final minY = yValues.reduce(min);
+    final maxY = yValues.reduce(max);
     final minX = 0.0;
     final maxX = (chartData.length - 1).toDouble();
+
     return Container(
       alignment: Alignment.center,
       height: 300,
@@ -47,99 +48,107 @@ class CustomLineChart extends StatelessWidget {
         children: [
           // 🔹 Heading Text
           MdSnsText(
-            // "data",
             title ?? "",
             color: AppColors.fieldTextColor,
             variant: TextVariant.h2,
             fontWeight: TextFontWeightVariant.h4,
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
-          // 🔹 Line Chart
+          // 🔹 Chart Area
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: LineChart(
-                duration: Duration(milliseconds: 100),
-
                 LineChartData(
                   minX: minX,
                   maxX: maxX,
                   minY: minY,
                   maxY: maxY,
+
+                  // ✅ Background Grid Lines (Horizontal + subtle)
                   gridData: FlGridData(
                     show: true,
-                    drawVerticalLine: true,
+                    drawVerticalLine: false,
+                    horizontalInterval: (maxY - minY) / 5,
                     getDrawingHorizontalLine: (value) => FlLine(
-                      color: AppColors.white.withOpacity(0.08),
+                      color: Colors.white.withOpacity(0.1),
                       strokeWidth: 1,
                     ),
-                    getDrawingVerticalLine: (value) =>
-                        FlLine(color: Colors.transparent),
                   ),
+
+                  // ✅ Optional zero baseline
                   extraLinesData: ExtraLinesData(
                     horizontalLines: [
                       HorizontalLine(
                         y: 0,
                         color: Colors.white24,
                         strokeWidth: 1,
+                        dashArray: [6, 4],
                       ),
                     ],
                   ),
+
+                  // ✅ Axis Titles
                   titlesData: FlTitlesData(
                     show: true,
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: false,
-                        reservedSize: 10,
-                      ),
-                    ),
+
                     rightTitles: AxisTitles(
                       sideTitles: SideTitles(
-                        showTitles: false,
-                        reservedSize: 30,
-                        interval: (maxY - minY) / 5,
-                        //  (maxY / 5e9).ceilToDouble(),
+                        showTitles: true,
+                        reservedSize: 45,
+                        // interval: 1000,
                         getTitlesWidget: (value, meta) {
-                          String label;
-                          if (value.abs() >= 1e9) {
-                            label = '\$${(value / 1e9).toStringAsFixed(0)}B';
-                          } else if (value.abs() >= 1e6) {
-                            label = '\$${(value / 1e6).toStringAsFixed(0)}M';
-                          } else {
-                            label = '\$${value.toStringAsFixed(0)}';
-                          }
                           return Padding(
-                            padding: const EdgeInsets.only(left: 0),
-                            child: MdSnsText(
-                              label,
-                              variant: TextVariant.h5,
-                              fontWeight: TextFontWeightVariant.h6,
-                              color: AppColors.white,
-                              maxLines: 2,
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: MdSnsText(
+                                compactFormatter.format(value),
+                                variant: TextVariant.h5,
+                                fontWeight: TextFontWeightVariant.h4,
+                                color: AppColors
+                                    .color0xFFc0c0c8, // your desired color
+                                textAlign: TextAlign.right,
+                              ),
                             ),
                           );
                         },
                       ),
                     ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    // ✅ Fixed Bottom Date Labels
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        reservedSize: 20,
-                        interval: 1,
+                        reservedSize: 35,
+                        interval: (chartData.length / 4).floorToDouble().clamp(
+                          1,
+                          4,
+                        ),
                         getTitlesWidget: (value, meta) {
                           final index = value.toInt();
-                          if (index < 0 || index >= chartData.length)
+                          if (index < 0 || index >= chartData.length) {
                             return const SizedBox.shrink();
+                          }
+
+                          final formattedDate = DateFormat(
+                            'MMM yyyy',
+                          ).format(DateTime.parse(chartData[index].x));
+
                           return Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: MdSnsText(
-                              DateFormat(
-                                'MMM yyyy',
-                              ).format(DateTime.parse(chartData[index].x)),
-                              variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h7,
-                              color: AppColors.white.withOpacity(0.95),
+                            padding: const EdgeInsets.only(top: 15, left: 30),
+                            child: Transform.translate(
+                              offset: const Offset(0, 6),
+                              child: MdSnsText(
+                                formattedDate,
+                                variant: TextVariant.h5,
+                                fontWeight: TextFontWeightVariant.h4,
+                                color: AppColors.color0xFFc0c0c8,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           );
                         },
@@ -149,43 +158,34 @@ class CustomLineChart extends StatelessWidget {
                       sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
-                  borderData: FlBorderData(
-                    show: true,
-                    border: Border(
-                      left: BorderSide(color: Colors.transparent, width: 1),
-                      bottom: BorderSide(color: Colors.transparent),
-                      right: BorderSide(color: Colors.transparent),
-                      top: BorderSide(color: Colors.transparent),
-                    ),
-                  ),
 
+                  // ✅ Remove chart borders
+                  borderData: FlBorderData(show: false),
+
+                  // ✅ Line Chart Data
                   lineBarsData: [
                     LineChartBarData(
                       isCurved: true,
-                      barWidth: 3,
-                      color: areaColor,
-
+                      color: lineColor,
+                      barWidth: 2.5,
                       belowBarData: BarAreaData(
                         show: true,
                         gradient: LinearGradient(
                           colors: [
-                            areaColor.withOpacity(0.25),
-                            Colors.transparent,
+                            areaColor.withOpacity(0.3),
                             Colors.transparent,
                           ],
-
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                         ),
                       ),
                       dotData: FlDotData(
                         show: true,
-                        checkToShowDot: (spot, barData) => spot.x == 4,
                         getDotPainter: (spot, percent, barData, index) =>
                             FlDotCirclePainter(
-                              radius: 5,
+                              radius: 3.5,
                               color: Colors.white,
-                              strokeWidth: 2,
+                              strokeWidth: 1.5,
                               strokeColor: lineColor,
                             ),
                       ),
@@ -199,16 +199,17 @@ class CustomLineChart extends StatelessWidget {
                     ),
                   ],
 
+                  // ✅ Tooltip Styling
                   lineTouchData: LineTouchData(
                     enabled: true,
                     touchTooltipData: LineTouchTooltipData(
-                      getTooltipColor: (touchedSpot) => Colors.white,
                       tooltipBorderRadius: BorderRadius.circular(10),
-                      tooltipPadding: const EdgeInsets.all(6),
+                      tooltipPadding: const EdgeInsets.all(8),
+                      getTooltipColor: (_) => Colors.white,
                       getTooltipItems: (spots) {
                         return spots.map((spot) {
                           return LineTooltipItem(
-                            "\$${spot.y / 5e9.ceilToDouble()}",
+                            "\$${spot.y.toStringAsFixed(2)}",
                             const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w600,

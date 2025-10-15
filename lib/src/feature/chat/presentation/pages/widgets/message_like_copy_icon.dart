@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trader_gpt/src/shared/widgets/feedback_popap.dart';
 
 import '../../../../../../gen/assets.gen.dart';
 import '../../../../../core/theme/app_colors.dart';
@@ -45,32 +46,47 @@ class _MessageLikeCopyIconState extends State<MessageLikeCopyIcon> {
             mainAxisAlignment: MainAxisAlignment.end,
             // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.all(10),
-
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: AppColors.fieldColor,
-                ),
-                child: Image.asset(
-                  Assets.images.like.path,
-                  width: 14,
-                  height: 14,
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const FeedbackPopup(),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.fieldColor,
+                  ),
+                  child: Image.asset(
+                    Assets.images.like.path,
+                    width: 14,
+                    height: 14,
+                  ),
                 ),
               ),
               SizedBox(width: 10),
 
-              Container(
-                padding: EdgeInsets.all(10),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const FeedbackPopup(),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
 
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: AppColors.fieldColor,
-                ),
-                child: Image.asset(
-                  "assets/images/dislike.png",
-                  width: 14,
-                  height: 14,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.fieldColor,
+                  ),
+                  child: Image.asset(
+                    "assets/images/dislike.png",
+                    width: 14,
+                    height: 14,
+                  ),
                 ),
               ),
               SizedBox(width: 10),

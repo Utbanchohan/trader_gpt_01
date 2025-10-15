@@ -34,7 +34,11 @@ import 'widgets/loading_widget.dart';
 class ChatConversation extends ConsumerStatefulWidget {
   ChatRouting? chatRouting;
 
-  ChatConversation({super.key, this.chatRouting});
+  ChatConversation({
+    super.key,
+    this.chatRouting,
+    required String initialMessage,
+  });
 
   @override
   ConsumerState<ChatConversation> createState() => _ChatConversationState();
