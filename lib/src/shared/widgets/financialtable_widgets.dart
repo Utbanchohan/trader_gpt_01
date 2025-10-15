@@ -369,6 +369,8 @@ class FinancialTable extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
+          columnSpacing: 20,
+          horizontalMargin: 0,
           dataRowMaxHeight: 60.h,
           headingRowColor: WidgetStateProperty.resolveWith<Color?>((
             Set<WidgetState> states,
@@ -402,7 +404,7 @@ class FinancialTable extends StatelessWidget {
             ),
             DataColumn(
               label: MdSnsText(
-                'Dec 31, 2023',
+                'Dec31,2023',
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.white,
@@ -410,7 +412,7 @@ class FinancialTable extends StatelessWidget {
             ),
             DataColumn(
               label: MdSnsText(
-                'Dec 31, 2022',
+                'Dec31,2022',
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.white,
@@ -418,7 +420,7 @@ class FinancialTable extends StatelessWidget {
             ),
             DataColumn(
               label: MdSnsText(
-                'Dec 31, 2021',
+                'Dec31,2021',
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.white,
@@ -426,7 +428,7 @@ class FinancialTable extends StatelessWidget {
             ),
             DataColumn(
               label: MdSnsText(
-                'Dec 31, 2020',
+                'Dec31,2020',
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.white,
@@ -442,16 +444,23 @@ class FinancialTable extends StatelessWidget {
             ),
           ],
           rows: itemName!.value == FinancialTableEnum.cashFlow.value
-              ? cashFLowList.map((item) {
+              ? cashFLowList.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final item = entry.value;
+
+                  // 🔹 4 different colors list
+                  final List<Color> lineColors = [
+                    Colors.purpleAccent,
+                    Colors.blueAccent,
+                    Colors.orangeAccent,
+                    AppColors.color06D54E,
+                  ];
+
+                  // 🔹 Pick color according to row index (repeats if more than 4 rows)
+                  final color = lineColors[index % lineColors.length];
                   return DataRow(
                     cells: [
-                      DataCell(
-                        Container(
-                          width: 2,
-                          height: 30,
-                          color: AppColors.redFF3B3B,
-                        ),
-                      ),
+                      DataCell(Container(width: 2, height: 40, color: color)),
                       DataCell(
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width / 3,
@@ -697,16 +706,23 @@ class FinancialTable extends StatelessWidget {
                   );
                 }).toList()
               : itemName!.value == FinancialTableEnum.incomeStatement.value
-              ? incomeStatement.map((item) {
+              ? incomeStatement.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final item = entry.value;
+
+                  // 🔹 4 different colors list
+                  final List<Color> lineColors = [
+                    Colors.purpleAccent,
+                    Colors.blueAccent,
+                    Colors.orangeAccent,
+                    AppColors.color06D54E,
+                  ];
+
+                  // 🔹 Pick color according to row index (repeats if more than 4 rows)
+                  final color = lineColors[index % lineColors.length];
                   return DataRow(
                     cells: [
-                      DataCell(
-                        Container(
-                          width: 2,
-                          height: 30,
-                          color: AppColors.redFF3B3B,
-                        ),
-                      ),
+                      DataCell(Container(width: 1, height: 40, color: color)),
                       DataCell(
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width / 3,
@@ -950,16 +966,23 @@ class FinancialTable extends StatelessWidget {
                     ],
                   );
                 }).toList()
-              : balanceSheet.map((item) {
+              : balanceSheet.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final item = entry.value;
+
+                  // 🔹 4 different colors list
+                  final List<Color> lineColors = [
+                    Colors.purpleAccent,
+                    Colors.blueAccent,
+                    Colors.orangeAccent,
+                    AppColors.color06D54E,
+                  ];
+
+                  // 🔹 Pick color according to row index (repeats if more than 4 rows)
+                  final color = lineColors[index % lineColors.length];
                   return DataRow(
                     cells: [
-                      DataCell(
-                        Container(
-                          width: 2,
-                          height: 30,
-                          color: AppColors.redFF3B3B,
-                        ),
-                      ),
+                      DataCell(Container(width: 2, height: 40, color: color)),
                       DataCell(
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width / 3,
