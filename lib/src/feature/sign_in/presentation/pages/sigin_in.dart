@@ -112,6 +112,28 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Please enter email";
+                          }
+
+                          // ❌ Agar email me space hai to invalid
+                          if (value.contains(' ')) {
+                            return "Email should not contain spaces";
+                          }
+
+                          // ✅ Email regex
+                          final _emailRegex = RegExp(
+                            r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$',
+                          );
+
+                          if (_emailRegex.hasMatch(value.trim())) {
+                            return null;
+                          } else {
+                            return "Please enter a valid email";
+                          }
+                        },
+
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: AppColors.bubbleColor,
@@ -167,6 +189,11 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                       TextFormField(
                         obscureText: !visible,
                         controller: password,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Please enter your Password";
+                          }
+                        },
                         style: GoogleFonts.plusJakartaSans(
                           color: AppColors.white,
                           fontSize: 16,

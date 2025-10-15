@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:trader_gpt/src/feature/analytics/data/dto/market_login_dto/market_login_dto.dart';
 import 'package:trader_gpt/src/feature/analytics/data/dto/price_comparison_dto/price_comparison_dto.dart';
+import 'package:trader_gpt/src/feature/analytics/domain/model/market_cap_model/market_cap_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/repositroy/overview_repository.dart';
 import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_up_dto/sign_up.dart';
@@ -10,12 +11,16 @@ import '../../data/api/analysis_api/analysis_api.dart';
 import '../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../data/dto/esg_score_dto/esg_score_dto.dart';
 import '../../data/dto/financial_dto/financial_dto.dart';
+import '../../data/dto/highlight_dto/highlight_dto_crypto.dart';
+import '../../data/dto/market_cap_dto/market_cap_dto.dart';
 import '../../data/dto/overview_dto/overview_dto.dart';
+import '../model/about_crypto/about_crypto_model.dart';
 import '../model/analysis_data/analysis_data_model.dart';
 import '../model/analytics_model/analytics_model.dart';
 import '../model/company_detail/company_detail_model.dart'
     show CompanyDetailModel;
 import '../model/compnay_model/company_model.dart';
+import '../model/crypto_market_model/crypto_market_model.dart';
 import '../model/earning_chart_model/earning_chart_model.dart';
 import '../model/earning_report_model/earning_report_model.dart';
 import '../model/earnings_model/earnings_model.dart';
@@ -23,6 +28,8 @@ import '../model/esg_score_model/esg_score_model.dart';
 import '../model/financial_chart_data/financial_chart_data_model.dart';
 import '../model/financial_data_model/financial_data_model.dart';
 import '../model/fundamental_model/fundamental_model.dart';
+import '../model/highlight_model_crypto/highlight_model_crypto.dart';
+import '../model/info_model_crypto/info_model_crypto.dart';
 import '../model/insider_transaction/insider_transaction_model.dart';
 import '../model/market_data_login/market_data_login.dart';
 import '../model/market_data_login_model/market_data_login_model.dart';
@@ -175,6 +182,21 @@ class OverviewApiRepository implements OverviewRepository {
   }
 
   @override
+  Future<AboutCryptoModel> aboutCrypto(String symbol) async {
+    return await AnalysisApi(client).aboutCrypto(symbol);
+  }
+
+  @override
+  Future<PriceComparisonModel> priceRatio(PriceComparisonDto symbol) async {
+    return await AnalysisApi(client).priceRatio(symbol);
+  }
+
+  @override
+  Future<MarketCapResponse> marketCapChart(MarketCapRequest symbol) async {
+    return await AnalysisApi(client).marketCapChart(symbol);
+  }
+
+  @override
   Future<List<OverviewCandleChartModel>> overviewCandleChart(
     String symbol,
     String interval,
@@ -191,5 +213,53 @@ class OverviewApiRepository implements OverviewRepository {
       sub_points,
       data_point,
     );
+  }
+
+  @override
+  Future<List<OverviewCandleChartModel>> cryptoCandleChart(
+    String symbol,
+    String interval,
+    String start_date,
+    String end_date,
+    String sub_points,
+    String data_point,
+  ) async {
+    return await AnalysisApi(client).cryptoCandleChart(
+      symbol,
+      interval,
+      start_date,
+      end_date,
+      sub_points,
+      data_point,
+    );
+  }
+
+  @override
+  Future<ProbabilityResponse> monthlyDataCrypto(
+    String ticker,
+    String asset_type,
+  ) async {
+    return await AnalysisApi(client).monthlyDataCrypto(ticker, asset_type);
+  }
+
+  Future<WeeklyModel> weeklyDataCrypto(String ticker, String asset_type) async {
+    return await AnalysisApi(client).weeklyDataCrypto(ticker, asset_type);
+  }
+
+  @override
+  Future<HighlightResponse> highlightTop(
+    HighlightRequest highlightRequest,
+  ) async {
+    return await AnalysisApi(client).highlightTop(highlightRequest);
+  }
+
+  @override
+  Future<InfoCryptoResponse> infoCrypto(String symbol) async {
+    return await AnalysisApi(client).infoCrypto(symbol);
+  }
+
+  @override
+  Future<CryptoMarketModel> cryptoMarkets(SymbolDto symbol) async {
+    return await AnalysisApi(client).cryptoMarkets(symbol);
   }
 }

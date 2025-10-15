@@ -107,7 +107,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   Future<void> _handleWorkflowSelection(int index) async {
-    setState(() => isWorkFlow = true);
+    if (mounted) {
+      setState(() => isWorkFlow = true);
+    }
 
     final workflow = workflows[index];
 
@@ -115,8 +117,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       final params = workflow.parameters ?? [];
 
       if (params.isNotEmpty && params.first.name == "symbol") {
-        setState(() => isWorkSymbol = true);
-
+        if (mounted) {
+          setState(() => isWorkSymbol = true);
+        }
         _setMessage(workflow.displayName);
         _closeDialogs();
 
@@ -277,7 +280,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           }
         }
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     } else {
       return false;
     }
@@ -290,7 +295,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         chats.add(res.data!.messages![i]);
       }
       scrollToBottom();
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     } else {
       return false;
     }
@@ -405,38 +412,39 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           analysisRequired: false,
           isWorkflow: isWorkFlow,
         ).toJson();
-
-        setState(() {
-          if (oldResponse != null) {
+        if (mounted) {
+          setState(() {
+            if (oldResponse != null) {
+              chats.add(
+                ChatMessageModel(
+                  id: "temp",
+                  chatId: chadId!,
+                  message: oldResponse!,
+                  type: "ai",
+                  userId: userid,
+                  displayable: Displayable(Display: oldDisplays),
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
+                ),
+              );
+            }
             chats.add(
               ChatMessageModel(
                 id: "temp",
                 chatId: chadId!,
-                message: oldResponse!,
-                type: "ai",
+                message: text,
+                type: "user",
                 userId: userid,
-                displayable: Displayable(Display: oldDisplays),
                 createdAt: DateTime.now(),
                 updatedAt: DateTime.now(),
               ),
             );
-          }
-          chats.add(
-            ChatMessageModel(
-              id: "temp",
-              chatId: chadId!,
-              message: text,
-              type: "user",
-              userId: userid,
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ),
-          );
 
-          startStream = true;
-          isWorkFlow = false;
-          isWorkSymbol = false;
-        });
+            startStream = true;
+            isWorkFlow = false;
+            isWorkSymbol = false;
+          });
+        }
         scrollToBottom();
       }
 
@@ -447,16 +455,20 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   getUser() async {
     dynamic userData = await ref.watch(localDataProvider).getUser();
     if (userData != null) {
-      setState(() {
-        user = User.fromJson(userData);
-      });
+      if (mounted) {
+        setState(() {
+          user = User.fromJson(userData);
+        });
+      }
     }
   }
 
   changeDialogueStatus() {
-    setState(() {
-      dialogOpen = true;
-    });
+    if (mounted) {
+      setState(() {
+        dialogOpen = true;
+      });
+    }
   }
 
   @override
