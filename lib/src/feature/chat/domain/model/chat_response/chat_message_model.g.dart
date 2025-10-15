@@ -61,7 +61,7 @@ Map<String, dynamic> _$DisplayableToJson(_Displayable instance) =>
     <String, dynamic>{'Worker': instance.Worker, 'Display': instance.Display};
 
 _DisplayData _$DisplayDataFromJson(Map<String, dynamic> json) => _DisplayData(
-  chartType: json['chart_type'] as String,
+  chartType: json['chart_type'] as String?,
   subType: json['sub_type'] as String?,
   type: json['type'] as String,
   title: json['title'] as String,
