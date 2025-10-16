@@ -360,6 +360,11 @@ class FinancialTable extends StatelessWidget {
       return formattedDataCashFLow;
     }
 
+    List<String> keys = [];
+    data.keys.forEach((key) {
+      keys.add(key);
+    });
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.colorB3B3B3),
@@ -396,7 +401,7 @@ class FinancialTable extends StatelessWidget {
             ),
             DataColumn(
               label: MdSnsText(
-                'Dec 31, 2024',
+                _formatDate(keys[0]),
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.white,
@@ -404,7 +409,7 @@ class FinancialTable extends StatelessWidget {
             ),
             DataColumn(
               label: MdSnsText(
-                'Dec31,2023',
+                _formatDate(keys[1]),
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.white,
@@ -412,7 +417,7 @@ class FinancialTable extends StatelessWidget {
             ),
             DataColumn(
               label: MdSnsText(
-                'Dec31,2022',
+                _formatDate(keys[2]),
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.white,
@@ -420,7 +425,7 @@ class FinancialTable extends StatelessWidget {
             ),
             DataColumn(
               label: MdSnsText(
-                'Dec31,2021',
+                _formatDate(keys[3]),
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.white,
@@ -428,7 +433,7 @@ class FinancialTable extends StatelessWidget {
             ),
             DataColumn(
               label: MdSnsText(
-                'Dec31,2020',
+                _formatDate(keys[4]),
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.white,
@@ -447,6 +452,10 @@ class FinancialTable extends StatelessWidget {
               ? cashFLowList.asMap().entries.map((entry) {
                   final index = entry.key;
                   final item = entry.value;
+                  List<String> keys = [];
+                  data.keys.forEach((key) {
+                    keys.add(key);
+                  });
 
                   // 🔹 4 different colors list
                   final List<Color> lineColors = [
@@ -498,7 +507,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractCashFlow(data)["2024-12-31"]![item][0],
+                                extractCashFlow(data)[keys[0]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
@@ -508,21 +517,15 @@ class FinancialTable extends StatelessWidget {
                             SizedBox(height: 2),
                             MdSnsText(
                               formatNumbers(
-                                    extractCashFlow(
-                                      data,
-                                    )["2024-12-31"]![item][1],
+                                    extractCashFlow(data)[keys[0]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color:
-                                  extractCashFlow(
-                                            data,
-                                          )["2024-12-31"]![item][1] !=
+                                  extractCashFlow(data)[keys[0]]![item][1] !=
                                           null &&
-                                      extractCashFlow(
-                                            data,
-                                          )["2024-12-31"]![item][1] >
+                                      extractCashFlow(data)[keys[0]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -538,7 +541,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractCashFlow(data)["2023-12-31"]![item][0],
+                                extractCashFlow(data)[keys[1]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
@@ -548,21 +551,15 @@ class FinancialTable extends StatelessWidget {
                             SizedBox(height: 2),
                             MdSnsText(
                               formatNumbers(
-                                    extractCashFlow(
-                                      data,
-                                    )["2023-12-31"]![item][1],
+                                    extractCashFlow(data)[keys[1]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color:
-                                  extractCashFlow(
-                                            data,
-                                          )["2023-12-31"]![item][1] !=
+                                  extractCashFlow(data)[keys[1]]![item][1] !=
                                           null &&
-                                      extractCashFlow(
-                                            data,
-                                          )["2023-12-31"]![item][1] >
+                                      extractCashFlow(data)[keys[1]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -578,7 +575,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractCashFlow(data)["2022-12-31"]![item][0],
+                                extractCashFlow(data)[keys[2]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
@@ -588,21 +585,15 @@ class FinancialTable extends StatelessWidget {
                             SizedBox(height: 2),
                             MdSnsText(
                               formatNumbers(
-                                    extractCashFlow(
-                                      data,
-                                    )["2022-12-31"]![item][1],
+                                    extractCashFlow(data)[keys[2]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color:
-                                  extractCashFlow(
-                                            data,
-                                          )["2022-12-31"]![item][1] !=
+                                  extractCashFlow(data)[keys[2]]![item][1] !=
                                           null &&
-                                      extractCashFlow(
-                                            data,
-                                          )["2022-12-31"]![item][1] >
+                                      extractCashFlow(data)[keys[2]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -619,7 +610,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractCashFlow(data)["2021-12-31"]![item][0],
+                                extractCashFlow(data)[keys[3]]![item][0],
                               ),
                               textAlign: TextAlign.center,
                               color: AppColors.white,
@@ -630,21 +621,15 @@ class FinancialTable extends StatelessWidget {
                             SizedBox(height: 2),
                             MdSnsText(
                               formatNumbers(
-                                    extractCashFlow(
-                                      data,
-                                    )["2021-12-31"]![item][1],
+                                    extractCashFlow(data)[keys[3]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color:
-                                  extractCashFlow(
-                                            data,
-                                          )["2021-12-31"]![item][1] !=
+                                  extractCashFlow(data)[keys[3]]![item][1] !=
                                           null &&
-                                      extractCashFlow(
-                                            data,
-                                          )["2021-12-31"]![item][1] >
+                                      extractCashFlow(data)[keys[3]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -660,7 +645,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractCashFlow(data)["2022-12-31"]![item][0],
+                                extractCashFlow(data)[keys[4]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
@@ -670,21 +655,15 @@ class FinancialTable extends StatelessWidget {
                             SizedBox(height: 2),
                             MdSnsText(
                               formatNumbers(
-                                    extractCashFlow(
-                                      data,
-                                    )["2020-12-31"]![item][1],
+                                    extractCashFlow(data)[keys[4]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color:
-                                  extractCashFlow(
-                                            data,
-                                          )["2020-12-31"]![item][1] !=
+                                  extractCashFlow(data)[keys[4]]![item][1] !=
                                           null &&
-                                      extractCashFlow(
-                                            data,
-                                          )["2020-12-31"]![item][1] >
+                                      extractCashFlow(data)[keys[4]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -709,6 +688,10 @@ class FinancialTable extends StatelessWidget {
               ? incomeStatement.asMap().entries.map((entry) {
                   final index = entry.key;
                   final item = entry.value;
+                  List<String> keys = [];
+                  data.keys.forEach((key) {
+                    keys.add(key);
+                  });
 
                   // 🔹 4 different colors list
                   final List<Color> lineColors = [
@@ -759,7 +742,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractIncomeData(data)["2024-12-31"]![item][0],
+                                extractIncomeData(data)[keys[0]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h4,
@@ -769,21 +752,17 @@ class FinancialTable extends StatelessWidget {
                             SizedBox(height: 2),
                             MdSnsText(
                               formatNumbers(
-                                    extractIncomeData(
-                                      data,
-                                    )["2024-12-31"]![item][1],
+                                    extractIncomeData(data)[keys[0]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color:
-                                  extractIncomeData(
-                                            data,
-                                          )["2024-12-31"]![item][1] !=
+                                  extractIncomeData(data)[keys[0]]![item][1] !=
                                           null &&
                                       extractIncomeData(
                                             data,
-                                          )["2024-12-31"]![item][1] >
+                                          )[keys[0]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -799,7 +778,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractIncomeData(data)["2023-12-31"]![item][0],
+                                extractIncomeData(data)[keys[1]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h4,
@@ -809,21 +788,17 @@ class FinancialTable extends StatelessWidget {
                             SizedBox(height: 2),
                             MdSnsText(
                               formatNumbers(
-                                    extractIncomeData(
-                                      data,
-                                    )["2023-12-31"]![item][1],
+                                    extractIncomeData(data)[keys[1]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color:
-                                  extractIncomeData(
-                                            data,
-                                          )["2023-12-31"]![item][1] !=
+                                  extractIncomeData(data)[keys[1]]![item][1] !=
                                           null &&
                                       extractIncomeData(
                                             data,
-                                          )["2023-12-31"]![item][1] >
+                                          )[keys[1]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -839,7 +814,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractIncomeData(data)["2022-12-31"]![item][0],
+                                extractIncomeData(data)[keys[2]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h4,
@@ -849,21 +824,17 @@ class FinancialTable extends StatelessWidget {
                             SizedBox(height: 2),
                             MdSnsText(
                               formatNumbers(
-                                    extractIncomeData(
-                                      data,
-                                    )["2022-12-31"]![item][1],
+                                    extractIncomeData(data)[keys[2]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color:
-                                  extractIncomeData(
-                                            data,
-                                          )["2022-12-31"]![item][1] !=
+                                  extractIncomeData(data)[keys[2]]![item][1] !=
                                           null &&
                                       extractIncomeData(
                                             data,
-                                          )["2022-12-31"]![item][1] >
+                                          )[keys[2]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -880,7 +851,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractIncomeData(data)["2021-12-31"]![item][0],
+                                extractIncomeData(data)[keys[3]]![item][0],
                               ),
                               textAlign: TextAlign.center,
                               color: AppColors.white,
@@ -891,21 +862,17 @@ class FinancialTable extends StatelessWidget {
                             SizedBox(height: 2),
                             MdSnsText(
                               formatNumbers(
-                                    extractIncomeData(
-                                      data,
-                                    )["2021-12-31"]![item][1],
+                                    extractIncomeData(data)[keys[3]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color:
-                                  extractIncomeData(
-                                            data,
-                                          )["2021-12-31"]![item][1] !=
+                                  extractIncomeData(data)[keys[3]]![item][1] !=
                                           null &&
                                       extractIncomeData(
                                             data,
-                                          )["2021-12-31"]![item][1] >
+                                          )[keys[3]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -921,7 +888,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractIncomeData(data)["2020-12-31"]![item][0],
+                                extractIncomeData(data)[keys[4]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h4,
@@ -931,21 +898,17 @@ class FinancialTable extends StatelessWidget {
                             SizedBox(height: 2),
                             MdSnsText(
                               formatNumbers(
-                                    extractIncomeData(
-                                      data,
-                                    )["2020-12-31"]![item][1],
+                                    extractIncomeData(data)[keys[4]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color:
-                                  extractIncomeData(
-                                            data,
-                                          )["2020-12-31"]![item][1] !=
+                                  extractIncomeData(data)[keys[4]]![item][1] !=
                                           null &&
                                       extractIncomeData(
                                             data,
-                                          )["2020-12-31"]![item][1] >
+                                          )[keys[4]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -969,6 +932,10 @@ class FinancialTable extends StatelessWidget {
               : balanceSheet.asMap().entries.map((entry) {
                   final index = entry.key;
                   final item = entry.value;
+                  List<String> keys = [];
+                  data.keys.forEach((key) {
+                    keys.add(key);
+                  });
 
                   // 🔹 4 different colors list
                   final List<Color> lineColors = [
@@ -1019,9 +986,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractBalanceSheet(
-                                  data,
-                                )["2024-12-31"]![item][0],
+                                extractBalanceSheet(data)[keys[0]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h4,
@@ -1033,7 +998,7 @@ class FinancialTable extends StatelessWidget {
                               formatNumbers(
                                     extractBalanceSheet(
                                       data,
-                                    )["2024-12-31"]![item][1],
+                                    )[keys[0]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
@@ -1041,11 +1006,11 @@ class FinancialTable extends StatelessWidget {
                               color:
                                   extractBalanceSheet(
                                             data,
-                                          )["2024-12-31"]![item][1] !=
+                                          )[keys[0]]![item][1] !=
                                           null &&
                                       extractBalanceSheet(
                                             data,
-                                          )["2024-12-31"]![item][1] >
+                                          )[keys[0]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -1061,9 +1026,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractBalanceSheet(
-                                  data,
-                                )["2023-12-31"]![item][0],
+                                extractBalanceSheet(data)[keys[1]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h4,
@@ -1075,7 +1038,7 @@ class FinancialTable extends StatelessWidget {
                               formatNumbers(
                                     extractBalanceSheet(
                                       data,
-                                    )["2023-12-31"]![item][1],
+                                    )[keys[1]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
@@ -1083,11 +1046,11 @@ class FinancialTable extends StatelessWidget {
                               color:
                                   extractBalanceSheet(
                                             data,
-                                          )["2023-12-31"]![item][1] !=
+                                          )[keys[1]]![item][1] !=
                                           null &&
                                       extractBalanceSheet(
                                             data,
-                                          )["2023-12-31"]![item][1] >
+                                          )[keys[1]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -1103,9 +1066,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractBalanceSheet(
-                                  data,
-                                )["2022-12-31"]![item][0],
+                                extractBalanceSheet(data)[keys[2]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h4,
@@ -1117,7 +1078,7 @@ class FinancialTable extends StatelessWidget {
                               formatNumbers(
                                     extractBalanceSheet(
                                       data,
-                                    )["2022-12-31"]![item][1],
+                                    )[keys[2]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
@@ -1125,11 +1086,11 @@ class FinancialTable extends StatelessWidget {
                               color:
                                   extractBalanceSheet(
                                             data,
-                                          )["2022-12-31"]![item][1] !=
+                                          )[keys[2]]![item][1] !=
                                           null &&
                                       extractBalanceSheet(
                                             data,
-                                          )["2022-12-31"]![item][1] >
+                                          )[keys[2]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -1146,9 +1107,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractBalanceSheet(
-                                  data,
-                                )["2021-12-31"]![item][0],
+                                extractBalanceSheet(data)[keys[3]]![item][0],
                               ),
                               textAlign: TextAlign.center,
                               color: AppColors.white,
@@ -1161,7 +1120,7 @@ class FinancialTable extends StatelessWidget {
                               formatNumbers(
                                     extractBalanceSheet(
                                       data,
-                                    )["2021-12-31"]![item][1],
+                                    )[keys[3]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
@@ -1169,11 +1128,11 @@ class FinancialTable extends StatelessWidget {
                               color:
                                   extractBalanceSheet(
                                             data,
-                                          )["2021-12-31"]![item][1] !=
+                                          )[keys[3]]![item][1] !=
                                           null &&
                                       extractBalanceSheet(
                                             data,
-                                          )["2021-12-31"]![item][1] >
+                                          )[keys[3]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -1189,9 +1148,7 @@ class FinancialTable extends StatelessWidget {
                           children: [
                             MdSnsText(
                               formatNumbers(
-                                extractBalanceSheet(
-                                  data,
-                                )["2020-12-31"]![item][0],
+                                extractBalanceSheet(data)[keys[4]]![item][0],
                               ),
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h4,
@@ -1203,7 +1160,7 @@ class FinancialTable extends StatelessWidget {
                               formatNumbers(
                                     extractBalanceSheet(
                                       data,
-                                    )["2020-12-31"]![item][1],
+                                    )[keys[4]]![item][1],
                                   ) +
                                   "%",
                               variant: TextVariant.h4,
@@ -1211,11 +1168,11 @@ class FinancialTable extends StatelessWidget {
                               color:
                                   extractBalanceSheet(
                                             data,
-                                          )["2020-12-31"]![item][1] !=
+                                          )[keys[4]]![item][1] !=
                                           null &&
                                       extractBalanceSheet(
                                             data,
-                                          )["2020-12-31"]![item][1] >
+                                          )[keys[4]]![item][1] >
                                           0
                                   ? AppColors.color00FF55
                                   : AppColors.redFF3B3B,
@@ -1262,5 +1219,18 @@ String formatNumbers(num? number) {
     return formatted;
   } else {
     return "0";
+  }
+}
+
+String _formatDate(String date) {
+  try {
+    final inputFormat = DateFormat('yyyy-MM-dd');
+    final outputFormat = DateFormat('MMM dd,yyyy');
+
+    final parsedDate = inputFormat.parse(date);
+    final formatted = outputFormat.format(parsedDate);
+    return formatted;
+  } catch (_) {
+    return '-';
   }
 }
