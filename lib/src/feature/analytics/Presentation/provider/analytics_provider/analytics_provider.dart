@@ -11,17 +11,22 @@ import '../../../../../shared/states/app_loading_state.dart';
 import '../../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../../data/dto/esg_score_dto/esg_score_dto.dart';
 import '../../../data/dto/financial_dto/financial_dto.dart';
+import '../../../data/dto/highlight_dto/highlight_dto_crypto.dart';
+import '../../../data/dto/market_cap_dto/market_cap_dto.dart';
 import '../../../data/dto/overview_dto/overview_dto.dart';
 import '../../../data/dto/price_comparison_dto/price_comparison_dto.dart';
 import '../../../domain/model/analysis_data/analysis_data_model.dart';
 import '../../../domain/model/analytics_model/analytics_model.dart';
+import '../../../domain/model/crypto_market_model/crypto_market_model.dart';
 import '../../../domain/model/earning_chart_model/earning_chart_model.dart';
 import '../../../domain/model/earning_report_model/earning_report_model.dart';
 import '../../../domain/model/earnings_model/earnings_model.dart';
 import '../../../domain/model/financial_chart_data/financial_chart_data_model.dart';
 import '../../../domain/model/financial_data_model/financial_data_model.dart';
 import '../../../domain/model/fundamental_model/fundamental_model.dart';
+import '../../../domain/model/highlight_model_crypto/highlight_model_crypto.dart';
 import '../../../domain/model/insider_transaction/insider_transaction_model.dart';
+import '../../../domain/model/market_cap_model/market_cap_model.dart';
 import '../../../domain/model/overview_model/overview_model.dart';
 import '../../../domain/model/price_comparison_model/price_comparison_model.dart';
 import '../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
@@ -302,4 +307,112 @@ class AnalyticsProvider extends _$AnalyticsProvider {
       state = AppLoadingState();
     }
   }
+
+  //crypto apis start
+
+  Future<HighlightResponse?> highlightsTop(
+    HighlightRequest highlightRequest,
+  ) async {
+    try {
+      var res = await ref
+          .read(overviewRepository)
+          .highlightTop(highlightRequest);
+      if (res.msg == "Success") {
+        return res;
+      } else {
+        return null;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        try {
+          $showMessage(e.response!.data!['message'], isError: true);
+        } catch (e) {
+          $showMessage("Something went wrong", isError: true);
+        }
+      } else if (e.type == DioExceptionType.connectionError) {
+        print('❌ Network error');
+      } else {
+        print('❌ Unknown error: ${e.message}');
+      }
+
+      state = AppLoadingState();
+    }
+  }
+
+  Future<MarketCapResponse?> marketCapChart(MarketCapRequest symbol) async {
+    try {
+      var res = await ref.read(overviewRepository).marketCapChart(symbol);
+      if (res.msg == "Success") {
+        return res;
+      } else {
+        return null;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        try {
+          $showMessage(e.response!.data!['message'], isError: true);
+        } catch (e) {
+          $showMessage("Something went wrong", isError: true);
+        }
+      } else if (e.type == DioExceptionType.connectionError) {
+        print('❌ Network error');
+      } else {
+        print('❌ Unknown error: ${e.message}');
+      }
+
+      state = AppLoadingState();
+    }
+  }
+
+  Future<CryptoMarketModel?> cryptoMarkets(SymbolDto symbol) async {
+    try {
+      var res = await ref.read(overviewRepository).cryptoMarkets(symbol);
+      if (res.msg == "Success") {
+        return res;
+      } else {
+        return null;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        try {
+          $showMessage(e.response!.data!['message'], isError: true);
+        } catch (e) {
+          $showMessage("Something went wrong", isError: true);
+        }
+      } else if (e.type == DioExceptionType.connectionError) {
+        print('❌ Network error');
+      } else {
+        print('❌ Unknown error: ${e.message}');
+      }
+
+      state = AppLoadingState();
+    }
+  }
+
+  Future<PriceComparisonModel?> priceRatio(PriceComparisonDto symbol) async {
+    try {
+      var res = await ref.read(overviewRepository).priceRatio(symbol);
+      if (res.msg == "Success") {
+        return res;
+      } else {
+        return null;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        try {
+          $showMessage(e.response!.data!['message'], isError: true);
+        } catch (e) {
+          $showMessage("Something went wrong", isError: true);
+        }
+      } else if (e.type == DioExceptionType.connectionError) {
+        print('❌ Network error');
+      } else {
+        print('❌ Unknown error: ${e.message}');
+      }
+
+      state = AppLoadingState();
+    }
+  }
+
+  //crypto apis end
 }

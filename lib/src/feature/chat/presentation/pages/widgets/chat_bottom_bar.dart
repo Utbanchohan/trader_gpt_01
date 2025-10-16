@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/speechtotext_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'setting_widget.dart';
 
@@ -350,16 +351,26 @@ class ChatBottomBar extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: 6.w),
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              height: 36.h,
-                              width: 36.w,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.bubbleColor,
-                              ),
-                              child: Image.asset(
-                                Assets.images.textfieldicon4.path,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SpeechToTextWidget(),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                height: 36.h,
+                                width: 36.w,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.bubbleColor,
+                                ),
+                                child: Image.asset(
+                                  Assets.images.textfieldicon4.path,
+                                ),
                               ),
                             ),
                             SizedBox(width: 6.w),

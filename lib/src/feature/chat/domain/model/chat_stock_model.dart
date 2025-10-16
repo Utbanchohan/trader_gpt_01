@@ -4,6 +4,7 @@ class ChatRouting {
   final String image;
   final String symbol;
   final String companyName;
+  final String type;
   final double price;
   final double changePercentage;
   final String chatId;
@@ -21,6 +22,7 @@ class ChatRouting {
     required this.stockid,
     required this.trendChart,
     required this.previousClose,
+    required this.type,
   });
 
   // factory ChatStock.fromJson(Map<String, dynamic> json) {

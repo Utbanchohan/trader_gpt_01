@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+    
   readmore: ^2.2.0
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.6.1
@@ -64,6 +65,10 @@ dependencies:
   flutter_svg: ^2.2.0
   dropdown_button2: ^2.3.9
   url_launcher: ^6.3.2
+  speech_to_text: ^7.3.0
+  record: ^5.0.5    
+  path_provider: ^2.1.2  
+  audioplayers: ^6.1.0  
 
 
 

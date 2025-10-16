@@ -129,6 +129,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               previousClose: stock.previousClose,
               chatId: chatHistory.id,
               symbol: stock.symbol,
+              type: stock.type,
               image: "",
               companyName: stock.companyName,
               price: stock.price,

@@ -67,7 +67,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
 
     if (result != null) {
       Navigator.pop(context);
-
+      if (!mounted) return;
       setState(() {
         convo.removeWhere((c) => c.id == convoId);
         searchConvo.removeWhere((c) => c.id == convoId);
@@ -122,7 +122,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         .archive(chatId: convoId, isArchived: isArchived);
     if (result != null) {
       Navigator.pop(context);
-
+      if (!mounted) return;
       setState(() {
         convo.removeWhere((c) => c.id == convoId);
         searchConvo.removeWhere((c) => c.id == convoId);
@@ -444,6 +444,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     "chatRouting": ChatRouting(
                                       previousClose:
                                           stocks[stockIndex].previousClose,
+                                      type: convo[index].type,
                                       chatId: convo[index].id,
                                       symbol: convo[index].symbol,
 
@@ -570,6 +571,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       chatId: convo[index].id,
                                       symbol: convo[index].symbol,
                                       image: "",
+                                      type: convo[index].type,
                                       companyName: convo[index].companyName,
                                       price: stocks[stockIndex].price,
                                       changePercentage:
@@ -709,6 +711,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       image: "",
                                       companyName: convo[index].companyName,
                                       price: stocks[stockIndex].price,
+                                      type: convo[index].type,
                                       changePercentage:
                                           stocks[stockIndex].pctChange,
                                       trendChart:
