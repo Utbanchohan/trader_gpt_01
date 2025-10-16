@@ -64,6 +64,7 @@ dependencies:
   flutter_svg: ^2.2.0
   dropdown_button2: ^2.3.9
   url_launcher: ^6.3.2
+  speech_to_text: ^7.3.0
 
 
 

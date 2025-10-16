@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-import 'setting_widget.dart';
 
-class ChatBottomBar extends StatelessWidget {
+class ChatBottomBar extends StatefulWidget {
   final TextEditingController messageController;
   final TextEditingController limitController;
   final ScrollController textScrollController;
@@ -45,6 +46,49 @@ class ChatBottomBar extends StatelessWidget {
   });
 
   @override
+  State<ChatBottomBar> createState() => _ChatBottomBarState();
+}
+
+class _ChatBottomBarState extends State<ChatBottomBar> {
+  final SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  String _lastWords = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initSpeech();
+  }
+
+  Future<void> _initSpeech() async {
+    bool available = await _speechToText.initialize();
+    setState(() => _speechEnabled = available);
+  }
+
+  Future<void> _startListening() async {
+    // Clear previous text before starting new listening
+    setState(() {
+      _lastWords = '';
+      widget.messageController.text = "";
+    });
+    await _speechToText.listen(onResult: _onSpeechResult);
+    setState(() {});
+  }
+
+  Future<void> _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      // 👇 Only show latest recognized words (no repetition)
+      _lastWords = result.recognizedWords;
+      widget.messageController.text = result.recognizedWords;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedPadding(
       duration: Duration(milliseconds: 200),
@@ -80,25 +124,25 @@ class ChatBottomBar extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min, // jitni zarurat utni height
                   children: [
                     TextField(
-                      controller: messageController,
+                      controller: widget.messageController,
                       style: const TextStyle(color: AppColors.white),
                       keyboardType: TextInputType.multiline,
                       minLines: 1, // kam se kam ek line
                       maxLines: 4, // max 4 line expand
-                      scrollController: textScrollController,
+                      scrollController: widget.textScrollController,
                       onChanged: (value) {
-                        textScrollController.jumpTo(
-                          textScrollController.position.maxScrollExtent,
+                        widget.textScrollController.jumpTo(
+                          widget.textScrollController.position.maxScrollExtent,
                         );
                         if (value.endsWith("/")) {
-                          onSlashDetected(context);
+                          widget.onSlashDetected(context);
                         }
                       },
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Ask anything about the market",
                         prefixIcon: GestureDetector(
-                          onTap: onPrefixTap,
+                          onTap: widget.onPrefixTap,
                           child: Image.asset(
                             Assets.images.prefixIcon.path,
                             scale: 3.3.sp,
@@ -108,13 +152,13 @@ class ChatBottomBar extends StatelessWidget {
                           minWidth: 0,
                           minHeight: 0,
                         ),
-                        suffixIcon: isWorkFlow
+                        suffixIcon: widget.isWorkFlow
                             ? IconButton(
                                 icon: const Icon(
                                   Icons.delete,
                                   color: Colors.red,
                                 ),
-                                onPressed: onDeleteWorkflow,
+                                onPressed: widget.onDeleteWorkflow,
                               )
                             : null,
                         hintStyle: TextStyle(
@@ -128,7 +172,7 @@ class ChatBottomBar extends StatelessWidget {
                     SizedBox(height: 15.h),
 
                     /// Work symbol chip
-                    if (isWorkSymbol && selectedStock != null)
+                    if (widget.isWorkSymbol && widget.selectedStock != null)
                       Container(
                         padding: EdgeInsets.all(5.w),
                         decoration: BoxDecoration(
@@ -136,14 +180,14 @@ class ChatBottomBar extends StatelessWidget {
                           border: Border.all(color: AppColors.redFF3B3B),
                         ),
                         child: MdSnsText(
-                          "Symbol | ${selectedStock!.symbol}",
+                          "Symbol | ${widget.selectedStock!.symbol}",
                           variant: TextVariant.h2,
                           fontWeight: TextFontWeightVariant.h4,
                           color: AppColors.fieldTextColor,
                         ),
                       ),
 
-                    if (isWorkSymbol) SizedBox(height: 15.h),
+                    if (widget.isWorkSymbol) SizedBox(height: 15.h),
 
                     /// Actions row
                     Row(
@@ -196,12 +240,12 @@ class ChatBottomBar extends StatelessWidget {
                                                 Colors.lightBlueAccent,
                                             inactiveTrackColor:
                                                 AppColors.primaryColor,
-                                            value: webMode,
+                                            value: widget.webMode,
                                             onChanged: (val) {
                                               localSetState(
-                                                () => webMode = val,
+                                                () => widget.webMode = val,
                                               );
-                                              onWebModeChanged(val);
+                                              widget.onWebModeChanged(val);
                                             },
                                           ),
                                         ),
@@ -250,10 +294,12 @@ class ChatBottomBar extends StatelessWidget {
                                                 Colors.lightBlueAccent,
                                             inactiveTrackColor:
                                                 AppColors.primaryColor,
-                                            value: report,
+                                            value: widget.report,
                                             onChanged: (val) {
-                                              localSetState(() => report = val);
-                                              onReportChanged(val);
+                                              localSetState(
+                                                () => widget.report = val,
+                                              );
+                                              widget.onReportChanged(val);
                                             },
                                           ),
                                         ),
@@ -301,12 +347,12 @@ class ChatBottomBar extends StatelessWidget {
                                                 Colors.lightBlueAccent,
                                             inactiveTrackColor:
                                                 AppColors.primaryColor,
-                                            value: deepAnalysis,
+                                            value: widget.deepAnalysis,
                                             onChanged: (val) {
                                               localSetState(
-                                                () => deepAnalysis = val,
+                                                () => widget.deepAnalysis = val,
                                               );
-                                              onDeepAnalysisChanged(val);
+                                              widget.onDeepAnalysisChanged(val);
                                             },
                                           ),
                                         ),
@@ -350,16 +396,35 @@ class ChatBottomBar extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: 6.w),
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              height: 36.h,
-                              width: 36.w,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.bubbleColor,
-                              ),
-                              child: Image.asset(
-                                Assets.images.textfieldicon4.path,
+                            GestureDetector(
+                              onTap: _speechToText.isNotListening
+                                  ? _startListening
+                                  : _stopListening,
+                              child: Container(
+                                height: 36.h,
+                                width: 36.w,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.bubbleColor,
+                                ),
+                                alignment: Alignment.center,
+                                child: _speechToText.isNotListening
+                                    ? Image.asset(
+                                        height: 14.h,
+                                        width: 12.w,
+                                        Assets.images.textfieldicon4.path,
+                                      )
+                                    : Container(
+                                        height: 16.h,
+                                        width: 16.w,
+                                        color: AppColors.redFF3B3B,
+                                        alignment: Alignment.center,
+                                        child: const Icon(
+                                          Icons.square,
+                                          size: 14,
+                                          color: AppColors.black,
+                                        ),
+                                      ),
                               ),
                             ),
                             SizedBox(width: 6.w),
@@ -377,7 +442,7 @@ class ChatBottomBar extends StatelessWidget {
                                   color: AppColors.white,
                                   size: 18,
                                 ),
-                                onPressed: onSend,
+                                onPressed: widget.onSend,
                               ),
                             ),
                           ],
