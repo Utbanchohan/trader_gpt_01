@@ -51,8 +51,8 @@ class ChatBottomBar extends StatefulWidget {
 
 class _ChatBottomBarState extends State<ChatBottomBar> {
   final SpeechToText _speechToText = SpeechToText();
-  bool _speechEnabled = false;
-  String _lastWords = '';
+  bool speechEnabled = false;
+  String lastWords = '';
 
   @override
   void initState() {
@@ -62,13 +62,13 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
 
   Future<void> _initSpeech() async {
     bool available = await _speechToText.initialize();
-    setState(() => _speechEnabled = available);
+    setState(() => speechEnabled = available);
   }
 
   Future<void> _startListening() async {
     // Clear previous text before starting new listening
     setState(() {
-      _lastWords = '';
+      lastWords = '';
       widget.messageController.text = "";
     });
     await _speechToText.listen(onResult: _onSpeechResult);
@@ -82,8 +82,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
 
   void _onSpeechResult(SpeechRecognitionResult result) {
     setState(() {
-      // 👇 Only show latest recognized words (no repetition)
-      _lastWords = result.recognizedWords;
+      lastWords = result.recognizedWords;
       widget.messageController.text = result.recognizedWords;
     });
   }
