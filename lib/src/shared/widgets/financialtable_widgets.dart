@@ -452,10 +452,6 @@ class FinancialTable extends StatelessWidget {
               ? cashFLowList.asMap().entries.map((entry) {
                   final index = entry.key;
                   final item = entry.value;
-                  List<String> keys = [];
-                  data.keys.forEach((key) {
-                    keys.add(key);
-                  });
 
                   // 🔹 4 different colors list
                   final List<Color> lineColors = [
@@ -688,10 +684,6 @@ class FinancialTable extends StatelessWidget {
               ? incomeStatement.asMap().entries.map((entry) {
                   final index = entry.key;
                   final item = entry.value;
-                  List<String> keys = [];
-                  data.keys.forEach((key) {
-                    keys.add(key);
-                  });
 
                   // 🔹 4 different colors list
                   final List<Color> lineColors = [
@@ -932,10 +924,6 @@ class FinancialTable extends StatelessWidget {
               : balanceSheet.asMap().entries.map((entry) {
                   final index = entry.key;
                   final item = entry.value;
-                  List<String> keys = [];
-                  data.keys.forEach((key) {
-                    keys.add(key);
-                  });
 
                   // 🔹 4 different colors list
                   final List<Color> lineColors = [

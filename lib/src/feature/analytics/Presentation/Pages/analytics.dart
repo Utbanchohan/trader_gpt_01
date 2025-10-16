@@ -2968,7 +2968,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                       ? CustomLineChart(
                                           lineColor: Colors.purpleAccent,
                                           areaColor: Colors.purple,
-                                          title: "Balance Sheet for MSFT",
+                                          title:
+                                              "Balance Sheet for ${selectedStock!.symbol}",
                                           chartData: financialResponse!
                                               .data
                                               .financialsBalanceSheet
@@ -3010,7 +3011,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                       ? CustomLineChart(
                                           lineColor: Colors.purpleAccent,
                                           areaColor: Colors.purple,
-                                          title: "Cash Flow for MSFT",
+                                          title:
+                                              "Cash Flow for ${selectedStock!.symbol}",
                                           chartData: financialResponse!
                                               .data
                                               .financialsCashFlow
