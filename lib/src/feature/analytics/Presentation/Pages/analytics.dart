@@ -379,18 +379,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     DateTime? now1,
     DateTime? startDate1,
   }) async {
-    final now = DateTime.now().toUtc();
+    final now = now1 != null ? now1.toUtc() : DateTime.now().toUtc();
 
     // Subtract 2 years for startDate
-    final startDate = DateTime.utc(
-      now.year - 10,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-      now.second,
-      now.millisecond,
-    );
+    final startDate = startDate1 != null
+        ? startDate1.toUtc()
+        : DateTime.utc(
+            now.year - 10,
+            now.month,
+            now.day,
+            now.hour,
+            now.minute,
+            now.second,
+            now.millisecond,
+          );
     final endDateString = now.toIso8601String();
     final startDateString = startDate.toIso8601String();
     ChartRequestDto overview = ChartRequestDto(
