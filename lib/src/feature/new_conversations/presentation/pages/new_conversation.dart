@@ -129,6 +129,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               previousClose: stock.previousClose,
               chatId: chatHistory.id,
               symbol: stock.symbol,
+              type: stock.type,
               image: "",
               companyName: stock.companyName,
               price: stock.price,
@@ -389,17 +390,23 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6),
-                  child: SvgPicture.network(
-                    getItemImage(
-                      widget.image.toLowerCase() == "stock"
-                          ? ImageType.stock
-                          : ImageType.crypto,
-                      widget.symbol,
-                    ),
-                    fit: BoxFit.cover,
-                    placeholderBuilder: (context) =>
-                        SizedBox(width: 26.w, height: 26.h, child: SizedBox()),
-                  ),
+                  child: widget.image.toLowerCase() == "crypto"
+                      ? Image.network(
+                          getItemImage(ImageType.crypto, widget.symbol),
+                          fit: BoxFit.cover,
+                        )
+                      : SvgPicture.network(
+                          getItemImage(ImageType.stock, widget.symbol),
+                          fit: BoxFit.cover,
+                          placeholderBuilder: (context) => SizedBox(
+                            width: 26.w,
+                            height: 26.h,
+                            child: SvgPicture.network(
+                              "https://cdn-images.traderverse.io/stock_dummy.svg",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                 ),
               ),
               // : shimmerBox(width: 26.w, height: 26.h),

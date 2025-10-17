@@ -110,7 +110,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
 
     return Container(
       alignment: Alignment.center,
-      height: 360.h,
+      height: 365.h,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.colorB3B3B3),
@@ -124,11 +124,26 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Left side text
-              MdSnsText(
-                widget.name ?? "",
-                color: AppColors.fieldTextColor,
-                fontWeight: TextFontWeightVariant.h4,
-                variant: TextVariant.h3,
+              Visibility(
+                visible: widget.name.isNotEmpty,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MdSnsText(
+                      widget.name,
+                      color: AppColors.white,
+                      fontWeight: TextFontWeightVariant.h3,
+                      variant: TextVariant.h3,
+                    ),
+                    SizedBox(height: 2),
+                    MdSnsText(
+                      "Description about OHLC chart",
+                      color: AppColors.fieldTextColor,
+                      fontWeight: TextFontWeightVariant.h5,
+                      variant: TextVariant.h3,
+                    ),
+                  ],
+                ),
               ),
 
               // Right side buttons (wrap in Row)
@@ -171,6 +186,9 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
           SizedBox(
             height: 280.h,
             child: BarChart(
+              duration: Duration(milliseconds: 1200),
+
+              curve: Curves.easeInOutCubic,
               BarChartData(
                 backgroundColor: Colors.transparent, // Dark background
                 alignment: BarChartAlignment.spaceAround,

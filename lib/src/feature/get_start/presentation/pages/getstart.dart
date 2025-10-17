@@ -102,7 +102,6 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
             ),
             SizedBox(height: 20.h),
 
-            // Terms
             MdSnsText(
               "By Signing Up you agree to our Terms & Privacy Policy.",
               textAlign: TextAlign.center,

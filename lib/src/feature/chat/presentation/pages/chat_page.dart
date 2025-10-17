@@ -106,8 +106,50 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
+  Widget _buildWorkflowList(BuildContext context, List workflows) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: workflows.length,
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
+          onTap: () async {
+            _handleWorkflowSelection(index);
+          },
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.color1B254B,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MdSnsText(
+                  "/${workflows[index].displayName}",
+                  color: AppColors.white,
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h4,
+                ),
+                const SizedBox(height: 8),
+                MdSnsText(
+                  workflows[index].description,
+                  color: AppColors.color9EAAC0,
+                  variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h4,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _handleWorkflowSelection(int index) async {
-    setState(() => isWorkFlow = true);
+    if (mounted) {
+      setState(() => isWorkFlow = true);
+    }
 
     final workflow = workflows[index];
 
@@ -115,8 +157,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       final params = workflow.parameters ?? [];
 
       if (params.isNotEmpty && params.first.name == "symbol") {
-        setState(() => isWorkSymbol = true);
-
+        if (mounted) {
+          setState(() => isWorkSymbol = true);
+        }
         _setMessage(workflow.displayName);
         _closeDialogs();
 
@@ -150,46 +193,102 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return GradientDialog(
-          child: SizedBox(
-            height: 400.h,
-            width: MediaQuery.sizeOf(context).width,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: workflows.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () async {
-                    _handleWorkflowSelection(index);
-                  },
-
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 12),
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.color1B254B,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MdSnsText(
-                          "/" + workflows[index].displayName,
-                          color: AppColors.white,
-                          variant: TextVariant.h2,
-                          fontWeight: TextFontWeightVariant.h4,
+          child: DefaultTabController(
+            length: 3,
+            child: SizedBox(
+              height: 400.h,
+              width: MediaQuery.sizeOf(context).width,
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: TabBar(
+                      isScrollable: true,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      tabAlignment: TabAlignment.start,
+                      dividerColor: Colors.transparent, // Removes bottom line
+                      // 👇 Each tab has its own rounded border and background
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        border: Border.all(
+                          color: AppColors
+                              .color046297, // Blue border for active tab
+                          width: 1,
                         ),
-                        SizedBox(height: 8),
-                        MdSnsText(
-                          workflows[index].description,
-                          color: AppColors.color9EAAC0,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
+                        color: AppColors
+                            .color1B254B, // Background color for selected tab only
+                      ),
+
+                      labelColor: AppColors.white,
+                      unselectedLabelColor: AppColors.colorB2B2B7,
+                      labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+
+                      tabs: [
+                        Tab(
+                          height: 28,
+                          child: MdSnsText(
+                            'All',
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
+
+                            color: AppColors.color046297,
+                          ),
+                        ),
+                        Tab(
+                          height: 28,
+                          child: MdSnsText(
+                            'Stock',
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
+
+                            color: AppColors.color046297,
+                          ),
+                        ),
+                        Tab(
+                          height: 28,
+                          child: MdSnsText(
+                            'Crypto',
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h4,
+
+                            color: AppColors.color046297,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                );
-              },
+                  SizedBox(height: 12.h),
+
+                  Expanded(
+                    child: TabBarView(
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                        // 🟢 All
+                        _buildWorkflowList(context, workflows),
+
+                        // 🟡 Stock
+                        _buildWorkflowList(
+                          context,
+                          workflows,
+                          // .where((w) =>
+                          //     w.category?.toLowerCase() == 'stock')
+                          // .toList(),
+                        ),
+
+                        // 🔵 Crypto
+                        _buildWorkflowList(
+                          context,
+                          workflows,
+                          // .where((w) =>
+                          //     w.category?.toLowerCase() == 'crypto')
+                          // .toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -277,7 +376,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           }
         }
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     } else {
       return false;
     }
@@ -290,7 +391,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         chats.add(res.data!.messages![i]);
       }
       scrollToBottom();
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     } else {
       return false;
     }
@@ -405,38 +508,39 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           analysisRequired: false,
           isWorkflow: isWorkFlow,
         ).toJson();
-
-        setState(() {
-          if (oldResponse != null) {
+        if (mounted) {
+          setState(() {
+            if (oldResponse != null) {
+              chats.add(
+                ChatMessageModel(
+                  id: "temp",
+                  chatId: chadId!,
+                  message: oldResponse!,
+                  type: "ai",
+                  userId: userid,
+                  displayable: Displayable(Display: oldDisplays),
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
+                ),
+              );
+            }
             chats.add(
               ChatMessageModel(
                 id: "temp",
                 chatId: chadId!,
-                message: oldResponse!,
-                type: "ai",
+                message: text,
+                type: "user",
                 userId: userid,
-                displayable: Displayable(Display: oldDisplays),
                 createdAt: DateTime.now(),
                 updatedAt: DateTime.now(),
               ),
             );
-          }
-          chats.add(
-            ChatMessageModel(
-              id: "temp",
-              chatId: chadId!,
-              message: text,
-              type: "user",
-              userId: userid,
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ),
-          );
 
-          startStream = true;
-          isWorkFlow = false;
-          isWorkSymbol = false;
-        });
+            startStream = true;
+            isWorkFlow = false;
+            isWorkSymbol = false;
+          });
+        }
         scrollToBottom();
       }
 
@@ -447,16 +551,20 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   getUser() async {
     dynamic userData = await ref.watch(localDataProvider).getUser();
     if (userData != null) {
-      setState(() {
-        user = User.fromJson(userData);
-      });
+      if (mounted) {
+        setState(() {
+          user = User.fromJson(userData);
+        });
+      }
     }
   }
 
   changeDialogueStatus() {
-    setState(() {
-      dialogOpen = true;
-    });
+    if (mounted) {
+      setState(() {
+        dialogOpen = true;
+      });
+    }
   }
 
   @override
@@ -533,6 +641,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             message: text.toString(),
                             name: widget.chatRouting?.symbol ?? "TDGPT",
                             image: widget.chatRouting?.image ?? "",
+                            symbolType: widget.chatRouting?.type ?? "",
                             type: "ai",
                             display: chartStrings,
                           ),

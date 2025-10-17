@@ -89,6 +89,7 @@ final routerConfigProvider = Provider((ref) {
                   previousClose: 0,
                   chatId: "",
                   stockid: "",
+                  type: "",
                   trendChart: FiveDayTrend(data: []),
                 );
 
@@ -199,6 +200,7 @@ final routerConfigProvider = Provider((ref) {
                 changePercentage: 0,
                 chatId: "",
                 stockid: "",
+                type: "",
                 trendChart: FiveDayTrend(data: []),
               );
 
@@ -227,10 +229,11 @@ final routerConfigProvider = Provider((ref) {
                   changePercentage: 0,
                   chatId: "",
                   stockid: "",
+                  type: "",
                   trendChart: FiveDayTrend(data: []),
                 );
 
-          return ChatConversation(chatRouting: chatRouting);
+          return ChatConversation(chatRouting: chatRouting, initialMessage: '');
         },
         routes: [],
       ),

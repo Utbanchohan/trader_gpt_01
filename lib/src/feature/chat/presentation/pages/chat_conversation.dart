@@ -34,7 +34,11 @@ import 'widgets/loading_widget.dart';
 class ChatConversation extends ConsumerStatefulWidget {
   ChatRouting? chatRouting;
 
-  ChatConversation({super.key, this.chatRouting});
+  ChatConversation({
+    super.key,
+    this.chatRouting,
+    required String initialMessage,
+  });
 
   @override
   ConsumerState<ChatConversation> createState() => _ChatConversationState();
@@ -213,6 +217,47 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
     );
   }
 
+  // 🔹 Helper widget — your original list untouched
+  Widget _buildWorkflowList(BuildContext context, List workflows) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: workflows.length,
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
+          onTap: () async {
+            _handleWorkflowSelection(index);
+          },
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.color1B254B,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MdSnsText(
+                  "/${workflows[index].displayName}",
+                  color: AppColors.white,
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h4,
+                ),
+                const SizedBox(height: 8),
+                MdSnsText(
+                  workflows[index].description,
+                  color: AppColors.color9EAAC0,
+                  variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h4,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   getChatsId() async {
     if (widget.chatRouting != null && widget.chatRouting!.chatId.isNotEmpty) {
       chadId = widget.chatRouting!.chatId;
@@ -277,7 +322,9 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
           }
         }
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     } else {
       return false;
     }
@@ -290,7 +337,9 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         chats.add(res.data!.messages![i]);
       }
       scrollToBottom();
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     } else {
       return false;
     }
@@ -546,6 +595,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                           widget.chatRouting?.symbol ?? "TDGPT",
                                       image: widget.chatRouting?.image ?? "",
                                       type: "ai",
+                                      symbolType:
+                                          widget.chatRouting?.type ?? "",
                                       display: chartStrings,
                                     ),
                                     SizedBox(height: 20),

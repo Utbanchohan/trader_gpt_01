@@ -39,6 +39,7 @@ class ChatMessagesView extends StatelessWidget {
           message: chats.message,
           name: name,
           image: image,
+          symbolType: chatRouting?.type ?? "",
           type: chats.type,
           display:
               chats.displayable != null && chats.displayable!.Display.isNotEmpty

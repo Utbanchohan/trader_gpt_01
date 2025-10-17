@@ -144,6 +144,8 @@ class ShortVolumeChart extends StatelessWidget {
           Container(
             height: 300,
             child: LineChart(
+              duration: Duration(milliseconds: 1200),
+              curve: Curves.easeInOutCubic,
               LineChartData(
                 minY: 0,
                 maxY: maxY * 1.1,

@@ -1,21 +1,39 @@
+import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import '../../feature/analytics/domain/model/financial_data_model/financial_data_model.dart';
 
 class CustomLineChart extends StatelessWidget {
-  String? title;
-  Color lineColor;
-  Color areaColor;
-  CustomLineChart({
+  final String? title;
+  final Color lineColor;
+  final Color areaColor;
+  final List<FinancialDataPoint> chartData;
+
+  const CustomLineChart({
     super.key,
     this.title,
     required this.lineColor,
     required this.areaColor,
+    required this.chartData,
   });
 
   @override
   Widget build(BuildContext context) {
+    final compactFormatter = NumberFormat.compact();
+
+    if (chartData.isEmpty) {
+      return const Center(child: Text("No Data"));
+    }
+
+    final yValues = chartData.map((e) => (e.y as num).toDouble()).toList();
+    final minY = yValues.reduce(min);
+    final maxY = yValues.reduce(max);
+    final minX = 0.0;
+    final maxX = (chartData.length - 1).toDouble();
+
     return Container(
       alignment: Alignment.center,
       height: 300,
@@ -30,170 +48,176 @@ class CustomLineChart extends StatelessWidget {
         children: [
           // 🔹 Heading Text
           MdSnsText(
-            // "data",
             title ?? "",
             color: AppColors.fieldTextColor,
             variant: TextVariant.h2,
             fontWeight: TextFontWeightVariant.h4,
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
-          // 🔹 Line Chart
+          // 🔹 Chart Area
           Expanded(
-            child: LineChart(
-              LineChartData(
-                minX: 0,
-                maxX: 10,
-                minY: 192,
-                maxY: 202,
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: true,
-                  getDrawingHorizontalLine: (value) => FlLine(
-                    color: AppColors.white.withOpacity(0.08),
-                    strokeWidth: 1,
-                  ),
-                  getDrawingVerticalLine: (value) =>
-                      FlLine(color: Colors.transparent),
-                ),
-                titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false, reservedSize: 16),
-                  ),
-                  rightTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 32,
-                      interval: 2,
-                      getTitlesWidget: (value, meta) {
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 4),
-                          child: MdSnsText(
-                            value.toInt().toString(),
-                            variant: TextVariant.h5,
-                            fontWeight: TextFontWeightVariant.h6,
-                            color: AppColors.white.withOpacity(0.9),
-                          ),
-                        );
-                      },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: LineChart(
+                LineChartData(
+                  minX: minX,
+                  maxX: maxX,
+                  minY: minY,
+                  maxY: maxY,
+
+                  // ✅ Background Grid Lines (Horizontal + subtle)
+                  gridData: FlGridData(
+                    show: true,
+                    drawVerticalLine: false,
+                    horizontalInterval: (maxY - minY) / 5,
+                    getDrawingHorizontalLine: (value) => FlLine(
+                      color: Colors.white.withOpacity(0.1),
+                      strokeWidth: 1,
                     ),
                   ),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 40,
-                      interval: 1,
-                      getTitlesWidget: (value, meta) {
-                        String text = "";
-                        switch (value.toInt()) {
-                          case 0:
-                            text = "6:00";
-                            break;
-                          case 2:
-                            text = "10:00";
-                            break;
-                          case 4:
-                            text = "14:00";
-                            break;
-                          case 6:
-                            text = "18:00";
-                            break;
-                          case 8:
-                            text = "22:00";
-                            break;
-                          case 10:
-                            text = "2:00";
-                            break;
-                        }
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: MdSnsText(
-                            text,
-                            variant: TextVariant.h4,
-                            fontWeight: TextFontWeightVariant.h7,
-                            color: AppColors.white.withOpacity(0.95),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  topTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                ),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border(
-                    left: BorderSide(color: Colors.transparent, width: 8),
-                    bottom: BorderSide(color: Colors.transparent),
-                    right: BorderSide(color: Colors.transparent),
-                    top: BorderSide(color: Colors.transparent),
-                  ),
-                ),
-                lineBarsData: [
-                  LineChartBarData(
-                    isCurved: true,
-                    barWidth: 3,
-                    color: areaColor,
-                    belowBarData: BarAreaData(
-                      show: true,
-                      gradient: LinearGradient(
-                        colors: [
-                          const Color.fromARGB(
-                            255,
-                            178,
-                            183,
-                            178,
-                          ).withOpacity(0.25),
-                          Colors.transparent,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+
+                  // ✅ Optional zero baseline
+                  extraLinesData: ExtraLinesData(
+                    horizontalLines: [
+                      HorizontalLine(
+                        y: 0,
+                        color: Colors.white24,
+                        strokeWidth: 1,
+                        dashArray: [6, 4],
                       ),
-                    ),
-                    dotData: FlDotData(
-                      show: true,
-                      checkToShowDot: (spot, barData) => spot.x == 4,
-                      getDotPainter: (spot, percent, barData, index) =>
-                          FlDotCirclePainter(
-                            radius: 5,
-                            color: Colors.white,
-                            strokeWidth: 2,
-                            strokeColor: lineColor,
-                          ),
-                    ),
-                    spots: const [
-                      FlSpot(0, 196),
-                      FlSpot(1, 194),
-                      FlSpot(2, 200),
-                      FlSpot(3, 197),
-                      FlSpot(4, 194.84),
-                      FlSpot(5, 198),
-                      FlSpot(6, 196),
-                      FlSpot(7, 198),
-                      FlSpot(8, 194),
-                      FlSpot(9, 200),
-                      FlSpot(10, 197),
                     ],
                   ),
-                ],
-                lineTouchData: LineTouchData(
-                  enabled: true,
-                  touchTooltipData: LineTouchTooltipData(
-                    getTooltipColor: (touchedSpot) => Colors.white,
-                    tooltipBorderRadius: BorderRadius.circular(10),
-                    tooltipPadding: const EdgeInsets.all(6),
-                    getTooltipItems: (spots) {
-                      return spots.map((spot) {
-                        return LineTooltipItem(
-                          "\$${spot.y.toStringAsFixed(2)}",
-                          const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        );
-                      }).toList();
-                    },
+
+                  // ✅ Axis Titles
+                  titlesData: FlTitlesData(
+                    show: true,
+
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 45,
+                        // interval: 1000,
+                        getTitlesWidget: (value, meta) {
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: MdSnsText(
+                                compactFormatter.format(value),
+                                variant: TextVariant.h5,
+                                fontWeight: TextFontWeightVariant.h4,
+                                color: AppColors
+                                    .color0xFFc0c0c8, // your desired color
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    // ✅ Fixed Bottom Date Labels
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 35,
+                        interval: (chartData.length / 4).floorToDouble().clamp(
+                          1,
+                          4,
+                        ),
+                        getTitlesWidget: (value, meta) {
+                          final index = value.toInt();
+                          if (index < 0 || index >= chartData.length) {
+                            return const SizedBox.shrink();
+                          }
+
+                          final formattedDate = DateFormat(
+                            'MMM yyyy',
+                          ).format(DateTime.parse(chartData[index].x));
+
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 15, left: 30),
+                            child: Transform.translate(
+                              offset: const Offset(0, 6),
+                              child: MdSnsText(
+                                formattedDate,
+                                variant: TextVariant.h5,
+                                fontWeight: TextFontWeightVariant.h4,
+                                color: AppColors.color0xFFc0c0c8,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    topTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                  ),
+
+                  // ✅ Remove chart borders
+                  borderData: FlBorderData(show: false),
+
+                  // ✅ Line Chart Data
+                  lineBarsData: [
+                    LineChartBarData(
+                      isCurved: true,
+                      color: lineColor,
+                      barWidth: 2.5,
+                      belowBarData: BarAreaData(
+                        show: true,
+                        gradient: LinearGradient(
+                          colors: [
+                            areaColor.withOpacity(0.3),
+                            Colors.transparent,
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      ),
+                      dotData: FlDotData(
+                        show: true,
+                        getDotPainter: (spot, percent, barData, index) =>
+                            FlDotCirclePainter(
+                              radius: 3.5,
+                              color: Colors.white,
+                              strokeWidth: 1.5,
+                              strokeColor: lineColor,
+                            ),
+                      ),
+                      spots: List.generate(
+                        chartData.length,
+                        (i) => FlSpot(
+                          i.toDouble(),
+                          (chartData[i].y as num).toDouble(),
+                        ),
+                      ),
+                    ),
+                  ],
+
+                  // ✅ Tooltip Styling
+                  lineTouchData: LineTouchData(
+                    enabled: true,
+                    touchTooltipData: LineTouchTooltipData(
+                      tooltipBorderRadius: BorderRadius.circular(10),
+                      tooltipPadding: const EdgeInsets.all(8),
+                      getTooltipColor: (_) => Colors.white,
+                      getTooltipItems: (spots) {
+                        return spots.map((spot) {
+                          return LineTooltipItem(
+                            "\$${spot.y.toStringAsFixed(2)}",
+                            const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        }).toList();
+                      },
+                    ),
                   ),
                 ),
               ),

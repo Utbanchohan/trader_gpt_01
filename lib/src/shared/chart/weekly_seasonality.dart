@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/weekly_model/weekly_model.dart';
+import 'package:trader_gpt/src/shared/widgets/WeeklyBarChart_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../feature/analytics/domain/model/monthly_model/monthly_model.dart';
@@ -26,10 +27,10 @@ class WeeklySeasonalityChart extends ConsumerStatefulWidget {
 
 class _WeeklySeasonalityChartState
     extends ConsumerState<WeeklySeasonalityChart> {
+  String selectedValue = "Radar";
+
   @override
   Widget build(BuildContext context) {
-    String selectedValue = "Radar";
-
     final List<Map<String, dynamic>> weeklyData = widget.isWeekly
         ? [
             {
@@ -120,6 +121,13 @@ class _WeeklySeasonalityChartState
               "amount": widget.data.probability!.december,
             },
           ];
+    final bar = [
+      {"day": "Mon", "value": 40.0, "amount": 123.45},
+      {"day": "Tue", "value": 70.0, "amount": 89.12},
+      {"day": "Wed", "value": 50.0, "amount": 54.33},
+      {"day": "Thu", "value": 80.0, "amount": 142.11},
+      {"day": "Fri", "value": 65.0, "amount": 99.99},
+    ];
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
 
@@ -149,7 +157,7 @@ class _WeeklySeasonalityChartState
 
                 Container(
                   height: 30,
-                  width: 90, // increased a bit for text + arrow
+                  width: 100,
                   decoration: BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
@@ -162,23 +170,33 @@ class _WeeklySeasonalityChartState
                     child: DropdownButton2<String>(
                       isExpanded: true,
                       value: selectedValue,
-                      // 👇 show selected text + arrow inside the same Row
+                      items: ["Radar", "Bar"].map((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: MdSnsText(
+                            value,
+                            variant: TextVariant.h5,
+                            fontWeight: TextFontWeightVariant.h4,
+                            color: AppColors.fieldTextColor,
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedValue = value!;
+                        });
+                      },
                       customButton: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(left: 8),
                             child: MdSnsText(
-                              selectedValue, // 👈 shows current selection beside the arrow
+                              selectedValue,
                               variant: TextVariant.h5,
                               fontWeight: TextFontWeightVariant.h4,
                               color: AppColors.fieldTextColor,
                             ),
-                          ),
-                          Icon(
-                            Icons.keyboard_arrow_down_outlined,
-                            color: AppColors.fieldTextColor,
-                            size: 18,
                           ),
                         ],
                       ),
@@ -190,39 +208,6 @@ class _WeeklySeasonalityChartState
                         ),
                         padding: EdgeInsets.zero,
                       ),
-                      items: [
-                        DropdownMenuItem(
-                          value: "Radar",
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 2),
-                            child: MdSnsText(
-                              "Radar",
-                              variant: TextVariant.h5,
-                              fontWeight: TextFontWeightVariant.h4,
-                              color: AppColors.fieldTextColor,
-                            ),
-                          ),
-                        ),
-                        DropdownMenuItem(
-                          value: "Bar",
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 2),
-                            child: MdSnsText(
-                              "Bar",
-                              variant: TextVariant.h5,
-                              fontWeight: TextFontWeightVariant.h4,
-                              color: AppColors.fieldTextColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() {
-                            selectedValue = value;
-                          });
-                        }
-                      },
                     ),
                   ),
                 ),
@@ -230,168 +215,78 @@ class _WeeklySeasonalityChartState
             ),
 
             SizedBox(height: 16),
+            if (selectedValue == "Radar")
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Divider line behind chart
+                  Positioned.fill(
+                    child: CustomPaint(painter: BackgroundDividerPainter()),
+                  ),
 
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                // Divider line behind chart
-                Positioned.fill(
-                  child: CustomPaint(painter: BackgroundDividerPainter()),
-                ),
+                  // The actual chart on top
+                  MonthlySpiderChart(
+                    isWeekly: widget.isWeekly,
+                    lables: !widget.isWeekly
+                        ? [
+                            "January",
+                            "February",
+                            "March",
+                            "April",
+                            "May",
+                            "June",
+                            "July",
+                            "August",
+                            "September",
+                            "October",
+                            "November",
+                            "December",
+                          ]
+                        : [
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday",
+                          ],
+                    values: widget.isWeekly
+                        ? [
+                            weeklyData[0]['value'],
+                            weeklyData[1]['value'],
+                            weeklyData[2]['value'],
+                            weeklyData[3]['value'],
+                            weeklyData[4]['value'],
+                          ]
+                        : [
+                            weeklyData[0]['value'],
+                            weeklyData[1]['value'],
+                            weeklyData[2]['value'],
+                            weeklyData[3]['value'],
+                            weeklyData[4]['value'],
+                            weeklyData[5]['value'],
+                            weeklyData[6]['value'],
+                            weeklyData[7]['value'],
+                            weeklyData[8]['value'],
+                            weeklyData[9]['value'],
+                            weeklyData[10]['value'],
+                            weeklyData[11]['value'],
+                          ],
+                    maxValue: 100,
+                  ),
+                ],
+              ),
 
-                // The actual chart on top
-                MonthlySpiderChart(
-                  isWeekly: widget.isWeekly,
-                  lables: !widget.isWeekly
-                      ? [
-                          "January",
-                          "February",
-                          "March",
-                          "April",
-                          "May",
-                          "June",
-                          "July",
-                          "August",
-                          "September",
-                          "October",
-                          "November",
-                          "December",
-                        ]
-                      : [
-                          "Monday",
-                          "Tuesday",
-                          "Wednesday",
-                          "Thursday",
-                          "Friday",
-                        ],
-                  values: widget.isWeekly
-                      ? [
-                          weeklyData[0]['value'],
-                          weeklyData[1]['value'],
-                          weeklyData[2]['value'],
-                          weeklyData[3]['value'],
-                          weeklyData[4]['value'],
-                        ]
-                      : [
-                          weeklyData[0]['value'],
-                          weeklyData[1]['value'],
-                          weeklyData[2]['value'],
-                          weeklyData[3]['value'],
-                          weeklyData[4]['value'],
-                          weeklyData[5]['value'],
-                          weeklyData[6]['value'],
-                          weeklyData[7]['value'],
-                          weeklyData[8]['value'],
-                          weeklyData[9]['value'],
-                          weeklyData[10]['value'],
-                          weeklyData[11]['value'],
-                        ],
-                  maxValue: 100,
-                ),
-              ],
-            ),
-
-            // Chart
-            // AspectRatio(
-            //   aspectRatio: 1.6,
-            //   child: RotatedBox(
-            //     quarterTurns: 1,
-            //     child: BarChart(
-            //       BarChartData(
-            //         alignment: BarChartAlignment.spaceAround,
-            //         minY: 0,
-            //         maxY: 100,
-            //         gridData: FlGridData(
-            //           show: true,
-            //           drawHorizontalLine: true,
-            //           drawVerticalLine: false,
-            //           horizontalInterval: 20,
-            //           getDrawingHorizontalLine: (value) =>
-            //               FlLine(color: Colors.white24, strokeWidth: 1),
-            //         ),
-            //         titlesData: FlTitlesData(
-            //           leftTitles: const AxisTitles(
-            //             sideTitles: SideTitles(showTitles: false),
-            //           ),
-            //           rightTitles: const AxisTitles(
-            //             sideTitles: SideTitles(showTitles: false),
-            //           ),
-            //           topTitles: const AxisTitles(
-            //             sideTitles: SideTitles(showTitles: false),
-            //           ),
-            //           bottomTitles: AxisTitles(
-            //             sideTitles: SideTitles(
-            //               showTitles: true,
-            //               reservedSize: 80,
-            //               getTitlesWidget: (value, meta) {
-            //                 int index = value.toInt();
-            //                 if (index >= 0 && index < weeklyData.length) {
-            //                   return Transform.rotate(
-            //                     angle: -1.5708,
-            //                     child: Container(
-            //                       margin: EdgeInsets.only(top: 30.h),
-
-            //                       child: MdSnsText(
-            //                         weeklyData[index]["day"],
-            //                         variant: TextVariant.h4,
-            //                         color: Color(0xB3FFFFFF),
-            //                       ),
-            //                     ),
-            //                   );
-            //                 }
-            //                 return const SizedBox.shrink();
-            //               },
-            //             ),
-            //           ),
-            //         ),
-            //         borderData: FlBorderData(
-            //           show: true,
-            //           border: const Border(
-            //             bottom: BorderSide(color: Colors.white30, width: 1),
-            //             right: BorderSide(
-            //               color: Colors.white30,
-            //               width: 1,
-            //             ), // ✅ right line
-            //             left: BorderSide.none,
-            //             top: BorderSide.none,
-            //           ),
-            //         ),
-            //         barGroups: weeklyData.asMap().entries.map((entry) {
-            //           return BarChartGroupData(
-            //             x: entry.key,
-            //             barRods: [
-            //               BarChartRodData(
-            //                 toY: entry.value["value"] * 1.0,
-            //                 width: 10,
-            //                 color: Colors.blueAccent,
-            //                 borderRadius: BorderRadius.circular(6),
-            //               ),
-            //             ],
-            //           );
-            //         }).toList(),
-            //         barTouchData: BarTouchData(
-            //           enabled: true,
-            //           touchTooltipData: BarTouchTooltipData(
-            //             tooltipMargin: 8,
-            //             tooltipPadding: const EdgeInsets.all(8),
-            //             getTooltipItem: (group, groupIndex, rod, rodIndex) {
-            //               final data = weeklyData[group.x.toInt()];
-            //               return BarTooltipItem(
-            //                 '\$${data["amount"].toStringAsFixed(2)}\n${data["value"].toStringAsFixed(0)}%',
-            //                 const TextStyle(
-            //                   color: Colors.black,
-            //                   fontWeight: FontWeight.bold,
-            //                 ),
-            //               );
-            //             },
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            const SizedBox(height: 12),
-
+            if (selectedValue == "Bar")
+              WeeklyBarChartWidget(
+                weeklyData: [
+                  {"day": "Mon", "value": 40.0, "amount": 123.45},
+                  {"day": "Tue", "value": 70.0, "amount": 89.12},
+                  {"day": "Wed", "value": 50.0, "amount": 54.33},
+                  {"day": "Thu", "value": 80.0, "amount": 142.11},
+                  {"day": "Fri", "value": 65.0, "amount": 99.99},
+                ],
+              ),
+            SizedBox(height: 12),
             Center(
               child: MdSnsText(
                 variant: TextVariant.h4,
@@ -488,7 +383,6 @@ class _SpiderPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
-    // --- Draw spider grid
     for (int i = 1; i <= 5; i++) {
       final r = radius * i / 5;
       final path = Path();

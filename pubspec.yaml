@@ -66,6 +66,7 @@ dependencies:
   url_launcher: ^6.3.2
   flutter_flavorizr: ^2.4.1
 
+  speech_to_text: ^7.3.0
 
 
 
