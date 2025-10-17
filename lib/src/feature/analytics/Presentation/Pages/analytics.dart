@@ -373,7 +373,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     }
   }
 
-  getAnalysisData(String symbol, IntervalEnum interval) async {
+  getAnalysisData(
+    String symbol,
+    IntervalEnum interval, {
+    DateTime? now1,
+    DateTime? startDate1,
+  }) async {
     final now = DateTime.now().toUtc();
 
     // Subtract 2 years for startDate
@@ -2869,6 +2874,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   Widget _analysisContent() {
+    DateTime fromDate;
+    DateTime toDate;
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2877,7 +2885,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [DateRangePickerWidget(onShowPressed: (from, to) {})],
+              children: [
+                DateRangePickerWidget(
+                  onShowPressed: (from, to) async {
+                    fromDate = from!;
+                    toDate = to!;
+                    await getAnalysisData(
+                      widget.chatRouting!.symbol,
+                      IntervalEnum.daily,
+                      now1: toDate,
+                      startDate1: fromDate,
+                    );
+                  },
+                ),
+              ],
             ),
           ),
 
