@@ -835,6 +835,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       if (!mounted) return;
       setState(() {});
     }
+    if (aboutCryptoModel == null) {
+      await getAboutCrypto(widget.chatRouting!.symbol);
+      if (!mounted) return;
+      setState(() {});
+    }
     if (overviewCandleChartModelCrypto == null) {
       await getOverviewCandleChartCrypto(
         widget.chatRouting!.symbol,
@@ -843,11 +848,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       if (!mounted) return;
       setState(() {});
     }
-    if (aboutCryptoModel == null) {
-      await getAboutCrypto(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
-    }
+
     if (priceComparisonModel == null) {
       await priceComparison(
         PriceComparisonDto(
@@ -861,7 +862,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     }
 
     if (marketCapResponse == null) {
-      marketCapRequest(
+      await marketCapRequest(
         MarketCapRequest(
           interval: "1 month",
           symbol: widget.chatRouting!.symbol,
@@ -871,12 +872,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       setState(() {});
     }
     if (cryptoMarketModel == null) {
-      cryptoMarkets(SymbolDto(symbol: widget.chatRouting!.symbol));
+      await cryptoMarkets(SymbolDto(symbol: widget.chatRouting!.symbol));
       if (!mounted) return;
       setState(() {});
     }
     if (priceRatioModel == null) {
-      priceRatio(
+      await priceRatio(
         PriceComparisonDto(
           daysBack: 365,
           symbol1: widget.chatRouting!.symbol,
@@ -1260,8 +1261,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                 secondColor: AppColors.white,
                                 firstHeading: "MARKET CAPITILIZATION",
                                 secondHeading: "DILUTED MARKET CAP",
-                                previousPrice:
-                                    "${highlightResponse!.data![0].marketCapitalization ?? "N/A"}",
+                                previousPrice: compactFormatter.format(
+                                  highlightResponse!
+                                          .data![0]
+                                          .marketCapitalization ??
+                                      0,
+                                ),
                                 afterHoursPrice:
                                     "${highlightResponse!.data![0].dilutedMarketCap ?? "N/A"}",
                                 percentage: "+1.48%",
@@ -1500,6 +1505,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                           DateTime.fromMillisecondsSinceEpoch(
                                             value.toInt(),
                                           );
+                                      print(value.toInt());
                                       final label = DateFormat(
                                         'MMM yyyy',
                                       ).format(date);
@@ -1827,8 +1833,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           Container(
             margin: EdgeInsets.only(left: 10.w),
 
-            child:
-             TabBar(
+            child: TabBar(
               controller: tabController,
               isScrollable: true,
               indicatorSize: TabBarIndicatorSize.tab,

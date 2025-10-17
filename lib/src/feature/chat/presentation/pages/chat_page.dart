@@ -545,6 +545,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             message: text.toString(),
                             name: widget.chatRouting?.symbol ?? "TDGPT",
                             image: widget.chatRouting?.image ?? "",
+                            symbolType: widget.chatRouting?.type ?? "",
                             type: "ai",
                             display: chartStrings,
                           ),
