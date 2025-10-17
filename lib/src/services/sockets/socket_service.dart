@@ -11,7 +11,7 @@ class SocketService {
 
   void connect() {
     socket = IO.io(
-F.newSocketUrl,
+      F.newSocketUrl,
       // 'https://stage.tradersgpt.io',
       IO.OptionBuilder()
           .setTransports(['websocket'])
