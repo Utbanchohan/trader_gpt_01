@@ -17,7 +17,8 @@ abstract class WorkflowsData with _$WorkflowsData {
     required List<Workflow> workflows,
   }) = _WorkflowsData;
 
-  factory WorkflowsData.fromJson(Map<String, dynamic> json) => _$WorkflowsDataFromJson(json);
+  factory WorkflowsData.fromJson(Map<String, dynamic> json) =>
+      _$WorkflowsDataFromJson(json);
 }
 
 @freezed
@@ -30,7 +31,8 @@ abstract class Workflow with _$Workflow {
     List<Parameter>? parameters,
   }) = _Workflow;
 
-  factory Workflow.fromJson(Map<String, dynamic> json) => _$WorkflowFromJson(json);
+  factory Workflow.fromJson(Map<String, dynamic> json) =>
+      _$WorkflowFromJson(json);
 }
 
 @freezed
@@ -42,7 +44,8 @@ abstract class Parameter with _$Parameter {
     @JsonKey(name: 'default') dynamic defaultValue,
   }) = _Parameter;
 
-  factory Parameter.fromJson(Map<String, dynamic> json) => _$ParameterFromJson(json);
+  factory Parameter.fromJson(Map<String, dynamic> json) =>
+      _$ParameterFromJson(json);
 }
 
 /*

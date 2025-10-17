@@ -1028,30 +1028,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   Widget _buildCryptoTab() {
-    double? maxY;
+    double? minX;
     double? maxX;
     List<FlSpot> buildPriceRatioSpots(Map<String, double> data) {
-      List<FlSpot> flSpots = [];
+      var spots;
       if (data.isNotEmpty) {
-        final spots =
-            data.entries
-                .map((e) => MapEntry(int.parse(e.key), e.value.toDouble()))
-                .toList()
-              ..sort((a, b) => a.key.compareTo(b.key)); // sort by date
-
-        flSpots = spots
-            .map(
-              (e) => FlSpot(
-                e.key.toDouble(), // x = timestamp (ms)
-                e.value, // y = value
-              ),
-            )
-            .toList();
+        spots = data.entries.map((e) {
+          return FlSpot(double.parse(e.key), e.value.toDouble());
+        }).toList()..sort((a, b) => a.x.compareTo(b.x));
       }
 
-      maxY = flSpots.last.y;
-      maxX = flSpots.last.x;
-      return flSpots;
+      minX = spots != null ? spots.first.x : 0;
+      maxX = spots != null ? spots.last.x : 10;
+
+      return spots != null ? spots : [];
     }
 
     List<ChartData> buildCryptoChartSpots(
@@ -1072,6 +1062,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       }).toList();
 
       return chartDataList;
+    }
+
+    double _twoMonthIntervalMilliseconds() {
+      const millisInDay = 86400000;
+      const daysInTwoMonths = 60;
+      return (millisInDay * daysInTwoMonths).toDouble();
     }
 
     List<FinancialDataPoint> buildMarketCapScope(List<MarketCapData> data) {
@@ -1442,7 +1438,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 : SizedBox(),
             SizedBox(height: 20.h),
             priceRatioModel != null &&
-                    priceRatioModel!.data.data["price_ratio"] != null
+                    priceRatioModel!.data.data["price_ratio"] != null &&
+                    priceRatioModel!.data.data["price_ratio"]!.isNotEmpty
                 ? Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -1467,10 +1464,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             curve: Curves.easeInOut,
                             duration: Duration(milliseconds: 1200),
                             LineChartData(
-                              minX: 0,
+                              minX: minX,
                               maxX: maxX,
-                              maxY: 0,
-                              minY: maxY,
+                              minY: 0,
+
                               backgroundColor: AppColors.color091224,
                               gridData: FlGridData(
                                 show: true,
@@ -1499,21 +1496,25 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                 bottomTitles: AxisTitles(
                                   sideTitles: SideTitles(
                                     showTitles: true,
-                                    interval: 60 * 60 * 24 * 30 * 2 * 1000,
+
+                                    interval: _twoMonthIntervalMilliseconds(),
+                                    reservedSize: 30,
                                     getTitlesWidget: (value, meta) {
                                       final date =
                                           DateTime.fromMillisecondsSinceEpoch(
                                             value.toInt(),
                                           );
-                                      print(value.toInt());
-                                      final label = DateFormat(
-                                        'MMM yyyy',
+                                      final formatted = DateFormat(
+                                        "MMM ''yy",
                                       ).format(date);
-
-                                      return MdSnsText(
-                                        "$label",
-                                        color: AppColors.white,
-                                        variant: TextVariant.h5,
+                                      return SideTitleWidget(
+                                        meta: meta,
+                                        space: 1,
+                                        child: MdSnsText(
+                                          formatted,
+                                          color: AppColors.white,
+                                          variant: TextVariant.h5,
+                                        ),
                                       );
                                     },
                                   ),
@@ -1529,245 +1530,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               lineBarsData: [
                                 LineChartBarData(
                                   spots: buildPriceRatioSpots(
-                                    // priceRatioModel!.data.data["price_ratio"]!,
-                                    {
-                                      "1730678400000": 1,
-                                      "1730764800000": 1,
-                                      "1730851200000": 1,
-                                      "1730937600000": 1,
-                                      "1731024000000": 1,
-                                      "1731283200000": 1,
-                                      "1731369600000": 1,
-                                      "1731456000000": 1,
-                                      "1731542400000": 1,
-                                      "1731628800000": 1,
-                                      "1731888000000": 1,
-                                      "1731974400000": 1,
-                                      "1732060800000": 1,
-                                      "1732147200000": 1,
-                                      "1732233600000": 1,
-                                      "1732492800000": 1,
-                                      "1732579200000": 1,
-                                      "1732665600000": 1,
-                                      "1732838400000": 1,
-                                      "1733097600000": 1,
-                                      "1733184000000": 1,
-                                      "1733270400000": 1,
-                                      "1733356800000": 1,
-                                      "1733443200000": 1,
-                                      "1733702400000": 1,
-                                      "1733788800000": 1,
-                                      "1733875200000": 1,
-                                      "1733961600000": 1,
-                                      "1734048000000": 1,
-                                      "1734307200000": 1,
-                                      "1734393600000": 1,
-                                      "1734480000000": 1,
-                                      "1734566400000": 1,
-                                      "1734652800000": 1,
-                                      "1734912000000": 1,
-                                      "1734998400000": 1,
-                                      "1735171200000": 1,
-                                      "1735257600000": 1,
-                                      "1735516800000": 1,
-                                      "1735603200000": 1,
-                                      "1735776000000": 1,
-                                      "1735862400000": 1,
-                                      "1736121600000": 1,
-                                      "1736208000000": 1,
-                                      "1736294400000": 1,
-                                      "1736467200000": 1,
-                                      "1736726400000": 1,
-                                      "1736812800000": 1,
-                                      "1736899200000": 1,
-                                      "1736985600000": 1,
-                                      "1737072000000": 1,
-                                      "1737417600000": 1,
-                                      "1737504000000": 1,
-                                      "1737590400000": 1,
-                                      "1737676800000": 1,
-                                      "1737936000000": 1,
-                                      "1738022400000": 1,
-                                      "1738108800000": 1,
-                                      "1738195200000": 1,
-                                      "1738281600000": 1,
-                                      "1738540800000": 1,
-                                      "1738627200000": 1,
-                                      "1738713600000": 1,
-                                      "1738800000000": 1,
-                                      "1738886400000": 1,
-                                      "1739145600000": 1,
-                                      "1739232000000": 1,
-                                      "1739318400000": 1,
-                                      "1739404800000": 1,
-                                      "1739491200000": 1,
-                                      "1739836800000": 1,
-                                      "1739923200000": 1,
-                                      "1740009600000": 1,
-                                      "1740096000000": 1,
-                                      "1740355200000": 1,
-                                      "1740441600000": 1,
-                                      "1740528000000": 1,
-                                      "1740614400000": 1,
-                                      "1740700800000": 1,
-                                      "1740960000000": 1,
-                                      "1741046400000": 1,
-                                      "1741132800000": 1,
-                                      "1741219200000": 1,
-                                      "1741305600000": 1,
-                                      "1741564800000": 1,
-                                      "1741651200000": 1,
-                                      "1741737600000": 1,
-                                      "1741824000000": 1,
-                                      "1741910400000": 1,
-                                      "1742169600000": 1,
-                                      "1742256000000": 1,
-                                      "1742342400000": 1,
-                                      "1742428800000": 1,
-                                      "1742515200000": 1,
-                                      "1742774400000": 1,
-                                      "1742860800000": 1,
-                                      "1742947200000": 1,
-                                      "1743033600000": 1,
-                                      "1743120000000": 1,
-                                      "1743379200000": 1,
-                                      "1743465600000": 1,
-                                      "1743552000000": 1,
-                                      "1743638400000": 1,
-                                      "1743724800000": 1,
-                                      "1743984000000": 1,
-                                      "1744070400000": 1,
-                                      "1744156800000": 1,
-                                      "1744243200000": 1,
-                                      "1744329600000": 1,
-                                      "1744588800000": 1,
-                                      "1744675200000": 1,
-                                      "1744761600000": 1,
-                                      "1744848000000": 1,
-                                      "1745193600000": 1,
-                                      "1745280000000": 1,
-                                      "1745366400000": 1,
-                                      "1745452800000": 1,
-                                      "1745539200000": 1,
-                                      "1745798400000": 1,
-                                      "1745884800000": 1,
-                                      "1745971200000": 1,
-                                      "1746057600000": 1,
-                                      "1746144000000": 1,
-                                      "1746403200000": 1,
-                                      "1746489600000": 1,
-                                      "1746576000000": 1,
-                                      "1746662400000": 1,
-                                      "1746748800000": 1,
-                                      "1747008000000": 1,
-                                      "1747094400000": 1,
-                                      "1747180800000": 1,
-                                      "1747267200000": 1,
-                                      "1747353600000": 1,
-                                      "1747612800000": 1,
-                                      "1747699200000": 1,
-                                      "1747785600000": 1,
-                                      "1747872000000": 1,
-                                      "1747958400000": 1,
-                                      "1748304000000": 1,
-                                      "1748390400000": 1,
-                                      "1748476800000": 1,
-                                      "1748563200000": 1,
-                                      "1748822400000": 1,
-                                      "1748908800000": 1,
-                                      "1748995200000": 1,
-                                      "1749081600000": 1,
-                                      "1749168000000": 1,
-                                      "1749427200000": 1,
-                                      "1749513600000": 1,
-                                      "1749600000000": 1,
-                                      "1749686400000": 1,
-                                      "1749772800000": 1,
-                                      "1750032000000": 1,
-                                      "1750118400000": 1,
-                                      "1750204800000": 1,
-                                      "1750377600000": 1,
-                                      "1750636800000": 1,
-                                      "1750723200000": 1,
-                                      "1750809600000": 1,
-                                      "1750896000000": 1,
-                                      "1750982400000": 1,
-                                      "1751241600000": 1,
-                                      "1751328000000": 1,
-                                      "1751414400000": 1,
-                                      "1751500800000": 1,
-                                      "1751846400000": 1,
-                                      "1751932800000": 1,
-                                      "1752019200000": 1,
-                                      "1752105600000": 1,
-                                      "1752192000000": 1,
-                                      "1752451200000": 1,
-                                      "1752537600000": 1,
-                                      "1752624000000": 1,
-                                      "1752710400000": 1,
-                                      "1752796800000": 1,
-                                      "1753056000000": 1,
-                                      "1753142400000": 1,
-                                      "1753228800000": 1,
-                                      "1753315200000": 1,
-                                      "1753401600000": 1,
-                                      "1753660800000": 1,
-                                      "1753747200000": 1,
-                                      "1753833600000": 1,
-                                      "1753920000000": 1,
-                                      "1754006400000": 1,
-                                      "1754265600000": 1,
-                                      "1754352000000": 1,
-                                      "1754438400000": 1,
-                                      "1754524800000": 1,
-                                      "1754611200000": 1,
-                                      "1754870400000": 1,
-                                      "1754956800000": 1,
-                                      "1755043200000": 1,
-                                      "1755129600000": 1,
-                                      "1755216000000": 1,
-                                      "1755475200000": 1,
-                                      "1755561600000": 1,
-                                      "1755648000000": 1,
-                                      "1755734400000": 1,
-                                      "1755820800000": 1,
-                                      "1756080000000": 1,
-                                      "1756166400000": 1,
-                                      "1756252800000": 1,
-                                      "1756339200000": 1,
-                                      "1756425600000": 1,
-                                      "1756771200000": 1,
-                                      "1756857600000": 1,
-                                      "1756944000000": 1,
-                                      "1757030400000": 1,
-                                      "1757289600000": 1,
-                                      "1757376000000": 1,
-                                      "1757462400000": 1,
-                                      "1757548800000": 1,
-                                      "1757635200000": 1,
-                                      "1757894400000": 1,
-                                      "1757980800000": 1,
-                                      "1758067200000": 1,
-                                      "1758153600000": 1,
-                                      "1758240000000": 1,
-                                      "1758499200000": 1,
-                                      "1758585600000": 1,
-                                      "1758672000000": 1,
-                                      "1758758400000": 1,
-                                      "1758844800000": 1,
-                                      "1759104000000": 1,
-                                      "1759190400000": 1,
-                                      "1759276800000": 1,
-                                      "1759363200000": 1,
-                                      "1759449600000": 1,
-                                      "1759708800000": 1,
-                                      "1759795200000": 1,
-                                      "1759881600000": 1,
-                                      "1759968000000": 1,
-                                      "1760054400000": 1,
-                                      "1760313600000": 1,
-                                      "1760400000000": 1,
-                                    },
+                                    priceRatioModel!.data.data["price_ratio"]!,
                                   ),
                                   isCurved: true,
                                   color: AppColors.color0098E4,
@@ -3098,9 +2861,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [DateRangePickerWidget(onShowPressed: (from, to) {})],
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [DateRangePickerWidget(onShowPressed: (from, to) {})],
+            ),
           ),
 
           SizedBox(height: 20),
