@@ -29,6 +29,7 @@ class ChatMarkdownWidget extends StatefulWidget {
   String name;
   String image;
   String type;
+  String symbolType;
   List<String> display;
 
   ChatMarkdownWidget({
@@ -38,6 +39,7 @@ class ChatMarkdownWidget extends StatefulWidget {
     required this.message,
     required this.type,
     required this.display,
+    required this.symbolType,
   });
   @override
   State<ChatMarkdownWidget> createState() => _ChatMarkdownWidgetState();
@@ -162,7 +164,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
-                        child: widget.type.toLowerCase() == "crypto"
+                        child: widget.symbolType.toLowerCase() == "crypto"
                             ? Image.network(
                                 getItemImage(ImageType.crypto, widget.name),
                                 fit: BoxFit.cover,
