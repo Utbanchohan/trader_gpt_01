@@ -140,14 +140,23 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
                         ),
 
                         LineChartBarData(
-                          spots: buildSpots(
-                            widget
-                                .priceComparisonModel!
-                                .data
-                                .data['${widget.symbol}']!,
-                          ),
+                          spots: widget.twoCharts
+                              ? buildSpots(
+                                  widget
+                                      .priceComparisonModel!
+                                      .data
+                                      .data['SPY']!,
+                                )
+                              : buildSpots(
+                                  widget
+                                      .priceComparisonModel!
+                                      .data
+                                      .data['${widget.symbol}']!,
+                                ),
                           isCurved: true,
-                          color: AppColors.color274E87,
+                          color: widget.twoCharts
+                              ? AppColors.white
+                              : AppColors.color274E87,
                           barWidth: 2,
                           dotData: FlDotData(show: false),
                         ),
