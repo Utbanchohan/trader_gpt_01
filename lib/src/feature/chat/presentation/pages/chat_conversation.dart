@@ -322,7 +322,9 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
           }
         }
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     } else {
       return false;
     }
@@ -335,7 +337,9 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         chats.add(res.data!.messages![i]);
       }
       scrollToBottom();
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     } else {
       return false;
     }

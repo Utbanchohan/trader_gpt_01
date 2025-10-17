@@ -506,6 +506,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       if (!mounted) return;
       setState(() {});
     }
+    if (overviewCandleChartModel == null) {
+      await getOverviewCandleChart(
+        widget.chatRouting!.symbol,
+        IntervalEnum.daily,
+      );
+      if (!mounted) return;
+      setState(() {});
+    }
     if (priceTargetMatrics == null) {
       await priceTargetMatricsData(
         SymbolDto(symbol: widget.chatRouting!.symbol),
@@ -546,14 +554,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     }
     if (monthlyData == null) {
       await getMonthlyData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
-    }
-    if (overviewCandleChartModel == null) {
-      await getOverviewCandleChart(
-        widget.chatRouting!.symbol,
-        IntervalEnum.daily,
-      );
       if (!mounted) return;
       setState(() {});
     }
@@ -2711,6 +2711,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                               .data
                                               .isNotEmpty
                                       ? FinancialTable(
+                                          chart: financialResponse!
+                                              .data
+                                              .financialsIncomeStatement
+                                              .chart,
                                           data: financialResponse!
                                               .data
                                               .financialsIncomeStatement
@@ -2754,6 +2758,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                               .data
                                               .isNotEmpty
                                       ? FinancialTable(
+                                          chart: financialResponse!
+                                              .data
+                                              .financialsBalanceSheet
+                                              .chart,
                                           data: financialResponse!
                                               .data
                                               .financialsBalanceSheet
@@ -2797,6 +2805,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                               .data
                                               .isNotEmpty
                                       ? FinancialTable(
+                                          chart: financialResponse!
+                                              .data
+                                              .financialsCashFlow
+                                              .chart,
                                           data: financialResponse!
                                               .data
                                               .financialsCashFlow
