@@ -591,6 +591,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                           widget.chatRouting?.symbol ?? "TDGPT",
                                       image: widget.chatRouting?.image ?? "",
                                       type: "ai",
+                                      symbolType:
+                                          widget.chatRouting?.type ?? "",
                                       display: chartStrings,
                                     ),
                                     SizedBox(height: 20),
