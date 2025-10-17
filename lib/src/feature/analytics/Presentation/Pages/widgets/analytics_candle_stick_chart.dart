@@ -200,11 +200,12 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                   horizontalInterval: 20,
                   verticalInterval: 1, // optional: adjust as needed
                   getDrawingHorizontalLine: (value) => FlLine(
-                    color: Colors.yellow, // 👈 ye color zyada visible hoga
+                    color:
+                        AppColors.colorB3B3B3, // 👈 ye color zyada visible hoga
                     strokeWidth: 1.2,
                   ),
                   getDrawingVerticalLine: (value) => FlLine(
-                    color: Colors.yellow, // thoda soft vertical line
+                    color: AppColors.colorB3B3B3, // thoda soft vertical line
                     strokeWidth: 0.8,
                   ),
                 ),
@@ -234,6 +235,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                       },
                     ),
                   ),
+
                   bottomTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),

@@ -157,7 +157,7 @@ class _WeeklySeasonalityChartState
 
                 Container(
                   height: 30,
-                  width: 100,
+                  width: 80,
                   decoration: BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
@@ -186,20 +186,26 @@ class _WeeklySeasonalityChartState
                           selectedValue = value!;
                         });
                       },
+
+                      // 👇 Custom button with down arrow icon before text
                       customButton: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: MdSnsText(
-                              selectedValue,
-                              variant: TextVariant.h5,
-                              fontWeight: TextFontWeightVariant.h4,
-                              color: AppColors.fieldTextColor,
-                            ),
+                          MdSnsText(
+                            selectedValue,
+                            variant: TextVariant.h5,
+                            fontWeight: TextFontWeightVariant.h4,
+                            color: AppColors.fieldTextColor,
+                          ),
+                          const SizedBox(width: 4),
+                          const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: AppColors.fieldTextColor,
+                            size: 18,
                           ),
                         ],
                       ),
+
                       dropdownStyleData: DropdownStyleData(
                         offset: const Offset(0, 5),
                         decoration: BoxDecoration(

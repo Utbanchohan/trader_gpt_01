@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/analysis_data/analysis_data_model.dart';
@@ -71,19 +72,25 @@ class _CryptoMarketChartState extends State<CryptoMarketChart> {
                   children: [
                     MdSnsText(
                       widget.title.toString(),
-                      color: AppColors.white,
-                      fontWeight: TextFontWeightVariant.h2,
                       variant: TextVariant.h3,
+                      fontWeight: TextFontWeightVariant.h4,
+
+                      color: AppColors.fieldTextColor,
                     ),
-                    SizedBox(width: 5),
-                    Icon(Icons.info_outline, color: AppColors.white, size: 20),
+                    SizedBox(width: 5.w),
+                    Icon(
+                      Icons.info_outline,
+                      size: 14.sp,
+                      color: AppColors.fieldTextColor,
+                    ),
                   ],
                 ),
                 MdSnsText(
                   "Description about Crypto Markets",
-                  color: AppColors.color9EAAC0,
-                  fontWeight: TextFontWeightVariant.h2,
-                  variant: TextVariant.h5,
+                  variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h4,
+
+                  color: AppColors.fieldTextColor,
                 ),
               ],
             ),

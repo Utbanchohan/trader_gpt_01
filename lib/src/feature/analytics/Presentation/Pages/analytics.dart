@@ -1395,10 +1395,42 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 ? CustomLineChart(
                     lineColor: AppColors.color046297,
                     areaColor: AppColors.color046297.withOpacity(0.4),
-                    title: "MARKETCAP CHART",
+                    title: "MarketCap Chart",
                     chartData: buildMarketCapScope(marketCapResponse!.data!),
                   )
                 : SizedBox(),
+            SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.colorB3B3B3),
+                color: AppColors.color091224,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MdSnsText(
+                    "Market Chart",
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h4,
+
+                    color: AppColors.fieldTextColor,
+                  ),
+                  Center(
+                    child: MdSnsText(
+                      "No Data Available",
+                      variant: TextVariant.h3,
+                      fontWeight: TextFontWeightVariant.h1,
+
+                      color: AppColors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             SizedBox(height: 20.h),
             cryptoMarketModel != null && cryptoMarketModel!.data.isNotEmpty
                 ? CryptoMarketChart(
@@ -1407,23 +1439,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   )
                 : AnalysisTableShimmer(),
 
-            SizedBox(height: monthlyDataCrypto != null ? 20.h : 0),
-
-            monthlyDataCrypto != null
-                ? WeeklySeasonalityChart(
-                    data: monthlyDataCrypto!,
-                    isWeekly: false,
-                    weeklyModel: WeeklyModel(),
-                  )
-                : SizedBox(),
-            SizedBox(height: weeklyDataCrypto != null ? 20.h : 0),
-            weeklyDataCrypto != null
-                ? WeeklySeasonalityChart(
-                    weeklyModel: weeklyDataCrypto!,
-                    isWeekly: true,
-                    data: ProbabilityResponse(),
-                  )
-                : SizedBox(),
             SizedBox(height: 20.h),
             priceComparisonModel != null &&
                     priceComparisonModel!
@@ -1544,6 +1559,53 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         ),
                       ],
                     ),
+                  )
+                : SizedBox(),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.colorB3B3B3),
+                color: AppColors.color091224,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MdSnsText(
+                    "Price Ratio",
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h4,
+
+                    color: AppColors.fieldTextColor,
+                  ),
+                  Center(
+                    child: MdSnsText(
+                      "No Data Available",
+                      variant: TextVariant.h3,
+                      fontWeight: TextFontWeightVariant.h1,
+
+                      color: AppColors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: monthlyDataCrypto != null ? 20.h : 0),
+
+            monthlyDataCrypto != null
+                ? WeeklySeasonalityChart(
+                    data: monthlyDataCrypto!,
+                    isWeekly: false,
+                    weeklyModel: WeeklyModel(),
+                  )
+                : SizedBox(),
+            SizedBox(height: weeklyDataCrypto != null ? 20.h : 0),
+            weeklyDataCrypto != null
+                ? WeeklySeasonalityChart(
+                    weeklyModel: weeklyDataCrypto!,
+                    isWeekly: true,
+                    data: ProbabilityResponse(),
                   )
                 : SizedBox(),
             SizedBox(height: highlightResponse != null ? 20.h : 0),

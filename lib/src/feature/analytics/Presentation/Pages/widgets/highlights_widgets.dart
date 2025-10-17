@@ -130,7 +130,7 @@ class HighlightsCard extends StatelessWidget {
         MdSnsText(
           'Highlights',
           variant: TextVariant.h3,
-          color: AppColors.white,
+          color: AppColors.fieldTextColor,
           fontWeight: TextFontWeightVariant.h2,
         ),
         MdSnsText(
@@ -302,7 +302,7 @@ class _DetailsList extends StatelessWidget {
               child: MdSnsText(
                 value,
                 variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h4,
+                fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
               ),
             ),
