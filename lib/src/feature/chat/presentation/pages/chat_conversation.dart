@@ -170,102 +170,46 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return GradientDialog(
-          child: DefaultTabController(
-            length: 3,
-            child: SizedBox(
-              height: 400.h,
-              width: MediaQuery.sizeOf(context).width,
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: TabBar(
-                      isScrollable: true,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      tabAlignment: TabAlignment.start,
-                      dividerColor: Colors.transparent, // Removes bottom line
-                      // 👇 Each tab has its own rounded border and background
-                      indicator: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        border: Border.all(
-                          color: AppColors
-                              .color046297, // Blue border for active tab
-                          width: 1,
-                        ),
-                        color: AppColors
-                            .color1B254B, // Background color for selected tab only
-                      ),
+          child: SizedBox(
+            height: 400.h,
+            width: MediaQuery.sizeOf(context).width,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: workflows.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () async {
+                    _handleWorkflowSelection(index);
+                  },
 
-                      labelColor: AppColors.white,
-                      unselectedLabelColor: AppColors.colorB2B2B7,
-                      labelPadding: const EdgeInsets.symmetric(horizontal: 10),
-
-                      tabs: [
-                        Tab(
-                          height: 28,
-                          child: MdSnsText(
-                            'All',
-                            variant: TextVariant.h4,
-                            fontWeight: TextFontWeightVariant.h4,
-
-                            color: AppColors.color046297,
-                          ),
-                        ),
-                        Tab(
-                          height: 28,
-                          child: MdSnsText(
-                            'Stock',
-                            variant: TextVariant.h4,
-                            fontWeight: TextFontWeightVariant.h4,
-
-                            color: AppColors.color046297,
-                          ),
-                        ),
-                        Tab(
-                          height: 28,
-                          child: MdSnsText(
-                            'Crypto',
-                            variant: TextVariant.h4,
-                            fontWeight: TextFontWeightVariant.h4,
-
-                            color: AppColors.color046297,
-                          ),
-                        ),
-                      ],
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 12),
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.color1B254B,
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                  ),
-                  SizedBox(height: 12.h),
-
-                  Expanded(
-                    child: TabBarView(
-                      physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 🟢 All
-                        _buildWorkflowList(context, workflows),
-
-                        // 🟡 Stock
-                        _buildWorkflowList(
-                          context,
-                          workflows,
-                          // .where((w) =>
-                          //     w.category?.toLowerCase() == 'stock')
-                          // .toList(),
+                        MdSnsText(
+                          "/" + workflows[index].displayName,
+                          color: AppColors.white,
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h4,
                         ),
-
-                        // 🔵 Crypto
-                        _buildWorkflowList(
-                          context,
-                          workflows,
-                          // .where((w) =>
-                          //     w.category?.toLowerCase() == 'crypto')
-                          // .toList(),
+                        SizedBox(height: 8),
+                        MdSnsText(
+                          workflows[index].description,
+                          color: AppColors.color9EAAC0,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
+                );
+              },
             ),
           ),
         );

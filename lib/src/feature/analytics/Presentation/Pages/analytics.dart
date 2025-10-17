@@ -1827,8 +1827,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           Container(
             margin: EdgeInsets.only(left: 10.w),
 
-            child:
-             TabBar(
+            child: TabBar(
               controller: tabController,
               isScrollable: true,
               indicatorSize: TabBarIndicatorSize.tab,
