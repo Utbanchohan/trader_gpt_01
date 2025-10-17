@@ -2861,9 +2861,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [DateRangePickerWidget(onShowPressed: (from, to) {})],
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [DateRangePickerWidget(onShowPressed: (from, to) {})],
+            ),
           ),
 
           SizedBox(height: 20),
