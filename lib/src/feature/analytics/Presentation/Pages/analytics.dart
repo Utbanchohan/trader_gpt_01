@@ -2878,57 +2878,64 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   Widget _analysisContent() {
     DateTime fromDate;
     DateTime toDate;
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DateRangePickerWidget(
-              isLoading: chartLoader,
-              onShowPressed: (from, to) async {
-                fromDate = from!;
-                toDate = to!;
-                await getAnalysisData(
-                  widget.chatRouting!.symbol,
-                  IntervalEnum.daily,
-                  now1: toDate,
-                  startDate1: fromDate,
-                );
-              },
-            ),
-            SizedBox(height: 20),
-            analysisDataModel != null &&
-                    analysisDataModel!.data != null &&
-                    analysisDataModel!.data!.chart != null
-                ? CustomCandleChart(
-                    name: "",
-                    data: analysisDataModel!.data!.chart!,
-                    onPressed: (val) async {
-                      await getAnalysisData(
-                        widget.chatRouting!.symbol,
-                        val == 'H'
-                            ? IntervalEnum.daily
-                            : val == 'D'
-                            ? IntervalEnum.daily
-                            : val == 'W'
-                            ? IntervalEnum.daily
-                            : IntervalEnum.monthly,
-                      );
-                    },
-                  )
-                : CustomCandleChartShimmer(),
 
-            SizedBox(height: 20),
-            analysisDataModel != null &&
-                    analysisDataModel!.data != null &&
-                    analysisDataModel!.data!.eodData != null
-                ? AnalysisTable(
-                    title: "Earnings Trend",
-                    eodData: analysisDataModel!.data!.eodData,
-                  )
-                : MetricsShimmer(),
-          ],
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DateRangePickerWidget(
+                  isLoading: chartLoader,
+                  onShowPressed: (from, to) async {
+                    fromDate = from!;
+                    toDate = to!;
+                    await getAnalysisData(
+                      widget.chatRouting!.symbol,
+                      IntervalEnum.daily,
+                      now1: toDate,
+                      startDate1: fromDate,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20),
+          analysisDataModel != null &&
+                  analysisDataModel!.data != null &&
+                  analysisDataModel!.data!.chart != null
+              ? CustomCandleChart(
+                  name: "",
+                  data: analysisDataModel!.data!.chart!,
+                  onPressed: (val) async {
+                    await getAnalysisData(
+                      widget.chatRouting!.symbol,
+                      val == 'H'
+                          ? IntervalEnum.daily
+                          : val == 'D'
+                          ? IntervalEnum.daily
+                          : val == 'W'
+                          ? IntervalEnum.daily
+                          : IntervalEnum.monthly,
+                    );
+                  },
+                )
+              : CustomCandleChartShimmer(),
+
+          SizedBox(height: 20),
+          analysisDataModel != null &&
+                  analysisDataModel!.data != null &&
+                  analysisDataModel!.data!.eodData != null
+              ? AnalysisTable(
+                  title: "Earnings Trend",
+                  eodData: analysisDataModel!.data!.eodData,
+                )
+              : MetricsShimmer(),
+        ],
       ),
     );
   }
