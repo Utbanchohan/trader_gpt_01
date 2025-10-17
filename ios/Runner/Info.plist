@@ -38,6 +38,10 @@
     <string>This app needs access to your photos to read and save files.</string>
     <key>NSUserNotificationUsageDescription</key>
     <string>This app needs permission to send you notifications.</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>This app uses speech recognition to convert your voice into text for faster and easier input.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app needs microphone access to capture your voice for speech recognition.</string>
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
     <key>UILaunchStoryboardName</key>
