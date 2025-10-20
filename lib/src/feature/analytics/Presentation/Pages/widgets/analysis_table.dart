@@ -386,7 +386,6 @@ class _PaginationWidgetState extends State<PaginationWidget> {
     );
     void goToLastPage() => setState(() => _currentPage = _totalPages);
 
-    // Determine if buttons should be disabled (onPressed: null disables a button)
     final bool isFirstPage = _currentPage == 1;
     final bool isLastPage = _currentPage == _totalPages;
     return Container(
