@@ -373,19 +373,26 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     }
   }
 
-  getAnalysisData(String symbol, IntervalEnum interval) async {
-    final now = DateTime.now().toUtc();
+  getAnalysisData(
+    String symbol,
+    IntervalEnum interval, {
+    DateTime? now1,
+    DateTime? startDate1,
+  }) async {
+    final now = now1 != null ? now1.toUtc() : DateTime.now().toUtc();
 
     // Subtract 2 years for startDate
-    final startDate = DateTime.utc(
-      now.year - 10,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-      now.second,
-      now.millisecond,
-    );
+    final startDate = startDate1 != null
+        ? startDate1.toUtc()
+        : DateTime.utc(
+            now.year - 10,
+            now.month,
+            now.day,
+            now.hour,
+            now.minute,
+            now.second,
+            now.millisecond,
+          );
     final endDateString = now.toIso8601String();
     final startDateString = startDate.toIso8601String();
     ChartRequestDto overview = ChartRequestDto(
@@ -506,6 +513,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       if (!mounted) return;
       setState(() {});
     }
+    if (overviewCandleChartModel == null) {
+      await getOverviewCandleChart(
+        widget.chatRouting!.symbol,
+        IntervalEnum.daily,
+      );
+      if (!mounted) return;
+      setState(() {});
+    }
     if (priceTargetMatrics == null) {
       await priceTargetMatricsData(
         SymbolDto(symbol: widget.chatRouting!.symbol),
@@ -546,14 +561,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     }
     if (monthlyData == null) {
       await getMonthlyData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
-    }
-    if (overviewCandleChartModel == null) {
-      await getOverviewCandleChart(
-        widget.chatRouting!.symbol,
-        IntervalEnum.daily,
-      );
       if (!mounted) return;
       setState(() {});
     }
@@ -2773,6 +2780,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                               .data
                                               .isNotEmpty
                                       ? FinancialTable(
+                                          chart: financialResponse!
+                                              .data
+                                              .financialsIncomeStatement
+                                              .chart,
                                           data: financialResponse!
                                               .data
                                               .financialsIncomeStatement
@@ -2816,6 +2827,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                               .data
                                               .isNotEmpty
                                       ? FinancialTable(
+                                          chart: financialResponse!
+                                              .data
+                                              .financialsBalanceSheet
+                                              .chart,
                                           data: financialResponse!
                                               .data
                                               .financialsBalanceSheet
@@ -2859,6 +2874,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                               .data
                                               .isNotEmpty
                                       ? FinancialTable(
+                                          chart: financialResponse!
+                                              .data
+                                              .financialsCashFlow
+                                              .chart,
                                           data: financialResponse!
                                               .data
                                               .financialsCashFlow
@@ -2919,6 +2938,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   Widget _analysisContent() {
+    DateTime fromDate;
+    DateTime toDate;
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2927,7 +2949,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [DateRangePickerWidget(onShowPressed: (from, to) {})],
+              children: [
+                DateRangePickerWidget(
+                  onShowPressed: (from, to) async {
+                    fromDate = from!;
+                    toDate = to!;
+                    await getAnalysisData(
+                      widget.chatRouting!.symbol,
+                      IntervalEnum.daily,
+                      now1: toDate,
+                      startDate1: fromDate,
+                    );
+                  },
+                ),
+              ],
             ),
           ),
 

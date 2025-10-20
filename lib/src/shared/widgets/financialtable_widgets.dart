@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chart_sparkline/chart_sparkline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -10,63 +11,18 @@ import '../../feature/analytics/domain/model/financial_data_model/financial_data
 
 class FinancialTable extends StatelessWidget {
   final Map<String, YearlyFinancialData> data;
+  final FinancialChart chart;
   final FinancialTableEnum? itemName;
 
-  const FinancialTable({super.key, required this.data, required this.itemName});
+  const FinancialTable({
+    super.key,
+    required this.data,
+    required this.itemName,
+    required this.chart,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final rows = [
-      {
-        "color": Colors.purpleAccent,
-        "title": "Research Development",
-        "values": ["29,510", "27,195", "0", "24,512"],
-        "growth": ["8.51%", "10.95%", "0%", "18.32%"],
-        "growthColors": [
-          AppColors.color06D54E,
-          AppColors.color06D54E,
-          AppColors.color0xFFCD3438,
-          AppColors.color06D54E,
-        ],
-      },
-      {
-        "color": Colors.blueAccent,
-        "title": "Effect Of Accounting Charges",
-        "values": ["0", "0", "0", "0"],
-        "growth": ["0%", "0%", "0%", "0%"],
-        "growthColors": [
-          AppColors.color0xFFCD3438,
-          AppColors.color0xFFCD3438,
-          AppColors.color0xFFCD3438,
-          AppColors.color0xFFCD3438,
-        ],
-      },
-      {
-        "color": Colors.orangeAccent,
-        "title": "Income Before Tax",
-        "values": ["107,787", "89,311", "0", "83,716"],
-        "growth": ["20.69%", "6.66%", "0%", "17.63%"],
-        "growthColors": [
-          AppColors.color06D54E,
-          AppColors.color06D54E,
-          AppColors.color0xFFCD3438,
-          AppColors.color06D54E,
-        ],
-      },
-      {
-        "color": AppColors.color06D54E,
-        "title": "Minority Interest",
-        "values": ["0", "0", "0", "0"],
-        "growth": ["0%", "0%", "0%", "0%"],
-        "growthColors": [
-          AppColors.color0xFFCD3438,
-          AppColors.color0xFFCD3438,
-          AppColors.color0xFFCD3438,
-          AppColors.color0xFFCD3438,
-        ],
-      },
-    ];
-
     List<String> cashFLowList = [
       "Investments",
       "Change To Liabilities",
@@ -194,6 +150,11 @@ class FinancialTable extends StatelessWidget {
       "Preferred Stock And Other Adjustments",
     ];
 
+    var fa = chart.investments != null
+        ? chart.investments!.map((e) => (e.y as num).toDouble()).toList()
+        : [0, 0, 0, 0, 0];
+
+    //income Statement data
     final Map<String, Map<String, dynamic>> formattedData = {};
     Map<String, Map<String, dynamic>> extractIncomeData(
       Map<String, YearlyFinancialData> yearlyData,
@@ -219,7 +180,11 @@ class FinancialTable extends StatelessWidget {
           "Tax Provision": data.taxProvision,
           "Interest Income": data.interestIncome,
           "Net Interest Income": data.netInterestIncome,
-          "Extraordinary Items": data.extraordinaryItems,
+          "Extraordinary Items": chart.reconciledDepreciation != null
+              ? chart.reconciledDepreciation!
+                    .map((e) => (e.y as num).toDouble())
+                    .toList()
+              : [0, 0, 0, 0, 0],
           "Non Recurring": data.nonRecurring,
           "Other Items": data.otherItems,
           "Income Tax Expense": data.incomeTaxExpense,
@@ -239,6 +204,155 @@ class FinancialTable extends StatelessWidget {
       return formattedData;
     }
 
+    Map<String, List<num>> extractIncomeChart(FinancialChart chart) {
+      return {
+        "Research Development": chart.researchDevelopment != null
+            ? chart.researchDevelopment!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Effect Of Accounting Charges": chart.effectOfAccountingCharges != null
+            ? chart.effectOfAccountingCharges!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Income Before Tax": chart.incomeBeforeTax != null
+            ? chart.incomeBeforeTax!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Minority Interest": chart.minorityInterest != null
+            ? chart.minorityInterest!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Net Income": chart.netIncome != null
+            ? chart.netIncome!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Selling General Administrative":
+            chart.sellingGeneralAdministrative != null
+            ? chart.sellingGeneralAdministrative!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Selling And Marketing Expenses":
+            chart.sellingAndMarketingExpenses != null
+            ? chart.sellingAndMarketingExpenses!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Gross Profit": chart.grossProfit != null
+            ? chart.grossProfit!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Reconciled Depreciation": chart.reconciledDepreciation != null
+            ? chart.reconciledDepreciation!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Ebit": chart.ebit != null
+            ? chart.ebit!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Ebitda": chart.ebitda != null
+            ? chart.ebitda!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Depreciation And Amortization":
+            chart.depreciationAndAmortization != null
+            ? chart.depreciationAndAmortization!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Non Operating Income Net Other":
+            chart.nonOperatingIncomeNetOther != null
+            ? chart.nonOperatingIncomeNetOther!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Operating Income": chart.operatingIncome != null
+            ? chart.operatingIncome!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Other Operating Expenses": chart.otherOperatingExpenses != null
+            ? chart.otherOperatingExpenses!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Interest Expense": chart.interestExpense != null
+            ? chart.interestExpense!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Tax Provision": chart.taxProvision != null
+            ? chart.taxProvision!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Interest Income": chart.interestIncome != null
+            ? chart.interestIncome!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Net Interest Income": chart.netInterestIncome != null
+            ? chart.netInterestIncome!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Extraordinary Items": chart.extraordinaryItems != null
+            ? chart.extraordinaryItems!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Non Recurring": chart.nonRecurring != null
+            ? chart.nonRecurring!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Other Items": chart.otherItems != null
+            ? chart.otherItems!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Income Tax Expense": chart.incomeTaxExpense != null
+            ? chart.incomeTaxExpense!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Total Revenue": chart.totalRevenue != null
+            ? chart.totalRevenue!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Total Operating Expenses": chart.totalOperatingExpenses != null
+            ? chart.totalOperatingExpenses!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Cost Of Revenue": chart.costOfRevenue != null
+            ? chart.costOfRevenue!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Total Other Income Expense Net":
+            chart.totalOtherIncomeExpenseNet != null
+            ? chart.totalOtherIncomeExpenseNet!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Discontinued Operations": chart.discontinuedOperations != null
+            ? chart.discontinuedOperations!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Net Income From Continuing Ops":
+            chart.netIncomeFromContinuingOps != null
+            ? chart.netIncomeFromContinuingOps!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Net Income Applicable To Common Shares":
+            chart.netIncomeApplicableToCommonShares != null
+            ? chart.netIncomeApplicableToCommonShares!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Preferred Stock And Other Adjustments":
+            chart.preferredStockAndOtherAdjustments != null
+            ? chart.preferredStockAndOtherAdjustments!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+      };
+    }
+
+    //balanceSheet data
     final Map<String, Map<String, dynamic>> formattedDataBalanceSheet = {};
     Map<String, Map<String, dynamic>> extractBalanceSheet(
       Map<String, YearlyFinancialData> yearlyData,
@@ -314,6 +428,283 @@ class FinancialTable extends StatelessWidget {
       return formattedDataBalanceSheet;
     }
 
+    Map<String, List<num>> extractBalanceSheetChart(FinancialChart chart) {
+      return {
+        "Total Assets": chart.totalAssets != null
+            ? chart.totalAssets!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Intangible Assets": chart.intangibleAssets != null
+            ? chart.intangibleAssets!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Earning Assets": chart.earningAssets != null
+            ? chart.earningAssets!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Other Current Assets": chart.otherCurrentAssets != null
+            ? chart.otherCurrentAssets!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Total Liab": chart.totalLiab != null
+            ? chart.totalLiab!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Total Stockholder Equity": chart.totalStockholderEquity != null
+            ? chart.totalStockholderEquity!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Deferred Long Term Liab": chart.deferredLongTermLiab != null
+            ? chart.deferredLongTermLiab!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Other Current Liab": chart.otherCurrentLiab != null
+            ? chart.otherCurrentLiab!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Common Stock": chart.commonStock != null
+            ? chart.commonStock!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Capital Stock": chart.capitalStock != null
+            ? chart.capitalStock!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Retained Earnings": chart.retainedEarnings != null
+            ? chart.retainedEarnings!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Other Liab": chart.otherLiab != null
+            ? chart.otherLiab!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Good Will": chart.goodWill != null
+            ? chart.goodWill!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Other Assets": chart.otherAssets != null
+            ? chart.otherAssets!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Cash": chart.cash != null
+            ? chart.cash!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Cash And Equivalents": chart.cashAndEquivalents != null
+            ? chart.cashAndEquivalents!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Total Current Liabilities": chart.totalCurrentLiabilities != null
+            ? chart.totalCurrentLiabilities!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Current Deferred Revenue": chart.currentDeferredRevenue != null
+            ? chart.currentDeferredRevenue!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Net Debt": chart.netDebt != null
+            ? chart.netDebt!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Short Term Debt": chart.shortTermDebt != null
+            ? chart.shortTermDebt!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Property Plant Equipment": chart.propertyPlantEquipment != null
+            ? chart.propertyPlantEquipment!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Total Current Assets": chart.totalCurrentAssets != null
+            ? chart.totalCurrentAssets!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Long Term Investments": chart.longTermInvestments != null
+            ? chart.longTermInvestments!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Net Tangible Assets": chart.netTangibleAssets != null
+            ? chart.netTangibleAssets!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Short Term Investments": chart.shortTermInvestments != null
+            ? chart.shortTermInvestments!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Net Receivables": chart.netReceivables != null
+            ? chart.netReceivables!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Long Term Debt": chart.longTermDebt != null
+            ? chart.longTermDebt!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Inventory": chart.inventory != null
+            ? chart.inventory!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Accounts Payable": chart.accountsPayable != null
+            ? chart.accountsPayable!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Total Permanent Equity": chart.totalPermanentEquity != null
+            ? chart.totalPermanentEquity!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+
+        "Noncontrolling Interest In Consolidated Entity":
+            chart.noncontrollingInterestInConsolidatedEntity != null
+            ? chart.noncontrollingInterestInConsolidatedEntity!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Temporary Equity Redeemable Noncontrolling Interests":
+            chart.temporaryEquityRedeemableNoncontrollingInterests != null
+            ? chart.temporaryEquityRedeemableNoncontrollingInterests!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Accumulated Other Comprehensive Income":
+            chart.accumulatedOtherComprehensiveIncome != null
+            ? chart.accumulatedOtherComprehensiveIncome!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Additional Paid In Capital": chart.additionalPaidInCapital != null
+            ? chart.additionalPaidInCapital!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Common Stock Total Equity": chart.commonStockTotalEquity != null
+            ? chart.commonStockTotalEquity!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Preferred Stock Total Equity": chart.preferredStockTotalEquity != null
+            ? chart.preferredStockTotalEquity!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Retained Earnings Total Equity":
+            chart.retainedEarningsTotalEquity != null
+            ? chart.retainedEarningsTotalEquity!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Treasury Stock": chart.treasuryStock != null
+            ? chart.treasuryStock!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Accumulated Amortization": chart.accumulatedAmortization != null
+            ? chart.accumulatedAmortization!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Non Current Assets Other": chart.nonCurrrentAssetsOther != null
+            ? chart.nonCurrrentAssetsOther!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Deferred Long Term Asset Charges":
+            chart.deferredLongTermAssetCharges != null
+            ? chart.deferredLongTermAssetCharges!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Non Current Assets Total": chart.nonCurrentAssetsTotal != null
+            ? chart.nonCurrentAssetsTotal!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Capital Lease Obligations": chart.capitalLeaseObligations != null
+            ? chart.capitalLeaseObligations!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Long Term Debt Total": chart.longTermDebtTotal != null
+            ? chart.longTermDebtTotal!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Non Current Liabilities Other":
+            chart.nonCurrentLiabilitiesOther != null
+            ? chart.nonCurrentLiabilitiesOther!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Non Current Liabilities Total":
+            chart.nonCurrentLiabilitiesTotal != null
+            ? chart.nonCurrentLiabilitiesTotal!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Negative Goodwill": chart.negativeGoodwill != null
+            ? chart.negativeGoodwill!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Warrants": chart.warrants != null
+            ? chart.warrants!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Preferred Stock Redeemable": chart.preferredStockRedeemable != null
+            ? chart.preferredStockRedeemable!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Capital Surplus": chart.capitalSurpluse != null
+            ? chart.capitalSurpluse!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Liabilities And Stockholders Equity":
+            chart.liabilitiesAndStockholdersEquity != null
+            ? chart.liabilitiesAndStockholdersEquity!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Cash And Short Term Investments":
+            chart.cashAndShortTermInvestments != null
+            ? chart.cashAndShortTermInvestments!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Property Plant And Equipment Gross":
+            chart.propertyPlantAndEquipmentGross != null
+            ? chart.propertyPlantAndEquipmentGross!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Property Plant And Equipment Net":
+            chart.propertyPlantAndEquipmentNet != null
+            ? chart.propertyPlantAndEquipmentNet!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Accumulated Depreciation": chart.accumulatedDepreciation != null
+            ? chart.accumulatedDepreciation!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Net Working Capital": chart.netWorkingCapital != null
+            ? chart.netWorkingCapital!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Net Invested Capital": chart.netInvestedCapital != null
+            ? chart.netInvestedCapital!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Common Stock Shares Outstanding":
+            chart.commonStockSharesOutstanding != null
+            ? chart.commonStockSharesOutstanding!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+      };
+    }
+
+    //cashflow Data
     final Map<String, Map<String, dynamic>> formattedDataCashFLow = {};
     Map<String, Map<String, dynamic>> extractCashFlow(
       Map<String, YearlyFinancialData> yearlyData,
@@ -358,6 +749,153 @@ class FinancialTable extends StatelessWidget {
       });
 
       return formattedDataCashFLow;
+    }
+
+    Map<String, List<num>> extractCashFlowChart(FinancialChart chart) {
+      return {
+        "Investments": chart.investments != null
+            ? chart.investments!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+
+        "Change To Liabilities": chart.changeToLiabilities != null
+            ? chart.changeToLiabilities!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Total Cashflows From Investing Activities":
+            chart.totalCashflowsFromInvestingActivities != null
+            ? chart.totalCashflowsFromInvestingActivities!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Net Borrowings": chart.netBorrowings != null
+            ? chart.netBorrowings!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Total Cash From Financing Activities":
+            chart.totalCashFromFinancingActivities != null
+            ? chart.totalCashFromFinancingActivities!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Change To Operating Activities":
+            chart.changeToOperatingActivities != null
+            ? chart.changeToOperatingActivities!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Net Income": chart.netIncome != null
+            ? chart.netIncome!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Change In Cash": chart.changeInCash != null
+            ? chart.changeInCash!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Begin Period Cash Flow": chart.beginPeriodCashFlow != null
+            ? chart.beginPeriodCashFlow!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "End Period Cash Flow": chart.endPeriodCashFlow != null
+            ? chart.endPeriodCashFlow!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Total Cash From Operating Activities":
+            chart.totalCashFromOperatingActivities != null
+            ? chart.totalCashFromOperatingActivities!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Issuance Of Capital Stock": chart.issuanceOfCapitalStock != null
+            ? chart.issuanceOfCapitalStock!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Depreciation": chart.depreciation != null
+            ? chart.depreciation!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Other Cashflows From Investing Activities":
+            chart.otherCashflowsFromInvestingActivities != null
+            ? chart.otherCashflowsFromInvestingActivities!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Dividends Paid": chart.dividendsPaid != null
+            ? chart.dividendsPaid!.map((e) => (e.y as num).toDouble()).toList()
+            : [0, 0, 0, 0, 0],
+        "Change To Inventory": chart.changeToInventory != null
+            ? chart.changeToInventory!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Change To Account Receivables":
+            chart.changeToAccountReceivables != null
+            ? chart.changeToAccountReceivables!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Sale Purchase Of Stock": chart.salePurchaseOfStock != null
+            ? chart.salePurchaseOfStock!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Other Cashflows From Financing Activities":
+            chart.otherCashflowsFromFinancingActivities != null
+            ? chart.otherCashflowsFromFinancingActivities!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Change To Netincome": chart.changeToNetincome != null
+            ? chart.changeToNetincome!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Capital Expenditures": chart.capitalExpenditures != null
+            ? chart.capitalExpenditures!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Change Receivables": chart.changeReceivables != null
+            ? chart.changeReceivables!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Cash Flows Other Operating": chart.cashFlowsOtherOperating != null
+            ? chart.cashFlowsOtherOperating!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Exchange Rate Changes": chart.exchangeRateChanges != null
+            ? chart.exchangeRateChanges!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Cash And Cash Equivalents Changes":
+            chart.cashAndCashEquivalentsChanges != null
+            ? chart.cashAndCashEquivalentsChanges!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Change In Working Capital": chart.changeInWorkingCapital != null
+            ? chart.changeInWorkingCapital!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Stock Based Compensation": chart.stockBasedCompensation != null
+            ? chart.stockBasedCompensation!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Other Non Cash Items": chart.otherNonCashItems != null
+            ? chart.otherNonCashItems!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+        "Free Cash Flow": chart.freeCashFlow != null
+            ? chart.changeInWorkingCapital!
+                  .map((e) => (e.y as num).toDouble())
+                  .toList()
+            : [0, 0, 0, 0, 0],
+      };
     }
 
     List<String> keys = [];
@@ -669,12 +1207,49 @@ class FinancialTable extends StatelessWidget {
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          "",
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.color0098E4,
-                          overflow: TextOverflow.ellipsis,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: 70.w,
+                            height: 15.h,
+                            child: Sparkline(
+                              data:
+                                  extractCashFlowChart(chart)[item]
+                                      as List<double>,
+
+                              lineWidth: 2.0,
+                              lineColor:
+                                  extractCashFlowChart(chart)[item]!.last <
+                                      extractCashFlowChart(chart)[item]!.first
+                                  ? AppColors.redFF3B3B
+                                  : AppColors.color06D54E,
+                              pointsMode: PointsMode.none,
+                              pointColor: Colors.white,
+                              useCubicSmoothing: false,
+                              sharpCorners: true,
+                              fillMode: FillMode.below,
+                              fillGradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  extractCashFlowChart(chart)[item]!.last <
+                                          extractCashFlowChart(
+                                            chart,
+                                          )[item]!.first
+                                      ? AppColors.color0xFFCD3438.withOpacity(
+                                          0.4,
+                                        )
+                                      : AppColors.color06D54E.withOpacity(0.4),
+                                  extractCashFlowChart(chart)[item]!.last <
+                                          extractCashFlowChart(
+                                            chart,
+                                          )[item]!.first
+                                      ? AppColors.redFF3B3B.withOpacity(0.3)
+                                      : AppColors.color06D54E.withOpacity(0.3),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -835,7 +1410,6 @@ class FinancialTable extends StatelessWidget {
                           ],
                         ),
                       ),
-
                       DataCell(
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -910,12 +1484,44 @@ class FinancialTable extends StatelessWidget {
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          "f",
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.color0098E4,
-                          overflow: TextOverflow.ellipsis,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: 70.w,
+                            height: 15.h,
+                            child: Sparkline(
+                              data:
+                                  extractIncomeChart(chart)['$item']
+                                      as List<double>,
+                              lineWidth: 2.0,
+                              lineColor:
+                                  extractIncomeChart(chart)[item]!.last <
+                                      extractIncomeChart(chart)[item]!.first
+                                  ? AppColors.redFF3B3B
+                                  : AppColors.color06D54E,
+                              pointsMode: PointsMode.none,
+                              pointColor: Colors.white,
+                              useCubicSmoothing: false,
+                              sharpCorners: true,
+                              fillMode: FillMode.below,
+                              fillGradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  extractIncomeChart(chart)[item]!.last <
+                                          extractIncomeChart(chart)[item]!.first
+                                      ? AppColors.color0xFFCD3438.withOpacity(
+                                          0.4,
+                                        )
+                                      : AppColors.color06D54E.withOpacity(0.4),
+                                  extractIncomeChart(chart)[item]!.last <
+                                          extractIncomeChart(chart)[item]!.first
+                                      ? AppColors.redFF3B3B.withOpacity(0.3)
+                                      : AppColors.color06D54E.withOpacity(0.3),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -1087,7 +1693,6 @@ class FinancialTable extends StatelessWidget {
                           ],
                         ),
                       ),
-
                       DataCell(
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -1170,12 +1775,50 @@ class FinancialTable extends StatelessWidget {
                         ),
                       ),
                       DataCell(
-                        MdSnsText(
-                          "",
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                          color: AppColors.color0098E4,
-                          overflow: TextOverflow.ellipsis,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: 70.w,
+                            height: 15.h,
+                            child: Sparkline(
+                              data:
+                                  extractBalanceSheetChart(chart)['$item']
+                                      as List<double>,
+                              lineWidth: 2.0,
+                              lineColor:
+                                  extractBalanceSheetChart(chart)[item]!.last <
+                                      extractBalanceSheetChart(
+                                        chart,
+                                      )[item]!.first
+                                  ? AppColors.redFF3B3B
+                                  : AppColors.color06D54E,
+                              pointsMode: PointsMode.none,
+                              pointColor: Colors.white,
+                              useCubicSmoothing: false,
+                              sharpCorners: true,
+                              fillMode: FillMode.below,
+                              fillGradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  extractBalanceSheetChart(chart)[item]!.last <
+                                          extractBalanceSheetChart(
+                                            chart,
+                                          )[item]!.first
+                                      ? AppColors.color0xFFCD3438.withOpacity(
+                                          0.4,
+                                        )
+                                      : AppColors.color06D54E.withOpacity(0.4),
+                                  extractBalanceSheetChart(chart)[item]!.last <
+                                          extractBalanceSheetChart(
+                                            chart,
+                                          )[item]!.first
+                                      ? AppColors.redFF3B3B.withOpacity(0.3)
+                                      : AppColors.color06D54E.withOpacity(0.3),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
