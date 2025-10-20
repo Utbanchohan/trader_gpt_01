@@ -969,14 +969,14 @@ class FinancialTable extends StatelessWidget {
                 color: AppColors.white,
               ),
             ),
-            DataColumn(
-              label: MdSnsText(
-                _formatDate(keys[4]),
-                variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h4,
-                color: AppColors.white,
-              ),
-            ),
+            // DataColumn(
+            //   label: MdSnsText(
+            //     _formatDate(keys[4]),
+            //     variant: TextVariant.h4,
+            //     fontWeight: TextFontWeightVariant.h4,
+            //     color: AppColors.white,
+            //   ),
+            // ),
             DataColumn(
               label: MdSnsText(
                 'Growth',
@@ -1447,42 +1447,42 @@ class FinancialTable extends StatelessWidget {
                           ],
                         ),
                       ),
-                      DataCell(
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            MdSnsText(
-                              formatNumbers(
-                                extractIncomeData(data)[keys[4]]![item][0],
-                              ),
-                              variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h4,
-                              color: AppColors.white,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 2),
-                            MdSnsText(
-                              formatNumbers(
-                                    extractIncomeData(data)[keys[4]]![item][1],
-                                  ) +
-                                  "%",
-                              variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractIncomeData(data)[keys[4]]![item][1] !=
-                                          null &&
-                                      extractIncomeData(
-                                            data,
-                                          )[keys[4]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // DataCell(
+                      //   Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: [
+                      //       // MdSnsText(
+                      //       //   formatNumbers(
+                      //       //     extractIncomeData(data)[keys[4]]![item][0],
+                      //       //   ),
+                      //       //   variant: TextVariant.h4,
+                      //       //   fontWeight: TextFontWeightVariant.h4,
+                      //       //   color: AppColors.white,
+                      //       //   overflow: TextOverflow.ellipsis,
+                      //       // ),
+                      //       SizedBox(height: 2),
+                      //       MdSnsText(
+                      //         formatNumbers(
+                      //               extractIncomeData(data)[keys[4]]![item][1],
+                      //             ) +
+                      //             "%",
+                      //         variant: TextVariant.h4,
+                      //         fontWeight: TextFontWeightVariant.h2,
+                      //         color:
+                      //             extractIncomeData(data)[keys[4]]![item][1] !=
+                      //                     null &&
+                      //                 extractIncomeData(
+                      //                       data,
+                      //                     )[keys[4]]![item][1] >
+                      //                     0
+                      //             ? AppColors.color00FF55
+                      //             : AppColors.redFF3B3B,
+                      //         overflow: TextOverflow.ellipsis,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       DataCell(
                         Padding(
                           padding: const EdgeInsets.all(8.0),

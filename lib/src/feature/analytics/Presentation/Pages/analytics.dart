@@ -1366,7 +1366,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w400,
                       color: AppColors.white,
-                      height: 1.4, // 👈 better line spacing
+                      height: 1.4,
                     ),
                   )
                 : SizedBox(),
