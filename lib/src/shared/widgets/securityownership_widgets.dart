@@ -144,7 +144,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                       MdSnsText(
                         item.name,
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -153,7 +153,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                       MdSnsText(
                         item.formType,
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -162,7 +162,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                       MdSnsText(
                         _formatDate(item.effectiveDate),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -171,7 +171,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                       MdSnsText(
                         _formatDate(item.fileDate),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -182,7 +182,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                         item.ownershipPercent.toStringAsFixed(2),
                         textAlign: TextAlign.center,
                         color: AppColors.color00FF55,
-                        variant: TextVariant.h5,
+                        variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -191,7 +191,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                       MdSnsText(
                         formatNumbers(item.ownershipPercentChange),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: item.ownershipPercentChange > 0
                             ? AppColors.color00FF55
                             : AppColors.color0xFFFFB21D,
@@ -202,7 +202,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                       MdSnsText(
                         formatNumbers(item.shares),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color0098E4,
 
                         overflow: TextOverflow.ellipsis,
@@ -212,7 +212,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                       MdSnsText(
                         formatNumbers(item.sharesChange),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: item.sharesChange < 0
                             ? AppColors.color00FF55
                             : AppColors.color0xFFFFB21D,
@@ -223,7 +223,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                       MdSnsText(
                         formatNumbers(item.sharesPercentChange),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: item.sharesPercentChange < 0
                             ? AppColors.color00FF55
                             : AppColors.color0xFFFFB21D,
@@ -234,7 +234,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                       MdSnsText(
                         formatNumbers(item.value),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color0098E4,
 
                         overflow: TextOverflow.ellipsis,
@@ -244,7 +244,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                       MdSnsText(
                         formatNumbers(item.valueChange),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: item.valueChange < 0
                             ? AppColors.color00FF55
                             : AppColors.color0xFFFFB21D,
@@ -255,7 +255,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                       MdSnsText(
                         formatNumbers(item.valuePercentChange),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: item.valuePercentChange < 0
                             ? AppColors.color00FF55
                             : AppColors.color0xFFFFB21D,

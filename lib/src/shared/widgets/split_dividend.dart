@@ -108,7 +108,7 @@ class SplitDividend extends StatelessWidget {
                             ? item.forwardAnnualDividendRate!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -121,7 +121,7 @@ class SplitDividend extends StatelessWidget {
                               )
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color0xFFCD3438,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -132,7 +132,7 @@ class SplitDividend extends StatelessWidget {
                             ? item.payoutRatio!.toStringAsFixed(3)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color046297,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -144,7 +144,7 @@ class SplitDividend extends StatelessWidget {
                             : "N/A",
 
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -158,7 +158,7 @@ class SplitDividend extends StatelessWidget {
 
                         textAlign: TextAlign.center,
                         color: AppColors.white,
-                        variant: TextVariant.h5,
+                        variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -170,7 +170,7 @@ class SplitDividend extends StatelessWidget {
                             : "N/A",
 
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -180,9 +180,8 @@ class SplitDividend extends StatelessWidget {
                         item.lastSplitDate != null
                             ? _formatDate(item.lastSplitDate!)
                             : "N/A",
-
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),

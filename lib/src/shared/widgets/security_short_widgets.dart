@@ -115,7 +115,7 @@ class SecurityShortVolume extends StatelessWidget {
       child: MdSnsText(
         text,
         variant: TextVariant.h4,
-        fontWeight: TextFontWeightVariant.h4,
+        fontWeight: TextFontWeightVariant.h2,
         color: color,
         textAlign: TextAlign.center,
       ),

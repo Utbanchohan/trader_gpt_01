@@ -159,7 +159,7 @@ class _AnalysisTableState extends State<AnalysisTable> {
                       MdSnsText(
                         _formatDate(item.key),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -170,7 +170,7 @@ class _AnalysisTableState extends State<AnalysisTable> {
                             ? item.value.open!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -181,7 +181,7 @@ class _AnalysisTableState extends State<AnalysisTable> {
                             ? item.value.high!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color06D54E,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -192,7 +192,7 @@ class _AnalysisTableState extends State<AnalysisTable> {
                             ? item.value.low!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color0xFFCD3438,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -203,7 +203,7 @@ class _AnalysisTableState extends State<AnalysisTable> {
                             ? item.value.close!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -214,7 +214,7 @@ class _AnalysisTableState extends State<AnalysisTable> {
                             ? formatNumbers(item.value.volume!)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -225,7 +225,7 @@ class _AnalysisTableState extends State<AnalysisTable> {
                             ? item.value.changepercent.toString()
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color:
                             item.value.changepercent == null ||
                                 item.value.changepercent.toString().contains(
@@ -243,7 +243,7 @@ class _AnalysisTableState extends State<AnalysisTable> {
                             ? item.value.change!.toString()
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
 
                         overflow: TextOverflow.ellipsis,
@@ -255,7 +255,7 @@ class _AnalysisTableState extends State<AnalysisTable> {
                             ? item.value.vwap!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
 
                         overflow: TextOverflow.ellipsis,
@@ -400,7 +400,7 @@ class _PaginationWidgetState extends State<PaginationWidget> {
           MdSnsText(
             displayText,
             variant: TextVariant.h4,
-            fontWeight: TextFontWeightVariant.h4,
+            fontWeight: TextFontWeightVariant.h2,
             color: AppColors.white,
           ),
 

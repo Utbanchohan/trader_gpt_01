@@ -95,7 +95,7 @@ class EarningsTable extends StatelessWidget {
                       MdSnsText(
                         item.period,
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -104,7 +104,7 @@ class EarningsTable extends StatelessWidget {
                       MdSnsText(
                         item.estimateEps.toStringAsFixed(2),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.redFF3B3B,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -113,7 +113,7 @@ class EarningsTable extends StatelessWidget {
                       MdSnsText(
                         item.estimateRevenue,
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color0098E4,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -122,7 +122,7 @@ class EarningsTable extends StatelessWidget {
                       MdSnsText(
                         item.actual.toStringAsFixed(2),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -135,7 +135,7 @@ class EarningsTable extends StatelessWidget {
                         color: item.growth < 0
                             ? AppColors.color0xFFCD3438
                             : AppColors.color00FF55,
-                        variant: TextVariant.h5,
+                        variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -144,7 +144,7 @@ class EarningsTable extends StatelessWidget {
                       MdSnsText(
                         item.surprise.toStringAsFixed(2) + "%",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color00FF55,
                         overflow: TextOverflow.ellipsis,
                       ),

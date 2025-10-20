@@ -246,7 +246,7 @@ class EarningsTrend extends StatelessWidget {
                       MdSnsText(
                         item.date ?? "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -255,7 +255,7 @@ class EarningsTrend extends StatelessWidget {
                       MdSnsText(
                         item.period ?? "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color0xFFCD3438,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -266,7 +266,7 @@ class EarningsTrend extends StatelessWidget {
                             ? item.growth!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color0098E4,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -277,7 +277,7 @@ class EarningsTrend extends StatelessWidget {
                             ? item.earningsEstimateAvg!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -289,7 +289,7 @@ class EarningsTrend extends StatelessWidget {
                             : "N/A",
                         textAlign: TextAlign.center,
                         color: AppColors.white,
-                        variant: TextVariant.h5,
+                        variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -301,7 +301,7 @@ class EarningsTrend extends StatelessWidget {
                             ? item.earningsEstimateHigh!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -314,7 +314,7 @@ class EarningsTrend extends StatelessWidget {
                               )
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -323,7 +323,7 @@ class EarningsTrend extends StatelessWidget {
                       MdSnsText(
                         item.earningsEstimateNumberOfAnalysts.toString(),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -334,7 +334,7 @@ class EarningsTrend extends StatelessWidget {
                             ? item.earningsEstimateGrowth!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -345,7 +345,7 @@ class EarningsTrend extends StatelessWidget {
                             ? formatNumbers(item.revenueEstimateAvg!)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -358,7 +358,7 @@ class EarningsTrend extends StatelessWidget {
                             : "N/A",
                         textAlign: TextAlign.center,
                         color: AppColors.white,
-                        variant: TextVariant.h5,
+                        variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -369,7 +369,7 @@ class EarningsTrend extends StatelessWidget {
                             ? formatNumbers(item.revenueEstimateHigh!)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -380,7 +380,7 @@ class EarningsTrend extends StatelessWidget {
                             ? formatNumbers(item.revenueEstimateYearAgoEps!)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -391,7 +391,7 @@ class EarningsTrend extends StatelessWidget {
                             ? item.revenueEstimateNumberOfAnalysts!.toString()
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -402,7 +402,7 @@ class EarningsTrend extends StatelessWidget {
                             ? item.revenueEstimateGrowth!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -413,8 +413,8 @@ class EarningsTrend extends StatelessWidget {
                         item.epsTrendCurrent != null
                             ? item.epsTrendCurrent!.toStringAsFixed(2)
                             : "N/A",
-                        variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        variant: TextVariant.h5,
+
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -426,8 +426,9 @@ class EarningsTrend extends StatelessWidget {
                             : "N/A",
                         textAlign: TextAlign.center,
                         color: AppColors.white,
-                        variant: TextVariant.h5,
+                        variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
+
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -437,7 +438,7 @@ class EarningsTrend extends StatelessWidget {
                             ? item.epsTrend30DaysAgo!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -449,7 +450,7 @@ class EarningsTrend extends StatelessWidget {
                             : "N/A",
                         textAlign: TextAlign.center,
                         color: AppColors.white,
-                        variant: TextVariant.h5,
+                        variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -460,7 +461,8 @@ class EarningsTrend extends StatelessWidget {
                             ? item.epsTrend90DaysAgo!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
+
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -474,7 +476,7 @@ class EarningsTrend extends StatelessWidget {
                         textAlign: TextAlign.center,
                         color: AppColors.white,
                         variant: TextVariant.h5,
-                        fontWeight: TextFontWeightVariant.h2,
+
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -483,8 +485,8 @@ class EarningsTrend extends StatelessWidget {
                         item.epsRevisionsUpLast30Days != null
                             ? item.epsRevisionsUpLast30Days!.toStringAsFixed(2)
                             : "N/A",
-                        variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        variant: TextVariant.h5,
+
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -497,7 +499,7 @@ class EarningsTrend extends StatelessWidget {
                         textAlign: TextAlign.center,
                         color: AppColors.white,
                         variant: TextVariant.h5,
-                        fontWeight: TextFontWeightVariant.h2,
+
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -508,8 +510,8 @@ class EarningsTrend extends StatelessWidget {
                                 2,
                               )
                             : "N/A",
-                        variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        variant: TextVariant.h5,
+
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),

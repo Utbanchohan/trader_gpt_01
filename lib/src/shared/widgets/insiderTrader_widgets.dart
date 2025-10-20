@@ -113,7 +113,7 @@ class InsiderTraderTable extends StatelessWidget {
                       MdSnsText(
                         item.name,
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -122,7 +122,7 @@ class InsiderTraderTable extends StatelessWidget {
                       MdSnsText(
                         item.formType,
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -131,7 +131,7 @@ class InsiderTraderTable extends StatelessWidget {
                       MdSnsText(
                         _formatDate(item.fileDate),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -140,7 +140,7 @@ class InsiderTraderTable extends StatelessWidget {
                       MdSnsText(
                         _formatDate(item.transactionDate),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -166,7 +166,7 @@ class InsiderTraderTable extends StatelessWidget {
                           item.code,
                           textAlign: TextAlign.center,
                           color: AppColors.color00FF55,
-                          variant: TextVariant.h5,
+                          variant: TextVariant.h4,
                           fontWeight: TextFontWeightVariant.h2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -176,7 +176,7 @@ class InsiderTraderTable extends StatelessWidget {
                       MdSnsText(
                         item.shares.toString(),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color0098E4,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -185,7 +185,7 @@ class InsiderTraderTable extends StatelessWidget {
                       MdSnsText(
                         item.value.toString(),
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color0xFFFFB21D,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -194,7 +194,7 @@ class InsiderTraderTable extends StatelessWidget {
                       MdSnsText(
                         item.link,
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),

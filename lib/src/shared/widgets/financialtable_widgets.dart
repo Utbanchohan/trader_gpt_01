@@ -925,7 +925,7 @@ class FinancialTable extends StatelessWidget {
               label: MdSnsText(
                 "",
                 variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h4,
+                fontWeight: TextFontWeightVariant.h2,
                 color: AppColors.white,
               ),
             ),
@@ -933,55 +933,55 @@ class FinancialTable extends StatelessWidget {
               label: MdSnsText(
                 "Values in USD",
                 variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h4,
+                fontWeight: TextFontWeightVariant.h2,
                 color: AppColors.white,
               ),
             ),
             DataColumn(
               label: MdSnsText(
-                _formatDate(keys[0]),
+                keys.length > 0 ? _formatDate(keys[0]) : "",
                 variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h4,
+                fontWeight: TextFontWeightVariant.h2,
                 color: AppColors.white,
               ),
             ),
             DataColumn(
               label: MdSnsText(
-                _formatDate(keys[1]),
+                keys.length > 1 ? _formatDate(keys[1]) : "",
                 variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h4,
+                fontWeight: TextFontWeightVariant.h2,
                 color: AppColors.white,
               ),
             ),
             DataColumn(
               label: MdSnsText(
-                _formatDate(keys[2]),
+                keys.length > 2 ? _formatDate(keys[2]) : "",
                 variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h4,
+                fontWeight: TextFontWeightVariant.h2,
                 color: AppColors.white,
               ),
             ),
             DataColumn(
               label: MdSnsText(
-                _formatDate(keys[3]),
+                keys.length > 3 ? _formatDate(keys[3]) : "",
                 variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h4,
+                fontWeight: TextFontWeightVariant.h2,
                 color: AppColors.white,
               ),
             ),
-            // DataColumn(
-            //   label: MdSnsText(
-            //     _formatDate(keys[4]),
-            //     variant: TextVariant.h4,
-            //     fontWeight: TextFontWeightVariant.h4,
-            //     color: AppColors.white,
-            //   ),
-            // ),
+            DataColumn(
+              label: MdSnsText(
+                keys.length > 4 ? _formatDate(keys[4]) : "",
+                variant: TextVariant.h4,
+                fontWeight: TextFontWeightVariant.h2,
+                color: AppColors.white,
+              ),
+            ),
             DataColumn(
               label: MdSnsText(
                 'Growth',
                 variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h4,
+                fontWeight: TextFontWeightVariant.h2,
                 color: AppColors.white,
               ),
             ),
@@ -1040,9 +1040,11 @@ class FinancialTable extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractCashFlow(data)[keys[0]]![item][0],
-                              ),
+                              keys.length > 0
+                                  ? formatNumbers(
+                                      extractCashFlow(data)[keys[0]]![item][0],
+                                    )
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
@@ -1050,19 +1052,26 @@ class FinancialTable extends StatelessWidget {
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractCashFlow(data)[keys[0]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 0
+                                  ? formatNumbers(
+                                          extractCashFlow(
+                                            data,
+                                          )[keys[0]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractCashFlow(data)[keys[0]]![item][1] !=
-                                          null &&
-                                      extractCashFlow(data)[keys[0]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 0
+                                  ? extractCashFlow(data)[keys[0]]![item][1] !=
+                                                null &&
+                                            extractCashFlow(
+                                                  data,
+                                                )[keys[0]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1074,9 +1083,11 @@ class FinancialTable extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractCashFlow(data)[keys[1]]![item][0],
-                              ),
+                              keys.length > 1
+                                  ? formatNumbers(
+                                      extractCashFlow(data)[keys[1]]![item][0],
+                                    )
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
@@ -1084,19 +1095,26 @@ class FinancialTable extends StatelessWidget {
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractCashFlow(data)[keys[1]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 1
+                                  ? formatNumbers(
+                                          extractCashFlow(
+                                            data,
+                                          )[keys[1]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractCashFlow(data)[keys[1]]![item][1] !=
-                                          null &&
-                                      extractCashFlow(data)[keys[1]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 1
+                                  ? extractCashFlow(data)[keys[1]]![item][1] !=
+                                                null &&
+                                            extractCashFlow(
+                                                  data,
+                                                )[keys[1]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1108,9 +1126,11 @@ class FinancialTable extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractCashFlow(data)[keys[2]]![item][0],
-                              ),
+                              keys.length > 2
+                                  ? formatNumbers(
+                                      extractCashFlow(data)[keys[2]]![item][0],
+                                    )
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
@@ -1118,19 +1138,26 @@ class FinancialTable extends StatelessWidget {
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractCashFlow(data)[keys[2]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 2
+                                  ? formatNumbers(
+                                          extractCashFlow(
+                                            data,
+                                          )[keys[2]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractCashFlow(data)[keys[2]]![item][1] !=
-                                          null &&
-                                      extractCashFlow(data)[keys[2]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 2
+                                  ? extractCashFlow(data)[keys[2]]![item][1] !=
+                                                null &&
+                                            extractCashFlow(
+                                                  data,
+                                                )[keys[2]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1143,9 +1170,11 @@ class FinancialTable extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractCashFlow(data)[keys[3]]![item][0],
-                              ),
+                              keys.length > 3
+                                  ? formatNumbers(
+                                      extractCashFlow(data)[keys[3]]![item][0],
+                                    )
+                                  : "",
                               textAlign: TextAlign.center,
                               color: AppColors.white,
                               variant: TextVariant.h4,
@@ -1154,19 +1183,26 @@ class FinancialTable extends StatelessWidget {
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractCashFlow(data)[keys[3]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 3
+                                  ? formatNumbers(
+                                          extractCashFlow(
+                                            data,
+                                          )[keys[3]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractCashFlow(data)[keys[3]]![item][1] !=
-                                          null &&
-                                      extractCashFlow(data)[keys[3]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 3
+                                  ? extractCashFlow(data)[keys[3]]![item][1] !=
+                                                null &&
+                                            extractCashFlow(
+                                                  data,
+                                                )[keys[3]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1178,9 +1214,11 @@ class FinancialTable extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractCashFlow(data)[keys[4]]![item][0],
-                              ),
+                              keys.length > 4
+                                  ? formatNumbers(
+                                      extractCashFlow(data)[keys[4]]![item][0],
+                                    )
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
@@ -1188,19 +1226,26 @@ class FinancialTable extends StatelessWidget {
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractCashFlow(data)[keys[4]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 4
+                                  ? formatNumbers(
+                                          extractCashFlow(
+                                            data,
+                                          )[keys[4]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractCashFlow(data)[keys[4]]![item][1] !=
-                                          null &&
-                                      extractCashFlow(data)[keys[4]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 4
+                                  ? extractCashFlow(data)[keys[4]]![item][1] !=
+                                                null &&
+                                            extractCashFlow(
+                                                  data,
+                                                )[keys[4]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1283,7 +1328,7 @@ class FinancialTable extends StatelessWidget {
                               MdSnsText(
                                 item,
                                 variant: TextVariant.h4,
-                                fontWeight: TextFontWeightVariant.h4,
+                                fontWeight: TextFontWeightVariant.h2,
                                 color: AppColors.white,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 3,
@@ -1308,31 +1353,42 @@ class FinancialTable extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractIncomeData(data)[keys[0]]![item][0],
-                              ),
+                              keys.length > 0
+                                  ? formatNumbers(
+                                      extractIncomeData(
+                                        data,
+                                      )[keys[0]]![item][0],
+                                    )
+                                  : "",
                               variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
                               overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractIncomeData(data)[keys[0]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 0
+                                  ? formatNumbers(
+                                          extractIncomeData(
+                                            data,
+                                          )[keys[0]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractIncomeData(data)[keys[0]]![item][1] !=
-                                          null &&
-                                      extractIncomeData(
-                                            data,
-                                          )[keys[0]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 0
+                                  ? extractIncomeData(
+                                                  data,
+                                                )[keys[0]]![item][1] !=
+                                                null &&
+                                            extractIncomeData(
+                                                  data,
+                                                )[keys[0]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1344,31 +1400,42 @@ class FinancialTable extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractIncomeData(data)[keys[1]]![item][0],
-                              ),
+                              keys.length > 1
+                                  ? formatNumbers(
+                                      extractIncomeData(
+                                        data,
+                                      )[keys[1]]![item][0],
+                                    )
+                                  : "",
                               variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
                               overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractIncomeData(data)[keys[1]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 1
+                                  ? formatNumbers(
+                                          extractIncomeData(
+                                            data,
+                                          )[keys[1]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractIncomeData(data)[keys[1]]![item][1] !=
-                                          null &&
-                                      extractIncomeData(
-                                            data,
-                                          )[keys[1]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 1
+                                  ? extractIncomeData(
+                                                  data,
+                                                )[keys[1]]![item][1] !=
+                                                null &&
+                                            extractIncomeData(
+                                                  data,
+                                                )[keys[1]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1380,31 +1447,42 @@ class FinancialTable extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractIncomeData(data)[keys[2]]![item][0],
-                              ),
+                              keys.length > 2
+                                  ? formatNumbers(
+                                      extractIncomeData(
+                                        data,
+                                      )[keys[2]]![item][0],
+                                    )
+                                  : "",
                               variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
                               overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractIncomeData(data)[keys[2]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 2
+                                  ? formatNumbers(
+                                          extractIncomeData(
+                                            data,
+                                          )[keys[2]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractIncomeData(data)[keys[2]]![item][1] !=
-                                          null &&
-                                      extractIncomeData(
-                                            data,
-                                          )[keys[2]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 2
+                                  ? extractIncomeData(
+                                                  data,
+                                                )[keys[2]]![item][1] !=
+                                                null &&
+                                            extractIncomeData(
+                                                  data,
+                                                )[keys[2]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1416,9 +1494,13 @@ class FinancialTable extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractIncomeData(data)[keys[3]]![item][0],
-                              ),
+                              keys.length > 3
+                                  ? formatNumbers(
+                                      extractIncomeData(
+                                        data,
+                                      )[keys[3]]![item][0],
+                                    )
+                                  : "",
                               textAlign: TextAlign.center,
                               color: AppColors.white,
                               variant: TextVariant.h4,
@@ -1427,62 +1509,80 @@ class FinancialTable extends StatelessWidget {
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractIncomeData(data)[keys[3]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 3
+                                  ? formatNumbers(
+                                          extractIncomeData(
+                                            data,
+                                          )[keys[3]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractIncomeData(data)[keys[3]]![item][1] !=
-                                          null &&
-                                      extractIncomeData(
-                                            data,
-                                          )[keys[3]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 3
+                                  ? extractIncomeData(
+                                                  data,
+                                                )[keys[3]]![item][1] !=
+                                                null &&
+                                            extractIncomeData(
+                                                  data,
+                                                )[keys[3]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
                       ),
-                      // DataCell(
-                      //   Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: [
-                      //       // MdSnsText(
-                      //       //   formatNumbers(
-                      //       //     extractIncomeData(data)[keys[4]]![item][0],
-                      //       //   ),
-                      //       //   variant: TextVariant.h4,
-                      //       //   fontWeight: TextFontWeightVariant.h4,
-                      //       //   color: AppColors.white,
-                      //       //   overflow: TextOverflow.ellipsis,
-                      //       // ),
-                      //       SizedBox(height: 2),
-                      //       MdSnsText(
-                      //         formatNumbers(
-                      //               extractIncomeData(data)[keys[4]]![item][1],
-                      //             ) +
-                      //             "%",
-                      //         variant: TextVariant.h4,
-                      //         fontWeight: TextFontWeightVariant.h2,
-                      //         color:
-                      //             extractIncomeData(data)[keys[4]]![item][1] !=
-                      //                     null &&
-                      //                 extractIncomeData(
-                      //                       data,
-                      //                     )[keys[4]]![item][1] >
-                      //                     0
-                      //             ? AppColors.color00FF55
-                      //             : AppColors.redFF3B3B,
-                      //         overflow: TextOverflow.ellipsis,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
+                      DataCell(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MdSnsText(
+                              keys.length > 4
+                                  ? formatNumbers(
+                                      extractIncomeData(
+                                        data,
+                                      )[keys[4]]![item][0],
+                                    )
+                                  : "",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color: AppColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2),
+                            MdSnsText(
+                              keys.length > 4
+                                  ? formatNumbers(
+                                          extractIncomeData(
+                                            data,
+                                          )[keys[4]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
+                              variant: TextVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
+                              color: keys.length > 4
+                                  ? extractIncomeData(
+                                                  data,
+                                                )[keys[4]]![item][1] !=
+                                                null &&
+                                            extractIncomeData(
+                                                  data,
+                                                )[keys[4]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
                       DataCell(
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -1554,7 +1654,7 @@ class FinancialTable extends StatelessWidget {
                               MdSnsText(
                                 item,
                                 variant: TextVariant.h4,
-                                fontWeight: TextFontWeightVariant.h4,
+                                fontWeight: TextFontWeightVariant.h2,
                                 color: AppColors.white,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
@@ -1579,35 +1679,42 @@ class FinancialTable extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractBalanceSheet(data)[keys[0]]![item][0],
-                              ),
+                              keys.length > 0
+                                  ? formatNumbers(
+                                      extractBalanceSheet(
+                                        data,
+                                      )[keys[0]]![item][0],
+                                    )
+                                  : "",
                               variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
                               overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractBalanceSheet(
-                                      data,
-                                    )[keys[0]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 0
+                                  ? formatNumbers(
+                                          extractBalanceSheet(
+                                            data,
+                                          )[keys[0]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractBalanceSheet(
-                                            data,
-                                          )[keys[0]]![item][1] !=
-                                          null &&
-                                      extractBalanceSheet(
-                                            data,
-                                          )[keys[0]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 0
+                                  ? extractBalanceSheet(
+                                                  data,
+                                                )[keys[0]]![item][1] !=
+                                                null &&
+                                            extractBalanceSheet(
+                                                  data,
+                                                )[keys[0]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1619,35 +1726,42 @@ class FinancialTable extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractBalanceSheet(data)[keys[1]]![item][0],
-                              ),
+                              keys.length > 1
+                                  ? formatNumbers(
+                                      extractBalanceSheet(
+                                        data,
+                                      )[keys[1]]![item][0],
+                                    )
+                                  : "",
                               variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
                               overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractBalanceSheet(
-                                      data,
-                                    )[keys[1]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 1
+                                  ? formatNumbers(
+                                          extractBalanceSheet(
+                                            data,
+                                          )[keys[1]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractBalanceSheet(
-                                            data,
-                                          )[keys[1]]![item][1] !=
-                                          null &&
-                                      extractBalanceSheet(
-                                            data,
-                                          )[keys[1]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 1
+                                  ? extractBalanceSheet(
+                                                  data,
+                                                )[keys[1]]![item][1] !=
+                                                null &&
+                                            extractBalanceSheet(
+                                                  data,
+                                                )[keys[1]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1659,35 +1773,42 @@ class FinancialTable extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractBalanceSheet(data)[keys[2]]![item][0],
-                              ),
+                              keys.length > 2
+                                  ? formatNumbers(
+                                      extractBalanceSheet(
+                                        data,
+                                      )[keys[2]]![item][0],
+                                    )
+                                  : "",
                               variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
                               overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractBalanceSheet(
-                                      data,
-                                    )[keys[2]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 2
+                                  ? formatNumbers(
+                                          extractBalanceSheet(
+                                            data,
+                                          )[keys[2]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractBalanceSheet(
-                                            data,
-                                          )[keys[2]]![item][1] !=
-                                          null &&
-                                      extractBalanceSheet(
-                                            data,
-                                          )[keys[2]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 2
+                                  ? extractBalanceSheet(
+                                                  data,
+                                                )[keys[2]]![item][1] !=
+                                                null &&
+                                            extractBalanceSheet(
+                                                  data,
+                                                )[keys[2]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1699,9 +1820,13 @@ class FinancialTable extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractBalanceSheet(data)[keys[3]]![item][0],
-                              ),
+                              keys.length > 3
+                                  ? formatNumbers(
+                                      extractBalanceSheet(
+                                        data,
+                                      )[keys[3]]![item][0],
+                                    )
+                                  : "",
                               textAlign: TextAlign.center,
                               color: AppColors.white,
                               variant: TextVariant.h4,
@@ -1710,25 +1835,28 @@ class FinancialTable extends StatelessWidget {
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractBalanceSheet(
-                                      data,
-                                    )[keys[3]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 3
+                                  ? formatNumbers(
+                                          extractBalanceSheet(
+                                            data,
+                                          )[keys[3]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractBalanceSheet(
-                                            data,
-                                          )[keys[3]]![item][1] !=
-                                          null &&
-                                      extractBalanceSheet(
-                                            data,
-                                          )[keys[3]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 3
+                                  ? extractBalanceSheet(
+                                                  data,
+                                                )[keys[3]]![item][1] !=
+                                                null &&
+                                            extractBalanceSheet(
+                                                  data,
+                                                )[keys[3]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
@@ -1740,35 +1868,42 @@ class FinancialTable extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MdSnsText(
-                              formatNumbers(
-                                extractBalanceSheet(data)[keys[4]]![item][0],
-                              ),
+                              keys.length > 4
+                                  ? formatNumbers(
+                                      extractBalanceSheet(
+                                        data,
+                                      )[keys[4]]![item][0],
+                                    )
+                                  : "",
                               variant: TextVariant.h4,
-                              fontWeight: TextFontWeightVariant.h4,
+                              fontWeight: TextFontWeightVariant.h2,
                               color: AppColors.white,
                               overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2),
                             MdSnsText(
-                              formatNumbers(
-                                    extractBalanceSheet(
-                                      data,
-                                    )[keys[4]]![item][1],
-                                  ) +
-                                  "%",
+                              keys.length > 4
+                                  ? formatNumbers(
+                                          extractBalanceSheet(
+                                            data,
+                                          )[keys[4]]![item][1],
+                                        ) +
+                                        "%"
+                                  : "",
                               variant: TextVariant.h4,
                               fontWeight: TextFontWeightVariant.h2,
-                              color:
-                                  extractBalanceSheet(
-                                            data,
-                                          )[keys[4]]![item][1] !=
-                                          null &&
-                                      extractBalanceSheet(
-                                            data,
-                                          )[keys[4]]![item][1] >
-                                          0
-                                  ? AppColors.color00FF55
-                                  : AppColors.redFF3B3B,
+                              color: keys.length > 4
+                                  ? extractBalanceSheet(
+                                                  data,
+                                                )[keys[4]]![item][1] !=
+                                                null &&
+                                            extractBalanceSheet(
+                                                  data,
+                                                )[keys[4]]![item][1] >
+                                                0
+                                        ? AppColors.color00FF55
+                                        : AppColors.redFF3B3B
+                                  : AppColors.black,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
