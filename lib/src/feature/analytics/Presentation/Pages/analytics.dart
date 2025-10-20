@@ -1351,8 +1351,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     trimMode: TrimMode.Line,
                     trimCollapsedText: '  Read More',
                     trimExpandedText: '  Show Less',
-                    delimiter:
-                        '', // 👈 ensures 'Read More' appears on next line cleanly
+                    delimiter: '',
                     moreStyle: GoogleFonts.plusJakartaSans(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
