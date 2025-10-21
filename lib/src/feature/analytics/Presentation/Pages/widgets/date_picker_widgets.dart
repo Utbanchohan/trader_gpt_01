@@ -3,10 +3,17 @@ import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../../../../shared/widgets/loading_widget.dart';
+
 class DateRangePickerWidget extends StatefulWidget {
+  final bool loading;
   final void Function(DateTime? from, DateTime? to) onShowPressed;
 
-  const DateRangePickerWidget({super.key, required this.onShowPressed});
+  const DateRangePickerWidget({
+    super.key,
+    required this.onShowPressed,
+    required this.loading,
+  });
 
   @override
   State<DateRangePickerWidget> createState() => _DateRangePickerWidgetState();
@@ -121,105 +128,71 @@ class _DateRangePickerWidgetState extends State<DateRangePickerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isTight = constraints.maxWidth < 600; // for smaller screens
-        return isTight
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _dateField(
-                          label: 'From',
-                          controller: _fromController,
-                          onTap: () => _pickDate(isFrom: true),
-                        ),
+    // return LayoutBuilder(
+    //   builder: (context, constraints) {
+    //     final isTight = constraints.maxWidth < 600; // for smaller screens
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              _dateField(
+                label: 'From',
+                controller: _fromController,
+                onTap: () => _pickDate(isFrom: true),
+              ),
+              const SizedBox(width: 12),
+              _dateField(
+                label: 'To',
+                controller: _toController,
+                onTap: () => _pickDate(isFrom: false),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            height: 44,
+            child: ElevatedButton(
+              onPressed: () {
+                if (!widget.loading) {
+                  widget.onShowPressed(_fromDate, _toDate);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2BB673),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 0,
+              ),
+              child: widget.loading
+                  ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: LoadingWidget(
+                        height: 20,
+                        width: 20,
+                        color: AppColors.white,
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _dateField(
-                          label: 'To',
-                          controller: _toController,
-                          onTap: () => _pickDate(isFrom: false),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 44,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        widget.onShowPressed(_fromDate, _toDate);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2BB673),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        'SHOW',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.6,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: _dateField(
-                      label: 'From',
-                      controller: _fromController,
-                      onTap: () => _pickDate(isFrom: true),
-                    ),
-                  ),
-                  const SizedBox(width: 18),
-                  Expanded(
-                    child: _dateField(
-                      label: 'To',
-                      controller: _toController,
-                      onTap: () => _pickDate(isFrom: false),
-                    ),
-                  ),
-                  const SizedBox(width: 18),
-                  SizedBox(
-                    height: 44,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        widget.onShowPressed(_fromDate, _toDate);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.color4ade80,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        'SHOW',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.6,
-                        ),
+                    )
+                  : Text(
+                      'SHOW',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.6,
                       ),
                     ),
-                  ),
-                ],
-              );
-      },
+            ),
+          ),
+        ],
+      ),
     );
+
+    // },
+    // );
   }
 }

@@ -2942,25 +2942,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DateRangePickerWidget(
-                  onShowPressed: (from, to) async {
-                    fromDate = from!;
-                    toDate = to!;
-                    await getAnalysisData(
-                      widget.chatRouting!.symbol,
-                      IntervalEnum.daily,
-                      now1: toDate,
-                      startDate1: fromDate,
-                    );
-                  },
-                ),
-              ],
-            ),
+          DateRangePickerWidget(
+            loading: chartLoader,
+            onShowPressed: (from, to) async {
+              fromDate = from!;
+              toDate = to!;
+              await getAnalysisData(
+                widget.chatRouting!.symbol,
+                IntervalEnum.daily,
+                now1: toDate,
+                startDate1: fromDate,
+              );
+            },
           ),
 
           SizedBox(height: 20),
