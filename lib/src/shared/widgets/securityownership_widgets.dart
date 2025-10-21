@@ -34,6 +34,11 @@ class SecurityOwnershipTable extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
+              headingRowHeight: 40.h,
+              columnSpacing: 20,
+              horizontalMargin: 15,
+
+              dataRowMaxHeight: 60.h,
               headingRowColor: WidgetStateProperty.resolveWith<Color?>((
                 Set<WidgetState> states,
               ) {
@@ -43,96 +48,96 @@ class SecurityOwnershipTable extends StatelessWidget {
                 DataColumn(
                   label: MdSnsText(
                     "Name",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Form Type',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Effective\nDate',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    'Effective Date',
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'File Date',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Ownership\nPercent',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    'Ownership Percent',
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Ownership\nPercent Change',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    'Ownership Percent Change',
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Shares',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Shares\nChange',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    'Shares Change',
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Shares\nPercent Change',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    'Shares Percent Change',
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Value',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Value\nChange',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    'Value Change',
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Value\nPercent Change',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    'Value Percent Change',
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),

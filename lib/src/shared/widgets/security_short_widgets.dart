@@ -94,13 +94,14 @@ class SecurityShortVolume extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(
-        vertical: 10, // 👈 smaller header height
-        horizontal: 8,
+        vertical: 14, // 👈 smaller header height
+        horizontal: 6,
       ),
       child: MdSnsText(
         text,
-        variant: TextVariant.h4,
-        fontWeight: TextFontWeightVariant.h4,
+
+        variant: TextVariant.h5,
+        fontWeight: TextFontWeightVariant.h2,
         color: AppColors.white,
         textAlign: TextAlign.center,
       ),
@@ -110,12 +111,12 @@ class SecurityShortVolume extends StatelessWidget {
   /// Data cell helper
   Widget _buildDataCell(String text, Color color) {
     return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
       child: MdSnsText(
         text,
-        variant: TextVariant.h4,
-        fontWeight: TextFontWeightVariant.h2,
+        variant: TextVariant.h5,
+        fontWeight: TextFontWeightVariant.h3,
         color: color,
         textAlign: TextAlign.center,
       ),

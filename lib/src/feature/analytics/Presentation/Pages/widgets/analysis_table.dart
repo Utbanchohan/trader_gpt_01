@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/analysis_data/analysis_data_model.dart';
@@ -72,6 +73,11 @@ class _AnalysisTableState extends State<AnalysisTable> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
+              headingRowHeight: 40.h,
+              columnSpacing: 20,
+              horizontalMargin: 15,
+
+              dataRowMaxHeight: 60.h,
               headingRowColor: WidgetStateProperty.resolveWith<Color?>((
                 Set<WidgetState> states,
               ) {
@@ -81,40 +87,40 @@ class _AnalysisTableState extends State<AnalysisTable> {
                 DataColumn(
                   label: MdSnsText(
                     "Date",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Open',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'High',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Low',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Close',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
@@ -122,32 +128,32 @@ class _AnalysisTableState extends State<AnalysisTable> {
                 DataColumn(
                   label: MdSnsText(
                     'Volume',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     "Change %",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Change \$',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'VWAP',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),

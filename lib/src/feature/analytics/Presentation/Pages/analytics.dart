@@ -2915,7 +2915,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               earningChartModel != null && earningChartModel!.data.isNotEmpty
                   ? QuarterlyPerformanceChart(data: earningChartModel!.data)
                   : SizedBox(),
-              QuarterlyPerformanceChartShimmer(),
+              // SizedBox(height: 20),
+              // QuarterlyPerformanceChartShimmer(),
               SizedBox(height: 20),
               earningReportsModel != null &&
                       earningReportsModel!.data.isNotEmpty

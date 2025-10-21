@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -33,6 +34,11 @@ class EarningsTable extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
+              headingRowHeight: 40.h,
+              columnSpacing: 20,
+              horizontalMargin: 15,
+
+              dataRowMaxHeight: 60.h,
               headingRowColor: WidgetStateProperty.resolveWith<Color?>((
                 Set<WidgetState> states,
               ) {
@@ -42,48 +48,48 @@ class EarningsTable extends StatelessWidget {
                 DataColumn(
                   label: MdSnsText(
                     "Period",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Estimated EPS',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Revenue',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Actual EPS',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Growth',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Surprise',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),

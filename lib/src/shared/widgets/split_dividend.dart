@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
@@ -36,6 +37,10 @@ class SplitDividend extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
+              headingRowHeight: 40.h,
+              columnSpacing: 20,
+              horizontalMargin: 15,
+              dataRowMaxHeight: 60.h,
               headingRowColor: WidgetStateProperty.resolveWith<Color?>((
                 Set<WidgetState> states,
               ) {
@@ -44,57 +49,59 @@ class SplitDividend extends StatelessWidget {
               columns: [
                 DataColumn(
                   label: MdSnsText(
-                    "Forward Annual\nDividend Rate",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    "Forward Annual Dividend Rate",
+                    textAlign: TextAlign.center,
+
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Forward Annual\nDividend Yield',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    'Forward Annual Dividend Yield',
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Payout Ratio',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Dividend Date',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Ex Dividend Date',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Last Split Factor',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Last Split Date',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
