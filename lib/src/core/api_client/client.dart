@@ -191,6 +191,7 @@ class MarketCustomClientAdapter extends IOHttpClientAdapter {
         try {
           final newToken = ref.read(localDataProvider).marketRefreshToken;
           if (newToken != null) {
+            ref.read(localDataProvider).setAccessTokenMarket(newToken);
             options.headers[HttpHeaders.authorizationHeader] =
                 'Bearer $newToken';
             debugPrint('Retrying with refreshed token...');
@@ -273,6 +274,7 @@ class MarketCustomClientAdapterNew extends IOHttpClientAdapter {
         try {
           final newToken = ref.read(localDataProvider).marketRefreshTokenNew;
           if (newToken != null) {
+            ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
             options.headers[HttpHeaders.authorizationHeader] =
                 'Bearer $newToken';
             debugPrint('Retrying with refreshed token...');

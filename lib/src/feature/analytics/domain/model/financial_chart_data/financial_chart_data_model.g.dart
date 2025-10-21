@@ -67,7 +67,9 @@ Map<String, dynamic> _$FinanceCategoryToJson(_FinanceCategory instance) =>
     };
 
 _FinancePeriod _$FinancePeriodFromJson(Map<String, dynamic> json) =>
-    _FinancePeriod(metrics: _metricsFromJson(json as Map<String, dynamic>));
+    _FinancePeriod(
+      metrics: _metricsFromJson(json['metrics'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$FinancePeriodToJson(_FinancePeriod instance) =>
     <String, dynamic>{'metrics': _metricsToJson(instance.metrics)};
