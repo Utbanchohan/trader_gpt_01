@@ -1138,7 +1138,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       children: [
                         MdSnsText(
                           "#${selectedStock!.symbol}",
-                          variant: TextVariant.h2,
+                          variant: TextVariant.h3,
                           fontWeight: TextFontWeightVariant.h1,
 
                           color: AppColors.white,
@@ -1200,7 +1200,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     infoCryptoResponse != null &&
                     infoCryptoResponse!.data != null
                 ? SizedBox(
-                    height: 122.h,
+                    height: 135.h,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal, // Horizontal scrolling
                       // padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -1363,7 +1363,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       color: AppColors.secondaryColor,
                     ),
                     style: GoogleFonts.plusJakartaSans(
-                      fontSize: 12.sp,
+                      fontSize: 1.sp,
                       fontWeight: FontWeight.w400,
                       color: AppColors.white,
                       height: 1.4,
@@ -1828,7 +1828,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       children: [
                         MdSnsText(
                           "#${selectedStock!.symbol}",
-                          variant: TextVariant.h2,
+                          variant: TextVariant.h3,
                           fontWeight: TextFontWeightVariant.h1,
 
                           color: AppColors.white,
@@ -1898,7 +1898,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
             stockResponse != null && stockResponse!.data.previousClose != null
                 ? SizedBox(
-                    height: 122.h,
+                    height: 135.h,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal, // Horizontal scrolling
                       // padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -2178,11 +2178,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               children: [
                 MdSnsText(
                   "Company Details",
-                  color: AppColors.white,
+                  color: AppColors.fieldTextColor,
                   variant: TextVariant.h3,
                   fontWeight: TextFontWeightVariant.h1,
                 ),
-                SizedBox(height: 6.h),
+                SizedBox(height: 4.h),
 
                 companyModel != null &&
                         companyModel!.general.Description != null
@@ -2191,21 +2191,27 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
                         trimLines: 2,
                         trimMode: TrimMode.Line,
-                        trimCollapsedText: 'Read More',
-                        trimExpandedText: 'Show Less',
+                        trimCollapsedText: '\nShow More',
+                        trimExpandedText: '\nShow Less',
 
                         moreStyle: GoogleFonts.plusJakartaSans(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          // wordSpacing: 0,
+                          // letterSpacing: 0,
+                          height: 1.8,
+                          fontWeight: FontWeight.w700,
                           color: AppColors.secondaryColor,
                         ),
                         lessStyle: GoogleFonts.plusJakartaSans(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          // wordSpacing: 0,
+                          // letterSpacing: 0,
+                          height: 1.8,
+                          fontWeight: FontWeight.w700,
                           color: AppColors.secondaryColor,
                         ),
                         style: GoogleFonts.plusJakartaSans(
-                          fontSize: 14.sp,
+                          fontSize: 12,
                           fontWeight: FontWeight.w400,
                           color: AppColors.white,
                         ),

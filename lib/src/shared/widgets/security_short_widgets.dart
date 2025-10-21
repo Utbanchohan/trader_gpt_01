@@ -112,11 +112,11 @@ class SecurityShortVolume extends StatelessWidget {
   Widget _buildDataCell(String text, Color color) {
     return Container(
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
       child: MdSnsText(
         text,
-        variant: TextVariant.h5,
-        fontWeight: TextFontWeightVariant.h3,
+        variant: TextVariant.h4,
+        fontWeight: TextFontWeightVariant.h2,
         color: color,
         textAlign: TextAlign.center,
       ),

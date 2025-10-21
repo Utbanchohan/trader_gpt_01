@@ -28,7 +28,7 @@ class PriceCardWidget extends StatelessWidget {
     return Container(
       width: 220.w,
       // height: 137.h,
-      padding: EdgeInsets.all(10.w),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: AppColors.primaryColor,
         borderRadius: BorderRadius.circular(20),
@@ -45,12 +45,12 @@ class PriceCardWidget extends StatelessWidget {
             variant: TextVariant.h4,
             fontWeight: TextFontWeightVariant.h4,
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 0.h),
           MdSnsText(
             previousPrice,
             color: firstColor,
 
-            variant: TextVariant.h4,
+            variant: TextVariant.h2,
             fontWeight: TextFontWeightVariant.h1,
           ),
           SizedBox(height: 10.h),
@@ -63,13 +63,13 @@ class PriceCardWidget extends StatelessWidget {
             variant: TextVariant.h4,
             fontWeight: TextFontWeightVariant.h4,
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 0.h),
           Row(
             children: [
               MdSnsText(
                 afterHoursPrice,
                 color: secondColor,
-                variant: TextVariant.h4,
+                variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
               ),
             ],

@@ -49,7 +49,7 @@ class SplitDividend extends StatelessWidget {
               columns: [
                 DataColumn(
                   label: MdSnsText(
-                    "Forward Annual Dividend Rate",
+                    "Forward Annual\nDividend Rate",
                     textAlign: TextAlign.center,
 
                     variant: TextVariant.h5,

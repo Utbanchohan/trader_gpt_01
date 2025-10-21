@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class CompanyDetailsItem extends StatelessWidget {
@@ -71,22 +72,43 @@ class CompanyDetailsCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CompanyDetailsItem(
-                  title: "OUTSTANDING SHARES",
+                  title: "OUTSTANDING SHARES".capitalize(),
                   value: items[0],
                 ),
 
                 CompanyDetailsItem(
-                  title: "INSTITUTIONAL OWNERSHIP",
+                  title: "INSTITUTIONAL OWNERSHIP".capitalize(),
 
                   value: "${items[1]}%",
                 ),
-                CompanyDetailsItem(title: "EBITA", value: items[2]),
-                CompanyDetailsItem(title: "EXCHANGE", value: items[3]),
-                CompanyDetailsItem(title: "SYMBOL", value: items[4]),
-                CompanyDetailsItem(title: "SECTOR", value: items[5]),
-                CompanyDetailsItem(title: "INDUSTRY", value: items[6]),
-                CompanyDetailsItem(title: "FISCAL YEAR END", value: items[7]),
-                CompanyDetailsItem(title: "MARKET CAP", value: "\$${items[8]}"),
+                CompanyDetailsItem(
+                  title: "EBITA".capitalize(),
+                  value: items[2],
+                ),
+                CompanyDetailsItem(
+                  title: "EXCHANGE".capitalize(),
+                  value: items[3],
+                ),
+                CompanyDetailsItem(
+                  title: "SYMBOL".capitalize(),
+                  value: items[4],
+                ),
+                CompanyDetailsItem(
+                  title: "SECTOR".capitalize(),
+                  value: items[5],
+                ),
+                CompanyDetailsItem(
+                  title: "INDUSTRY".capitalize(),
+                  value: items[6],
+                ),
+                CompanyDetailsItem(
+                  title: "FISCAL YEAR END".capitalize(),
+                  value: items[7],
+                ),
+                CompanyDetailsItem(
+                  title: "MARKET CAP".capitalize(),
+                  value: "\$${items[8]}",
+                ),
               ],
             ),
           ),
