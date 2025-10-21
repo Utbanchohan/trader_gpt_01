@@ -121,7 +121,17 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   getWorkFlows() async {
     var res = await ref.read(workFlowProviderProvider.notifier).getWorksFlows();
     if (res.workflows.isNotEmpty) {
-      workflows.addAll(res.workflows);
+      for (var ij in res.workflows) {
+        if (widget.chatRouting!.type == "crypto") {
+          if (ij.isStock != null && ij.isStock == false) {
+            workflows.add(ij);
+          }
+        } else {
+          if (ij.isStock != null && ij.isStock == true) {
+            workflows.add(ij);
+          }
+        }
+      }
     }
   }
 
