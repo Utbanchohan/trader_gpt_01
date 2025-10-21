@@ -47,7 +47,7 @@ class _FeedbackPopupState extends State<FeedbackPopup> {
           maxLines: 3,
           decoration: InputDecoration(
             hintText: "Comment (optional)",
-            hintStyle: const TextStyle(color: AppColors.color0xFFc0c0c8),
+            hintStyle: const TextStyle(color: AppColors.white),
             filled: true,
 
             fillColor: AppColors.black,
