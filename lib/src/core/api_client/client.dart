@@ -181,33 +181,8 @@ class MarketCustomClientAdapter extends IOHttpClientAdapter {
       options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
       debugPrint('CUSTOM CLIENT ACCESS TOKEN $token');
     }
-    try {
-      return super.fetch(options, requestStream, cancelFuture);
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        debugPrint('Access token expired, trying refresh token...');
-        final refreshToken = ref.read(localDataProvider).marketRefreshToken;
-        if (refreshToken == null) rethrow;
-        try {
-          final newToken = ref.read(localDataProvider).marketRefreshToken;
-          if (newToken != null) {
-            ref.read(localDataProvider).setAccessTokenMarket(newToken);
-            options.headers[HttpHeaders.authorizationHeader] =
-                'Bearer $newToken';
-            debugPrint('Retrying with refreshed token...');
-            return await super.fetch(options, requestStream, cancelFuture);
-          } else {
-            debugPrint('Failed to refresh token.');
-            rethrow;
-          }
-        } catch (refreshError) {
-          debugPrint('Error refreshing token: $refreshError');
-          rethrow;
-        }
-      } else {
-        rethrow;
-      }
-    }
+
+    return super.fetch(options, requestStream, cancelFuture);
   }
 }
 
@@ -264,32 +239,7 @@ class MarketCustomClientAdapterNew extends IOHttpClientAdapter {
       options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
       debugPrint('CUSTOM CLIENT ACCESS TOKEN $token');
     }
-    try {
-      return super.fetch(options, requestStream, cancelFuture);
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        debugPrint('Access token expired, trying refresh token...');
-        final refreshToken = ref.read(localDataProvider).marketRefreshTokenNew;
-        if (refreshToken == null) rethrow;
-        try {
-          final newToken = ref.read(localDataProvider).marketRefreshTokenNew;
-          if (newToken != null) {
-            ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
-            options.headers[HttpHeaders.authorizationHeader] =
-                'Bearer $newToken';
-            debugPrint('Retrying with refreshed token...');
-            return await super.fetch(options, requestStream, cancelFuture);
-          } else {
-            debugPrint('Failed to refresh token.');
-            rethrow;
-          }
-        } catch (refreshError) {
-          debugPrint('Error refreshing token: $refreshError');
-          rethrow;
-        }
-      } else {
-        rethrow;
-      }
-    }
+
+    return super.fetch(options, requestStream, cancelFuture);
   }
 }
