@@ -160,7 +160,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
     }
     ref.read(stocksManagerProvider.notifier).watchStocks(watchStockes);
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   debounceSearch(String val) {
