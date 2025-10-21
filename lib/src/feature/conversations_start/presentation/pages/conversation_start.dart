@@ -41,6 +41,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
   final TextEditingController search = TextEditingController();
 
   List<ChatHistory> convo = [];
+  List<ChatHistory> stocksChat = [];
+  List<ChatHistory> cryptoChats = [];
   List<ChatHistory> searchConvo = [];
 
   final SocketService socketService = SocketService();
@@ -144,6 +146,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
       if (chat.symbol.toLowerCase() != "tdgpt" &&
           !existingSymbols.contains(chat.symbol)) {
         convo.add(chat);
+        if (chat.type.toLowerCase() == "stocks") {
+          stocksChat.add(chat);
+        } else if (chat.type.toLowerCase() == "crypto") {
+          cryptoChats.add(chat);
+        }
         watchStockes.add(
           Stock(
             stockId: chat.stockId,
