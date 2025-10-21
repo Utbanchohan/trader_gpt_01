@@ -61,6 +61,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   bool? report;
   bool? deepAnalysis;
   List<Workflow> workflows = [];
+  List<Workflow> cryptoWorkFLows = [];
+  List<Workflow> stockWorkFlows = [];
+
   Workflow? selectedWorkFlow;
   bool isWorkFlow = false;
   bool isWorkSymbol = false;
@@ -88,7 +91,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   getWorkFlows() async {
     var res = await ref.read(workFlowProviderProvider.notifier).getWorksFlows();
     if (res.workflows.isNotEmpty) {
-      workflows.addAll(res.workflows);
+      for (var ij in res.workflows) {
+        workflows.add(ij);
+        if (ij.isStock ?? false) {
+          stockWorkFlows.add(ij);
+        } else {
+          cryptoWorkFLows.add(ij);
+        }
+      }
     }
   }
 
@@ -268,22 +278,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         _buildWorkflowList(context, workflows),
 
                         // 🟡 Stock
-                        _buildWorkflowList(
-                          context,
-                          workflows,
-                          // .where((w) =>
-                          //     w.category?.toLowerCase() == 'stock')
-                          // .toList(),
-                        ),
+                        _buildWorkflowList(context, stockWorkFlows),
 
                         // 🔵 Crypto
-                        _buildWorkflowList(
-                          context,
-                          workflows,
-                          // .where((w) =>
-                          //     w.category?.toLowerCase() == 'crypto')
-                          // .toList(),
-                        ),
+                        _buildWorkflowList(context, cryptoWorkFLows),
                       ],
                     ),
                   ),

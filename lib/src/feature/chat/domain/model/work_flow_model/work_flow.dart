@@ -29,6 +29,7 @@ abstract class Workflow with _$Workflow {
     required String description,
     required String query,
     List<Parameter>? parameters,
+    bool? isStock,
   }) = _Workflow;
 
   factory Workflow.fromJson(Map<String, dynamic> json) =>

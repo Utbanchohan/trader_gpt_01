@@ -27,6 +27,12 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
 
   int selectedIndex = 1;
 
+  setItem(index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<OhlcData> chartData = widget.data.map((item) {
@@ -149,12 +155,11 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
               // Right side buttons (wrap in Row)
               Row(
                 children: List.generate(labels.length, (index) {
-                  final isSelected = selectedIndex == index;
-
                   return GestureDetector(
                     onTap: () {
+                      setItem(index);
+
                       widget.onPressed(labels[index]);
-                      selectedIndex = index;
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
@@ -165,14 +170,16 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                         vertical: 5,
                       ),
                       decoration: BoxDecoration(
-                        color: isSelected
+                        color: selectedIndex == index
                             ? AppColors.color0E1738
                             : AppColors.colo2C3754,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: MdSnsText(
                         labels[index],
-                        color: isSelected ? Colors.white : Colors.white70,
+                        color: selectedIndex == index
+                            ? Colors.white
+                            : Colors.white70,
                         variant: TextVariant.h5,
                         fontWeight: TextFontWeightVariant.h2,
                       ),
