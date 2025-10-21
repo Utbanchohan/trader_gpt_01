@@ -30,6 +30,7 @@ _Workflow _$WorkflowFromJson(Map<String, dynamic> json) => _Workflow(
   parameters: (json['parameters'] as List<dynamic>?)
       ?.map((e) => Parameter.fromJson(e as Map<String, dynamic>))
       .toList(),
+  isStock: json['isStock'] as bool?,
 );
 
 Map<String, dynamic> _$WorkflowToJson(_Workflow instance) => <String, dynamic>{
@@ -38,6 +39,7 @@ Map<String, dynamic> _$WorkflowToJson(_Workflow instance) => <String, dynamic>{
   'description': instance.description,
   'query': instance.query,
   'parameters': instance.parameters,
+  'isStock': instance.isStock,
 };
 
 _Parameter _$ParameterFromJson(Map<String, dynamic> json) => _Parameter(
