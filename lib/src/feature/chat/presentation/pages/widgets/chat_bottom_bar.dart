@@ -441,7 +441,13 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                   color: AppColors.white,
                                   size: 18,
                                 ),
-                                onPressed: widget.onSend,
+                                onPressed: () {
+                                  FocusScope.of(context).unfocus();
+                                  if (!_speechToText.isNotListening) {
+                                    _stopListening();
+                                  }
+                                  widget.onSend();
+                                },
                               ),
                             ),
                           ],

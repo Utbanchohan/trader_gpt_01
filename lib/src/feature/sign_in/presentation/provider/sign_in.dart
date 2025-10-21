@@ -49,6 +49,9 @@ class Login extends _$Login {
           await ref
               .read(localDataProvider)
               .setAccessTokenMarket(response1.accessToken);
+          await ref
+              .read(localDataProvider)
+              .setRefreshTokenMarket(response1.refreshToken);
         }
         final response2 = await ref
             .read(overviewRepositoryNrm)
@@ -62,6 +65,9 @@ class Login extends _$Login {
           await ref
               .read(localDataProvider)
               .setAccessTokenMarketNew(response2.data.accessToken);
+          await ref
+              .read(localDataProvider)
+              .setRefreshTokenMarketNew(response2.data.refreshToken);
         }
 
         bool isEmailVerified = false;

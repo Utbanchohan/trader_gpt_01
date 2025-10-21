@@ -59,6 +59,9 @@ class Profile extends _$Profile {
           await ref
               .read(localDataProvider)
               .setAccessTokenMarket(response1.accessToken);
+          await ref
+              .read(localDataProvider)
+              .setRefreshTokenMarket(response1.refreshToken);
         }
         final response2 = await ref
             .read(overviewRepositoryNrm)
@@ -72,6 +75,9 @@ class Profile extends _$Profile {
           await ref
               .read(localDataProvider)
               .setAccessTokenMarketNew(response2.data.accessToken);
+          await ref
+              .read(localDataProvider)
+              .setRefreshTokenMarketNew(response2.data.refreshToken);
         }
         await ref
             .read(localDataProvider)
@@ -162,6 +168,9 @@ class Profile extends _$Profile {
           await ref
               .read(localDataProvider)
               .setAccessTokenMarketNew(response2.data.accessToken);
+          await ref
+              .read(localDataProvider)
+              .setRefreshTokenMarketNew(response2.data.refreshToken);
         }
         return response.data;
       } else {

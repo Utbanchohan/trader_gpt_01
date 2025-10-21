@@ -6,6 +6,7 @@ import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/comp
 import 'package:trader_gpt/src/feature/analytics/domain/model/esg_score_model/esg_score_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/matrics_data_model/matrics_data_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';
+import '../../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../../shared/custom_message.dart';
 import '../../../../../shared/states/app_loading_state.dart';
 import '../../../data/dto/analysis_dto/analysis_dto.dart';
@@ -46,22 +47,69 @@ class AnalyticsProvider extends _$AnalyticsProvider {
   AppLoadingState build() => const AppLoadingState();
 
   Future<StockPriceModel> stockPrices(StockPriceData stockprice) async {
-    var res = await ref.read(overviewRepository).stockPrice(stockprice);
-    if (res.msg != null) {
-      return res;
-    } else {
-      return StockPriceModel(
-        data: StockPriceData(chart: [], chartVol: [], eodData: {}),
-      );
+    try {
+      var res = await ref.read(overviewRepository).stockPrice(stockprice);
+      if (res.msg != null) {
+        return res;
+      } else {
+        return StockPriceModel(
+          data: StockPriceData(chart: [], chartVol: [], eodData: {}),
+        );
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        final refreshToken = ref.read(localDataProvider).marketRefreshToken;
+        if (refreshToken == null) rethrow;
+        try {
+          final newToken = ref.read(localDataProvider).marketRefreshToken;
+          if (newToken != null) {
+            ref.read(localDataProvider).setAccessTokenMarket(newToken);
+            return StockPriceModel(
+              data: StockPriceData(chart: [], chartVol: [], eodData: {}),
+            );
+          } else {
+            rethrow;
+          }
+        } catch (refreshError) {
+          rethrow;
+        }
+      } else {
+        rethrow;
+      }
     }
   }
 
   Future<StockResponse?> getOverview(SymbolDto symbol) async {
-    var res = await ref.read(overviewRepository).getOverview(symbol);
-    if (res.status == 200) {
-      return res;
-    } else {
-      return null;
+    try {
+      var res = await ref.read(overviewRepository).getOverview(symbol);
+      if (res.status == 200) {
+        return res;
+      } else {
+        return null;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        final refreshToken = ref.read(localDataProvider).marketRefreshToken;
+        if (refreshToken == null) rethrow;
+        try {
+          final newToken = ref.read(localDataProvider).marketRefreshToken;
+          if (newToken != null) {
+            ref.read(localDataProvider).setAccessTokenMarket(newToken);
+            var res = await ref.read(overviewRepository).getOverview(symbol);
+            if (res.status == 200) {
+              return res;
+            } else {
+              return null;
+            }
+          } else {
+            rethrow;
+          }
+        } catch (refreshError) {
+          rethrow;
+        }
+      } else {
+        rethrow;
+      }
     }
   }
 
@@ -237,18 +285,29 @@ class AnalyticsProvider extends _$AnalyticsProvider {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
+        final refreshToken = ref.read(localDataProvider).marketAccessTokenNew;
+        if (refreshToken == null) rethrow;
         try {
-          $showMessage(e.response!.data!['message'], isError: true);
-        } catch (e) {
-          $showMessage("Something went wrong", isError: true);
+          final newToken = ref.read(localDataProvider).marketAccessTokenNew;
+          if (newToken != null) {
+            ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
+            var res = await ref
+                .read(overviewRepositoryNrm)
+                .analysisData(overview);
+            if (res.msg == "Success") {
+              return res;
+            } else {
+              return null;
+            }
+          } else {
+            rethrow;
+          }
+        } catch (refreshError) {
+          rethrow;
         }
-      } else if (e.type == DioExceptionType.connectionError) {
-        print('❌ Network error');
       } else {
-        print('❌ Unknown error: ${e.message}');
+        rethrow;
       }
-
-      state = AppLoadingState();
     }
   }
 
@@ -264,18 +323,29 @@ class AnalyticsProvider extends _$AnalyticsProvider {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
+        final refreshToken = ref.read(localDataProvider).marketAccessTokenNew;
+        if (refreshToken == null) rethrow;
         try {
-          $showMessage(e.response!.data!['message'], isError: true);
-        } catch (e) {
-          $showMessage("Something went wrong", isError: true);
+          final newToken = ref.read(localDataProvider).marketAccessTokenNew;
+          if (newToken != null) {
+            ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
+            var res = await ref
+                .read(overviewRepositoryNrm)
+                .earningChartData(overview);
+            if (res.msg == "Success") {
+              return res;
+            } else {
+              return null;
+            }
+          } else {
+            rethrow;
+          }
+        } catch (refreshError) {
+          rethrow;
         }
-      } else if (e.type == DioExceptionType.connectionError) {
-        print('❌ Network error');
       } else {
-        print('❌ Unknown error: ${e.message}');
+        rethrow;
       }
-
-      state = AppLoadingState();
     }
   }
 
@@ -293,18 +363,29 @@ class AnalyticsProvider extends _$AnalyticsProvider {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
+        final refreshToken = ref.read(localDataProvider).marketAccessTokenNew;
+        if (refreshToken == null) rethrow;
         try {
-          $showMessage(e.response!.data!['message'], isError: true);
-        } catch (e) {
-          $showMessage("Something went wrong", isError: true);
+          final newToken = ref.read(localDataProvider).marketAccessTokenNew;
+          if (newToken != null) {
+            ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
+            var res = await ref
+                .read(overviewRepositoryNrm)
+                .earningReportData(overview);
+            if (res.msg == "Success") {
+              return res;
+            } else {
+              return null;
+            }
+          } else {
+            rethrow;
+          }
+        } catch (refreshError) {
+          rethrow;
         }
-      } else if (e.type == DioExceptionType.connectionError) {
-        print('❌ Network error');
       } else {
-        print('❌ Unknown error: ${e.message}');
+        rethrow;
       }
-
-      state = AppLoadingState();
     }
   }
 
@@ -324,18 +405,29 @@ class AnalyticsProvider extends _$AnalyticsProvider {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
+        final refreshToken = ref.read(localDataProvider).marketRefreshToken;
+        if (refreshToken == null) rethrow;
         try {
-          $showMessage(e.response!.data!['message'], isError: true);
-        } catch (e) {
-          $showMessage("Something went wrong", isError: true);
+          final newToken = ref.read(localDataProvider).marketRefreshToken;
+          if (newToken != null) {
+            ref.read(localDataProvider).setAccessTokenMarket(newToken);
+            var res = await ref
+                .read(overviewRepository)
+                .highlightTop(highlightRequest);
+            if (res.msg == "Success") {
+              return res;
+            } else {
+              return null;
+            }
+          } else {
+            rethrow;
+          }
+        } catch (refreshError) {
+          rethrow;
         }
-      } else if (e.type == DioExceptionType.connectionError) {
-        print('❌ Network error');
       } else {
-        print('❌ Unknown error: ${e.message}');
+        rethrow;
       }
-
-      state = AppLoadingState();
     }
   }
 

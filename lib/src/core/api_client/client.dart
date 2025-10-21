@@ -181,6 +181,7 @@ class MarketCustomClientAdapter extends IOHttpClientAdapter {
       options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
       debugPrint('CUSTOM CLIENT ACCESS TOKEN $token');
     }
+
     return super.fetch(options, requestStream, cancelFuture);
   }
 }
@@ -238,6 +239,7 @@ class MarketCustomClientAdapterNew extends IOHttpClientAdapter {
       options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
       debugPrint('CUSTOM CLIENT ACCESS TOKEN $token');
     }
+
     return super.fetch(options, requestStream, cancelFuture);
   }
 }
