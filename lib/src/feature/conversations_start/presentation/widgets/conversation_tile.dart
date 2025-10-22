@@ -74,12 +74,14 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: widget.stock.type.toLowerCase() == "crypto"
-                      ? Image.network(
-                          getItemImage(ImageType.crypto, widget.stock.symbol),
+                      ? Image(
+                          image: NetworkImage(
+                            getItemImage(ImageType.crypto, widget.stock.symbol),
+                          ),
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return SvgPicture.network(
-                              "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                              "https://cdn-images.traderverse.io/crypto_dummy.svg",
                               fit: BoxFit.cover,
                             );
                           },

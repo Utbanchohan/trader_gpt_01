@@ -172,7 +172,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return SvgPicture.network(
-                                    "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                                    "https://cdn-images.traderverse.io/crypto_dummy.svg",
                                     fit: BoxFit.cover,
                                   );
                                 },
