@@ -7,6 +7,9 @@ import 'package:trader_gpt/src/shared/app_start/presentation/app_start_view.dart
 import 'package:trader_gpt/src/shared/custom_scroll_behavour.dart';
 
 class MyApp extends ConsumerWidget {
+  //financial chart data me matrics hatana hai json say file location= financial_chart_model.g.dart line 70
+  // price comparison say data hatana hai file location=price_comparison_model.g.dart line 30
+
   const MyApp({super.key});
 
   @override
@@ -53,9 +56,9 @@ class MyApp extends ConsumerWidget {
             builder: (_, child) {
               return AppStartupWidget(
                 onLoaded: (_) => MediaQuery(
-                  data: MediaQuery.of(context).copyWith(
-                    textScaler: TextScaler.linear(1.0),
-                  ),
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(textScaler: TextScaler.linear(1.0)),
                   child: child!,
                 ),
               );

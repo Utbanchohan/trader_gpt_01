@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
-import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-
 import '../../feature/analytics/domain/model/company_detail/company_detail_model.dart';
-import '../../feature/analytics/domain/model/esg_score_model/esg_score_model.dart';
+import '../extensions/custom_extensions.dart';
 
 class SplitDividend extends StatelessWidget {
   final List<FundamentalsSplitsDividends>? fundamentalsSplitsDividends;
@@ -146,7 +143,7 @@ class SplitDividend extends StatelessWidget {
                     DataCell(
                       MdSnsText(
                         item.dividendDate != null
-                            ? _formatDate(item.dividendDate!)
+                            ? formatDateMMDDYYYY(item.dividendDate!)
                             : "N/A",
 
                         variant: TextVariant.h4,
@@ -159,7 +156,7 @@ class SplitDividend extends StatelessWidget {
                     DataCell(
                       MdSnsText(
                         item.exDividendDate != null
-                            ? _formatDate(item.exDividendDate!)
+                            ? formatDateMMDDYYYY(item.exDividendDate!)
                             : "N/A",
 
                         textAlign: TextAlign.center,
@@ -184,7 +181,7 @@ class SplitDividend extends StatelessWidget {
                     DataCell(
                       MdSnsText(
                         item.lastSplitDate != null
-                            ? _formatDate(item.lastSplitDate!)
+                            ? formatDateMMDDYYYY(item.lastSplitDate!)
                             : "N/A",
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
@@ -203,12 +200,4 @@ class SplitDividend extends StatelessWidget {
   }
 
   /// 🔹 Row Builder
-}
-
-String _formatDate(String date) {
-  try {
-    return DateFormat('MM/dd/yyyy').format(DateTime.parse(date));
-  } catch (_) {
-    return '-';
-  }
 }

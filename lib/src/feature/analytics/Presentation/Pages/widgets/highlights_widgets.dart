@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-
-import '../../../domain/model/highlight_model_crypto/highlight_model_crypto.dart';
 import '../../../domain/model/info_model_crypto/info_model_crypto.dart';
 
 class HighlightsCard extends StatelessWidget {
@@ -387,9 +385,4 @@ class _DetailsList extends StatelessWidget {
       ],
     );
   }
-}
-
-String formatNumbers(num? number) {
-  String formatted = NumberFormat.decimalPattern().format(number);
-  return formatted;
 }
