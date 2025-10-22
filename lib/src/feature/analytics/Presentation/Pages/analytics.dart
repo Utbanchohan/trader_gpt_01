@@ -1118,6 +1118,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                   selectedStock!.symbol,
                                 ),
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return SvgPicture.network(
+                                    "https://cdn-images.traderverse.io/crypto_dummy.svg",
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               )
                             : SvgPicture.network(
                                 getItemImage(
@@ -1133,6 +1139,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                     fit: BoxFit.cover,
                                   ),
                                 ),
+                                errorBuilder: (context, error, stackTrace) {
+                                  return SvgPicture.network(
+                                    "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               ),
                       ),
                     ),
@@ -1832,6 +1844,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               selectedStock!.symbol,
                             ),
                             fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return SvgPicture.network(
+                                "https://cdn-images.traderverse.io/crypto_dummy.svg",
+                                fit: BoxFit.cover,
+                              );
+                            },
                           )
                         : SvgPicture.network(
                             getItemImage(
@@ -1848,6 +1866,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                 fit: BoxFit.cover,
                               ),
                             ),
+                            errorBuilder: (context, error, stackTrace) {
+                              return SvgPicture.network(
+                                "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                                fit: BoxFit.cover,
+                              );
+                            },
                           ),
                   ),
                 ),

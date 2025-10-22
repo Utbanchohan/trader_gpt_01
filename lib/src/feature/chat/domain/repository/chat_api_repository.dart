@@ -13,7 +13,10 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 import '../../data/dto/archive_chat_dto/archive_chat_dto.dart';
 import '../../data/dto/chat_message_dto/chat_message_dto.dart';
 import '../model/base_model/base_model.dart';
+import '../model/delete_all_memories/delete_all_memories.dart';
+import '../model/delete_memory_model/delete_memory_model.dart';
 import '../model/delete_model/delete_model.dart';
+import '../model/memory_model/memory_model.dart';
 
 class ChatApiRepository implements ChatRepository {
   ChatApiRepository(this.client);
@@ -69,5 +72,20 @@ class ChatApiRepository implements ChatRepository {
   @override
   Future<WorkflowsData> getWorkFlows() async {
     return await UserAskStreamApi(client).workFlows();
+  }
+
+  @override
+  Future<MemoryModel> getMemories(String limit) async {
+    return await UserAskStreamApi(client).getMemories(limit);
+  }
+
+  @override
+  Future<DeleteAllMemoriesModel> deleteAllMemory(String memoryId) async {
+    return await UserAskStreamApi(client).deleteAllMemory();
+  }
+
+  @override
+  Future<DeleteMemoryModel> deleteMemory(String memoryId) async {
+    return await UserAskStreamApi(client).deleteMemory(memoryId);
   }
 }
