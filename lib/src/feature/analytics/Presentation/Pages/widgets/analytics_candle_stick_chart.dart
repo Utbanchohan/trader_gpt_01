@@ -137,7 +137,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                   children: [
                     MdSnsText(
                       widget.name,
-                      color: AppColors.white,
+                      color: AppColors.fieldTextColor,
                       fontWeight: TextFontWeightVariant.h3,
                       variant: TextVariant.h3,
                     ),

@@ -66,8 +66,8 @@ class Earnings extends StatelessWidget {
           MdSnsText(
             "Earnings",
             color: AppColors.fieldTextColor,
-            fontWeight: TextFontWeightVariant.h4,
             variant: TextVariant.h3,
+            fontWeight: TextFontWeightVariant.h3,
           ),
           Container(
             width: double.infinity,

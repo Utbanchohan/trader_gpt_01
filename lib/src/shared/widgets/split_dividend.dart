@@ -30,8 +30,8 @@ class SplitDividend extends StatelessWidget {
             child: MdSnsText(
               "Split Dividends",
               color: AppColors.fieldTextColor,
-              fontWeight: TextFontWeightVariant.h4,
               variant: TextVariant.h3,
+              fontWeight: TextFontWeightVariant.h3,
             ),
           ),
           SingleChildScrollView(
@@ -39,7 +39,7 @@ class SplitDividend extends StatelessWidget {
             child: DataTable(
               headingRowHeight: 40.h,
               columnSpacing: 20,
-              horizontalMargin: 15,
+              horizontalMargin: 10,
               dataRowMaxHeight: 60.h,
               headingRowColor: WidgetStateProperty.resolveWith<Color?>((
                 Set<WidgetState> states,
@@ -49,8 +49,7 @@ class SplitDividend extends StatelessWidget {
               columns: [
                 DataColumn(
                   label: MdSnsText(
-                    "Forward Annual Dividend Rate",
-                    textAlign: TextAlign.center,
+                    "Forward Annual\nDividend Rate",
 
                     variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
@@ -59,7 +58,7 @@ class SplitDividend extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Forward Annual Dividend Yield',
+                    'Forward Annual\nDividend Yield',
                     variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,

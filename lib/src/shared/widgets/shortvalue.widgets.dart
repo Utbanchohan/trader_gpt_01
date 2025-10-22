@@ -118,10 +118,10 @@ class ShortVolumeChart extends StatelessWidget {
               Row(
                 children: [
                   MdSnsText(
-                    "SHORT VOLUME",
+                    "Short Volume",
                     color: AppColors.fieldTextColor,
-                    fontWeight: TextFontWeightVariant.h4,
                     variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h3,
                   ),
                   // SizedBox(width: 8),
                   // SvgPicture.network(
@@ -133,10 +133,10 @@ class ShortVolumeChart extends StatelessWidget {
                 ],
               ),
               MdSnsText(
-                "SHEL",
+                "Shel",
                 color: AppColors.fieldTextColor,
-                fontWeight: TextFontWeightVariant.h4,
                 variant: TextVariant.h3,
+                fontWeight: TextFontWeightVariant.h3,
               ),
             ],
           ),
@@ -199,6 +199,7 @@ class ShortVolumeChart extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
+
           // simple legend
           Wrap(
             spacing: 12,
@@ -206,11 +207,10 @@ class ShortVolumeChart extends StatelessWidget {
             children: series.map((s) {
               // Conditionally stack Short Exempt + Total together
               if (s.name == "shortExemptParQuantity") {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
                           decoration: BoxDecoration(
@@ -229,13 +229,12 @@ class ShortVolumeChart extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(width: 10),
                     Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.orange, // color for total
+                          decoration: BoxDecoration(
+                            color: _getColor('shortParQuantity'),
                             shape: BoxShape.circle,
                           ),
                           width: 10,
@@ -243,7 +242,7 @@ class ShortVolumeChart extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         MdSnsText(
-                          "Total Par Quantity",
+                          "Short Par Quantity",
                           color: AppColors.white,
                           variant: TextVariant.h4,
                           fontWeight: TextFontWeightVariant.h4,
@@ -256,31 +255,35 @@ class ShortVolumeChart extends StatelessWidget {
 
               // Normal case (Short Par Quantity only)
               if (s.name == "shortParQuantity") {
-                return Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: _getColor(s.name),
-                        shape: BoxShape.circle,
-                      ),
-                      width: 10,
-                      height: 10,
-                    ),
-                    const SizedBox(width: 4),
-                    MdSnsText(
-                      "Short Par Quantity",
-                      color: AppColors.white,
-                      variant: TextVariant.h4,
-                      fontWeight: TextFontWeightVariant.h4,
-                    ),
-                  ],
-                );
+                return SizedBox();
               }
 
               // Skip rendering for "Total Par Quantity"
               if (s.name == "totalParQuantity") {
-                return const SizedBox.shrink();
+                return Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // 👈 center items
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.orange,
+                          shape: BoxShape.circle,
+                        ),
+                        width: 10,
+                        height: 10,
+                      ),
+                      const SizedBox(width: 4),
+                      MdSnsText(
+                        "Total Par Quantity",
+                        color: AppColors.white,
+                        variant: TextVariant.h4,
+                        fontWeight: TextFontWeightVariant.h4,
+                      ),
+                    ],
+                  ),
+                );
               }
 
               return const SizedBox.shrink();

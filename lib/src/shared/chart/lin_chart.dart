@@ -50,7 +50,7 @@ class CustomLineChart extends StatelessWidget {
           MdSnsText(
             title ?? "",
             variant: TextVariant.h3,
-            fontWeight: TextFontWeightVariant.h4,
+            fontWeight: TextFontWeightVariant.h3,
 
             color: AppColors.fieldTextColor,
           ),

@@ -60,12 +60,12 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MdSnsText(
             "Price Comparison",
             variant: TextVariant.h3,
-            fontWeight: TextFontWeightVariant.h4,
+            fontWeight: TextFontWeightVariant.h3,
 
             color: AppColors.fieldTextColor,
           ),
