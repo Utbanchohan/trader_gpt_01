@@ -67,6 +67,15 @@ String formatDateMMddYY(String date) {
   }
 }
 
+String formatNumbers(num? number) {
+  if (number != null) {
+    String formatted = NumberFormat.decimalPattern().format(number);
+    return formatted;
+  } else {
+    return "0";
+  }
+}
+
 extension IntExtension on int {
   String getFileSizeString() {
     int bytes = this;

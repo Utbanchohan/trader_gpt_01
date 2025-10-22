@@ -2168,12 +2168,3 @@ enum FinancialTableEnum {
     return FinancialTableEnum.values.firstWhere((e) => e.value == value);
   }
 }
-
-String formatNumbers(num? number) {
-  if (number != null) {
-    String formatted = NumberFormat.decimalPattern().format(number);
-    return formatted;
-  } else {
-    return "0";
-  }
-}

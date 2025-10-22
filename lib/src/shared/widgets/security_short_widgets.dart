@@ -123,8 +123,3 @@ class SecurityShortVolume extends StatelessWidget {
     );
   }
 }
-
-String formatNumbers(int number) {
-  String formatted = NumberFormat.decimalPattern().format(number);
-  return formatted;
-}

@@ -479,8 +479,3 @@ class SecurityOwnershipTable extends StatelessWidget {
     );
   }
 }
-
-String formatNumbers(num number) {
-  String formatted = NumberFormat.decimalPattern().format(number);
-  return formatted;
-}
