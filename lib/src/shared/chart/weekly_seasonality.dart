@@ -151,8 +151,8 @@ class _WeeklySeasonalityChartState
                       ? "Weekly Seasonality"
                       : "Monthly Seasonality",
                   variant: TextVariant.h3,
+                  fontWeight: TextFontWeightVariant.h3,
                   color: AppColors.fieldTextColor,
-                  fontWeight: TextFontWeightVariant.h4,
                 ),
 
                 Container(

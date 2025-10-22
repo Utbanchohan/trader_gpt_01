@@ -155,10 +155,10 @@ class InsiderTraderTable extends StatelessWidget {
 
                     DataCell(
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
+                        margin: EdgeInsets.symmetric(vertical: 18),
                         alignment: Alignment.center,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
+                          horizontal: 8,
                           vertical: 0,
                         ),
                         decoration: BoxDecoration(

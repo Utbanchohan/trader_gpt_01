@@ -120,8 +120,8 @@ class ShortVolumeChart extends StatelessWidget {
                   MdSnsText(
                     "Short Volume",
                     color: AppColors.fieldTextColor,
-                    fontWeight: TextFontWeightVariant.h4,
                     variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h3,
                   ),
                   // SizedBox(width: 8),
                   // SvgPicture.network(
@@ -135,8 +135,8 @@ class ShortVolumeChart extends StatelessWidget {
               MdSnsText(
                 "Shel",
                 color: AppColors.fieldTextColor,
-                fontWeight: TextFontWeightVariant.h4,
                 variant: TextVariant.h3,
+                fontWeight: TextFontWeightVariant.h3,
               ),
             ],
           ),

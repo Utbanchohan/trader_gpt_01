@@ -46,12 +46,16 @@ class PriceCardWidget extends StatelessWidget {
             fontWeight: TextFontWeightVariant.h4,
           ),
           SizedBox(height: 0.h),
-          MdSnsText(
-            previousPrice,
-            color: firstColor,
+          SizedBox(
+            width: 170.w,
+            child: MdSnsText(
+              previousPrice,
+              color: firstColor,
+              maxLines: 1,
 
-            variant: TextVariant.h2,
-            fontWeight: TextFontWeightVariant.h1,
+              variant: TextVariant.h2,
+              fontWeight: TextFontWeightVariant.h1,
+            ),
           ),
           SizedBox(height: 10.h),
 
@@ -66,11 +70,16 @@ class PriceCardWidget extends StatelessWidget {
           SizedBox(height: 0.h),
           Row(
             children: [
-              MdSnsText(
-                afterHoursPrice,
-                color: secondColor,
-                variant: TextVariant.h2,
-                fontWeight: TextFontWeightVariant.h1,
+              SizedBox(
+                width: 170.w,
+                child: MdSnsText(
+                  afterHoursPrice,
+                  maxLines: 1,
+                  color: secondColor,
+
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h1,
+                ),
               ),
             ],
           ),

@@ -940,69 +940,73 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       ),
                     ),
                   ),
+                  SizedBox(width: 15.w),
+                  SizedBox(
+                    height: 44,
+                    child: TabBar(
+                      physics: NeverScrollableScrollPhysics(),
+                      isScrollable: true,
+                      tabAlignment: TabAlignment.start,
+                      dividerColor: Colors.transparent,
+                      indicator: BoxDecoration(
+                        color: Color(0xFF1B254B),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      indicatorPadding: EdgeInsets.zero,
+                      labelPadding: EdgeInsets.symmetric(horizontal: 10),
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Color(0xFFB2B2B7),
+                      tabs: [
+                        // ---- First Tab (with icon + text) ----
+                        Tab(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  "assets/images/analytics.png",
+                                  width: 20,
+                                  height: 20,
+                                ),
+                                SizedBox(width: 6),
+                                MdSnsText(
+                                  "ANALYTICS",
+                                  color: AppColors.white,
+                                  fontWeight: TextFontWeightVariant.h4,
+                                  variant: TextVariant.h3,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
 
-                  TabBar(
-                    physics: NeverScrollableScrollPhysics(),
-                    isScrollable: true,
-                    dividerColor: Colors.transparent,
-                    indicator: BoxDecoration(
-                      color: Color(0xFF1B254B),
-                      borderRadius: BorderRadius.circular(30),
+                        // ---- Second Tab (only text) ----
+                        Tab(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: MdSnsText(
+                              "History",
+                              fontWeight: TextFontWeightVariant.h4,
+                              variant: TextVariant.h3,
+                              color: AppColors.white,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    indicatorPadding: EdgeInsets.zero,
-                    labelPadding: EdgeInsets.symmetric(horizontal: 8),
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Color(0xFFB2B2B7),
-                    tabs: [
-                      // ---- First Tab (with icon + text) ----
-                      Tab(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image.asset(
-                                "assets/images/analytics.png", // yahan apna asset icon
-                                width: 20,
-                                height: 20,
-                              ),
-                              SizedBox(width: 8),
-                              MdSnsText(
-                                "ANALYTICS",
-                                color: AppColors.white,
-                                fontWeight: TextFontWeightVariant.h4,
-                                variant: TextVariant.h3,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // ---- Second Tab (only text) ----
-                      Tab(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: MdSnsText(
-                            "History",
-                            fontWeight: TextFontWeightVariant.h4,
-                            variant: TextVariant.h3,
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),
@@ -1153,6 +1157,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     ),
                   ],
                 ),
+
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -1202,7 +1207,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 ? SizedBox(
                     height: 135.h,
                     child: ListView.separated(
-                      scrollDirection: Axis.horizontal, // Horizontal scrolling
+                      scrollDirection: Axis.horizontal,
                       // padding: EdgeInsets.symmetric(horizontal: 16.w),
                       itemCount: 8,
                       physics:
@@ -1330,7 +1335,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     ),
                   )
                 : SizedBox(),
-            SizedBox(height: 20),
+
+            SizedBox(height: 10),
+            SizedBox(
+              height: aboutCryptoModel != null && aboutCryptoModel!.data != null
+                  ? 6.h
+                  : 0,
+            ),
             aboutCryptoModel != null && aboutCryptoModel!.data != null
                 ? MdSnsText(
                     "Company Details",
@@ -1346,31 +1357,32 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             ),
             aboutCryptoModel != null && aboutCryptoModel!.data != null
                 ? ReadMoreText(
-                    "${aboutCryptoModel!.data!.description!.en}",
+                    aboutCryptoModel!.data!.description!.en ?? "",
                     trimLines: 2,
                     trimMode: TrimMode.Line,
-                    trimCollapsedText: '  Read More',
-                    trimExpandedText: '  Show Less',
-                    delimiter: '',
+                    trimCollapsedText: '\nShow More',
+                    trimExpandedText: '\nShow Less',
                     moreStyle: GoogleFonts.plusJakartaSans(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      height: 1.8,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.secondaryColor,
                     ),
                     lessStyle: GoogleFonts.plusJakartaSans(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      height: 1.8,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.secondaryColor,
                     ),
                     style: GoogleFonts.plusJakartaSans(
-                      fontSize: 1.sp,
+                      fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: AppColors.white,
-                      height: 1.4,
                     ),
                   )
                 : SizedBox(),
-            SizedBox(height: 20),
+
+            SizedBox(height: 10),
             overviewCandleChartModelCrypto != null
                 ? CustomCandleChart(
                     key: UniqueKey(),
@@ -1418,7 +1430,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         MdSnsText(
                           "Market Chart",
                           variant: TextVariant.h3,
-                          fontWeight: TextFontWeightVariant.h4,
+                          fontWeight: TextFontWeightVariant.h3,
 
                           color: AppColors.fieldTextColor,
                         ),
@@ -1578,7 +1590,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         MdSnsText(
                           "Price Ratio",
                           variant: TextVariant.h3,
-                          fontWeight: TextFontWeightVariant.h4,
+                          fontWeight: TextFontWeightVariant.h3,
 
                           color: AppColors.fieldTextColor,
                         ),
@@ -1633,27 +1645,33 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           /// 🔹 SEARCH BAR
           Padding(
             padding: EdgeInsets.all(16),
-            child: TextFormField(
-              controller: search,
-              style: TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: AppColors.fieldColor,
-                hintText: 'Search here',
-                hintStyle: TextStyle(color: Color(0xFF8B8B97)),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(50.0),
-                  borderSide: BorderSide.none,
-                ),
-                suffixIcon: InkWell(
-                  onTap: () {
-                    // debounceSearch(search.text);
-                  },
-                  child: Image.asset(Assets.images.searchNormal.path, scale: 5),
+            child: SizedBox(
+              height: 55,
+              child: TextFormField(
+                controller: search,
+                style: TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: AppColors.color091224,
+                  hintText: 'Search here',
+                  hintStyle: TextStyle(color: Color(0xFF8B8B97)),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  suffixIcon: InkWell(
+                    onTap: () {
+                      // debounceSearch(search.text);
+                    },
+                    child: Image.asset(
+                      Assets.images.searchNormal.path,
+                      scale: 5,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -1661,7 +1679,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
           Container(
             margin: EdgeInsets.only(left: 10.w),
-
             child: TabBar(
               controller: tabController,
               isScrollable: true,
@@ -1676,9 +1693,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 vertical: 6,
               ),
               labelColor: Colors.white,
-              labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
               unselectedLabelColor: AppColors.colorB2B2B7,
               dividerColor: Colors.transparent,
+              labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
               onTap: (val) {
                 if (val == 1) {
                   secondIndexTap();
@@ -1695,34 +1712,48 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               tabs: List.generate(
                 categories.length,
                 (index) => Tab(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      border: Border.all(
-                        color: AppColors.colorB2B2B7.withOpacity(0.4),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (categoryImages[index] != null)
-                          Image.asset(
-                            categoryImages[index]!,
-                            width: 14.w,
-                            height: 14.h,
-                          ),
-                        if (categoryImages[index] != null) SizedBox(width: 8.w),
-                        Text(
-                          categories[index],
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
+                  child: AnimatedBuilder(
+                    animation: tabController,
+                    builder: (context, _) {
+                      bool isSelected = tabController.index == index;
+
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(
+                            color: isSelected
+                                ? Colors
+                                      .transparent // 👈 no border when selected
+                                : AppColors.colorB2B2B7.withOpacity(0.4),
+                            width: 1,
                           ),
                         ),
-                      ],
-                    ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (categoryImages[index] != null)
+                              Image.asset(
+                                categoryImages[index]!,
+                                width: 14.w,
+                                height: 14.h,
+                              ),
+                            if (categoryImages[index] != null)
+                              SizedBox(width: 8.w),
+                            Text(
+                              categories[index],
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),

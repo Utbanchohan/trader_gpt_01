@@ -129,10 +129,12 @@ class HighlightsCard extends StatelessWidget {
       children: [
         MdSnsText(
           'Highlights',
-          variant: TextVariant.h3,
+
           color: AppColors.fieldTextColor,
-          fontWeight: TextFontWeightVariant.h2,
+          variant: TextVariant.h3,
+          fontWeight: TextFontWeightVariant.h3,
         ),
+        SizedBox(height: 2),
         MdSnsText(
           'Description about Highlights',
           variant: TextVariant.h4,

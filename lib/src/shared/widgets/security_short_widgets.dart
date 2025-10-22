@@ -28,8 +28,8 @@ class SecurityShortVolume extends StatelessWidget {
             child: MdSnsText(
               "Security Short Volume",
               color: AppColors.fieldTextColor,
-              fontWeight: TextFontWeightVariant.h4,
               variant: TextVariant.h3,
+              fontWeight: TextFontWeightVariant.h3,
             ),
           ),
 
@@ -95,7 +95,7 @@ class SecurityShortVolume extends StatelessWidget {
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(
         vertical: 14, // 👈 smaller header height
-        horizontal: 6,
+        horizontal: 4,
       ),
       child: MdSnsText(
         text,

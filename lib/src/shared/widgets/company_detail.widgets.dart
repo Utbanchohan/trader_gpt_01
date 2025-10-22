@@ -56,8 +56,8 @@ class CompanyDetailsCard extends StatelessWidget {
           MdSnsText(
             "Company Details",
             color: AppColors.fieldTextColor,
-            fontWeight: TextFontWeightVariant.h4,
             variant: TextVariant.h3,
+            fontWeight: TextFontWeightVariant.h3,
           ),
 
           // SizedBox(height: 16),

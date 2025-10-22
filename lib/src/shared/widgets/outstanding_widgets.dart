@@ -65,8 +65,8 @@ class OutstandingSharesChart extends StatelessWidget {
             MdSnsText(
               "Outstanding Shares",
               color: AppColors.fieldTextColor,
-              fontWeight: TextFontWeightVariant.h4,
               variant: TextVariant.h3,
+              fontWeight: TextFontWeightVariant.h3,
             ),
             SizedBox(height: 12),
             Container(

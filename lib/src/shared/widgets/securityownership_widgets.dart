@@ -79,7 +79,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Ownership Percent',
+                    'Ownership\nPercent',
                     variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
@@ -87,7 +87,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Ownership Percent Change',
+                    'Ownership\nPercent Change',
                     variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
@@ -111,7 +111,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Shares Percent Change',
+                    'Shares Percent\nChange',
                     variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
@@ -135,7 +135,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                 ),
                 DataColumn(
                   label: MdSnsText(
-                    'Value Percent Change',
+                    'Value Percent\nChange',
                     variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
