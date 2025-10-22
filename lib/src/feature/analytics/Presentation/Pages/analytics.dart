@@ -1428,37 +1428,38 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     title: "MarketCap Chart",
                     chartData: buildMarketCapScope(marketCapResponse!.data!),
                   )
-                : Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.colorB3B3B3),
-                      color: AppColors.color091224,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MdSnsText(
-                          "Market Chart",
-                          variant: TextVariant.h3,
-                          fontWeight: TextFontWeightVariant.h3,
+                : SizedBox(),
 
-                          color: AppColors.fieldTextColor,
-                        ),
-                        Center(
-                          child: MdSnsText(
-                            "No Data Available",
-                            variant: TextVariant.h3,
-                            fontWeight: TextFontWeightVariant.h1,
+            //  Container(
+            //     width: double.infinity,
+            //     padding: const EdgeInsets.all(16),
+            //     decoration: BoxDecoration(
+            //       border: Border.all(color: AppColors.colorB3B3B3),
+            //       color: AppColors.color091224,
+            //       borderRadius: BorderRadius.circular(16),
+            //     ),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         MdSnsText(
+            //           "Market Chart",
+            //           variant: TextVariant.h3,
+            //           fontWeight: TextFontWeightVariant.h3,
 
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            //           color: AppColors.fieldTextColor,
+            //         ),
+            //         Center(
+            //           child: MdSnsText(
+            //             "No Data Available",
+            //             variant: TextVariant.h3,
+            //             fontWeight: TextFontWeightVariant.h1,
 
+            //             color: AppColors.white,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
             SizedBox(height: 20.h),
             cryptoMarketModel != null && cryptoMarketModel!.data.isNotEmpty
                 ? CryptoMarketChart(
@@ -1588,37 +1589,38 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       ],
                     ),
                   )
-                : Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.colorB3B3B3),
-                      color: AppColors.color091224,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MdSnsText(
-                          "Price Ratio",
-                          variant: TextVariant.h3,
-                          fontWeight: TextFontWeightVariant.h3,
+                : SizedBox(),
 
-                          color: AppColors.fieldTextColor,
-                        ),
-                        Center(
-                          child: MdSnsText(
-                            "No Data Available",
-                            variant: TextVariant.h3,
-                            fontWeight: TextFontWeightVariant.h1,
+            //  Container(
+            //     width: double.infinity,
+            //     padding: const EdgeInsets.all(16),
+            //     decoration: BoxDecoration(
+            //       border: Border.all(color: AppColors.colorB3B3B3),
+            //       color: AppColors.color091224,
+            //       borderRadius: BorderRadius.circular(16),
+            //     ),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         MdSnsText(
+            //           "Price Ratio",
+            //           variant: TextVariant.h3,
+            //           fontWeight: TextFontWeightVariant.h3,
 
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            //           color: AppColors.fieldTextColor,
+            //         ),
+            //         Center(
+            //           child: MdSnsText(
+            //             "No Data Available",
+            //             variant: TextVariant.h3,
+            //             fontWeight: TextFontWeightVariant.h1,
 
+            //             color: AppColors.white,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
             SizedBox(height: monthlyDataCrypto != null ? 20.h : 0),
 
             monthlyDataCrypto != null

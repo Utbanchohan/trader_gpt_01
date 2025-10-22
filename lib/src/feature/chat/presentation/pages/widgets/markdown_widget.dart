@@ -204,7 +204,6 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                   widget.type == "user"
                       ? widget.name.capitalize()
                       : "TradersGPT : #" + widget.name,
-
                   variant: TextVariant.h4,
                   fontWeight: TextFontWeightVariant.h3,
 
@@ -218,7 +217,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
           Container(
             width: widget.type == "user"
                 ? MediaQuery.sizeOf(context).width * 0.6.w
-                : MediaQuery.sizeOf(context).width * 0.75.w,
+                : MediaQuery.sizeOf(context).width * 0.85.w,
             padding: EdgeInsets.symmetric(
               vertical: 10,
               horizontal: widget.type == "user" ? 10 : 2,
@@ -233,7 +232,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
             child: SizedBox(
               width: widget.type == "user"
                   ? MediaQuery.sizeOf(context).width * 0.6.w
-                  : MediaQuery.sizeOf(context).width * 0.75.w,
+                  : MediaQuery.sizeOf(context).width * 0.85.w,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -245,7 +244,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                 height:
                                     MediaQuery.sizeOf(context).height * 0.3.h,
                                 width:
-                                    MediaQuery.sizeOf(context).width * 0.75.w,
+                                    MediaQuery.sizeOf(context).width * 0.85.w,
                                 child: ChartExample(
                                   data: model!.yAxis,
                                   xAxis: model!.xAxis,
@@ -307,6 +306,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                           pPadding: EdgeInsets.zero,
                           p: GoogleFonts.plusJakartaSans(
                             color: AppColors.white,
+                            height: 1.5,
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                           ),

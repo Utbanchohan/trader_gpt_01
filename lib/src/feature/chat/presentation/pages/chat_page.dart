@@ -612,10 +612,25 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: chats.length,
               itemBuilder: (_, index) {
-                return ChatMessagesView(
-                  chats: chats[index],
-                  chatRouting: widget.chatRouting,
-                  user: user,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    ChatMessagesView(
+                      chats: chats[index],
+                      chatRouting: widget.chatRouting,
+                      user: user,
+                    ),
+                    SizedBox(height: 20),
+
+                    SizedBox(
+                      width: 150,
+                      child: MessageLikeCopyIcon(
+                        type: chats[index].type,
+                        message: chats[index].message,
+                        // text.toString(),
+                      ),
+                    ),
+                  ],
                 );
               },
               separatorBuilder: (BuildContext context, int index) {

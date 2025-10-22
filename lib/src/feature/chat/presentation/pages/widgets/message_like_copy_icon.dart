@@ -83,7 +83,7 @@ class _MessageLikeCopyIconState extends State<MessageLikeCopyIcon> {
                     color: AppColors.fieldColor,
                   ),
                   child: Image.asset(
-                    "assets/images/dislike.png",
+                    Assets.images.dislike.path,
                     width: 14,
                     height: 14,
                   ),
@@ -98,7 +98,7 @@ class _MessageLikeCopyIconState extends State<MessageLikeCopyIcon> {
                   color: AppColors.fieldColor,
                 ),
                 child: Image.asset(
-                  "assets/images/Regenerate.png",
+                  Assets.images.regenerate.path,
                   width: 14,
                   height: 14,
                 ),
