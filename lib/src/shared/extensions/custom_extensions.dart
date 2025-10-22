@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 extension Uint8ListImageExtensions on Uint8List {
   /// Checks if the image has the exact resolution (width x height).
@@ -42,6 +43,27 @@ extension StringExtension on String {
 
   String getImagePath() {
     return 'packages/shared/$this';
+  }
+}
+
+String formatDateMMDDYYYY(String date) {
+  try {
+    return DateFormat('MM/dd/yyyy').format(DateTime.parse(date));
+  } catch (_) {
+    return '-';
+  }
+}
+
+String formatDateMMddYY(String date) {
+  try {
+    final inputFormat = DateFormat('yyyy-MM-dd');
+    final outputFormat = DateFormat('MMM dd,yyyy');
+
+    final parsedDate = inputFormat.parse(date);
+    final formatted = outputFormat.format(parsedDate);
+    return formatted;
+  } catch (_) {
+    return '-';
   }
 }
 

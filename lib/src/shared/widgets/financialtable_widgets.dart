@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:chart_sparkline/chart_sparkline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +6,7 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../feature/analytics/domain/model/financial_data_model/financial_data_model.dart';
+import '../extensions/custom_extensions.dart';
 
 class FinancialTable extends StatelessWidget {
   final Map<String, YearlyFinancialData> data;
@@ -960,7 +959,7 @@ class FinancialTable extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     MdSnsText(
-                      keys.length > 0 ? _formatDate(keys[0]) : "",
+                      keys.length > 0 ? formatDateMMddYY(keys[0]) : "",
                       variant: TextVariant.h5,
                       fontWeight: TextFontWeightVariant.h2,
                       color: AppColors.white,
@@ -978,7 +977,7 @@ class FinancialTable extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     MdSnsText(
-                      keys.length > 1 ? _formatDate(keys[1]) : "",
+                      keys.length > 1 ? formatDateMMddYY(keys[1]) : "",
                       variant: TextVariant.h5,
                       fontWeight: TextFontWeightVariant.h2,
                       color: AppColors.white,
@@ -996,7 +995,7 @@ class FinancialTable extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     MdSnsText(
-                      keys.length > 2 ? _formatDate(keys[2]) : "",
+                      keys.length > 2 ? formatDateMMddYY(keys[2]) : "",
                       variant: TextVariant.h5,
                       fontWeight: TextFontWeightVariant.h2,
                       color: AppColors.white,
@@ -1015,7 +1014,7 @@ class FinancialTable extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     MdSnsText(
-                      keys.length > 3 ? _formatDate(keys[3]) : "",
+                      keys.length > 3 ? formatDateMMddYY(keys[3]) : "",
                       variant: TextVariant.h5,
                       fontWeight: TextFontWeightVariant.h2,
                       color: AppColors.white,
@@ -1033,7 +1032,7 @@ class FinancialTable extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     MdSnsText(
-                      keys.length > 4 ? _formatDate(keys[4]) : "",
+                      keys.length > 4 ? formatDateMMddYY(keys[4]) : "",
                       variant: TextVariant.h5,
                       fontWeight: TextFontWeightVariant.h2,
                       color: AppColors.white,
@@ -2176,18 +2175,5 @@ String formatNumbers(num? number) {
     return formatted;
   } else {
     return "0";
-  }
-}
-
-String _formatDate(String date) {
-  try {
-    final inputFormat = DateFormat('yyyy-MM-dd');
-    final outputFormat = DateFormat('MMM dd,yyyy');
-
-    final parsedDate = inputFormat.parse(date);
-    final formatted = outputFormat.format(parsedDate);
-    return formatted;
-  } catch (_) {
-    return '-';
   }
 }

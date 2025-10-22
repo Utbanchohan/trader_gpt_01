@@ -5,6 +5,7 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../feature/analytics/domain/model/security_ownership_model/security_ownership_model.dart';
+import '../extensions/custom_extensions.dart';
 
 class SecurityOwnershipTable extends StatelessWidget {
   final List<SecurityOwnership> data;
@@ -165,7 +166,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                     ),
                     DataCell(
                       MdSnsText(
-                        _formatDate(item.effectiveDate),
+                        formatDateMMDDYYYY(item.effectiveDate),
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
@@ -174,7 +175,7 @@ class SecurityOwnershipTable extends StatelessWidget {
                     ),
                     DataCell(
                       MdSnsText(
-                        _formatDate(item.fileDate),
+                        formatDateMMDDYYYY(item.fileDate),
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
@@ -476,14 +477,6 @@ class SecurityOwnershipTable extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-String _formatDate(String date) {
-  try {
-    return DateFormat('MM/dd/yyyy').format(DateTime.parse(date));
-  } catch (_) {
-    return '-';
   }
 }
 

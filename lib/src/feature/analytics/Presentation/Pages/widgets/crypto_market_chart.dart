@@ -303,19 +303,6 @@ String formatNumbers(num number) {
   return formatted;
 }
 
-String _formatDate(String date) {
-  try {
-    final inputFormat = DateFormat('MM-dd-yyyy');
-    final outputFormat = DateFormat('MM/dd/yyyy');
-
-    final parsedDate = inputFormat.parse(date);
-    final formatted = outputFormat.format(parsedDate);
-    return formatted;
-  } catch (_) {
-    return '-';
-  }
-}
-
 class PaginationWidget extends StatefulWidget {
   const PaginationWidget({super.key});
 

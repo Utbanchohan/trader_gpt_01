@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../feature/analytics/domain/model/esg_score_model/esg_score_model.dart';
@@ -102,7 +103,7 @@ class EsgScoreTable extends StatelessWidget {
                   cells: [
                     DataCell(
                       MdSnsText(
-                        _formatDate(item.date),
+                        formatDateMMDDYYYY(item.date),
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h4,
                         color: AppColors.white,
@@ -181,14 +182,6 @@ class EsgScoreTable extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _formatDate(String date) {
-    try {
-      return DateFormat('MM/dd/yyyy').format(DateTime.parse(date));
-    } catch (_) {
-      return '-';
-    }
   }
 
   /// 🔹 Row Builder

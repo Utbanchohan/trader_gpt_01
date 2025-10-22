@@ -7,6 +7,7 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 
 import '../../feature/analytics/domain/model/insider_transaction/insider_transaction_model.dart'
     show InsiderTransactionResponse;
+import '../extensions/custom_extensions.dart';
 
 class InsiderTraderTable extends StatelessWidget {
   final InsiderTransactionResponse data;
@@ -136,7 +137,7 @@ class InsiderTraderTable extends StatelessWidget {
                     ),
                     DataCell(
                       MdSnsText(
-                        _formatDate(item.fileDate),
+                        formatDateMMDDYYYY(item.fileDate),
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
@@ -145,7 +146,7 @@ class InsiderTraderTable extends StatelessWidget {
                     ),
                     DataCell(
                       MdSnsText(
-                        _formatDate(item.transactionDate),
+                        formatDateMMDDYYYY(item.transactionDate),
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
@@ -214,14 +215,6 @@ class InsiderTraderTable extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _formatDate(String date) {
-    try {
-      return DateFormat('MM/dd/yyyy').format(DateTime.parse(date));
-    } catch (_) {
-      return '-';
-    }
   }
 
   /// 🔹 Row Builder
