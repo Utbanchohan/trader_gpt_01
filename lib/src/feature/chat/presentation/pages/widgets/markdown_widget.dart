@@ -310,7 +310,6 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                           ),
-
                           h1: GoogleFonts.plusJakartaSans(
                             color: AppColors.white,
                             fontSize: 16,
@@ -341,13 +340,11 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
-
                           code: GoogleFonts.plusJakartaSans(
                             color: AppColors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
-
                           tableBody: GoogleFonts.plusJakartaSans(
                             color: AppColors.white,
                             fontSize: 14,

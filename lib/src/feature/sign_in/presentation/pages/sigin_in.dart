@@ -26,6 +26,7 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
 
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
+  bool isChecked = false;
 
   @override
   FutureOr<void> onSubmit() async {
@@ -242,19 +243,70 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                 SizedBox(height: 10.h),
 
                 // Forgot password
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      context.pushNamed(AppRoutes.forgetPassword.name);
-                    },
-                    child: MdSnsText(
-                      "Forgot password?",
-                      variant: TextVariant.h4,
-                      fontWeight: TextFontWeightVariant.h4,
-                      color: AppColors.white,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        StatefulBuilder(
+                          builder: (context, setState) {
+                            return Row(
+                              children: [
+                                Transform.scale(
+                                  scale: 0.85, // 🔹 slightly smaller checkbox
+                                  child: Checkbox(
+                                    value: isChecked,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        isChecked = value!;
+                                      });
+                                    },
+                                    activeColor: AppColors.secondaryColor,
+                                    checkColor: Colors.white,
+                                    side: BorderSide(
+                                      color: Colors.grey,
+                                      width: 1.3,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    visualDensity: VisualDensity(
+                                      horizontal: -4,
+                                      vertical: -4,
+                                    ),
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                ),
+                                SizedBox(width: 4.w),
+                                MdSnsText(
+                                  "Remember Me",
+                                  variant: TextVariant.h4,
+                                  fontWeight: TextFontWeightVariant.h4,
+                                  color: AppColors.white,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                  ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          context.pushNamed(AppRoutes.forgetPassword.name);
+                        },
+                        child: MdSnsText(
+                          "Forgot password?",
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
                 SizedBox(height: 35.h),
