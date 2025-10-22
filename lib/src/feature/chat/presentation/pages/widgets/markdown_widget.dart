@@ -170,6 +170,12 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                             ? Image.network(
                                 getItemImage(ImageType.crypto, widget.name),
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return SvgPicture.network(
+                                    "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               )
                             : SvgPicture.network(
                                 getItemImage(ImageType.stock, widget.name),
@@ -182,6 +188,12 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                     fit: BoxFit.cover,
                                   ),
                                 ),
+                                errorBuilder: (context, error, stackTrace) {
+                                  return SvgPicture.network(
+                                    "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               ),
                       ),
                     ),

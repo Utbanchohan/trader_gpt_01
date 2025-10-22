@@ -38,6 +38,12 @@ class StockTile extends StatelessWidget {
                     ? Image.network(
                         getItemImage(ImageType.crypto, stock.symbol),
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return SvgPicture.network(
+                            "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                            fit: BoxFit.cover,
+                          );
+                        },
                       )
                     : SvgPicture.network(
                         getItemImage(ImageType.stock, stock.symbol),
@@ -50,6 +56,12 @@ class StockTile extends StatelessWidget {
                             fit: BoxFit.cover,
                           ),
                         ),
+                        errorBuilder: (context, error, stackTrace) {
+                          return SvgPicture.network(
+                            "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                            fit: BoxFit.cover,
+                          );
+                        },
                       ),
               ),
             )

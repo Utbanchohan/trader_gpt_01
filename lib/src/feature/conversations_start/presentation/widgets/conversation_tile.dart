@@ -77,6 +77,12 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? Image.network(
                           getItemImage(ImageType.crypto, widget.stock.symbol),
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return SvgPicture.network(
+                              "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                              fit: BoxFit.cover,
+                            );
+                          },
                         )
                       : SvgPicture.network(
                           getItemImage(ImageType.stock, widget.stock.symbol),
@@ -89,6 +95,12 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                               fit: BoxFit.cover,
                             ),
                           ),
+                          errorBuilder: (context, error, stackTrace) {
+                            return SvgPicture.network(
+                              "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                              fit: BoxFit.cover,
+                            );
+                          },
                         ),
                 ),
               ),
