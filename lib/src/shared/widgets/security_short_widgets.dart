@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 
 import '../../feature/analytics/domain/model/security_short/short_security_model.dart';
 
@@ -28,8 +28,8 @@ class SecurityShortVolume extends StatelessWidget {
             child: MdSnsText(
               "Security Short Volume",
               color: AppColors.fieldTextColor,
-              fontWeight: TextFontWeightVariant.h4,
               variant: TextVariant.h3,
+              fontWeight: TextFontWeightVariant.h3,
             ),
           ),
 
@@ -64,7 +64,7 @@ class SecurityShortVolume extends StatelessWidget {
                 return TableRow(
                   children: [
                     _buildDataCell(
-                      _formatDate(item.marketDate),
+                      formatDateMMDDYYYY(item.marketDate),
                       AppColors.white,
                     ),
                     _buildDataCell(
@@ -94,13 +94,14 @@ class SecurityShortVolume extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(
-        vertical: 10, // 👈 smaller header height
-        horizontal: 8,
+        vertical: 14, // 👈 smaller header height
+        horizontal: 4,
       ),
       child: MdSnsText(
         text,
-        variant: TextVariant.h4,
-        fontWeight: TextFontWeightVariant.h4,
+
+        variant: TextVariant.h5,
+        fontWeight: TextFontWeightVariant.h2,
         color: AppColors.white,
         textAlign: TextAlign.center,
       ),
@@ -110,28 +111,15 @@ class SecurityShortVolume extends StatelessWidget {
   /// Data cell helper
   Widget _buildDataCell(String text, Color color) {
     return Container(
-      alignment: Alignment.center,
+      alignment: Alignment.centerLeft,
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
       child: MdSnsText(
         text,
         variant: TextVariant.h4,
-        fontWeight: TextFontWeightVariant.h4,
+        fontWeight: TextFontWeightVariant.h2,
         color: color,
         textAlign: TextAlign.center,
       ),
     );
   }
-}
-
-String _formatDate(String date) {
-  try {
-    return DateFormat('MM/dd/yyyy').format(DateTime.parse(date));
-  } catch (_) {
-    return '-';
-  }
-}
-
-String formatNumbers(int number) {
-  String formatted = NumberFormat.decimalPattern().format(number);
-  return formatted;
 }

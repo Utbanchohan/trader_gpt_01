@@ -3,13 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
-import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/memory_model/memory_model.dart';
+import 'package:trader_gpt/src/feature/my_profile/Presentation/provider/memory_provider/memory_provider.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/memory_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+
+import '../../../shared/widgets/loading_widget.dart';
 
 class MyProfileScreen extends ConsumerStatefulWidget {
   const MyProfileScreen({super.key});
@@ -22,6 +26,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
   bool updatesEnabled = true;
   bool alertsEnabled = true;
   User? userModel;
+  MemoryModel? memories;
+  bool? memoriesLoading = false;
 
   getUser() async {
     dynamic userData = await ref.watch(localDataProvider).getUser();
@@ -30,6 +36,31 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
         userModel = User.fromJson(userData);
       });
     }
+  }
+
+  getMemories() async {
+    try {
+      setState(() {
+        memoriesLoading = true;
+      });
+      dynamic memoriesData = await ref
+          .watch(memoryProviderProvider.notifier)
+          .getMemory("100");
+      setState(() {
+        memories = memoriesData;
+        memoriesLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        memoriesLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -71,6 +102,7 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
                           ? userModel!.name.capitalize()
                           : "N/A",
                       color: AppColors.white,
+                      textAlign: TextAlign.center,
                       variant: TextVariant.h6,
                       fontWeight: TextFontWeightVariant.h1,
                     ),
@@ -170,21 +202,25 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
               _buildProfileItem(
                 asset: Assets.images.cpu8.path,
                 title: "Memory",
-                onTap: () {
+                memoryLoading: memoriesLoading,
+                onTap: () async {
+                  // memories != null ?
+                  await getMemories();
+                  //  : () {};
                   showDialog(
                     context: context,
-                    barrierDismissible: true, // Tap outside to close
-                    // barrierColor: Colors.black.withOpacity(0.5), // Dark overlay
+                    barrierDismissible: true,
                     builder: (context) {
                       return Container(
                         margin: EdgeInsets.only(left: 13, right: 13),
                         child: MemoryWidgets(
+                          memory: memories ?? MemoryModel(),
                           onClear: () {
                             debugPrint("Memory Cleared!");
-                            Navigator.pop(context); // Popup close kare
+                            Navigator.pop(context);
                           },
                           onClose: () {
-                            Navigator.pop(context); // Sirf close kare
+                            Navigator.pop(context);
                           },
                         ),
                       );
@@ -216,6 +252,7 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
     required String asset,
     required String title,
     required VoidCallback onTap,
+    bool? memoryLoading,
     bool isLast = false,
   }) {
     return Container(
@@ -225,12 +262,31 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
       child: ListTile(
         onTap: onTap,
         leading: Image.asset(asset, height: 18.h, width: 18.w),
-        title: MdSnsText(
-          title,
-          color: AppColors.white,
-          variant: TextVariant.h2,
-          fontWeight: TextFontWeightVariant.h4,
-        ),
+        title: memoryLoading != null && memoryLoading == true
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  MdSnsText(
+                    "Loading",
+                    color: AppColors.white,
+                    variant: TextVariant.h2,
+                    fontWeight: TextFontWeightVariant.h4,
+                  ),
+                  SizedBox(width: 5),
+                  Image.asset(
+                    Assets.images.microinteractionsPreloader03.path,
+                    height: 20,
+                    width: 20,
+                    color: Colors.white,
+                  ),
+                ],
+              )
+            : MdSnsText(
+                title,
+                color: AppColors.white,
+                variant: TextVariant.h2,
+                fontWeight: TextFontWeightVariant.h4,
+              ),
         trailing: Image.asset(
           Assets.images.vector1.path,
           height: 14.h,

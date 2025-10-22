@@ -98,8 +98,8 @@ class _CashdebtWidgetsState extends State<CashdebtWidgets> {
           MdSnsText(
             widget.title ?? "",
             color: AppColors.fieldTextColor,
-            fontWeight: TextFontWeightVariant.h4,
             variant: TextVariant.h3,
+            fontWeight: TextFontWeightVariant.h3,
           ),
 
           SizedBox(height: 20),

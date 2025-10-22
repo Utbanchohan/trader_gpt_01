@@ -41,6 +41,10 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
   final TextEditingController search = TextEditingController();
 
   List<ChatHistory> convo = [];
+  List<ChatHistory> stocksChat = [];
+  List<ChatHistory> cryptoChats = [];
+  List<ChatHistory> eftsChats = [];
+
   List<ChatHistory> searchConvo = [];
 
   final SocketService socketService = SocketService();
@@ -144,6 +148,15 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
       if (chat.symbol.toLowerCase() != "tdgpt" &&
           !existingSymbols.contains(chat.symbol)) {
         convo.add(chat);
+        if (chat.type.toLowerCase() == "stocks" ||
+            chat.type.toLowerCase() == "stock") {
+          stocksChat.add(chat);
+        } else if (chat.type.toLowerCase() == "crypto") {
+          cryptoChats.add(chat);
+        } else if (chat.type.toLowerCase() == "etf" ||
+            chat.type.toLowerCase() == "etfs") {
+          eftsChats.add(chat);
+        }
         watchStockes.add(
           Stock(
             stockId: chat.stockId,
@@ -160,7 +173,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
     }
     ref.read(stocksManagerProvider.notifier).watchStocks(watchStockes);
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   debounceSearch(String val) {
@@ -677,17 +692,19 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                         ),
 
                   // Second tab
-                  convo != null && convo.isNotEmpty && stocks.isNotEmpty
+                  stocksChat != null &&
+                          stocksChat.isNotEmpty &&
+                          stocks.isNotEmpty
                       ? ListView.separated(
                           itemCount:
                               search.text.isNotEmpty && searchConvo.isNotEmpty
                               ? searchConvo.length
-                              : convo.length,
+                              : stocksChat.length,
                           itemBuilder: (context, index) {
                             final stock =
                                 search.text.isNotEmpty && searchConvo.isNotEmpty
                                 ? searchConvo[index]
-                                : convo[index];
+                                : stocksChat[index];
                             int stockIndex = findRelatedStock(stock.symbol);
                             final liveStock =
                                 stockManagerState[stocks[stockIndex].stockId];
@@ -707,17 +724,17 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   AppRoutes.swipeScreen.name,
                                   extra: {
                                     "chatRouting": ChatRouting(
-                                      chatId: convo[index].id,
-                                      symbol: convo[index].symbol,
+                                      chatId: stock.id,
+                                      symbol: stock.symbol,
                                       image: "",
-                                      companyName: convo[index].companyName,
+                                      companyName: stock.companyName,
                                       price: stocks[stockIndex].price,
-                                      type: convo[index].type,
+                                      type: stock.type,
                                       changePercentage:
                                           stocks[stockIndex].pctChange,
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
-                                      stockid: convo[index].stockId,
+                                      stockid: stock.stockId,
                                       previousClose:
                                           stocks[stockIndex].previousClose,
                                     ),
@@ -732,7 +749,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     CustomSlidableAction(
                                       onPressed: (context) {
                                         _showArchivedDialog(context, () {
-                                          archivedStock(convo[index].id, true);
+                                          archivedStock(stock.id, true);
                                         });
                                       },
                                       backgroundColor: AppColors.color1B254B,
@@ -760,7 +777,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                     CustomSlidableAction(
                                       onPressed: (context) {
                                         _showDeleteDialog(context, () {
-                                          deleteStock(convo[index].id);
+                                          deleteStock(stock.id);
                                         });
                                       },
                                       backgroundColor: AppColors.color091224,
@@ -786,7 +803,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 ),
                                 child: ConversationTile(
                                   stocks: stocks[stockIndex],
-                                  stock: convo[index],
+                                  stock: stock,
                                 ),
                               ),
                             );
@@ -803,15 +820,259 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                           child: WelcomeWidget(),
                         ),
 
-                  Container(
-                    margin: EdgeInsets.only(left: 20.w, right: 20.w),
-                    child: WelcomeWidget(),
-                  ),
+                  cryptoChats != null &&
+                          cryptoChats.isNotEmpty &&
+                          stocks.isNotEmpty
+                      ? ListView.separated(
+                          itemCount:
+                              search.text.isNotEmpty && searchConvo.isNotEmpty
+                              ? searchConvo.length
+                              : cryptoChats.length,
+                          itemBuilder: (context, index) {
+                            final stock =
+                                search.text.isNotEmpty && searchConvo.isNotEmpty
+                                ? searchConvo[index]
+                                : cryptoChats[index];
+                            int stockIndex = findRelatedStock(stock.symbol);
+                            final liveStock =
+                                stockManagerState[stocks[stockIndex].stockId];
+                            stocks[stockIndex] = stocks[stockIndex].copyWith(
+                              pctChange:
+                                  liveStock != null && liveStock.price > 0
+                                  ? liveStock.price -
+                                        stocks[stockIndex].previousClose
+                                  : stocks[stockIndex].pctChange,
+                              price:
+                                  liveStock?.price ?? stocks[stockIndex].price,
+                            );
+
+                            return GestureDetector(
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.swipeScreen.name,
+                                  extra: {
+                                    "chatRouting": ChatRouting(
+                                      chatId: stock.id,
+                                      symbol: stock.symbol,
+                                      image: "",
+                                      companyName: stock.companyName,
+                                      price: stocks[stockIndex].price,
+                                      type: stock.type,
+                                      changePercentage:
+                                          stocks[stockIndex].pctChange,
+                                      trendChart:
+                                          stocks[stockIndex].fiveDayTrend[0],
+                                      stockid: stock.stockId,
+                                      previousClose:
+                                          stocks[stockIndex].previousClose,
+                                    ),
+                                    "initialIndex": 1,
+                                  },
+                                );
+                              },
+                              child: Slidable(
+                                endActionPane: ActionPane(
+                                  motion: ScrollMotion(),
+                                  children: [
+                                    CustomSlidableAction(
+                                      onPressed: (context) {
+                                        _showArchivedDialog(context, () {
+                                          archivedStock(stock.id, true);
+                                        });
+                                      },
+                                      backgroundColor: AppColors.color1B254B,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            Assets.images.direct.path,
+                                            width: 24.w,
+                                            height: 24.h,
+                                            color: AppColors.color9EAAC0,
+                                          ),
+                                          SizedBox(height: 4),
+                                          MdSnsText(
+                                            'Archive',
+                                            variant: TextVariant.h4,
+                                            fontWeight:
+                                                TextFontWeightVariant.h4,
+                                            color: AppColors.color9EAAC0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    CustomSlidableAction(
+                                      onPressed: (context) {
+                                        _showDeleteDialog(context, () {
+                                          deleteStock(stock.id);
+                                        });
+                                      },
+                                      backgroundColor: AppColors.color091224,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            Assets.images.trash.path,
+                                            width: 24.w,
+                                            height: 24.h,
+                                            color: AppColors.color9EAAC0,
+                                          ),
+                                          SizedBox(height: 4),
+                                          MdSnsText(
+                                            'Delete',
+                                            color: AppColors.color9EAAC0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                child: ConversationTile(
+                                  stocks: stocks[stockIndex],
+                                  stock: stock,
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return Divider(
+                              height: 1,
+                              color: AppColors.colorB3B3B3,
+                            );
+                          },
+                        )
+                      : Container(
+                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                          child: WelcomeWidget(),
+                        ),
                   // Third tab
-                  Container(
-                    margin: EdgeInsets.only(left: 20.w, right: 20.w),
-                    child: WelcomeWidget(),
-                  ),
+                  eftsChats != null && eftsChats.isNotEmpty && stocks.isNotEmpty
+                      ? ListView.separated(
+                          itemCount:
+                              search.text.isNotEmpty && searchConvo.isNotEmpty
+                              ? searchConvo.length
+                              : eftsChats.length,
+                          itemBuilder: (context, index) {
+                            final stock =
+                                search.text.isNotEmpty && searchConvo.isNotEmpty
+                                ? searchConvo[index]
+                                : eftsChats[index];
+                            int stockIndex = findRelatedStock(stock.symbol);
+                            final liveStock =
+                                stockManagerState[stocks[stockIndex].stockId];
+                            stocks[stockIndex] = stocks[stockIndex].copyWith(
+                              pctChange:
+                                  liveStock != null && liveStock.price > 0
+                                  ? liveStock.price -
+                                        stocks[stockIndex].previousClose
+                                  : stocks[stockIndex].pctChange,
+                              price:
+                                  liveStock?.price ?? stocks[stockIndex].price,
+                            );
+
+                            return GestureDetector(
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.swipeScreen.name,
+                                  extra: {
+                                    "chatRouting": ChatRouting(
+                                      chatId: stock.id,
+                                      symbol: stock.symbol,
+                                      image: "",
+                                      companyName: stock.companyName,
+                                      price: stocks[stockIndex].price,
+                                      type: stock.type,
+                                      changePercentage:
+                                          stocks[stockIndex].pctChange,
+                                      trendChart:
+                                          stocks[stockIndex].fiveDayTrend[0],
+                                      stockid: stock.stockId,
+                                      previousClose:
+                                          stocks[stockIndex].previousClose,
+                                    ),
+                                    "initialIndex": 1,
+                                  },
+                                );
+                              },
+                              child: Slidable(
+                                endActionPane: ActionPane(
+                                  motion: ScrollMotion(),
+                                  children: [
+                                    CustomSlidableAction(
+                                      onPressed: (context) {
+                                        _showArchivedDialog(context, () {
+                                          archivedStock(stock.id, true);
+                                        });
+                                      },
+                                      backgroundColor: AppColors.color1B254B,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            Assets.images.direct.path,
+                                            width: 24.w,
+                                            height: 24.h,
+                                            color: AppColors.color9EAAC0,
+                                          ),
+                                          SizedBox(height: 4),
+                                          MdSnsText(
+                                            'Archive',
+                                            variant: TextVariant.h4,
+                                            fontWeight:
+                                                TextFontWeightVariant.h4,
+                                            color: AppColors.color9EAAC0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    CustomSlidableAction(
+                                      onPressed: (context) {
+                                        _showDeleteDialog(context, () {
+                                          deleteStock(stock.id);
+                                        });
+                                      },
+                                      backgroundColor: AppColors.color091224,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            Assets.images.trash.path,
+                                            width: 24.w,
+                                            height: 24.h,
+                                            color: AppColors.color9EAAC0,
+                                          ),
+                                          SizedBox(height: 4),
+                                          MdSnsText(
+                                            'Delete',
+                                            color: AppColors.color9EAAC0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                child: ConversationTile(
+                                  stocks: stocks[stockIndex],
+                                  stock: stock,
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return Divider(
+                              height: 1,
+                              color: AppColors.colorB3B3B3,
+                            );
+                          },
+                        )
+                      : Container(
+                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                          child: WelcomeWidget(),
+                        ),
                 ],
               ),
             ),

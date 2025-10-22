@@ -38,7 +38,7 @@ class PriceTargetWidget extends StatelessWidget {
                             MdSnsText(
                               "Price Target",
                               variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
+                              fontWeight: TextFontWeightVariant.h3,
 
                               color: AppColors.fieldTextColor,
                             ),
@@ -50,7 +50,7 @@ class PriceTargetWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 6),
+                        SizedBox(height: 2),
                         MdSnsText(
                           'Description about price target',
                           variant: TextVariant.h4,
@@ -143,7 +143,7 @@ Widget buildPriceTargetBar(
             MdSnsText(
               price,
               color: AppColors.white,
-              variant: TextVariant.h2,
+              variant: TextVariant.h3,
               fontWeight: TextFontWeightVariant.h4,
             ),
           ],

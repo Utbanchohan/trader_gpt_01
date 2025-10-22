@@ -91,8 +91,7 @@ class ShareStructureCard extends StatelessWidget {
                     MdSnsText(
                       heading.value,
                       variant: TextVariant.h3,
-                      fontWeight: TextFontWeightVariant.h4,
-
+                      fontWeight: TextFontWeightVariant.h3,
                       color: AppColors.fieldTextColor,
                     ),
                     SizedBox(width: 5.w),
@@ -103,7 +102,7 @@ class ShareStructureCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 6),
+                SizedBox(height: 2),
                 MdSnsText(
                   'Data delayed by 15 minutes',
                   variant: TextVariant.h4,

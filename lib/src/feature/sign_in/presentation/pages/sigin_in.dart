@@ -124,7 +124,7 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
 
                           // ✅ Email regex
                           final _emailRegex = RegExp(
-                            r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$',
+                            r'^[\w\.\+\-]+@([\w-]+\.)+[\w-]{2,4}$',
                           );
 
                           if (_emailRegex.hasMatch(value.trim())) {

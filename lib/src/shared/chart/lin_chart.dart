@@ -49,9 +49,10 @@ class CustomLineChart extends StatelessWidget {
           // 🔹 Heading Text
           MdSnsText(
             title ?? "",
+            variant: TextVariant.h3,
+            fontWeight: TextFontWeightVariant.h3,
+
             color: AppColors.fieldTextColor,
-            variant: TextVariant.h2,
-            fontWeight: TextFontWeightVariant.h4,
           ),
           const SizedBox(height: 12),
 

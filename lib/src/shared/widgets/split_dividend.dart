@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-
 import '../../feature/analytics/domain/model/company_detail/company_detail_model.dart';
-import '../../feature/analytics/domain/model/esg_score_model/esg_score_model.dart';
+import '../extensions/custom_extensions.dart';
 
 class SplitDividend extends StatelessWidget {
   final List<FundamentalsSplitsDividends>? fundamentalsSplitsDividends;
@@ -29,13 +27,17 @@ class SplitDividend extends StatelessWidget {
             child: MdSnsText(
               "Split Dividends",
               color: AppColors.fieldTextColor,
-              fontWeight: TextFontWeightVariant.h4,
               variant: TextVariant.h3,
+              fontWeight: TextFontWeightVariant.h3,
             ),
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
+              headingRowHeight: 40.h,
+              columnSpacing: 20,
+              horizontalMargin: 10,
+              dataRowMaxHeight: 60.h,
               headingRowColor: WidgetStateProperty.resolveWith<Color?>((
                 Set<WidgetState> states,
               ) {
@@ -45,56 +47,57 @@ class SplitDividend extends StatelessWidget {
                 DataColumn(
                   label: MdSnsText(
                     "Forward Annual\nDividend Rate",
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Forward Annual\nDividend Yield',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Payout Ratio',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Dividend Date',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Ex Dividend Date',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Last Split Factor',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
                 DataColumn(
                   label: MdSnsText(
                     'Last Split Date',
-                    variant: TextVariant.h4,
-                    fontWeight: TextFontWeightVariant.h4,
+                    variant: TextVariant.h5,
+                    fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
                 ),
@@ -108,7 +111,7 @@ class SplitDividend extends StatelessWidget {
                             ? item.forwardAnnualDividendRate!.toStringAsFixed(2)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -121,7 +124,7 @@ class SplitDividend extends StatelessWidget {
                               )
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color0xFFCD3438,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -132,7 +135,7 @@ class SplitDividend extends StatelessWidget {
                             ? item.payoutRatio!.toStringAsFixed(3)
                             : "N/A",
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.color046297,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -140,11 +143,11 @@ class SplitDividend extends StatelessWidget {
                     DataCell(
                       MdSnsText(
                         item.dividendDate != null
-                            ? _formatDate(item.dividendDate!)
+                            ? formatDateMMDDYYYY(item.dividendDate!)
                             : "N/A",
 
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -153,12 +156,12 @@ class SplitDividend extends StatelessWidget {
                     DataCell(
                       MdSnsText(
                         item.exDividendDate != null
-                            ? _formatDate(item.exDividendDate!)
+                            ? formatDateMMDDYYYY(item.exDividendDate!)
                             : "N/A",
 
                         textAlign: TextAlign.center,
                         color: AppColors.white,
-                        variant: TextVariant.h5,
+                        variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -170,7 +173,7 @@ class SplitDividend extends StatelessWidget {
                             : "N/A",
 
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -178,11 +181,10 @@ class SplitDividend extends StatelessWidget {
                     DataCell(
                       MdSnsText(
                         item.lastSplitDate != null
-                            ? _formatDate(item.lastSplitDate!)
+                            ? formatDateMMDDYYYY(item.lastSplitDate!)
                             : "N/A",
-
                         variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
                         color: AppColors.white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -198,12 +200,4 @@ class SplitDividend extends StatelessWidget {
   }
 
   /// 🔹 Row Builder
-}
-
-String _formatDate(String date) {
-  try {
-    return DateFormat('MM/dd/yyyy').format(DateTime.parse(date));
-  } catch (_) {
-    return '-';
-  }
 }

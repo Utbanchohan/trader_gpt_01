@@ -11,10 +11,12 @@ import 'package:trader_gpt/src/feature/chat/domain/model/random_question/random_
 import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_flow.dart';
 import 'package:trader_gpt/src/feature/chat/domain/repository/chat_api_repository.dart';
 
+import '../../../../../flavors.dart';
 import '../../../../core/api_client/client.dart';
-import 'package:trader_gpt/flavors.dart';
-
+import '../model/delete_all_memories/delete_all_memories.dart';
+import '../model/delete_memory_model/delete_memory_model.dart';
 import '../model/delete_model/delete_model.dart';
+import '../model/memory_model/memory_model.dart';
 
 abstract interface class ChatRepository {
   Future<BaseModel<ChatMessageModel>> sendMessage(ChatMessageDto chat);
@@ -25,8 +27,10 @@ abstract interface class ChatRepository {
   Future<BaseModel<ChatHistory>> archiveChat(ArchiveChatDto archiveChat);
   Future<BaseModel<DeleteResponse>> deleteChat(String chadId);
   Future<WorkflowsData> getWorkFlows();
-
   Future<dynamic> streamApi(TaskRequestDto taskRequestDto);
+  Future<MemoryModel> getMemories(String limit);
+  Future<DeleteAllMemoriesModel> deleteAllMemory(String memoryId);
+  Future<DeleteMemoryModel> deleteMemory(String memoryId);
 }
 
 final chatRepository = Provider<ChatRepository>(

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../../core/theme/app_colors.dart';
@@ -27,10 +28,10 @@ class AnalyticsWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             MdSnsText(
-              'ANALYST RATINGS',
+              'ANALYST RATINGS'.capitalize(),
               variant: TextVariant.h3,
               color: AppColors.fieldTextColor,
-              fontWeight: TextFontWeightVariant.h4,
+              fontWeight: TextFontWeightVariant.h3,
             ),
             SizedBox(height: 10.h),
             Row(
@@ -48,8 +49,8 @@ class AnalyticsWidget extends StatelessWidget {
                       fontWeight: TextFontWeightVariant.h2,
                       color: AppColors.color00FF55,
                     ),
-                    SizedBox(height: 10.h),
 
+                    // SizedBox(height: 10.h),
                     MdSnsText(
                       '${data[0].analystCount} Analyst',
                       variant: TextVariant.h3,

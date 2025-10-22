@@ -122,6 +122,8 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController scrollController = ScrollController();
+
     return Visibility(
       visible: widget.message.isNotEmpty,
       child: Column(
@@ -168,6 +170,12 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                             ? Image.network(
                                 getItemImage(ImageType.crypto, widget.name),
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return SvgPicture.network(
+                                    "https://cdn-images.traderverse.io/crypto_dummy.svg",
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               )
                             : SvgPicture.network(
                                 getItemImage(ImageType.stock, widget.name),
@@ -180,6 +188,12 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                     fit: BoxFit.cover,
                                   ),
                                 ),
+                                errorBuilder: (context, error, stackTrace) {
+                                  return SvgPicture.network(
+                                    "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               ),
                       ),
                     ),
@@ -216,109 +230,138 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
               borderRadius: BorderRadius.circular(16),
             ),
             // child: Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                widget.type != "user"
-                    ? model != null &&
-                              model!.xAxis.isNotEmpty &&
-                              model!.yAxis.isNotEmpty
-                          ? SizedBox(
-                              height: MediaQuery.sizeOf(context).height * 0.3.h,
-                              width: MediaQuery.sizeOf(context).width * 0.75.w,
-                              child: ChartExample(
-                                data: model!.yAxis,
-                                xAxis: model!.xAxis,
-                              ),
-                            )
-                          : SizedBox()
-                    : SizedBox(),
-                SizedBox(
-                  height:
-                      widget.type != "user" &&
-                          model != null &&
-                          model!.xAxis.isNotEmpty &&
-                          model!.yAxis.isNotEmpty
-                      ? 10
-                      : 0,
-                ),
-                MarkdownBody(
-                  data: widget.message,
-                  selectable: true,
-                  styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                      .copyWith(
-                        blockquotePadding: EdgeInsets.zero,
-                        blockquoteDecoration: const BoxDecoration(
-                          color: Colors.transparent,
-                          border: Border(),
-                        ),
+            child: SizedBox(
+              width: widget.type == "user"
+                  ? MediaQuery.sizeOf(context).width * 0.6.w
+                  : MediaQuery.sizeOf(context).width * 0.75.w,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.type != "user"
+                      ? model != null &&
+                                model!.xAxis.isNotEmpty &&
+                                model!.yAxis.isNotEmpty
+                            ? SizedBox(
+                                height:
+                                    MediaQuery.sizeOf(context).height * 0.3.h,
+                                width:
+                                    MediaQuery.sizeOf(context).width * 0.75.w,
+                                child: ChartExample(
+                                  data: model!.yAxis,
+                                  xAxis: model!.xAxis,
+                                ),
+                              )
+                            : SizedBox()
+                      : SizedBox(),
+                  SizedBox(
+                    height:
+                        widget.type != "user" &&
+                            model != null &&
+                            model!.xAxis.isNotEmpty &&
+                            model!.yAxis.isNotEmpty
+                        ? 10
+                        : 0,
+                  ),
+                  Markdown(
+                    padding: EdgeInsets.all(0),
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    data: widget.message,
+                    listItemCrossAxisAlignment:
+                        MarkdownListItemCrossAxisAlignment.start,
+                    selectable: true,
+                    controller: scrollController,
 
-                        horizontalRuleDecoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: Colors.transparent,
-                              width: 0,
+                    styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                        .copyWith(
+                          tableColumnWidth: FixedColumnWidth(100.w),
+                          tableScrollbarThumbVisibility: false,
+                          tableBorder: TableBorder.all(color: Colors.white24),
+                          tableCellsPadding: const EdgeInsets.all(8),
+                          tableHead: GoogleFonts.plusJakartaSans(
+                            color: AppColors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+
+                          tableHeadAlign: TextAlign.center,
+                          tablePadding: EdgeInsets.all(10),
+                          tableCellsDecoration: BoxDecoration(),
+                          tableVerticalAlignment:
+                              TableCellVerticalAlignment.middle,
+                          blockquotePadding: EdgeInsets.zero,
+                          blockquoteDecoration: const BoxDecoration(
+                            color: Colors.transparent,
+                            border: Border(),
+                          ),
+
+                          horizontalRuleDecoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
+                                color: Colors.transparent,
+                                width: 0,
+                              ),
                             ),
                           ),
-                        ),
 
-                        pPadding: EdgeInsets.zero,
-                        p: GoogleFonts.plusJakartaSans(
-                          color: AppColors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
+                          pPadding: EdgeInsets.zero,
+                          p: GoogleFonts.plusJakartaSans(
+                            color: AppColors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
 
-                        h1: GoogleFonts.plusJakartaSans(
-                          color: AppColors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        h2: GoogleFonts.plusJakartaSans(
-                          color: AppColors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        h3: GoogleFonts.plusJakartaSans(
-                          color: AppColors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        h4: GoogleFonts.plusJakartaSans(
-                          color: AppColors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        h5: GoogleFonts.plusJakartaSans(
-                          color: AppColors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        h6: GoogleFonts.plusJakartaSans(
-                          color: AppColors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
+                          h1: GoogleFonts.plusJakartaSans(
+                            color: AppColors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          h2: GoogleFonts.plusJakartaSans(
+                            color: AppColors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          h3: GoogleFonts.plusJakartaSans(
+                            color: AppColors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          h4: GoogleFonts.plusJakartaSans(
+                            color: AppColors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          h5: GoogleFonts.plusJakartaSans(
+                            color: AppColors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          h6: GoogleFonts.plusJakartaSans(
+                            color: AppColors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
 
-                        code: GoogleFonts.plusJakartaSans(
-                          color: AppColors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+                          code: GoogleFonts.plusJakartaSans(
+                            color: AppColors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
 
-                        tableBody: GoogleFonts.plusJakartaSans(
-                          color: AppColors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                          tableBody: GoogleFonts.plusJakartaSans(
+                            color: AppColors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
-                  onTapLink: (text, href, title) {
-                    if (href != null) {
-                      launchUrl(Uri.parse(href));
-                    }
-                  },
-                ),
-              ],
+                    onTapLink: (text, href, title) {
+                      if (href != null) {
+                        launchUrl(Uri.parse(href));
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ],

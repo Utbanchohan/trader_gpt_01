@@ -27,6 +27,12 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
 
   int selectedIndex = 1;
 
+  setItem(index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<OhlcData> chartData = widget.data.map((item) {
@@ -110,7 +116,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
 
     return Container(
       alignment: Alignment.center,
-      height: 365.h,
+      height: 360.h,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.colorB3B3B3),
@@ -131,7 +137,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                   children: [
                     MdSnsText(
                       widget.name,
-                      color: AppColors.white,
+                      color: AppColors.fieldTextColor,
                       fontWeight: TextFontWeightVariant.h3,
                       variant: TextVariant.h3,
                     ),
@@ -139,8 +145,8 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                     MdSnsText(
                       "Description about OHLC chart",
                       color: AppColors.fieldTextColor,
-                      fontWeight: TextFontWeightVariant.h5,
-                      variant: TextVariant.h3,
+                      fontWeight: TextFontWeightVariant.h4,
+                      variant: TextVariant.h4,
                     ),
                   ],
                 ),
@@ -149,30 +155,31 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
               // Right side buttons (wrap in Row)
               Row(
                 children: List.generate(labels.length, (index) {
-                  final isSelected = selectedIndex == index;
-
                   return GestureDetector(
                     onTap: () {
+                      setItem(index);
+
                       widget.onPressed(labels[index]);
-                      selectedIndex = index;
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       padding: const EdgeInsets.symmetric(
                         horizontal:
-                            10, // (aap yahan width/height adjust kar sakte ho)
-                        vertical: 6,
+                            8, // (aap yahan width/height adjust kar sakte ho)
+                        vertical: 5,
                       ),
                       decoration: BoxDecoration(
-                        color: isSelected
+                        color: selectedIndex == index
                             ? AppColors.color0E1738
                             : AppColors.colo2C3754,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: MdSnsText(
                         labels[index],
-                        color: isSelected ? Colors.white : Colors.white70,
+                        color: selectedIndex == index
+                            ? Colors.white
+                            : Colors.white70,
                         variant: TextVariant.h5,
                         fontWeight: TextFontWeightVariant.h2,
                       ),
@@ -184,23 +191,32 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
           ),
           SizedBox(height: 20.h),
           SizedBox(
-            height: 280.h,
+            height: 260.h,
             child: BarChart(
-              duration: Duration(milliseconds: 1200),
-
+              duration: const Duration(milliseconds: 1200),
               curve: Curves.easeInOutCubic,
               BarChartData(
-                backgroundColor: Colors.transparent, // Dark background
+                // backgroundColor: Colors.transparent,
                 alignment: BarChartAlignment.spaceAround,
 
-                // Grid and Titles Configuration (similar to previous solution)
+                // ✅ GRID LINES
                 gridData: FlGridData(
                   show: true,
-                  drawVerticalLine: false,
-                  horizontalInterval: 20, // Match Y-axis interval
-                  getDrawingHorizontalLine: (value) =>
-                      FlLine(color: Colors.white10, strokeWidth: 1),
+                  drawVerticalLine:
+                      true, // Agar vertical lines bhi chahiye to true rakho
+                  horizontalInterval: 20,
+                  verticalInterval: 1, // optional: adjust as needed
+                  getDrawingHorizontalLine: (value) => FlLine(
+                    color:
+                        AppColors.colorB3B3B3, // 👈 ye color zyada visible hoga
+                    strokeWidth: 1.2,
+                  ),
+                  getDrawingVerticalLine: (value) => FlLine(
+                    color: AppColors.colorB3B3B3, // thoda soft vertical line
+                    strokeWidth: 0.8,
+                  ),
                 ),
+
                 titlesData: FlTitlesData(
                   show: true,
                   topTitles: const AxisTitles(
@@ -210,7 +226,6 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                     sideTitles: SideTitles(showTitles: false),
                   ),
                   rightTitles: AxisTitles(
-                    // Y-axis on the right
                     sideTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 40,
@@ -227,17 +242,15 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                       },
                     ),
                   ),
+
                   bottomTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
                 ),
 
                 borderData: FlBorderData(show: false),
-
-                // Bar Groups Data
                 barGroups: getBarGroups(),
 
-                // Axis Ranges
                 maxY: chartData.isNotEmpty
                     ? chartData
                           .map((e) => e.high)

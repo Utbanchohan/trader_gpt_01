@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/analysis_data/analysis_data_model.dart';
@@ -71,19 +72,25 @@ class _CryptoMarketChartState extends State<CryptoMarketChart> {
                   children: [
                     MdSnsText(
                       widget.title.toString(),
-                      color: AppColors.white,
-                      fontWeight: TextFontWeightVariant.h2,
                       variant: TextVariant.h3,
+                      fontWeight: TextFontWeightVariant.h3,
+
+                      color: AppColors.fieldTextColor,
                     ),
-                    SizedBox(width: 5),
-                    Icon(Icons.info_outline, color: AppColors.white, size: 20),
+                    SizedBox(width: 5.w),
+                    Icon(
+                      Icons.info_outline,
+                      size: 14.sp,
+                      color: AppColors.fieldTextColor,
+                    ),
                   ],
                 ),
                 MdSnsText(
                   "Description about Crypto Markets",
-                  color: AppColors.color9EAAC0,
-                  fontWeight: TextFontWeightVariant.h2,
-                  variant: TextVariant.h5,
+                  variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h4,
+
+                  color: AppColors.fieldTextColor,
                 ),
               ],
             ),
@@ -91,6 +98,10 @@ class _CryptoMarketChartState extends State<CryptoMarketChart> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
+              headingRowHeight: 40.h,
+              columnSpacing: 20,
+              horizontalMargin: 10,
+              dataRowMaxHeight: 60.h,
               headingRowColor: WidgetStateProperty.resolveWith<Color?>((
                 Set<WidgetState> states,
               ) {
@@ -100,7 +111,7 @@ class _CryptoMarketChartState extends State<CryptoMarketChart> {
                 DataColumn(
                   label: MdSnsText(
                     "Exchange",
-                    variant: TextVariant.h4,
+                    variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -108,7 +119,7 @@ class _CryptoMarketChartState extends State<CryptoMarketChart> {
                 DataColumn(
                   label: MdSnsText(
                     'Pair',
-                    variant: TextVariant.h4,
+                    variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -116,7 +127,7 @@ class _CryptoMarketChartState extends State<CryptoMarketChart> {
                 DataColumn(
                   label: MdSnsText(
                     'Price',
-                    variant: TextVariant.h4,
+                    variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -124,7 +135,7 @@ class _CryptoMarketChartState extends State<CryptoMarketChart> {
                 DataColumn(
                   label: MdSnsText(
                     'Spread',
-                    variant: TextVariant.h4,
+                    variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -132,7 +143,7 @@ class _CryptoMarketChartState extends State<CryptoMarketChart> {
                 DataColumn(
                   label: MdSnsText(
                     '24H Volume',
-                    variant: TextVariant.h4,
+                    variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -141,7 +152,7 @@ class _CryptoMarketChartState extends State<CryptoMarketChart> {
                 DataColumn(
                   label: MdSnsText(
                     '-2% Depth',
-                    variant: TextVariant.h4,
+                    variant: TextVariant.h5,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -221,7 +232,7 @@ class _CryptoMarketChartState extends State<CryptoMarketChart> {
           Card(
             elevation: 2,
             child: Container(
-              width: double.infinity, // 👈 ensures full width
+              width: double.infinity,
               color: AppColors.color091224,
               padding: const EdgeInsets.symmetric(
                 vertical: 8.0,
@@ -290,19 +301,6 @@ class _CryptoMarketChartState extends State<CryptoMarketChart> {
 String formatNumbers(num number) {
   String formatted = NumberFormat.decimalPattern().format(number);
   return formatted;
-}
-
-String _formatDate(String date) {
-  try {
-    final inputFormat = DateFormat('MM-dd-yyyy');
-    final outputFormat = DateFormat('MM/dd/yyyy');
-
-    final parsedDate = inputFormat.parse(date);
-    final formatted = outputFormat.format(parsedDate);
-    return formatted;
-  } catch (_) {
-    return '-';
-  }
 }
 
 class PaginationWidget extends StatefulWidget {
