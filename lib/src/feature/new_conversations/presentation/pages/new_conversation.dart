@@ -19,6 +19,7 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../core/routes/routes.dart';
+import '../../../../shared/extensions/number_formatter_extension.dart';
 import '../../../../shared/socket/providers/stocks_price.dart';
 import '../../../chat/domain/model/chat_stock_model.dart';
 
@@ -240,6 +241,44 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               ),
             ),
           ),
+          Row(
+            children: [
+              SizedBox(width: 12.w),
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.color0xFF5F5EDE,
+                ),
+              ),
+
+              SizedBox(width: 5),
+              MdSnsText(
+                "Stock",
+                variant: TextVariant.h4,
+                fontWeight: TextFontWeightVariant.h2,
+                color: AppColors.white,
+              ),
+              SizedBox(width: 10),
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.color0xFFFFB21D,
+                ),
+              ),
+
+              SizedBox(width: 5),
+              MdSnsText(
+                "Crypto",
+                variant: TextVariant.h4,
+                fontWeight: TextFontWeightVariant.h2,
+                color: AppColors.white,
+              ),
+            ],
+          ),
 
           search.text.isNotEmpty && searchStock.isEmpty
               ? MdSnsText(
@@ -372,7 +411,11 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
       decoration: BoxDecoration(
         color: AppColors.color091224,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.color1B254B),
+        border: Border.all(
+          color: widget.image.toLowerCase() == "crypto"
+              ? AppColors.color0xFFFFB21D
+              : AppColors.color0xFF5F5EDE,
+        ),
       ),
       padding: EdgeInsets.all(12),
       child: Column(
@@ -453,9 +496,18 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
           ),
           SizedBox(height: 10.h),
           MdSnsText(
-            liveStock != null && liveStock.price > 0
-                ? "\$${liveStock.price.toStringAsFixed(2)}"
-                : "\$${widget.price.toStringAsFixed(2)}",
+            liveStock != null
+                ? Filters.systemNumberConvention(
+                    liveStock.price,
+                    isPrice: true,
+                    isAbs: false,
+                  )
+                : Filters.systemNumberConvention(
+                    widget.price,
+                    isPrice: true,
+                    isAbs: false,
+                  ),
+
             color: AppColors.white,
             variant: TextVariant.h2,
             fontWeight: TextFontWeightVariant.h1,

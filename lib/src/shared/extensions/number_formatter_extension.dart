@@ -67,8 +67,8 @@ class Filters {
         } else if (value < 1 && value >= 0.0001) {
           result = double.parse(value.toStringAsFixed(4)).toString();
         } else if (value < 0.0001) {
-          // result = fetchLowestValues(value, containerWidth);
-          result = formatWithZeroPower(value);
+          result = fetchLowestValues(value, containerWidth);
+          // result = formatWithZeroPower(value);
         } else {
           result = double.parse(value.toStringAsFixed(2)).toString();
         }
@@ -194,7 +194,7 @@ class Filters {
         sig = sig.length > 4 ? sig.substring(0, 4) : sig;
         // Build string like 0.00...significants
         final zeros = '0' * leadingZeros;
-        final result = '0.${zeros.length}${sig}';
+        final result = '0.0${_superscript(zeros.length)}${sig}';
         return result;
       } else {
         return input.toString();
