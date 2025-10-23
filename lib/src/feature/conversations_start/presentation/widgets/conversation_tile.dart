@@ -120,7 +120,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                     ? widget.stock.lastMessage!.createdAt.millisecondsSinceEpoch
                           .timeAgoFromMilliseconds()
                     : "",
-                variant: TextVariant.h5,
+                variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.color677FA4,
               ),
