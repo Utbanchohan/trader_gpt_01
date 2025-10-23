@@ -190,9 +190,9 @@ class StocksManager extends _$StocksManager {
     for (int index = 0; index < stocks.length; index++) {
       final stockData = state[stocks[index].stockId];
       if (stockData != null) {
-        // print(
-        //   "priceChange ${stock.price} exchange stockData.price ${stockData.price}",
-        // );
+        print(
+          "priceChange ${stock.price} exchange stockData.price ${stockData.price}",
+        );
         var priceChange =
             (((stock.price - stockData.price) / stockData.price) * 100)
                 .toPrecision(2);
