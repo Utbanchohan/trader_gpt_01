@@ -815,84 +815,131 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     } catch (e) {}
   }
 
-  cryptoApis() async {
+  Future<void> cryptoApis() async {
     if (highlightResponse == null) {
-      await highlightTopRequest(
-        HighlightRequest(
-          symbol: widget.chatRouting!.symbol,
-          limit: 5,
-          sort: "desc",
-        ),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await highlightTopRequest(
+          HighlightRequest(
+            symbol: widget.chatRouting!.symbol,
+            limit: 5,
+            sort: "desc",
+          ),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in highlightTopRequest: $e\n$s");
+      }
     }
+
     if (infoCryptoResponse == null) {
-      await infoCryptoData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await infoCryptoData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in infoCryptoData: $e\n$s");
+      }
     }
-    if (weeklyDataCrypto == null) {
-      await getWeeklyDataCrypto(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
-    }
-    if (monthlyDataCrypto == null) {
-      await getMonthlyDataCrypto(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
-    }
+
     if (aboutCryptoModel == null) {
-      await getAboutCrypto(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getAboutCrypto(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getAboutCrypto: $e\n$s");
+      }
     }
+
+    if (weeklyDataCrypto == null) {
+      try {
+        await getWeeklyDataCrypto(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getWeeklyDataCrypto: $e\n$s");
+      }
+    }
+
+    if (monthlyDataCrypto == null) {
+      try {
+        await getMonthlyDataCrypto(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getMonthlyDataCrypto: $e\n$s");
+      }
+    }
+
     if (overviewCandleChartModelCrypto == null) {
-      await getOverviewCandleChartCrypto(
-        widget.chatRouting!.symbol,
-        IntervalEnum.daily,
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getOverviewCandleChartCrypto(
+          widget.chatRouting!.symbol,
+          IntervalEnum.daily,
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getOverviewCandleChartCrypto: $e\n$s");
+      }
     }
 
     if (priceComparisonModel == null) {
-      await priceComparison(
-        PriceComparisonDto(
-          daysBack: 365,
-          symbol1: widget.chatRouting!.symbol,
-          symbol2: widget.chatRouting!.symbol,
-        ),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await priceComparison(
+          PriceComparisonDto(
+            daysBack: 365,
+            symbol1: widget.chatRouting!.symbol,
+            symbol2: widget.chatRouting!.symbol,
+          ),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in priceComparison: $e\n$s");
+      }
     }
 
     if (marketCapResponse == null) {
-      await marketCapRequest(
-        MarketCapRequest(
-          interval: "1 month",
-          symbol: widget.chatRouting!.symbol,
-        ),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await marketCapRequest(
+          MarketCapRequest(
+            interval: "1 month",
+            symbol: widget.chatRouting!.symbol,
+          ),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in marketCapRequest: $e\n$s");
+      }
     }
+
     if (cryptoMarketModel == null) {
-      await cryptoMarkets(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await cryptoMarkets(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in cryptoMarkets: $e\n$s");
+      }
     }
+
     if (priceRatioModel == null) {
-      await priceRatio(
-        PriceComparisonDto(
-          daysBack: 365,
-          symbol1: widget.chatRouting!.symbol,
-          symbol2: widget.chatRouting!.symbol,
-        ),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await priceRatio(
+          PriceComparisonDto(
+            daysBack: 365,
+            symbol1: widget.chatRouting!.symbol,
+            symbol2: widget.chatRouting!.symbol,
+          ),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in priceRatio: $e\n$s");
+      }
     }
   }
 

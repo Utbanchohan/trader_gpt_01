@@ -11,6 +11,8 @@ import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_mod
 import 'package:trader_gpt/src/shared/widgets/logout_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../../../shared/socket/providers/stocks_price.dart';
+
 class SideMenu extends ConsumerStatefulWidget {
   const SideMenu({super.key});
 
@@ -33,6 +35,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     ref.read(localDataProvider).setRefreshTokenMarket(token);
     ref.read(localDataProvider).setRefreshTokenMarketNew(token);
     ref.read(localDataProvider).saveStock(stocks);
+    ref.read(stocksManagerProvider.notifier).unWatchAllStock();
     context.goNamed(AppRoutes.signInPage.name);
   }
 

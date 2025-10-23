@@ -37,6 +37,14 @@ class ProfileCardWidget extends StatelessWidget {
                     height: 122.h,
                     width: 122.w,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        "assets/images/Placeholderimage.png",
+                        height: 122.h,
+                        width: 122.w,
+                        fit: BoxFit.cover,
+                      );
+                    },
                   )
                 : Image.asset(
                     "assets/images/Placeholderimage.png",

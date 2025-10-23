@@ -6,7 +6,7 @@ part of 'delete_memory.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$deleteMemoryHash() => r'e804ae6e845f32386fefc45e5bbd617349944135';
+String _$deleteMemoryHash() => r'6bcaf18a3fe600cd32e51faba77590071f1f4775';
 
 /// See also [DeleteMemory].
 @ProviderFor(DeleteMemory)
