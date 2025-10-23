@@ -9,8 +9,10 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sign_in/presentation/provider/sign_in.dart';
+import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import '../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../shared/mixin/form_state_mixin.dart';
 import '../../../../shared/states/app_loading_state.dart';
 
@@ -38,6 +40,25 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
         context.goNamed(AppRoutes.swipeScreen.name, extra: {"initialIndex": 0});
       }
     }
+  }
+
+  getLocalData() async {
+    email.text = ref.read(localDataProvider).getEmail ?? "";
+    isChecked = ref.read(localDataProvider).getRemamberMe == "true"
+        ? true
+        : false;
+  }
+
+  emptyLocalData() {
+    ref.read(localDataProvider).setEmail("");
+    ref.read(localDataProvider).setRememberMe("false");
+  }
+
+  @override
+  void initState() {
+    getLocalData();
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -257,10 +278,27 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                                   scale: 0.85, // 🔹 slightly smaller checkbox
                                   child: Checkbox(
                                     value: isChecked,
-                                    onChanged: (value) {
+                                    onChanged: (value) async {
                                       setState(() {
                                         isChecked = value!;
                                       });
+                                      if (value!) {
+                                        if (email.text.isNotEmpty) {
+                                          await ref
+                                              .read(localDataProvider)
+                                              .setEmail(email.text);
+                                          await ref
+                                              .read(localDataProvider)
+                                              .setRememberMe(value.toString());
+                                        } else {
+                                          $showMessage(
+                                            "Please Fill your email",
+                                            isError: false,
+                                          );
+                                        }
+                                      } else {
+                                        emptyLocalData();
+                                      }
                                     },
                                     activeColor: AppColors.secondaryColor,
                                     checkColor: Colors.white,
