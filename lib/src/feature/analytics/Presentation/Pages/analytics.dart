@@ -1238,16 +1238,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
     double change =
         PriceUtils.getChangesPercentage(
-              liveStock != null && liveStock.price > 0
-                  ? liveStock.price
-                  : widget.chatRouting!.changePercentage,
+              liveStock != null ? liveStock.price : widget.chatRouting!.price,
               widget.chatRouting!.previousClose,
             ) !=
             null
         ? PriceUtils.getChangesPercentage(
-            liveStock != null && liveStock.price > 0
-                ? liveStock.price
-                : widget.chatRouting!.changePercentage,
+            liveStock != null ? liveStock.price : widget.chatRouting!.price,
             widget.chatRouting!.previousClose,
           )!
         : widget.chatRouting!.changePercentage;
@@ -1987,14 +1983,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
     double change =
         PriceUtils.getChangesPercentage(
-              liveStock != null && liveStock.price > 0
+              liveStock != null
                   ? liveStock.price
                   : widget.chatRouting!.changePercentage,
               widget.chatRouting!.previousClose,
             ) !=
             null
         ? PriceUtils.getChangesPercentage(
-            liveStock != null && liveStock.price > 0
+            liveStock != null
                 ? liveStock.price
                 : widget.chatRouting!.changePercentage,
             widget.chatRouting!.previousClose,

@@ -5,6 +5,7 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/model/analysis_data/analysis_data_model.dart';
+import 'dart:math';
 
 class CustomCandleChart extends StatefulWidget {
   final String name;
@@ -23,6 +24,26 @@ class CustomCandleChart extends StatefulWidget {
 }
 
 class _CustomCandleChartState extends State<CustomCandleChart> {
+  double calculateInterval(double minY, double maxY, {int targetSteps = 6}) {
+    final range = (maxY - minY).abs();
+    if (range == 0) return 1; // avoid divide-by-zero
+    final rawInterval = range / targetSteps;
+    // round interval to a “nice” number (like 1, 2, 5, 10, 100, etc.)
+    final magnitude = pow(10, (log(rawInterval) / ln10).floor());
+    final normalized = rawInterval / magnitude;
+    double niceNormalized;
+    if (normalized < 1.5) {
+      niceNormalized = 1;
+    } else if (normalized < 3) {
+      niceNormalized = 2;
+    } else if (normalized < 7) {
+      niceNormalized = 5;
+    } else {
+      niceNormalized = 10;
+    }
+    return niceNormalized * magnitude;
+  }
+
   final List<String> labels = ['H', 'D', 'W', 'M'];
 
   int selectedIndex = 1;
@@ -229,7 +250,18 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 40,
-                      interval: 20,
+                      interval: calculateInterval(
+                        chartData.isNotEmpty
+                            ? chartData
+                                  .map((e) => e.low)
+                                  .reduce((a, b) => a < b ? a : b)
+                            : 0.0,
+                        chartData.isNotEmpty
+                            ? chartData
+                                  .map((e) => e.high)
+                                  .reduce((a, b) => a > b ? a : b)
+                            : 0.0,
+                      ),
                       getTitlesWidget: (value, meta) {
                         return Text(
                           value.toStringAsFixed(2),
