@@ -49,7 +49,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
         : widget.stocks.pctChange.toStringAsFixed(2);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
-      margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
+      margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 7.w),
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(12),
@@ -110,11 +110,18 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               //   height: 41.h,
               //   fit: BoxFit.cover,
               // ),
-              SizedBox(height: 5.h),
+              SizedBox(height: 10.h),
               MdSnsText(
                 widget.stock.lastMessage != null
-                    ? widget.stock.lastMessage!.createdAt.millisecondsSinceEpoch
-                          .timeAgoFromMilliseconds()
+                    ? DateFormat('hh:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                          widget
+                              .stock
+                              .lastMessage!
+                              .createdAt
+                              .millisecondsSinceEpoch,
+                        ),
+                      )
                     : "",
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
