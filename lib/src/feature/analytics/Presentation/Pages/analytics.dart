@@ -58,8 +58,11 @@ import 'package:trader_gpt/src/shared/widgets/profile_card_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:trader_gpt/utils/constant.dart';
 
+import '../../../../core/extensions/price_calculation.dart';
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/routes/routes.dart';
+import '../../../../shared/extensions/number_formatter_extension.dart';
+import '../../../../shared/socket/providers/stocks_price.dart';
 import '../../../../shared/widgets/esg_score_table.dart';
 import '../../../../shared/widgets/price_card_shimmer.dart'
     hide ProfileCardShimmer;
@@ -1122,6 +1125,25 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       return chartDataList;
     }
 
+    final stockManagerState = ref.watch(stocksManagerProvider);
+
+    final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
+    double change =
+        PriceUtils.getChangesPercentage(
+              liveStock != null && liveStock.price > 0
+                  ? liveStock.price
+                  : widget.chatRouting!.changePercentage,
+              widget.chatRouting!.previousClose,
+            ) !=
+            null
+        ? PriceUtils.getChangesPercentage(
+            liveStock != null && liveStock.price > 0
+                ? liveStock.price
+                : widget.chatRouting!.changePercentage,
+            widget.chatRouting!.previousClose,
+          )!
+        : widget.chatRouting!.changePercentage;
+
     double _twoMonthIntervalMilliseconds() {
       const millisInDay = 86400000;
       const daysInTwoMonths = 60;
@@ -1221,8 +1243,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     MdSnsText(
-                      "\$${selectedStock!.price.toStringAsFixed(2)}",
-                      color: selectedStock!.pctChange.toString().contains("-")
+                      liveStock != null
+                          ? Filters.systemNumberConvention(
+                              liveStock.price,
+                              isPrice: true,
+                              isAbs: false,
+                            )
+                          : Filters.systemNumberConvention(
+                              selectedStock!.price,
+                              isPrice: true,
+                              isAbs: false,
+                            ),
+                      color: change.toString().contains("-")
                           ? AppColors.redFF3B3B
                           : AppColors.white,
 
@@ -1233,19 +1265,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Icon(
-                          selectedStock!.pctChange.toString().contains("-")
+                          change.toString().contains("-")
                               ? Icons.arrow_drop_down
                               : Icons.arrow_drop_up,
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
+                          color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           size: 20,
                         ),
                         MdSnsText(
-                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
+                          " ${change.toStringAsFixed(2)}%",
+                          color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           variant: TextVariant.h4,
@@ -1842,6 +1872,24 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   Widget _overviewContent() {
+    final stockManagerState = ref.watch(stocksManagerProvider);
+
+    final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
+    double change =
+        PriceUtils.getChangesPercentage(
+              liveStock != null && liveStock.price > 0
+                  ? liveStock.price
+                  : widget.chatRouting!.changePercentage,
+              widget.chatRouting!.previousClose,
+            ) !=
+            null
+        ? PriceUtils.getChangesPercentage(
+            liveStock != null && liveStock.price > 0
+                ? liveStock.price
+                : widget.chatRouting!.changePercentage,
+            widget.chatRouting!.previousClose,
+          )!
+        : widget.chatRouting!.changePercentage;
     List<ChartData> buildChartSpots(
       List<OverviewCandleChartModel> overviewCandle,
     ) {
@@ -1962,9 +2010,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     Row(
                       children: [
                         MdSnsText(
-                          "\$${selectedStock!.price.toStringAsFixed(2)}",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
+                          liveStock != null
+                              ? Filters.systemNumberConvention(
+                                  liveStock.price,
+                                  isPrice: true,
+                                  isAbs: false,
+                                )
+                              : Filters.systemNumberConvention(
+                                  selectedStock!.price,
+                                  isPrice: true,
+                                  isAbs: false,
+                                ),
+                          color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.white,
                           variant: TextVariant.h4,
@@ -1972,19 +2029,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         ),
                         const SizedBox(width: 6),
                         Icon(
-                          selectedStock!.pctChange.toString().contains("-")
+                          change.toString().contains("-")
                               ? Icons.arrow_drop_down
                               : Icons.arrow_drop_up,
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
+                          color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           size: 20,
                         ),
                         MdSnsText(
-                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
+                          " ${change.toStringAsFixed(2).replaceAll("-", "")}%",
+                          color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           variant: TextVariant.h4,

@@ -12,6 +12,7 @@ import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../../core/extensions/price_calculation.dart';
+import '../../../../../shared/extensions/number_formatter_extension.dart';
 import '../../../../../shared/socket/providers/stocks_price.dart';
 
 // ignore: must_be_immutable
@@ -198,8 +199,16 @@ class _ConversationChatAppBarState
                   children: [
                     MdSnsText(
                       liveStock != null
-                          ? "\$${liveStock.price.toStringAsFixed(2)}"
-                          : "\$${widget.chatRouting!.price..toStringAsFixed(2)}",
+                          ? Filters.systemNumberConvention(
+                              liveStock.price,
+                              isPrice: true,
+                              isAbs: false,
+                            )
+                          : Filters.systemNumberConvention(
+                              widget.chatRouting!.price,
+                              isPrice: true,
+                              isAbs: false,
+                            ),
                       variant: TextVariant.h3,
                       color: AppColors.white,
                     ),
