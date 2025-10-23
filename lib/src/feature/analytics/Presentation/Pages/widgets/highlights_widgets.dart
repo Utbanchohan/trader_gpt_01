@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import '../../../../../shared/extensions/number_formatter_extension.dart';
 import '../../../domain/model/info_model_crypto/info_model_crypto.dart';
 
 class HighlightsCard extends StatelessWidget {
@@ -227,8 +228,11 @@ class _RangeCard extends StatelessWidget {
                                 null &&
                             highlightResponse.data!.marketData!.low24h!.usd !=
                                 null
-                        ? highlightResponse.data!.marketData!.low24h!.usd!
-                              .toStringAsFixed(2)
+                        ? Filters.systemNumberConvention(
+                            highlightResponse.data!.marketData!.low24h!.usd!,
+                            isPrice: false,
+                            isAbs: false,
+                          )
                         : "N/A",
                     variant: TextVariant.h4,
                     color: AppColors.white,
@@ -248,8 +252,11 @@ class _RangeCard extends StatelessWidget {
                                 null &&
                             highlightResponse.data!.marketData!.high24h!.usd !=
                                 null
-                        ? highlightResponse.data!.marketData!.high24h!.usd!
-                              .toStringAsFixed(2)
+                        ? Filters.systemNumberConvention(
+                            highlightResponse.data!.marketData!.high24h!.usd!,
+                            isPrice: false,
+                            isAbs: false,
+                          )
                         : "N/A",
                     variant: TextVariant.h4,
                     color: AppColors.white,

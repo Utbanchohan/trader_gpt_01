@@ -188,8 +188,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                       duration: const Duration(milliseconds: 200),
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       padding: const EdgeInsets.symmetric(
-                        horizontal:
-                            8, // (aap yahan width/height adjust kar sakte ho)
+                        horizontal: 8,
                         vertical: 5,
                       ),
                       decoration: BoxDecoration(
@@ -262,7 +261,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                   rightTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 40.w,
+                      reservedSize: 45.w,
                       interval: calculateInterval(
                         chartData.isNotEmpty
                             ? chartData
@@ -280,7 +279,10 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                           "  " +
                               Filters.systemNumberConvention(
                                 value,
-                                isPrice: false,
+                                isPrice: true,
+                                isAbs: true,
+                                containerWidth: 30,
+                                isRound: true,
                               ),
                           style: const TextStyle(
                             color: Colors.white70,
