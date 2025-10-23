@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../shared/extensions/number_formatter_extension.dart';
 import '../../../domain/model/analysis_data/analysis_data_model.dart';
 import 'dart:math';
 
@@ -46,7 +47,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
 
   final List<String> labels = ['H', 'D', 'W', 'M'];
 
-  int selectedIndex = 1;
+  String selectedIndex = 'D';
 
   setItem(index) {
     setState(() {
@@ -178,8 +179,9 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                 children: List.generate(labels.length, (index) {
                   return GestureDetector(
                     onTap: () {
-                      setItem(index);
-
+                      setState(() {
+                        selectedIndex = labels[index];
+                      });
                       widget.onPressed(labels[index]);
                     },
                     child: AnimatedContainer(
@@ -191,14 +193,14 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                         vertical: 5,
                       ),
                       decoration: BoxDecoration(
-                        color: selectedIndex == index
+                        color: selectedIndex == labels[index]
                             ? AppColors.color0E1738
                             : AppColors.colo2C3754,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: MdSnsText(
                         labels[index],
-                        color: selectedIndex == index
+                        color: selectedIndex == labels[index]
                             ? Colors.white
                             : Colors.white70,
                         variant: TextVariant.h5,
@@ -225,7 +227,18 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                   show: true,
                   drawVerticalLine:
                       true, // Agar vertical lines bhi chahiye to true rakho
-                  horizontalInterval: 20,
+                  horizontalInterval: calculateInterval(
+                    chartData.isNotEmpty
+                        ? chartData
+                              .map((e) => e.low)
+                              .reduce((a, b) => a < b ? a : b)
+                        : 0.0,
+                    chartData.isNotEmpty
+                        ? chartData
+                              .map((e) => e.high)
+                              .reduce((a, b) => a > b ? a : b)
+                        : 0.0,
+                  ),
                   verticalInterval: 1, // optional: adjust as needed
                   getDrawingHorizontalLine: (value) => FlLine(
                     color:
@@ -249,7 +262,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                   rightTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 40,
+                      reservedSize: 40.w,
                       interval: calculateInterval(
                         chartData.isNotEmpty
                             ? chartData
@@ -264,7 +277,11 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                       ),
                       getTitlesWidget: (value, meta) {
                         return Text(
-                          value.toStringAsFixed(2),
+                          "  " +
+                              Filters.systemNumberConvention(
+                                value,
+                                isPrice: false,
+                              ),
                           style: const TextStyle(
                             color: Colors.white70,
                             fontSize: 10,
