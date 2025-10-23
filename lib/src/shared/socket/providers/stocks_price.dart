@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 
 import '../../../core/extensions/empty_stock.dart';
+import '../../../core/local/repository/local_storage_repository.dart';
 import '../domain/repository/repository.dart';
 import '../model/stock_model.dart/stock_model.dart';
 
@@ -209,6 +210,7 @@ class StocksManager extends _$StocksManager {
 
   /// fetch all pending stocks
   Future<void> _fetchPendingUpdates() async {
+    print("fetch pending");
     if (_pendingFetchIds.isEmpty) return;
 
     final idsToFetch = List<Stock>.from(_pendingFetchIds);
@@ -216,7 +218,38 @@ class StocksManager extends _$StocksManager {
 
     ref.read(socketRepository).getUpdatedStocks(idsToFetch, (stocks) {
       state = {...state, for (final stock in stocks) stock.stockId: stock};
+      addNewStocks(state);
     });
+  }
+
+  Future<void> addNewStocks(Map<String, Stock> newStocks) async {
+    final localData = ref.read(localDataProvider);
+
+    // 1. Load existing stocks
+    final existingJson = await localData.getStocks();
+    final List<Stock> oldStocks = existingJson != null
+        ? existingJson.map<Stock>((s) => Stock.fromJson(s)).toList()
+        : [];
+
+    // 2. Convert to map for quick lookup
+    final Map<String, Stock> stockMap = {for (var s in oldStocks) s.stockId: s};
+
+    // 3. Add only stocks that don't already exist
+    int addedCount = 0;
+    for (final entry in newStocks.entries) {
+      if (!stockMap.containsKey(entry.key)) {
+        stockMap[entry.key] = entry.value;
+        addedCount++;
+      }
+    }
+
+    // 4. Save updated stock list
+    if (addedCount > 0) {
+      final updatedJson = stockMap.values.map((s) => s.toJson()).toList();
+      await localData.saveStock(updatedJson);
+    }
+
+    print("✅ Added $addedCount new stock(s). Total: ${stockMap.length}");
   }
 
   void watchStock(Stock stock) {
@@ -250,6 +283,10 @@ class StocksManager extends _$StocksManager {
 
   List<Stock> getStocks(List<String> ids) =>
       ids.map((id) => state[id]).whereType<Stock>().toList();
+
+  void unWatchAllStock() {
+    _watchedStockIds.removeWhere((s) => s.stockId != "");
+  }
 }
 
 

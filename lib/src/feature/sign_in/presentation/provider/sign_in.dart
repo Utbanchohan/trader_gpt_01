@@ -88,7 +88,7 @@ class Login extends _$Login {
               .read(localDataProvider)
               .saveUser(response.data!.user.toJson());
           List<Map<String, dynamic>> stocks = [];
-          ref.read(socketRepository).fetchStocks((data) {
+          ref.read(socketRepository).fetchStocks((data) async {
             final updatedStocks = data;
 
             for (var updated in updatedStocks) {
@@ -96,20 +96,20 @@ class Login extends _$Login {
 
               stocks.add(stockItem.toJson());
             }
-            ref
-                .read(stocksManagerProvider.notifier)
-                .watchStocks(
-                  data
-                      .map(
-                        (e) => Stock(
-                          stockId: e.stockId,
-                          symbol: e.symbol,
-                          price: e.price ?? 0,
-                        ),
-                      )
-                      .toList(),
-                );
-            ref.read(localDataProvider).saveStock(stocks);
+            // ref
+            //     .read(stocksManagerProvider.notifier)
+            //     .watchStocks(
+            //       updatedStocks
+            //           .map(
+            //             (e) => Stock(
+            //               stockId: e.stockId,
+            //               symbol: e.symbol,
+            //               price: e.price ?? 0,
+            //             ),
+            //           )
+            //           .toList(),
+            //     );
+            await ref.read(localDataProvider).saveStock(stocks);
           });
 
           state = AppLoadingState();

@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/extensions/price_calculation.dart';
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/extensions/number_formatter_extension.dart';
 import '../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:intl/intl.dart';
 
@@ -171,8 +172,16 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
             children: [
               MdSnsText(
                 liveStock != null
-                    ? compactFormatter.format(liveStock.price)
-                    : compactFormatter.format(widget.stocks.price),
+                    ? Filters.systemNumberConvention(
+                        liveStock.price,
+                        isPrice: true,
+                        isAbs: false,
+                      )
+                    : Filters.systemNumberConvention(
+                        widget.stocks.price,
+                        isPrice: true,
+                        isAbs: false,
+                      ),
                 variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
@@ -183,7 +192,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                    change.replaceAll("-", ""),
+                    change.replaceAll("-", "") + "%",
                     color: change.contains("-")
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,
@@ -193,7 +202,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 ],
               ),
               SizedBox(
-                width: 86.w,
+                width: 85.w,
                 height: 15.h,
                 child: Sparkline(
                   data:
@@ -230,10 +239,18 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                   useCubicSmoothing: false,
                   sharpCorners: true,
                   fillMode: FillMode.below,
-                  fillGradient: const LinearGradient(
+                  fillGradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.transparent],
+                    colors: change.contains("-")
+                        ? [
+                            AppColors.redFF3B3B.withOpacity(0.5),
+                            AppColors.redFF3B3B.withOpacity(0.2),
+                          ]
+                        : [
+                            AppColors.color06D54E.withOpacity(0.5),
+                            AppColors.color06D54E.withOpacity(0.2),
+                          ],
                   ),
                 ),
               ),
