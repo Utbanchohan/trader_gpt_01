@@ -47,10 +47,12 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
     isChecked = ref.read(localDataProvider).getRemamberMe == "true"
         ? true
         : false;
+    password.text = ref.read(localDataProvider).getPassword1 ?? "";
   }
 
   emptyLocalData() {
     ref.read(localDataProvider).setEmail("");
+    ref.read(localDataProvider).setPassword("");
     ref.read(localDataProvider).setRememberMe("false");
   }
 
@@ -283,16 +285,22 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                                         isChecked = value!;
                                       });
                                       if (value!) {
-                                        if (email.text.isNotEmpty) {
+                                        if (email.text.isNotEmpty &&
+                                            password.text.isEmpty) {
                                           await ref
                                               .read(localDataProvider)
                                               .setEmail(email.text);
                                           await ref
                                               .read(localDataProvider)
                                               .setRememberMe(value.toString());
+                                          await ref
+                                              .read(localDataProvider)
+                                              .setPassword(
+                                                password.text.toString(),
+                                              );
                                         } else {
                                           $showMessage(
-                                            "Please Fill your email",
+                                            "Please Fill all fields",
                                             isError: false,
                                           );
                                         }
