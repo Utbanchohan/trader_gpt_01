@@ -70,19 +70,10 @@ class OutstandingSharesChart extends StatelessWidget {
             ),
             SizedBox(height: 12),
             Container(
-              padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(color: AppColors.color0xFF0B1224),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 👇 Top Text
-                  MdSnsText(
-                    "Outstanding Shares", // apna title yahan likho
-                    fontWeight: TextFontWeightVariant.h4,
-                    variant: TextVariant.h4,
-                    color: AppColors.color0xB3FFFFFF,
-                  ),
-                  SizedBox(height: 20.h),
                   SizedBox(
                     height: 210,
                     child: LineChart(

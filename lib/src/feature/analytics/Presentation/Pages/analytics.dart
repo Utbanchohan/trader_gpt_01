@@ -184,11 +184,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   getOverview(SymbolDto symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .getOverview(symbol);
-    if (res != null) {
-      stockResponse = res;
+    try {
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .getOverview(symbol);
+      if (res != null) {
+        stockResponse = res;
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -1332,11 +1336,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
                           color: AppColors.white,
                         ),
-                        MdSnsText(
-                          selectedStock!.companyName.split("-").first.trim(),
-                          color: AppColors.white,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
+                        SizedBox(
+                          width: MediaQuery.sizeOf(context).width / 1.7,
+                          child: MdSnsText(
+                            selectedStock!.companyName.split("-").first.trim(),
+                            color: AppColors.colorB2B2B7,
+                            variant: TextVariant.h4,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            fontWeight: TextFontWeightVariant.h4,
+                          ),
                         ),
                       ],
                     ),
@@ -2096,11 +2105,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         ),
 
                         SizedBox(width: 6),
-                        MdSnsText(
-                          selectedStock!.companyName.split("-").first.trim(),
-                          color: AppColors.colorB2B2B7,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
+                        SizedBox(
+                          width: MediaQuery.sizeOf(context).width / 1.7,
+                          child: MdSnsText(
+                            selectedStock!.companyName.split("-").first.trim(),
+                            color: AppColors.colorB2B2B7,
+                            variant: TextVariant.h4,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            fontWeight: TextFontWeightVariant.h4,
+                          ),
                         ),
                         // Icon(
                         //   Icons.keyboard_arrow_down,
@@ -2282,8 +2296,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       setState(() {});
                     },
                   )
-                : CustomCandleChartShimmer(),
+                : SizedBox(),
 
+            // CustomCandleChartShimmer(),
             SizedBox(height: 20.h),
             priceTargetMatrics != null && priceTargetMatrics!.data.length > 0
                 ? PriceTargetWidget(data: priceTargetMatrics!.data)
@@ -2857,7 +2872,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                                   .metrics['Debt'] ??
                                               [],
                                         )
-                                      : CashDebtShimmer(),
+                                      : SizedBox(),
+                                  // CashDebtShimmer(),
                                   const SizedBox(height: 20),
 
                                   financeChartsDataModel != null &&
@@ -2891,7 +2907,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                                   .metrics["Total StockHolder"] ??
                                               [],
                                         )
-                                      : CashDebtShimmer(),
+                                      : SizedBox(),
+                                  // CashDebtShimmer(),
                                   SizedBox(height: 20),
 
                                   financeChartsDataModel != null &&
@@ -2925,7 +2942,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                                   .metrics["Stock Buyback Percentage"] ??
                                               [],
                                         )
-                                      : CashDebtShimmer(),
+                                      : SizedBox(),
+                                  // CashDebtShimmer(),
                                   const SizedBox(height: 20),
 
                                   financeChartsDataModel != null &&
@@ -2959,7 +2977,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                                   .metrics["Income"] ??
                                               [],
                                         )
-                                      : CashDebtShimmer(),
+                                      : SizedBox(),
+                                  //  CashDebtShimmer(),
                                   const SizedBox(height: 20),
 
                                   financeChartsDataModel != null &&
@@ -3005,7 +3024,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                                   .metrics["Cash Flow Dividends"] ??
                                               [],
                                         )
-                                      : CashDebtShimmer(),
+                                      : SizedBox(),
+                                  // CashDebtShimmer(),
                                   const SizedBox(height: 0),
                                 ],
                               ),
