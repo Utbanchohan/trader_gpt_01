@@ -457,157 +457,265 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   final TextEditingController search = TextEditingController();
   int selectedIndex = -1;
-  secondIndexTap() async {
+  Future<void> secondIndexTap() async {
     if (companyModel == null) {
-      await getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getcompanyData: $e\n$s");
+      }
     }
+
     if (insiderTransactionResponse == null) {
-      await insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in insiderTrades: $e\n$s");
+      }
     }
+
     if (shortVolumeModel == null) {
-      await getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getShortVolumeData: $e\n$s");
+      }
     }
 
     if (securityOwnership == null) {
-      await getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getShortOwnership: $e\n$s");
+      }
     }
+
     if (securityShortVolume == null) {
-      await getSecurityShortVolumeData(
-        SymbolDto(symbol: widget.chatRouting!.symbol),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getSecurityShortVolumeData(
+          SymbolDto(symbol: widget.chatRouting!.symbol),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getSecurityShortVolumeData: $e\n$s");
+      }
     }
+
     if (esgScoreData == null) {
-      await esgScore(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await esgScore(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in esgScore: $e\n$s");
+      }
     }
+
     if (earningdata == null) {
-      await getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getEarningData: $e\n$s");
+      }
     }
+
     if (companyDetailModel == null) {
-      await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getCompanyDetail: $e\n$s");
+      }
     }
+
     if (!mounted) return;
     setState(() {});
   }
 
   firstIndexData() async {
     if (stockResponse == null) {
-      await getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
-    }
-    if (matricData == null) {
-      await getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getOverview: $e\n$s");
+      }
     }
     if (overviewCandleChartModel == null) {
-      await getOverviewCandleChart(
-        widget.chatRouting!.symbol,
-        IntervalEnum.daily,
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getOverviewCandleChart(
+          widget.chatRouting!.symbol,
+          IntervalEnum.daily,
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getOverviewCandleChart: $e\n$s");
+      }
     }
     if (priceTargetMatrics == null) {
-      await priceTargetMatricsData(
-        SymbolDto(symbol: widget.chatRouting!.symbol),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await priceTargetMatricsData(
+          SymbolDto(symbol: widget.chatRouting!.symbol),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in priceTargetMatricsData: $e\n$s");
+      }
     }
+
+    if (matricData == null) {
+      try {
+        await getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getMatricsData: $e\n$s");
+      }
+    }
+
     if (analyticsRespinseData == null) {
-      analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in analyticsData: $e\n$s");
+      }
     }
+
     if (priceComparisonModel == null) {
-      await priceComparison(
-        PriceComparisonDto(
-          daysBack: 365,
-          symbol1: widget.chatRouting!.symbol,
-          symbol2: "SPY",
-        ),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await priceComparison(
+          PriceComparisonDto(
+            daysBack: 365,
+            symbol1: widget.chatRouting!.symbol,
+            symbol2: "SPY",
+          ),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in priceComparison: $e\n$s");
+      }
     }
+
     if (fundamentalResponse == null) {
-      await fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in fundamental: $e\n$s");
+      }
     }
+
     if (sharesResponse == null) {
-      await shares(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await shares(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in shares: $e\n$s");
+      }
     }
+
     if (weeklyData == null) {
-      await getWeeklyData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getWeeklyData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getWeeklyData: $e\n$s");
+      }
     }
+
     if (monthlyData == null) {
-      await getMonthlyData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getMonthlyData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getMonthlyData: $e\n$s");
+      }
     }
   }
 
   fourthTap() async {
-    if (earningReportsModel == null) {
-      await earningReportData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
-    }
     if (earningChartModel == null) {
-      await earningChartData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await earningChartData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e) {
+        print(e);
+      }
     }
     if (companyDetailModel == null) {
-      await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e) {
+        print(e);
+      }
+    }
+    if (earningReportsModel == null) {
+      try {
+        await earningReportData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
   thirdTap(int val) async {
     if (val == 0) {
       if (financeChartsDataModel == null) {
-        await financialCharts(widget.chatRouting!.symbol);
-        if (!mounted) return;
-        setState(() {});
+        try {
+          await financialCharts(widget.chatRouting!.symbol);
+          if (!mounted) return;
+          setState(() {});
+        } catch (e) {
+          print(e);
+        }
       }
     } else {
       if (financialResponse == null) {
-        await financialData(widget.chatRouting!.symbol);
-        if (!mounted) return;
-        setState(() {});
+        try {
+          await financialData(widget.chatRouting!.symbol);
+          if (!mounted) return;
+          setState(() {});
+        } catch (e) {
+          print(e);
+        }
       }
     }
   }
 
   fifthTap() async {
     if (analysisDataModel == null) {
-      await getAnalysisData(widget.chatRouting!.symbol, IntervalEnum.daily);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getAnalysisData(widget.chatRouting!.symbol, IntervalEnum.daily);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e) {}
     }
   }
 
