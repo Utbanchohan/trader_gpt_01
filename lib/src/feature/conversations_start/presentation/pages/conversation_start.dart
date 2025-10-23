@@ -173,7 +173,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
     }
     await getStocks();
 
-    // ref.read(stocksManagerProvider.notifier).watchStocks(watchStockes);
+    ref.read(stocksManagerProvider.notifier).watchStocks(watchStockes);
 
     if (mounted) {
       setState(() {});
