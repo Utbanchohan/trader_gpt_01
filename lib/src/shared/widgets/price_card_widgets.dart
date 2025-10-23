@@ -49,7 +49,11 @@ class PriceCardWidget extends StatelessWidget {
           SizedBox(
             width: 170.w,
             child: MdSnsText(
-              previousPrice,
+              previousPrice == "null" ||
+                      previousPrice == "0.0" ||
+                      previousPrice == "0"
+                  ? "N/A"
+                  : previousPrice,
               color: firstColor,
               maxLines: 1,
 
@@ -73,7 +77,12 @@ class PriceCardWidget extends StatelessWidget {
               SizedBox(
                 width: 170.w,
                 child: MdSnsText(
-                  afterHoursPrice,
+                  afterHoursPrice == "null" ||
+                          afterHoursPrice == "0.0" ||
+                          afterHoursPrice == "0"
+                      ? "N/A"
+                      : afterHoursPrice,
+
                   maxLines: 1,
                   color: secondColor,
 

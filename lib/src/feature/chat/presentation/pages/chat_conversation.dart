@@ -300,14 +300,22 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (sc.hasClients) {
-        sc.animateTo(
-          sc.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 750),
-          curve: Curves.easeOut,
-        );
+        sc.jumpTo(sc.position.maxScrollExtent); // 👈 instantly jump to bottom
       }
     });
   }
+
+  // void scrollToBottom() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     if (sc.hasClients) {
+  //       sc.animateTo(
+  //         sc.position.maxScrollExtent,
+  //         duration: const Duration(milliseconds: 750),
+  //         curve: Curves.easeOut,
+  //       );
+  //     }
+  //   });
+  // }
 
   @override
   void dispose() {
