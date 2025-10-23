@@ -18,6 +18,8 @@ class SharedPreferencesService implements SharedPrefService {
   final _marketAccessTokenNew = "metaAccessTokenNew";
   final _marketRefreshToken = "metaRefreshToken";
   final _markeRefreshTokenNew = "metaRefreshTokenNew";
+  final _setEmail = "setEmail";
+  final _rememberMe = "rememberMe";
 
   @override
   String? get accessToken => sharedPreferences.getString(_tokenKey);
@@ -42,8 +44,24 @@ class SharedPreferencesService implements SharedPrefService {
   String? get getUserName => sharedPreferences.getString(userNameKey);
 
   @override
+  String? get getEmail => sharedPreferences.getString(_setEmail);
+
+  @override
+  String? get getRemamberMe => sharedPreferences.getString(_rememberMe);
+
+  @override
   Future<bool> setAccessToken(String token) async {
     return await sharedPreferences.setString(_tokenKey, token);
+  }
+
+  @override
+  Future<bool> setEmail(String email) async {
+    return await sharedPreferences.setString(_setEmail, email);
+  }
+
+  @override
+  Future<bool> setRememberMe(String rememberMe) async {
+    return await sharedPreferences.setString(_rememberMe, rememberMe);
   }
 
   @override

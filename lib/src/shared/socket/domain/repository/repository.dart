@@ -35,7 +35,7 @@ class SocketRepository {
     List<Stock> ids,
     // List<Stock> stocks,
     Function(List<Stock> stocks) callBack,
-  ) {
+  ) async {
     var data = {
       "stocks": ids
           .map((e) => {'stockId': e.stockId, 'showTrendChart': true})

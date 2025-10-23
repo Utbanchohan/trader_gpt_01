@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/extensions/price_calculation.dart';
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../shared/extensions/number_formatter_extension.dart';
 import '../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:intl/intl.dart';
 
@@ -36,23 +37,19 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
     final liveStock = stockManagerState[widget.stock.stockId];
     String change = liveStock != null && liveStock.stockId.isNotEmpty
         ? PriceUtils.getChangesPercentage(
-                    liveStock != null && liveStock.price > 0
-                        ? liveStock.price
-                        : widget.stocks.price,
+                    liveStock != null ? liveStock.price : widget.stocks.price,
                     widget.stocks.previousClose,
                   ) !=
                   null
               ? PriceUtils.getChangesPercentage(
-                  liveStock != null && liveStock.price > 0
-                      ? liveStock.price
-                      : widget.stocks.price,
+                  liveStock != null ? liveStock.price : widget.stocks.price,
                   widget.stocks.previousClose,
                 )!.toStringAsFixed(2)
               : widget.stocks.pctChange.toStringAsFixed(2)
         : widget.stocks.pctChange.toStringAsFixed(2);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
-      margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
+      margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 7.w),
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(12),
@@ -113,13 +110,20 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               //   height: 41.h,
               //   fit: BoxFit.cover,
               // ),
-              SizedBox(height: 5.h),
+              SizedBox(height: 10.h),
               MdSnsText(
                 widget.stock.lastMessage != null
-                    ? widget.stock.lastMessage!.createdAt.millisecondsSinceEpoch
-                          .timeAgoFromMilliseconds()
+                    ? DateFormat('hh:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                          widget
+                              .stock
+                              .lastMessage!
+                              .createdAt
+                              .millisecondsSinceEpoch,
+                        ),
+                      )
                     : "",
-                variant: TextVariant.h5,
+                variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.color677FA4,
               ),
@@ -171,8 +175,16 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
             children: [
               MdSnsText(
                 liveStock != null
-                    ? compactFormatter.format(liveStock.price)
-                    : compactFormatter.format(widget.stocks.price),
+                    ? Filters.systemNumberConvention(
+                        liveStock.price,
+                        isPrice: true,
+                        isAbs: false,
+                      )
+                    : Filters.systemNumberConvention(
+                        widget.stocks.price,
+                        isPrice: true,
+                        isAbs: false,
+                      ),
                 variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
@@ -183,7 +195,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                    change.replaceAll("-", ""),
+                    change.replaceAll("-", "") + "%",
                     color: change.contains("-")
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,
@@ -193,7 +205,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 ],
               ),
               SizedBox(
-                width: 86.w,
+                width: 85.w,
                 height: 15.h,
                 child: Sparkline(
                   data:
@@ -230,10 +242,18 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                   useCubicSmoothing: false,
                   sharpCorners: true,
                   fillMode: FillMode.below,
-                  fillGradient: const LinearGradient(
+                  fillGradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.transparent],
+                    colors: change.contains("-")
+                        ? [
+                            AppColors.redFF3B3B.withOpacity(0.5),
+                            AppColors.redFF3B3B.withOpacity(0.2),
+                          ]
+                        : [
+                            AppColors.color06D54E.withOpacity(0.5),
+                            AppColors.color06D54E.withOpacity(0.2),
+                          ],
                   ),
                 ),
               ),

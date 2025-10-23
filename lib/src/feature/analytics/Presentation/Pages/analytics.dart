@@ -58,8 +58,11 @@ import 'package:trader_gpt/src/shared/widgets/profile_card_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:trader_gpt/utils/constant.dart';
 
+import '../../../../core/extensions/price_calculation.dart';
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../core/routes/routes.dart';
+import '../../../../shared/extensions/number_formatter_extension.dart';
+import '../../../../shared/socket/providers/stocks_price.dart';
 import '../../../../shared/widgets/esg_score_table.dart';
 import '../../../../shared/widgets/price_card_shimmer.dart'
     hide ProfileCardShimmer;
@@ -454,157 +457,265 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   final TextEditingController search = TextEditingController();
   int selectedIndex = -1;
-  secondIndexTap() async {
+  Future<void> secondIndexTap() async {
     if (companyModel == null) {
-      await getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getcompanyData: $e\n$s");
+      }
     }
+
     if (insiderTransactionResponse == null) {
-      await insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in insiderTrades: $e\n$s");
+      }
     }
+
     if (shortVolumeModel == null) {
-      await getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getShortVolumeData: $e\n$s");
+      }
     }
 
     if (securityOwnership == null) {
-      await getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getShortOwnership: $e\n$s");
+      }
     }
+
     if (securityShortVolume == null) {
-      await getSecurityShortVolumeData(
-        SymbolDto(symbol: widget.chatRouting!.symbol),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getSecurityShortVolumeData(
+          SymbolDto(symbol: widget.chatRouting!.symbol),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getSecurityShortVolumeData: $e\n$s");
+      }
     }
+
     if (esgScoreData == null) {
-      await esgScore(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await esgScore(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in esgScore: $e\n$s");
+      }
     }
+
     if (earningdata == null) {
-      await getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getEarningData: $e\n$s");
+      }
     }
+
     if (companyDetailModel == null) {
-      await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getCompanyDetail: $e\n$s");
+      }
     }
+
     if (!mounted) return;
     setState(() {});
   }
 
   firstIndexData() async {
     if (stockResponse == null) {
-      await getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
-    }
-    if (matricData == null) {
-      await getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getOverview: $e\n$s");
+      }
     }
     if (overviewCandleChartModel == null) {
-      await getOverviewCandleChart(
-        widget.chatRouting!.symbol,
-        IntervalEnum.daily,
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getOverviewCandleChart(
+          widget.chatRouting!.symbol,
+          IntervalEnum.daily,
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getOverviewCandleChart: $e\n$s");
+      }
     }
     if (priceTargetMatrics == null) {
-      await priceTargetMatricsData(
-        SymbolDto(symbol: widget.chatRouting!.symbol),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await priceTargetMatricsData(
+          SymbolDto(symbol: widget.chatRouting!.symbol),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in priceTargetMatricsData: $e\n$s");
+      }
     }
+
+    if (matricData == null) {
+      try {
+        await getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getMatricsData: $e\n$s");
+      }
+    }
+
     if (analyticsRespinseData == null) {
-      analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in analyticsData: $e\n$s");
+      }
     }
+
     if (priceComparisonModel == null) {
-      await priceComparison(
-        PriceComparisonDto(
-          daysBack: 365,
-          symbol1: widget.chatRouting!.symbol,
-          symbol2: "SPY",
-        ),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await priceComparison(
+          PriceComparisonDto(
+            daysBack: 365,
+            symbol1: widget.chatRouting!.symbol,
+            symbol2: "SPY",
+          ),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in priceComparison: $e\n$s");
+      }
     }
+
     if (fundamentalResponse == null) {
-      await fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in fundamental: $e\n$s");
+      }
     }
+
     if (sharesResponse == null) {
-      await shares(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await shares(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in shares: $e\n$s");
+      }
     }
+
     if (weeklyData == null) {
-      await getWeeklyData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getWeeklyData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getWeeklyData: $e\n$s");
+      }
     }
+
     if (monthlyData == null) {
-      await getMonthlyData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getMonthlyData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getMonthlyData: $e\n$s");
+      }
     }
   }
 
   fourthTap() async {
-    if (earningReportsModel == null) {
-      await earningReportData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
-    }
     if (earningChartModel == null) {
-      await earningChartData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await earningChartData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e) {
+        print(e);
+      }
     }
     if (companyDetailModel == null) {
-      await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e) {
+        print(e);
+      }
+    }
+    if (earningReportsModel == null) {
+      try {
+        await earningReportData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
   thirdTap(int val) async {
     if (val == 0) {
       if (financeChartsDataModel == null) {
-        await financialCharts(widget.chatRouting!.symbol);
-        if (!mounted) return;
-        setState(() {});
+        try {
+          await financialCharts(widget.chatRouting!.symbol);
+          if (!mounted) return;
+          setState(() {});
+        } catch (e) {
+          print(e);
+        }
       }
     } else {
       if (financialResponse == null) {
-        await financialData(widget.chatRouting!.symbol);
-        if (!mounted) return;
-        setState(() {});
+        try {
+          await financialData(widget.chatRouting!.symbol);
+          if (!mounted) return;
+          setState(() {});
+        } catch (e) {
+          print(e);
+        }
       }
     }
   }
 
   fifthTap() async {
     if (analysisDataModel == null) {
-      await getAnalysisData(widget.chatRouting!.symbol, IntervalEnum.daily);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getAnalysisData(widget.chatRouting!.symbol, IntervalEnum.daily);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e) {}
     }
   }
 
@@ -815,84 +926,131 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     } catch (e) {}
   }
 
-  cryptoApis() async {
+  Future<void> cryptoApis() async {
     if (highlightResponse == null) {
-      await highlightTopRequest(
-        HighlightRequest(
-          symbol: widget.chatRouting!.symbol,
-          limit: 5,
-          sort: "desc",
-        ),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await highlightTopRequest(
+          HighlightRequest(
+            symbol: widget.chatRouting!.symbol,
+            limit: 5,
+            sort: "desc",
+          ),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in highlightTopRequest: $e\n$s");
+      }
     }
+
     if (infoCryptoResponse == null) {
-      await infoCryptoData(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await infoCryptoData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in infoCryptoData: $e\n$s");
+      }
     }
-    if (weeklyDataCrypto == null) {
-      await getWeeklyDataCrypto(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
-    }
-    if (monthlyDataCrypto == null) {
-      await getMonthlyDataCrypto(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
-    }
+
     if (aboutCryptoModel == null) {
-      await getAboutCrypto(widget.chatRouting!.symbol);
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getAboutCrypto(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getAboutCrypto: $e\n$s");
+      }
     }
+
+    if (weeklyDataCrypto == null) {
+      try {
+        await getWeeklyDataCrypto(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getWeeklyDataCrypto: $e\n$s");
+      }
+    }
+
+    if (monthlyDataCrypto == null) {
+      try {
+        await getMonthlyDataCrypto(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getMonthlyDataCrypto: $e\n$s");
+      }
+    }
+
     if (overviewCandleChartModelCrypto == null) {
-      await getOverviewCandleChartCrypto(
-        widget.chatRouting!.symbol,
-        IntervalEnum.daily,
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await getOverviewCandleChartCrypto(
+          widget.chatRouting!.symbol,
+          IntervalEnum.daily,
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getOverviewCandleChartCrypto: $e\n$s");
+      }
     }
 
     if (priceComparisonModel == null) {
-      await priceComparison(
-        PriceComparisonDto(
-          daysBack: 365,
-          symbol1: widget.chatRouting!.symbol,
-          symbol2: widget.chatRouting!.symbol,
-        ),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await priceComparison(
+          PriceComparisonDto(
+            daysBack: 365,
+            symbol1: widget.chatRouting!.symbol,
+            symbol2: widget.chatRouting!.symbol,
+          ),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in priceComparison: $e\n$s");
+      }
     }
 
     if (marketCapResponse == null) {
-      await marketCapRequest(
-        MarketCapRequest(
-          interval: "1 month",
-          symbol: widget.chatRouting!.symbol,
-        ),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await marketCapRequest(
+          MarketCapRequest(
+            interval: "1 month",
+            symbol: widget.chatRouting!.symbol,
+          ),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in marketCapRequest: $e\n$s");
+      }
     }
+
     if (cryptoMarketModel == null) {
-      await cryptoMarkets(SymbolDto(symbol: widget.chatRouting!.symbol));
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await cryptoMarkets(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in cryptoMarkets: $e\n$s");
+      }
     }
+
     if (priceRatioModel == null) {
-      await priceRatio(
-        PriceComparisonDto(
-          daysBack: 365,
-          symbol1: widget.chatRouting!.symbol,
-          symbol2: widget.chatRouting!.symbol,
-        ),
-      );
-      if (!mounted) return;
-      setState(() {});
+      try {
+        await priceRatio(
+          PriceComparisonDto(
+            daysBack: 365,
+            symbol1: widget.chatRouting!.symbol,
+            symbol2: widget.chatRouting!.symbol,
+          ),
+        );
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in priceRatio: $e\n$s");
+      }
     }
   }
 
@@ -1075,6 +1233,21 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       return chartDataList;
     }
 
+    final stockManagerState = ref.watch(stocksManagerProvider);
+
+    final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
+    double change =
+        PriceUtils.getChangesPercentage(
+              liveStock != null ? liveStock.price : widget.chatRouting!.price,
+              widget.chatRouting!.previousClose,
+            ) !=
+            null
+        ? PriceUtils.getChangesPercentage(
+            liveStock != null ? liveStock.price : widget.chatRouting!.price,
+            widget.chatRouting!.previousClose,
+          )!
+        : widget.chatRouting!.changePercentage;
+
     double _twoMonthIntervalMilliseconds() {
       const millisInDay = 86400000;
       const daysInTwoMonths = 60;
@@ -1174,8 +1347,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     MdSnsText(
-                      "\$${selectedStock!.price.toStringAsFixed(2)}",
-                      color: selectedStock!.pctChange.toString().contains("-")
+                      liveStock != null
+                          ? Filters.systemNumberConvention(
+                              liveStock.price,
+                              isPrice: true,
+                              isAbs: false,
+                            )
+                          : Filters.systemNumberConvention(
+                              selectedStock!.price,
+                              isPrice: true,
+                              isAbs: false,
+                            ),
+                      color: change.toString().contains("-")
                           ? AppColors.redFF3B3B
                           : AppColors.white,
 
@@ -1186,19 +1369,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Icon(
-                          selectedStock!.pctChange.toString().contains("-")
+                          change.toString().contains("-")
                               ? Icons.arrow_drop_down
                               : Icons.arrow_drop_up,
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
+                          color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           size: 20,
                         ),
                         MdSnsText(
-                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
+                          " ${change.toStringAsFixed(2)}%",
+                          color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           variant: TextVariant.h4,
@@ -1428,37 +1609,38 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     title: "MarketCap Chart",
                     chartData: buildMarketCapScope(marketCapResponse!.data!),
                   )
-                : Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.colorB3B3B3),
-                      color: AppColors.color091224,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MdSnsText(
-                          "Market Chart",
-                          variant: TextVariant.h3,
-                          fontWeight: TextFontWeightVariant.h3,
+                : SizedBox(),
 
-                          color: AppColors.fieldTextColor,
-                        ),
-                        Center(
-                          child: MdSnsText(
-                            "No Data Available",
-                            variant: TextVariant.h3,
-                            fontWeight: TextFontWeightVariant.h1,
+            //  Container(
+            //     width: double.infinity,
+            //     padding: const EdgeInsets.all(16),
+            //     decoration: BoxDecoration(
+            //       border: Border.all(color: AppColors.colorB3B3B3),
+            //       color: AppColors.color091224,
+            //       borderRadius: BorderRadius.circular(16),
+            //     ),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         MdSnsText(
+            //           "Market Chart",
+            //           variant: TextVariant.h3,
+            //           fontWeight: TextFontWeightVariant.h3,
 
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            //           color: AppColors.fieldTextColor,
+            //         ),
+            //         Center(
+            //           child: MdSnsText(
+            //             "No Data Available",
+            //             variant: TextVariant.h3,
+            //             fontWeight: TextFontWeightVariant.h1,
 
+            //             color: AppColors.white,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
             SizedBox(height: 20.h),
             cryptoMarketModel != null && cryptoMarketModel!.data.isNotEmpty
                 ? CryptoMarketChart(
@@ -1588,37 +1770,38 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       ],
                     ),
                   )
-                : Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.colorB3B3B3),
-                      color: AppColors.color091224,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MdSnsText(
-                          "Price Ratio",
-                          variant: TextVariant.h3,
-                          fontWeight: TextFontWeightVariant.h3,
+                : SizedBox(),
 
-                          color: AppColors.fieldTextColor,
-                        ),
-                        Center(
-                          child: MdSnsText(
-                            "No Data Available",
-                            variant: TextVariant.h3,
-                            fontWeight: TextFontWeightVariant.h1,
+            //  Container(
+            //     width: double.infinity,
+            //     padding: const EdgeInsets.all(16),
+            //     decoration: BoxDecoration(
+            //       border: Border.all(color: AppColors.colorB3B3B3),
+            //       color: AppColors.color091224,
+            //       borderRadius: BorderRadius.circular(16),
+            //     ),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         MdSnsText(
+            //           "Price Ratio",
+            //           variant: TextVariant.h3,
+            //           fontWeight: TextFontWeightVariant.h3,
 
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            //           color: AppColors.fieldTextColor,
+            //         ),
+            //         Center(
+            //           child: MdSnsText(
+            //             "No Data Available",
+            //             variant: TextVariant.h3,
+            //             fontWeight: TextFontWeightVariant.h1,
 
+            //             color: AppColors.white,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
             SizedBox(height: monthlyDataCrypto != null ? 20.h : 0),
 
             monthlyDataCrypto != null
@@ -1795,6 +1978,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   Widget _overviewContent() {
+    final stockManagerState = ref.watch(stocksManagerProvider);
+
+    final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
+    double change =
+        PriceUtils.getChangesPercentage(
+              liveStock != null ? liveStock.price : widget.chatRouting!.price,
+              widget.chatRouting!.previousClose,
+            ) !=
+            null
+        ? PriceUtils.getChangesPercentage(
+            liveStock != null ? liveStock.price : widget.chatRouting!.price,
+            widget.chatRouting!.previousClose,
+          )!
+        : widget.chatRouting!.changePercentage;
     List<ChartData> buildChartSpots(
       List<OverviewCandleChartModel> overviewCandle,
     ) {
@@ -1915,9 +2112,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     Row(
                       children: [
                         MdSnsText(
-                          "\$${selectedStock!.price.toStringAsFixed(2)}",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
+                          liveStock != null
+                              ? Filters.systemNumberConvention(
+                                  liveStock.price,
+                                  isPrice: true,
+                                  isAbs: false,
+                                )
+                              : Filters.systemNumberConvention(
+                                  selectedStock!.price,
+                                  isPrice: true,
+                                  isAbs: false,
+                                ),
+                          color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.white,
                           variant: TextVariant.h4,
@@ -1925,19 +2131,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         ),
                         const SizedBox(width: 6),
                         Icon(
-                          selectedStock!.pctChange.toString().contains("-")
+                          change.toString().contains("-")
                               ? Icons.arrow_drop_down
                               : Icons.arrow_drop_up,
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
+                          color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           size: 20,
                         ),
                         MdSnsText(
-                          " ${selectedStock!.pctChange.toStringAsFixed(2)}%",
-                          color:
-                              selectedStock!.pctChange.toString().contains("-")
+                          " ${change.toStringAsFixed(2).replaceAll("-", "")}%",
+                          color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
                           variant: TextVariant.h4,

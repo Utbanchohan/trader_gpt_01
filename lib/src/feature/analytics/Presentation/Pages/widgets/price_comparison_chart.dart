@@ -169,6 +169,57 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
                   ),
                 )
               : SizedBox(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.color274E87,
+                      border: Border.all(color: AppColors.white, width: 0.5),
+                    ),
+                  ),
+                  SizedBox(width: 1),
+                  MdSnsText(
+                    "GOOGL",
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h1,
+                    color: AppColors.white,
+                  ),
+                ],
+              ),
+
+              SizedBox(width: 10),
+
+              Row(
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.borderColor,
+                      border: Border.all(
+                        color: AppColors.borderColor,
+                        width: 0.5,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 1),
+                  MdSnsText(
+                    "SPY",
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h1,
+                    color: AppColors.borderColor,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     );

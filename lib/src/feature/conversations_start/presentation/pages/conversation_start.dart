@@ -58,7 +58,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
   @override
   void initState() {
     tabController = TabController(length: 4, vsync: this);
-    getStocks();
+    // getStocks();
     getChats();
     // TODO: implement initState
     super.initState();
@@ -171,6 +171,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         existingSymbols.add(chat.symbol); // keep set in sync
       }
     }
+    await getStocks();
+
     ref.read(stocksManagerProvider.notifier).watchStocks(watchStockes);
 
     if (mounted) {
@@ -217,6 +219,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
     if (res != null) {
       for (var stock in res) {
         stocks.add(Stock.fromJson(stock));
+        watchStockes.add(Stock.fromJson(stock));
       }
     }
     setState(() {});
@@ -439,7 +442,8 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 ? searchConvo[index]
                                 : convo[index];
 
-                            int stockIndex = findRelatedStock(stock.symbol);
+                            int? stockIndex = findRelatedStock(stock.symbol);
+
                             final liveStock =
                                 stockManagerState[stocks[stockIndex].stockId];
                             stocks[stockIndex] = stocks[stockIndex].copyWith(
@@ -459,7 +463,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   extra: {
                                     "chatRouting": ChatRouting(
                                       previousClose:
-                                          stocks[stockIndex].previousClose,
+                                          stocks[stockIndex!].previousClose,
                                       type: convo[index].type,
                                       chatId: convo[index].id,
                                       symbol: convo[index].symbol,
@@ -541,7 +545,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                   ],
                                 ),
                                 child: ConversationTile(
-                                  stocks: stocks[stockIndex],
+                                  stocks: stocks[stockIndex!],
                                   stock: stock,
                                 ),
                               ),
@@ -565,9 +569,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 search.text.isNotEmpty && searchConvo.isNotEmpty
                                 ? searchConvo[index]
                                 : convo[index];
-                            int stockIndex = findRelatedStock(stock.symbol);
+                            int? stockIndex = findRelatedStock(stock.symbol);
                             final liveStock =
-                                stockManagerState[stocks[stockIndex].stockId];
+                                stockManagerState[stocks[stockIndex!].stockId];
                             stocks[stockIndex] = stocks[stockIndex].copyWith(
                               pctChange:
                                   liveStock != null && liveStock.price > 0
@@ -705,9 +709,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 search.text.isNotEmpty && searchConvo.isNotEmpty
                                 ? searchConvo[index]
                                 : stocksChat[index];
-                            int stockIndex = findRelatedStock(stock.symbol);
+                            int? stockIndex = findRelatedStock(stock.symbol);
                             final liveStock =
-                                stockManagerState[stocks[stockIndex].stockId];
+                                stockManagerState[stocks[stockIndex!].stockId];
                             stocks[stockIndex] = stocks[stockIndex].copyWith(
                               pctChange:
                                   liveStock != null && liveStock.price > 0
@@ -833,9 +837,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 search.text.isNotEmpty && searchConvo.isNotEmpty
                                 ? searchConvo[index]
                                 : cryptoChats[index];
-                            int stockIndex = findRelatedStock(stock.symbol);
+                            int? stockIndex = findRelatedStock(stock.symbol);
                             final liveStock =
-                                stockManagerState[stocks[stockIndex].stockId];
+                                stockManagerState[stocks[stockIndex!].stockId];
                             stocks[stockIndex] = stocks[stockIndex].copyWith(
                               pctChange:
                                   liveStock != null && liveStock.price > 0
@@ -959,9 +963,9 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                 search.text.isNotEmpty && searchConvo.isNotEmpty
                                 ? searchConvo[index]
                                 : eftsChats[index];
-                            int stockIndex = findRelatedStock(stock.symbol);
+                            int? stockIndex = findRelatedStock(stock.symbol);
                             final liveStock =
-                                stockManagerState[stocks[stockIndex].stockId];
+                                stockManagerState[stocks[stockIndex!].stockId];
                             stocks[stockIndex] = stocks[stockIndex].copyWith(
                               pctChange:
                                   liveStock != null && liveStock.price > 0

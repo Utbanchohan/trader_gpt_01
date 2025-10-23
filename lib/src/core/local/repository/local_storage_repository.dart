@@ -31,6 +31,14 @@ abstract interface class SharedPrefService {
 
   String? get marketRefreshTokenNew;
 
+  Future<bool> setRememberMe(String remamberMe);
+
+  String? get getRemamberMe;
+
+  Future<bool> setEmail(String email);
+
+  String? get getEmail;
+
   Future<void> setIsFirstTime(bool value);
 
   bool getIsFirstTime();

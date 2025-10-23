@@ -9,8 +9,10 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/sign_in/presentation/provider/sign_in.dart';
+import 'package:trader_gpt/src/shared/custom_message.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import '../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../shared/mixin/form_state_mixin.dart';
 import '../../../../shared/states/app_loading_state.dart';
 
@@ -26,6 +28,7 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
 
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
+  bool isChecked = false;
 
   @override
   FutureOr<void> onSubmit() async {
@@ -37,6 +40,25 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
         context.goNamed(AppRoutes.swipeScreen.name, extra: {"initialIndex": 0});
       }
     }
+  }
+
+  getLocalData() async {
+    email.text = ref.read(localDataProvider).getEmail ?? "";
+    isChecked = ref.read(localDataProvider).getRemamberMe == "true"
+        ? true
+        : false;
+  }
+
+  emptyLocalData() {
+    ref.read(localDataProvider).setEmail("");
+    ref.read(localDataProvider).setRememberMe("false");
+  }
+
+  @override
+  void initState() {
+    getLocalData();
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -242,19 +264,87 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                 SizedBox(height: 10.h),
 
                 // Forgot password
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      context.pushNamed(AppRoutes.forgetPassword.name);
-                    },
-                    child: MdSnsText(
-                      "Forgot password?",
-                      variant: TextVariant.h4,
-                      fontWeight: TextFontWeightVariant.h4,
-                      color: AppColors.white,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        StatefulBuilder(
+                          builder: (context, setState) {
+                            return Row(
+                              children: [
+                                Transform.scale(
+                                  scale: 0.85, // 🔹 slightly smaller checkbox
+                                  child: Checkbox(
+                                    value: isChecked,
+                                    onChanged: (value) async {
+                                      setState(() {
+                                        isChecked = value!;
+                                      });
+                                      if (value!) {
+                                        if (email.text.isNotEmpty) {
+                                          await ref
+                                              .read(localDataProvider)
+                                              .setEmail(email.text);
+                                          await ref
+                                              .read(localDataProvider)
+                                              .setRememberMe(value.toString());
+                                        } else {
+                                          $showMessage(
+                                            "Please Fill your email",
+                                            isError: false,
+                                          );
+                                        }
+                                      } else {
+                                        emptyLocalData();
+                                      }
+                                    },
+                                    activeColor: AppColors.secondaryColor,
+                                    checkColor: Colors.white,
+                                    side: BorderSide(
+                                      color: Colors.grey,
+                                      width: 1.3,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    visualDensity: VisualDensity(
+                                      horizontal: -4,
+                                      vertical: -4,
+                                    ),
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                ),
+                                SizedBox(width: 4.w),
+                                MdSnsText(
+                                  "Remember Me",
+                                  variant: TextVariant.h4,
+                                  fontWeight: TextFontWeightVariant.h4,
+                                  color: AppColors.white,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                  ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          context.pushNamed(AppRoutes.forgetPassword.name);
+                        },
+                        child: MdSnsText(
+                          "Forgot password?",
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
                 SizedBox(height: 35.h),
