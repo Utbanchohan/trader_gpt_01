@@ -172,11 +172,36 @@ class AnalyticsProvider extends _$AnalyticsProvider {
   }
 
   Future<CompanyModel?> companyData(SymbolDto symbol) async {
-    var res = await ref.read(overviewRepository).companyData(symbol);
-    if (res.status == 200) {
-      return res;
-    } else {
-      return null;
+    try {
+      var res = await ref.read(overviewRepository).companyData(symbol);
+      if (res.status == 200) {
+        return res;
+      } else {
+        return null;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        final refreshToken = ref.read(localDataProvider).marketRefreshToken;
+        if (refreshToken == null) rethrow;
+        try {
+          final newToken = ref.read(localDataProvider).marketRefreshToken;
+          if (newToken != null) {
+            ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
+            var res = await ref.read(overviewRepository).companyData(symbol);
+            if (res.status == 200) {
+              return res;
+            } else {
+              return null;
+            }
+          } else {
+            rethrow;
+          }
+        } catch (refreshError) {
+          rethrow;
+        }
+      } else {
+        rethrow;
+      }
     }
   }
 
@@ -190,11 +215,38 @@ class AnalyticsProvider extends _$AnalyticsProvider {
   }
 
   Future<FinanceDataResponse?> financialCharts(SymbolDto symbol) async {
-    var res = await ref.read(overviewRepository).financialCharts(symbol);
-    if (res.status == 200) {
-      return res;
-    } else {
-      return null;
+    try {
+      var res = await ref.read(overviewRepository).financialCharts(symbol);
+      if (res.status == 200) {
+        return res;
+      } else {
+        return null;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        final refreshToken = ref.read(localDataProvider).marketRefreshToken;
+        if (refreshToken == null) rethrow;
+        try {
+          final newToken = ref.read(localDataProvider).marketRefreshToken;
+          if (newToken != null) {
+            ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
+            var res = await ref
+                .read(overviewRepository)
+                .financialCharts(symbol);
+            if (res.status == 200) {
+              return res;
+            } else {
+              return null;
+            }
+          } else {
+            rethrow;
+          }
+        } catch (refreshError) {
+          rethrow;
+        }
+      } else {
+        rethrow;
+      }
     }
   }
 
@@ -285,10 +337,10 @@ class AnalyticsProvider extends _$AnalyticsProvider {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
-        final refreshToken = ref.read(localDataProvider).marketAccessTokenNew;
+        final refreshToken = ref.read(localDataProvider).marketRefreshTokenNew;
         if (refreshToken == null) rethrow;
         try {
-          final newToken = ref.read(localDataProvider).marketAccessTokenNew;
+          final newToken = ref.read(localDataProvider).marketRefreshTokenNew;
           if (newToken != null) {
             ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
             var res = await ref
