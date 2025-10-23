@@ -337,14 +337,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         : emptyStock();
   }
 
+  // void scrollToBottom() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+  //     if (sc.hasClients) {
+  //       await Future.delayed(const Duration(milliseconds: 10));
+  //       sc.jumpTo(sc.position.maxScrollExtent);
+  //     }
+  //   });
+  // }
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (sc.hasClients) {
-        sc.animateTo(
-          sc.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 750),
-          curve: Curves.easeOut,
-        );
+        sc.jumpTo(sc.position.maxScrollExtent); // 👈 instantly jump to bottom
       }
     });
   }
