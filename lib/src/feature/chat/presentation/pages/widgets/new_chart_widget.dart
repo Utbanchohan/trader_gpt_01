@@ -337,7 +337,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
         borderData: FlBorderData(show: false),
 
         gridData: FlGridData(
-          show: true,
+          show: false,
           drawVerticalLine: true,
           horizontalInterval: 1,
           verticalInterval: 1,
@@ -364,7 +364,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               ),
               getTitlesWidget: (value, meta) => MdSnsText(
                 Filters.systemNumberConvention(
-                  value,
+                  value.toInt(),
                   isPrice: false,
                   isAbs: false,
                   containerWidth: 40,
@@ -386,7 +386,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                     children: [
                       SizedBox(height: 5),
                       MdSnsText(
-                        formatDateMMDDYYYY(categories[index]),
+                        formatDateMMYYY(categories[index]),
                         variant: TextVariant.h4,
                         color: axisColor,
                       ),
@@ -456,7 +456,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
         barGroups: barGroups,
         backgroundColor: Colors.transparent,
         gridData: FlGridData(
-          show: true,
+          show: false,
           horizontalInterval: 1,
           getDrawingHorizontalLine: (value) =>
               FlLine(color: gridColor, strokeWidth: 1),
@@ -467,15 +467,16 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
-              reservedSize: 50,
+              reservedSize: 40,
               showTitles: true,
               interval: (categories.length / 2).floorToDouble(),
               getTitlesWidget: (value, meta) => MdSnsText(
                 Filters.systemNumberConvention(
-                  value,
-                  isPrice: true,
+                  value.toInt(),
+                  isPrice: false,
                   isAbs: false,
                   containerWidth: 40,
+                  isRound: true,
                 ),
                 variant: TextVariant.h4,
                 color: axisColor,
@@ -494,7 +495,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                     children: [
                       SizedBox(height: 5),
                       MdSnsText(
-                        formatDateMMDDYYYY(categories[index]),
+                        formatDateMMYYY(categories[index]),
                         variant: TextVariant.h4,
                         color: axisColor,
                       ),
@@ -581,7 +582,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
         LineChartData(
           lineBarsData: lineBars,
           gridData: FlGridData(
-            show: true,
+            show: false,
             horizontalInterval: 1,
             verticalInterval: 1,
             getDrawingHorizontalLine: (value) =>
@@ -596,7 +597,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 50,
+                reservedSize: 40,
                 interval: calculateInterval(
                   lineBars.isNotEmpty
                       ? lineBars[0].spots
@@ -611,10 +612,11 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                 ), // 👈 set fixed step to avoid too many labels
                 getTitlesWidget: (value, meta) => MdSnsText(
                   Filters.systemNumberConvention(
-                    value,
-                    isPrice: false,
-                    isAbs: false,
+                    value.toInt(),
+
                     containerWidth: 40,
+                    isRound: true,
+                    fromChart: true,
                   ),
                   variant: TextVariant.h4,
                   color: axisColor,
@@ -625,7 +627,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               sideTitles: SideTitles(
                 reservedSize: 40,
                 showTitles: true,
-                interval: (categories.length / 4)
+                interval: (categories.length / 3)
                     .floorToDouble(), // 👈 show only 10 titles
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
@@ -634,7 +636,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                       children: [
                         SizedBox(height: 5),
                         MdSnsText(
-                          formatDateMMDDYYYY(categories[index]),
+                          formatDateMMYYY(categories[index]),
                           variant: TextVariant.h4,
                           color: axisColor,
                         ),
@@ -646,7 +648,12 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               ),
             ),
           ),
-          borderData: FlBorderData(show: false),
+          borderData: FlBorderData(
+            show: false,
+            border: Border.fromBorderSide(
+              BorderSide(width: 1, color: Colors.red),
+            ),
+          ),
         ),
       ),
     );
@@ -865,9 +872,12 @@ class ChartExample extends StatelessWidget {
                 ),
               ),
             )
-          : Padding(
-              padding: EdgeInsets.all(10),
-
+          : Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.fieldTextColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: GPTEchartContainer(chartData: chartData),
             ),
     );
