@@ -337,21 +337,21 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         : emptyStock();
   }
 
-  // void scrollToBottom() {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) async {
-  //     if (sc.hasClients) {
-  //       await Future.delayed(const Duration(milliseconds: 10));
-  //       sc.jumpTo(sc.position.maxScrollExtent);
-  //     }
-  //   });
-  // }
   void scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (sc.hasClients) {
-        sc.jumpTo(sc.position.maxScrollExtent); // 👈 instantly jump to bottom
+        await Future.delayed(const Duration(milliseconds: 10));
+        sc.jumpTo(sc.position.maxScrollExtent);
       }
     });
   }
+  // void scrollToBottom() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     if (sc.hasClients) {
+  //       sc.jumpTo(sc.position.maxScrollExtent); // 👈 instantly jump to bottom
+  //     }
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -624,16 +624,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       chatRouting: widget.chatRouting,
                       user: user,
                     ),
-                    SizedBox(height: 20),
-
-                    SizedBox(
-                      width: 150,
-                      child: MessageLikeCopyIcon(
-                        type: chats[index].type,
-                        message: chats[index].message,
-                        // text.toString(),
-                      ),
-                    ),
                   ],
                 );
               },
@@ -661,15 +651,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             symbolType: widget.chatRouting?.type ?? "",
                             type: "ai",
                             display: chartStrings,
-                          ),
-                          SizedBox(height: 20),
-
-                          SizedBox(
-                            width: 150,
-                            child: MessageLikeCopyIcon(
-                              type: "ai",
-                              message: text.toString(),
-                            ),
                           ),
                         ],
                       )

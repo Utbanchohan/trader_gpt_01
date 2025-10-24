@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/new_chart_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -214,152 +215,172 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
           ),
           SizedBox(height: widget.name == "TDGPT" ? 0 : 10),
 
-          Container(
-            width: widget.type == "user"
-                ? MediaQuery.sizeOf(context).width * 0.6.w
-                : MediaQuery.sizeOf(context).width * 0.85.w,
-            padding: EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: widget.type == "user" ? 10 : 2,
-            ),
-            decoration: BoxDecoration(
-              color: widget.type == "user"
-                  ? AppColors.bubbleColor
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            // child: Flexible(
-            child: SizedBox(
-              width: widget.type == "user"
-                  ? MediaQuery.sizeOf(context).width * 0.6.w
-                  : MediaQuery.sizeOf(context).width * 0.85.w,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  widget.type != "user"
-                      ? model != null &&
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                width: widget.type == "user"
+                    ? MediaQuery.sizeOf(context).width * 0.6.w
+                    : MediaQuery.sizeOf(context).width * 0.85.w,
+                padding: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: widget.type == "user" ? 10 : 2,
+                ),
+                decoration: BoxDecoration(
+                  color: widget.type == "user"
+                      ? AppColors.bubbleColor
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                // child: Flexible(
+                child: SizedBox(
+                  width: widget.type == "user"
+                      ? MediaQuery.sizeOf(context).width * 0.6.w
+                      : MediaQuery.sizeOf(context).width * 0.85.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      widget.type != "user"
+                          ? model != null &&
+                                    model!.xAxis.isNotEmpty &&
+                                    model!.yAxis.isNotEmpty
+                                ? SizedBox(
+                                    height:
+                                        MediaQuery.sizeOf(context).height *
+                                        0.3.h,
+                                    width:
+                                        MediaQuery.sizeOf(context).width *
+                                        0.85.w,
+                                    child: ChartExample(
+                                      data: model!.yAxis,
+                                      xAxis: model!.xAxis,
+                                    ),
+                                  )
+                                : SizedBox()
+                          : SizedBox(),
+                      SizedBox(
+                        height:
+                            widget.type != "user" &&
+                                model != null &&
                                 model!.xAxis.isNotEmpty &&
                                 model!.yAxis.isNotEmpty
-                            ? SizedBox(
-                                height:
-                                    MediaQuery.sizeOf(context).height * 0.3.h,
-                                width:
-                                    MediaQuery.sizeOf(context).width * 0.85.w,
-                                child: ChartExample(
-                                  data: model!.yAxis,
-                                  xAxis: model!.xAxis,
-                                ),
-                              )
-                            : SizedBox()
-                      : SizedBox(),
-                  SizedBox(
-                    height:
-                        widget.type != "user" &&
-                            model != null &&
-                            model!.xAxis.isNotEmpty &&
-                            model!.yAxis.isNotEmpty
-                        ? 10
-                        : 0,
-                  ),
-                  Markdown(
-                    padding: EdgeInsets.all(0),
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    data: widget.message,
-                    listItemCrossAxisAlignment:
-                        MarkdownListItemCrossAxisAlignment.start,
-                    selectable: true,
-                    controller: scrollController,
+                            ? 10
+                            : 0,
+                      ),
+                      Markdown(
+                        padding: EdgeInsets.all(0),
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        data: widget.message,
+                        listItemCrossAxisAlignment:
+                            MarkdownListItemCrossAxisAlignment.start,
+                        selectable: true,
+                        controller: scrollController,
 
-                    styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                        .copyWith(
-                          tableColumnWidth: FixedColumnWidth(100.w),
-                          tableScrollbarThumbVisibility: false,
-                          tableBorder: TableBorder.all(color: Colors.white24),
-                          tableCellsPadding: const EdgeInsets.all(8),
-                          tableHead: GoogleFonts.plusJakartaSans(
-                            color: AppColors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        styleSheet:
+                            MarkdownStyleSheet.fromTheme(
+                              Theme.of(context),
+                            ).copyWith(
+                              tableColumnWidth: FixedColumnWidth(100.w),
+                              tableScrollbarThumbVisibility: false,
+                              tableBorder: TableBorder.all(
+                                color: Colors.white24,
+                              ),
+                              tableCellsPadding: const EdgeInsets.all(8),
+                              tableHead: GoogleFonts.plusJakartaSans(
+                                color: AppColors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
 
-                          tableHeadAlign: TextAlign.center,
-                          tablePadding: EdgeInsets.all(10),
-                          tableCellsDecoration: BoxDecoration(),
-                          tableVerticalAlignment:
-                              TableCellVerticalAlignment.middle,
-                          blockquotePadding: EdgeInsets.zero,
-                          blockquoteDecoration: const BoxDecoration(
-                            color: Colors.transparent,
-                            border: Border(),
-                          ),
-
-                          horizontalRuleDecoration: const BoxDecoration(
-                            border: Border(
-                              top: BorderSide(
+                              tableHeadAlign: TextAlign.center,
+                              tablePadding: EdgeInsets.all(10),
+                              tableCellsDecoration: BoxDecoration(),
+                              tableVerticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              blockquotePadding: EdgeInsets.zero,
+                              blockquoteDecoration: const BoxDecoration(
                                 color: Colors.transparent,
-                                width: 0,
+                                border: Border(),
+                              ),
+
+                              horizontalRuleDecoration: const BoxDecoration(
+                                border: Border(
+                                  top: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 0,
+                                  ),
+                                ),
+                              ),
+
+                              pPadding: EdgeInsets.zero,
+                              p: GoogleFonts.plusJakartaSans(
+                                color: AppColors.white,
+                                height: 1.5,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              h1: GoogleFonts.plusJakartaSans(
+                                color: AppColors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              h2: GoogleFonts.plusJakartaSans(
+                                color: AppColors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              h3: GoogleFonts.plusJakartaSans(
+                                color: AppColors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              h4: GoogleFonts.plusJakartaSans(
+                                color: AppColors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              h5: GoogleFonts.plusJakartaSans(
+                                color: AppColors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              h6: GoogleFonts.plusJakartaSans(
+                                color: AppColors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              code: GoogleFonts.plusJakartaSans(
+                                color: AppColors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              tableBody: GoogleFonts.plusJakartaSans(
+                                color: AppColors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
-                          ),
-
-                          pPadding: EdgeInsets.zero,
-                          p: GoogleFonts.plusJakartaSans(
-                            color: AppColors.white,
-                            height: 1.5,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          h1: GoogleFonts.plusJakartaSans(
-                            color: AppColors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          h2: GoogleFonts.plusJakartaSans(
-                            color: AppColors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          h3: GoogleFonts.plusJakartaSans(
-                            color: AppColors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          h4: GoogleFonts.plusJakartaSans(
-                            color: AppColors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          h5: GoogleFonts.plusJakartaSans(
-                            color: AppColors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          h6: GoogleFonts.plusJakartaSans(
-                            color: AppColors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          code: GoogleFonts.plusJakartaSans(
-                            color: AppColors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          tableBody: GoogleFonts.plusJakartaSans(
-                            color: AppColors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                    onTapLink: (text, href, title) {
-                      if (href != null) {
-                        launchUrl(Uri.parse(href));
-                      }
-                    },
+                        onTapLink: (text, href, title) {
+                          if (href != null) {
+                            launchUrl(Uri.parse(href));
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
+              SizedBox(height: 20),
+              SizedBox(
+                width: widget.type == "user" ? 50 : 150,
+                child: MessageLikeCopyIcon(
+                  type: widget.type,
+                  message: widget.message,
+                ),
+              ),
+              SizedBox(height: 10),
+            ],
           ),
         ],
       ),

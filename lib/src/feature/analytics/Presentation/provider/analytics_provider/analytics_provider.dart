@@ -81,13 +81,10 @@ class AnalyticsProvider extends _$AnalyticsProvider {
 
   Future<StockResponse?> getOverview(SymbolDto symbol) async {
     try {
-      state = AppLoadingState.loading();
       var res = await ref.read(overviewRepository).getOverview(symbol);
       if (res.status == 200) {
-        state = AppLoadingState();
         return res;
       } else {
-        state = AppLoadingState();
         return null;
       }
     } on DioException catch (e) {

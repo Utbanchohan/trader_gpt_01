@@ -561,7 +561,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     if (overviewCandleChartModel == null) {
       try {
         await getOverviewCandleChart(
-          widget.chatRouting!.symbol,
+          widget.chatRouting!.symbol + "_NASDAQ",
           IntervalEnum.daily,
         );
         if (!mounted) return;

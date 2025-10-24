@@ -72,6 +72,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                   borderRadius: BorderRadius.circular(10),
                   child: widget.stock.type.toLowerCase() == "crypto"
                       ? Image(
+                          height: 41,
+                          width: 42,
                           image: NetworkImage(
                             getItemImage(ImageType.crypto, widget.stock.symbol),
                           ),
@@ -122,7 +124,11 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                               .millisecondsSinceEpoch,
                         ),
                       )
-                    : "",
+                    : DateFormat('hh:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                          widget.stock.createdAt.millisecondsSinceEpoch,
+                        ),
+                      ),
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.color677FA4,

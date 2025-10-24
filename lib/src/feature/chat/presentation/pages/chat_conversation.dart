@@ -617,16 +617,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                           widget.chatRouting?.type ?? "",
                                       display: chartStrings,
                                     ),
-                                    SizedBox(height: 20),
-
-                                    SizedBox(
-                                      width: 150,
-                                      child: MessageLikeCopyIcon(
-                                        type: "ai",
-                                        message: text.toString(),
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
                                   ],
                                 )
                               : SizedBox();

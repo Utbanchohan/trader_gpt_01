@@ -1079,6 +1079,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                 ],
               ),
             ),
+            SizedBox(height: 70.h),
           ],
         ),
 

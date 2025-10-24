@@ -865,7 +865,11 @@ class ChartExample extends StatelessWidget {
                 ),
               ),
             )
-          : GPTEchartContainer(chartData: chartData),
+          : Padding(
+              padding: EdgeInsets.all(10),
+
+              child: GPTEchartContainer(chartData: chartData),
+            ),
     );
   }
 }
