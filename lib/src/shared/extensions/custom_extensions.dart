@@ -54,6 +54,14 @@ String formatDateMMDDYYYY(String date) {
   }
 }
 
+String formatDateMMYYY(String date) {
+  try {
+    return DateFormat('MM, yy').format(DateTime.parse(date));
+  } catch (_) {
+    return '-';
+  }
+}
+
 String formatDateMMddYY(String date) {
   try {
     final inputFormat = DateFormat('yyyy-MM-dd');

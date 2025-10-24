@@ -37,8 +37,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
     final liveStock = stockManagerState[widget.stock.stockId];
     String change = liveStock != null && liveStock.stockId.isNotEmpty
         ? PriceUtils.getChangesPercentage(
-                    liveStock != null ? liveStock.price : widget.stocks.price,
-                    widget.stocks.previousClose,
+                    liveStock.price,
+                    liveStock.previousClose,
                   ) !=
                   null
               ? PriceUtils.getChangesPercentage(

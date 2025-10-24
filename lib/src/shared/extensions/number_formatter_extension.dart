@@ -90,9 +90,7 @@ class Filters {
         // if (value >= 1000) result = NumberFormat.decimalPattern().format(double.tryParse(result) ?? double.parse(value.toString()));
         if (value >= 1000) {
           // best-effort grouping without intl:
-          final numVal = double.tryParse(
-            result.replaceAll(RegExp(r'[^\d\.\-]'), ''),
-          );
+          final numVal = double.tryParse(value.toString());
           if (numVal != null && !numVal.isNaN) {
             // Insert simple grouping for integer part
             final parts = numVal

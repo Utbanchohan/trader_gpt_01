@@ -20,7 +20,9 @@ enum IntervalEnum {
   quarterly('quarterly'),
   weekly('weekly'),
   monthly("monthly"),
-  daily('daily');
+  daily('daily'),
+  hour("hour"),
+  min('min');
 
   final String value;
   const IntervalEnum(this.value);

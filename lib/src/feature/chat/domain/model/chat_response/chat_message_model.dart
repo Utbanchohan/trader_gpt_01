@@ -14,7 +14,7 @@ abstract class ChatMessageModel with _$ChatMessageModel {
     required DateTime createdAt,
     required DateTime updatedAt,
     String? followup,
-    String? feedback,
+    UserFeedbackModel? feedback,
     @Default('') String runId,
     String? tempMessageId,
     String? symbol,
@@ -37,6 +37,21 @@ abstract class Displayable with _$Displayable {
 
   factory Displayable.fromJson(Map<String, dynamic> json) =>
       _$DisplayableFromJson(json);
+}
+
+@freezed
+abstract class UserFeedbackModel with _$UserFeedbackModel {
+  const factory UserFeedbackModel({
+    @Default('') String key,
+    @Default('') String comment,
+    @Default(0) int score,
+    @Default('') String userid,
+    @Default('') String traceId,
+    @JsonKey(name: 'created_at') DateTime? createdAt,
+  }) = _UserFeedbackModel;
+
+  factory UserFeedbackModel.fromJson(Map<String, dynamic> json) =>
+      _$UserFeedbackModelFromJson(json);
 }
 
 // @freezed
