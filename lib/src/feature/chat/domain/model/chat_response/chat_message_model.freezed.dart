@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChatMessageModel {
 
-@JsonKey(name: '_id') String get id; String get chatId; String get message; String get type; String get userId; DateTime get createdAt; DateTime get updatedAt; String? get followup; String? get feedback; String get runId; String? get tempMessageId; String? get symbol; String get status; Displayable? get displayable; dynamic get tracing; List<dynamic>? get updates;
+@JsonKey(name: '_id') String get id; String get chatId; String get message; String get type; String get userId; DateTime get createdAt; DateTime get updatedAt; String? get followup; UserFeedbackModel? get feedback; String get runId; String? get tempMessageId; String? get symbol; String get status; Displayable? get displayable; dynamic get tracing; List<dynamic>? get updates;
 /// Create a copy of ChatMessageModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $ChatMessageModelCopyWith<$Res>  {
   factory $ChatMessageModelCopyWith(ChatMessageModel value, $Res Function(ChatMessageModel) _then) = _$ChatMessageModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String chatId, String message, String type, String userId, DateTime createdAt, DateTime updatedAt, String? followup, String? feedback, String runId, String? tempMessageId, String? symbol, String status, Displayable? displayable, dynamic tracing, List<dynamic>? updates
+@JsonKey(name: '_id') String id, String chatId, String message, String type, String userId, DateTime createdAt, DateTime updatedAt, String? followup, UserFeedbackModel? feedback, String runId, String? tempMessageId, String? symbol, String status, Displayable? displayable, dynamic tracing, List<dynamic>? updates
 });
 
 
-$DisplayableCopyWith<$Res>? get displayable;
+$UserFeedbackModelCopyWith<$Res>? get feedback;$DisplayableCopyWith<$Res>? get displayable;
 
 }
 /// @nodoc
@@ -76,7 +76,7 @@ as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: 
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,followup: freezed == followup ? _self.followup : followup // ignore: cast_nullable_to_non_nullable
 as String?,feedback: freezed == feedback ? _self.feedback : feedback // ignore: cast_nullable_to_non_nullable
-as String?,runId: null == runId ? _self.runId : runId // ignore: cast_nullable_to_non_nullable
+as UserFeedbackModel?,runId: null == runId ? _self.runId : runId // ignore: cast_nullable_to_non_nullable
 as String,tempMessageId: freezed == tempMessageId ? _self.tempMessageId : tempMessageId // ignore: cast_nullable_to_non_nullable
 as String?,symbol: freezed == symbol ? _self.symbol : symbol // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -87,6 +87,18 @@ as List<dynamic>?,
   ));
 }
 /// Create a copy of ChatMessageModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserFeedbackModelCopyWith<$Res>? get feedback {
+    if (_self.feedback == null) {
+    return null;
+  }
+
+  return $UserFeedbackModelCopyWith<$Res>(_self.feedback!, (value) {
+    return _then(_self.copyWith(feedback: value));
+  });
+}/// Create a copy of ChatMessageModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -180,7 +192,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String chatId,  String message,  String type,  String userId,  DateTime createdAt,  DateTime updatedAt,  String? followup,  String? feedback,  String runId,  String? tempMessageId,  String? symbol,  String status,  Displayable? displayable,  dynamic tracing,  List<dynamic>? updates)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String chatId,  String message,  String type,  String userId,  DateTime createdAt,  DateTime updatedAt,  String? followup,  UserFeedbackModel? feedback,  String runId,  String? tempMessageId,  String? symbol,  String status,  Displayable? displayable,  dynamic tracing,  List<dynamic>? updates)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChatMessageModel() when $default != null:
 return $default(_that.id,_that.chatId,_that.message,_that.type,_that.userId,_that.createdAt,_that.updatedAt,_that.followup,_that.feedback,_that.runId,_that.tempMessageId,_that.symbol,_that.status,_that.displayable,_that.tracing,_that.updates);case _:
@@ -201,7 +213,7 @@ return $default(_that.id,_that.chatId,_that.message,_that.type,_that.userId,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String chatId,  String message,  String type,  String userId,  DateTime createdAt,  DateTime updatedAt,  String? followup,  String? feedback,  String runId,  String? tempMessageId,  String? symbol,  String status,  Displayable? displayable,  dynamic tracing,  List<dynamic>? updates)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String chatId,  String message,  String type,  String userId,  DateTime createdAt,  DateTime updatedAt,  String? followup,  UserFeedbackModel? feedback,  String runId,  String? tempMessageId,  String? symbol,  String status,  Displayable? displayable,  dynamic tracing,  List<dynamic>? updates)  $default,) {final _that = this;
 switch (_that) {
 case _ChatMessageModel():
 return $default(_that.id,_that.chatId,_that.message,_that.type,_that.userId,_that.createdAt,_that.updatedAt,_that.followup,_that.feedback,_that.runId,_that.tempMessageId,_that.symbol,_that.status,_that.displayable,_that.tracing,_that.updates);case _:
@@ -221,7 +233,7 @@ return $default(_that.id,_that.chatId,_that.message,_that.type,_that.userId,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String id,  String chatId,  String message,  String type,  String userId,  DateTime createdAt,  DateTime updatedAt,  String? followup,  String? feedback,  String runId,  String? tempMessageId,  String? symbol,  String status,  Displayable? displayable,  dynamic tracing,  List<dynamic>? updates)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String id,  String chatId,  String message,  String type,  String userId,  DateTime createdAt,  DateTime updatedAt,  String? followup,  UserFeedbackModel? feedback,  String runId,  String? tempMessageId,  String? symbol,  String status,  Displayable? displayable,  dynamic tracing,  List<dynamic>? updates)?  $default,) {final _that = this;
 switch (_that) {
 case _ChatMessageModel() when $default != null:
 return $default(_that.id,_that.chatId,_that.message,_that.type,_that.userId,_that.createdAt,_that.updatedAt,_that.followup,_that.feedback,_that.runId,_that.tempMessageId,_that.symbol,_that.status,_that.displayable,_that.tracing,_that.updates);case _:
@@ -247,7 +259,7 @@ class _ChatMessageModel implements ChatMessageModel {
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 @override final  String? followup;
-@override final  String? feedback;
+@override final  UserFeedbackModel? feedback;
 @override@JsonKey() final  String runId;
 @override final  String? tempMessageId;
 @override final  String? symbol;
@@ -297,11 +309,11 @@ abstract mixin class _$ChatMessageModelCopyWith<$Res> implements $ChatMessageMod
   factory _$ChatMessageModelCopyWith(_ChatMessageModel value, $Res Function(_ChatMessageModel) _then) = __$ChatMessageModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String chatId, String message, String type, String userId, DateTime createdAt, DateTime updatedAt, String? followup, String? feedback, String runId, String? tempMessageId, String? symbol, String status, Displayable? displayable, dynamic tracing, List<dynamic>? updates
+@JsonKey(name: '_id') String id, String chatId, String message, String type, String userId, DateTime createdAt, DateTime updatedAt, String? followup, UserFeedbackModel? feedback, String runId, String? tempMessageId, String? symbol, String status, Displayable? displayable, dynamic tracing, List<dynamic>? updates
 });
 
 
-@override $DisplayableCopyWith<$Res>? get displayable;
+@override $UserFeedbackModelCopyWith<$Res>? get feedback;@override $DisplayableCopyWith<$Res>? get displayable;
 
 }
 /// @nodoc
@@ -325,7 +337,7 @@ as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: 
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,followup: freezed == followup ? _self.followup : followup // ignore: cast_nullable_to_non_nullable
 as String?,feedback: freezed == feedback ? _self.feedback : feedback // ignore: cast_nullable_to_non_nullable
-as String?,runId: null == runId ? _self.runId : runId // ignore: cast_nullable_to_non_nullable
+as UserFeedbackModel?,runId: null == runId ? _self.runId : runId // ignore: cast_nullable_to_non_nullable
 as String,tempMessageId: freezed == tempMessageId ? _self.tempMessageId : tempMessageId // ignore: cast_nullable_to_non_nullable
 as String?,symbol: freezed == symbol ? _self.symbol : symbol // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -337,6 +349,18 @@ as List<dynamic>?,
 }
 
 /// Create a copy of ChatMessageModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserFeedbackModelCopyWith<$Res>? get feedback {
+    if (_self.feedback == null) {
+    return null;
+  }
+
+  return $UserFeedbackModelCopyWith<$Res>(_self.feedback!, (value) {
+    return _then(_self.copyWith(feedback: value));
+  });
+}/// Create a copy of ChatMessageModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -623,6 +647,284 @@ class __$DisplayableCopyWithImpl<$Res>
 Worker: null == Worker ? _self._Worker : Worker // ignore: cast_nullable_to_non_nullable
 as List<String>,Display: null == Display ? _self._Display : Display // ignore: cast_nullable_to_non_nullable
 as List<String>,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$UserFeedbackModel {
+
+ String get key; String get comment; int get score; String get userid; String get traceId;@JsonKey(name: 'created_at') DateTime? get createdAt;
+/// Create a copy of UserFeedbackModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$UserFeedbackModelCopyWith<UserFeedbackModel> get copyWith => _$UserFeedbackModelCopyWithImpl<UserFeedbackModel>(this as UserFeedbackModel, _$identity);
+
+  /// Serializes this UserFeedbackModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserFeedbackModel&&(identical(other.key, key) || other.key == key)&&(identical(other.comment, comment) || other.comment == comment)&&(identical(other.score, score) || other.score == score)&&(identical(other.userid, userid) || other.userid == userid)&&(identical(other.traceId, traceId) || other.traceId == traceId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,key,comment,score,userid,traceId,createdAt);
+
+@override
+String toString() {
+  return 'UserFeedbackModel(key: $key, comment: $comment, score: $score, userid: $userid, traceId: $traceId, createdAt: $createdAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $UserFeedbackModelCopyWith<$Res>  {
+  factory $UserFeedbackModelCopyWith(UserFeedbackModel value, $Res Function(UserFeedbackModel) _then) = _$UserFeedbackModelCopyWithImpl;
+@useResult
+$Res call({
+ String key, String comment, int score, String userid, String traceId,@JsonKey(name: 'created_at') DateTime? createdAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$UserFeedbackModelCopyWithImpl<$Res>
+    implements $UserFeedbackModelCopyWith<$Res> {
+  _$UserFeedbackModelCopyWithImpl(this._self, this._then);
+
+  final UserFeedbackModel _self;
+  final $Res Function(UserFeedbackModel) _then;
+
+/// Create a copy of UserFeedbackModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? key = null,Object? comment = null,Object? score = null,Object? userid = null,Object? traceId = null,Object? createdAt = freezed,}) {
+  return _then(_self.copyWith(
+key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
+as String,comment: null == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
+as String,score: null == score ? _self.score : score // ignore: cast_nullable_to_non_nullable
+as int,userid: null == userid ? _self.userid : userid // ignore: cast_nullable_to_non_nullable
+as String,traceId: null == traceId ? _self.traceId : traceId // ignore: cast_nullable_to_non_nullable
+as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [UserFeedbackModel].
+extension UserFeedbackModelPatterns on UserFeedbackModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _UserFeedbackModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _UserFeedbackModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _UserFeedbackModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _UserFeedbackModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _UserFeedbackModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _UserFeedbackModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String key,  String comment,  int score,  String userid,  String traceId, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _UserFeedbackModel() when $default != null:
+return $default(_that.key,_that.comment,_that.score,_that.userid,_that.traceId,_that.createdAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String key,  String comment,  int score,  String userid,  String traceId, @JsonKey(name: 'created_at')  DateTime? createdAt)  $default,) {final _that = this;
+switch (_that) {
+case _UserFeedbackModel():
+return $default(_that.key,_that.comment,_that.score,_that.userid,_that.traceId,_that.createdAt);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String key,  String comment,  int score,  String userid,  String traceId, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,) {final _that = this;
+switch (_that) {
+case _UserFeedbackModel() when $default != null:
+return $default(_that.key,_that.comment,_that.score,_that.userid,_that.traceId,_that.createdAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _UserFeedbackModel implements UserFeedbackModel {
+  const _UserFeedbackModel({this.key = '', this.comment = '', this.score = 0, this.userid = '', this.traceId = '', @JsonKey(name: 'created_at') this.createdAt});
+  factory _UserFeedbackModel.fromJson(Map<String, dynamic> json) => _$UserFeedbackModelFromJson(json);
+
+@override@JsonKey() final  String key;
+@override@JsonKey() final  String comment;
+@override@JsonKey() final  int score;
+@override@JsonKey() final  String userid;
+@override@JsonKey() final  String traceId;
+@override@JsonKey(name: 'created_at') final  DateTime? createdAt;
+
+/// Create a copy of UserFeedbackModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UserFeedbackModelCopyWith<_UserFeedbackModel> get copyWith => __$UserFeedbackModelCopyWithImpl<_UserFeedbackModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$UserFeedbackModelToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserFeedbackModel&&(identical(other.key, key) || other.key == key)&&(identical(other.comment, comment) || other.comment == comment)&&(identical(other.score, score) || other.score == score)&&(identical(other.userid, userid) || other.userid == userid)&&(identical(other.traceId, traceId) || other.traceId == traceId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,key,comment,score,userid,traceId,createdAt);
+
+@override
+String toString() {
+  return 'UserFeedbackModel(key: $key, comment: $comment, score: $score, userid: $userid, traceId: $traceId, createdAt: $createdAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UserFeedbackModelCopyWith<$Res> implements $UserFeedbackModelCopyWith<$Res> {
+  factory _$UserFeedbackModelCopyWith(_UserFeedbackModel value, $Res Function(_UserFeedbackModel) _then) = __$UserFeedbackModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String key, String comment, int score, String userid, String traceId,@JsonKey(name: 'created_at') DateTime? createdAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$UserFeedbackModelCopyWithImpl<$Res>
+    implements _$UserFeedbackModelCopyWith<$Res> {
+  __$UserFeedbackModelCopyWithImpl(this._self, this._then);
+
+  final _UserFeedbackModel _self;
+  final $Res Function(_UserFeedbackModel) _then;
+
+/// Create a copy of UserFeedbackModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? key = null,Object? comment = null,Object? score = null,Object? userid = null,Object? traceId = null,Object? createdAt = freezed,}) {
+  return _then(_UserFeedbackModel(
+key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
+as String,comment: null == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
+as String,score: null == score ? _self.score : score // ignore: cast_nullable_to_non_nullable
+as int,userid: null == userid ? _self.userid : userid // ignore: cast_nullable_to_non_nullable
+as String,traceId: null == traceId ? _self.traceId : traceId // ignore: cast_nullable_to_non_nullable
+as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

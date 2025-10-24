@@ -16,7 +16,11 @@ _ChatMessageModel _$ChatMessageModelFromJson(Map<String, dynamic> json) =>
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       followup: json['followup'] as String?,
-      feedback: json['feedback'] as String?,
+      feedback: json['feedback'] == null
+          ? null
+          : UserFeedbackModel.fromJson(
+              json['feedback'] as Map<String, dynamic>,
+            ),
       runId: json['runId'] as String? ?? '',
       tempMessageId: json['tempMessageId'] as String?,
       symbol: json['symbol'] as String?,
@@ -59,6 +63,28 @@ _Displayable _$DisplayableFromJson(Map<String, dynamic> json) => _Displayable(
 
 Map<String, dynamic> _$DisplayableToJson(_Displayable instance) =>
     <String, dynamic>{'Worker': instance.Worker, 'Display': instance.Display};
+
+_UserFeedbackModel _$UserFeedbackModelFromJson(Map<String, dynamic> json) =>
+    _UserFeedbackModel(
+      key: json['key'] as String? ?? '',
+      comment: json['comment'] as String? ?? '',
+      score: (json['score'] as num?)?.toInt() ?? 0,
+      userid: json['userid'] as String? ?? '',
+      traceId: json['traceId'] as String? ?? '',
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
+    );
+
+Map<String, dynamic> _$UserFeedbackModelToJson(_UserFeedbackModel instance) =>
+    <String, dynamic>{
+      'key': instance.key,
+      'comment': instance.comment,
+      'score': instance.score,
+      'userid': instance.userid,
+      'traceId': instance.traceId,
+      'created_at': instance.createdAt?.toIso8601String(),
+    };
 
 _DisplayData _$DisplayDataFromJson(Map<String, dynamic> json) => _DisplayData(
   chartType: json['chart_type'] as String?,
