@@ -191,7 +191,7 @@ class StocksManager extends _$StocksManager {
       final stockData = state[stocks[index].stockId];
       if (stockData != null) {
         print(
-          "priceChange ${stock.price} exchange stockData.price ${stockData.price}",
+          "priceChange ${stock.price} exchange stockData.price ${stockData.price}  ${stockData.symbol}",
         );
         var priceChange =
             (((stock.price - stockData.price) / stockData.price) * 100)

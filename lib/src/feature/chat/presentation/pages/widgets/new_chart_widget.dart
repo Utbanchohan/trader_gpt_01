@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:math' as math;
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+
+import '../../../../../shared/extensions/custom_extensions.dart';
+import '../../../../../shared/extensions/number_formatter_extension.dart';
 
 /// Chart data model that mirrors the Vue component's expected data structure
 class ChartDataModel {
@@ -72,6 +76,27 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
   final Color gridColor = AppColors.primaryColor;
   final Color bgColor = AppColors.color01B254B;
   final Color legendTextColor = AppColors.secondaryColor;
+
+  double calculateInterval(double minY, double maxY, {int targetSteps = 6}) {
+    final range = (maxY - minY).abs();
+    if (range == 0) return 1; // avoid divide-by-zero
+    final rawInterval = range / targetSteps;
+    // round interval to a “nice” number (like 1, 2, 5, 10, 100, etc.)
+    final magnitude = pow(10, (log(rawInterval) / ln10).floor());
+    final normalized = rawInterval / magnitude;
+    double niceNormalized;
+    if (normalized < 1.5) {
+      niceNormalized = 1;
+    } else if (normalized < 3) {
+      niceNormalized = 2;
+    } else if (normalized < 7) {
+      niceNormalized = 5;
+    } else {
+      niceNormalized = 10;
+    }
+    return niceNormalized * magnitude;
+  }
+
   //
   @override
   void initState() {
@@ -322,27 +347,50 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               FlLine(color: gridColor, strokeWidth: 1),
         ),
         titlesData: FlTitlesData(
-          show: false,
+          show: true,
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+              reservedSize: 50,
+              interval: calculateInterval(
+                spots.isNotEmpty
+                    ? spots.map((e) => e.y).reduce((a, b) => a < b ? a : b)
+                    : 0.0,
+                spots.isNotEmpty
+                    ? spots.map((e) => e.y).reduce((a, b) => a > b ? a : b)
+                    : 0.0,
+              ),
               getTitlesWidget: (value, meta) => MdSnsText(
-                value.toStringAsFixed(0),
-                color: axisColor,
+                Filters.systemNumberConvention(
+                  value,
+                  isPrice: false,
+                  isAbs: false,
+                  containerWidth: 40,
+                ),
                 variant: TextVariant.h4,
+                color: axisColor,
               ),
             ),
           ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+              reservedSize: 50,
+              interval: (categories.length / 4).floorToDouble(),
               getTitlesWidget: (value, meta) {
                 final index = value.toInt();
                 if (index >= 0 && index < categories.length) {
-                  return MdSnsText(
-                    categories[index],
-                    variant: TextVariant.h4,
-                    color: axisColor,
+                  return Column(
+                    children: [
+                      SizedBox(height: 5),
+                      MdSnsText(
+                        formatDateMMDDYYYY(categories[index]),
+                        variant: TextVariant.h4,
+                        color: axisColor,
+                      ),
+                    ],
                   );
                 }
                 return MdSnsText('');
@@ -414,12 +462,21 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               FlLine(color: gridColor, strokeWidth: 1),
         ),
         titlesData: FlTitlesData(
-          show: false,
+          show: true,
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
+              reservedSize: 50,
               showTitles: true,
+              interval: (categories.length / 2).floorToDouble(),
               getTitlesWidget: (value, meta) => MdSnsText(
-                value.toStringAsFixed(0),
+                Filters.systemNumberConvention(
+                  value,
+                  isPrice: true,
+                  isAbs: false,
+                  containerWidth: 40,
+                ),
                 variant: TextVariant.h4,
                 color: axisColor,
               ),
@@ -427,14 +484,21 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
-              showTitles: true,
+              showTitles: false,
+              reservedSize: 50,
+              interval: (categories.length / 1).floorToDouble(),
               getTitlesWidget: (value, meta) {
                 final index = value.toInt();
                 if (index >= 0 && index < categories.length) {
-                  return MdSnsText(
-                    categories[index],
-                    variant: TextVariant.h4,
-                    color: axisColor,
+                  return Column(
+                    children: [
+                      SizedBox(height: 5),
+                      MdSnsText(
+                        formatDateMMDDYYYY(categories[index]),
+                        variant: TextVariant.h4,
+                        color: axisColor,
+                      ),
+                    ],
                   );
                 }
                 return MdSnsText('');
@@ -510,8 +574,10 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
 
     return SizedBox(
       height: 300,
-      width: MediaQuery.sizeOf(context).width * 0.75,
+      width: MediaQuery.sizeOf(context).width,
       child: LineChart(
+        duration: Duration(milliseconds: 1500),
+        curve: Curves.easeIn,
         LineChartData(
           lineBarsData: lineBars,
           gridData: FlGridData(
@@ -524,12 +590,32 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                 FlLine(color: gridColor, strokeWidth: 1),
           ),
           titlesData: FlTitlesData(
-            show: false,
+            show: true,
+            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
+                reservedSize: 50,
+                interval: calculateInterval(
+                  lineBars.isNotEmpty
+                      ? lineBars[0].spots
+                            .map((e) => e.y)
+                            .reduce((a, b) => a < b ? a : b)
+                      : 0.0,
+                  lineBars.isNotEmpty
+                      ? lineBars[0].spots
+                            .map((e) => e.y)
+                            .reduce((a, b) => a > b ? a : b)
+                      : 0.0,
+                ), // 👈 set fixed step to avoid too many labels
                 getTitlesWidget: (value, meta) => MdSnsText(
-                  value.toStringAsFixed(0),
+                  Filters.systemNumberConvention(
+                    value,
+                    isPrice: false,
+                    isAbs: false,
+                    containerWidth: 40,
+                  ),
                   variant: TextVariant.h4,
                   color: axisColor,
                 ),
@@ -537,17 +623,25 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             ),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
+                reservedSize: 40,
                 showTitles: true,
+                interval: (categories.length / 4)
+                    .floorToDouble(), // 👈 show only 10 titles
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
                   if (index >= 0 && index < categories.length) {
-                    return MdSnsText(
-                      categories[index],
-                      variant: TextVariant.h4,
-                      color: axisColor,
+                    return Column(
+                      children: [
+                        SizedBox(height: 5),
+                        MdSnsText(
+                          formatDateMMDDYYYY(categories[index]),
+                          variant: TextVariant.h4,
+                          color: axisColor,
+                        ),
+                      ],
                     );
                   }
-                  return MdSnsText('');
+                  return const SizedBox.shrink();
                 },
               ),
             ),
@@ -556,6 +650,55 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
         ),
       ),
     );
+
+    // SizedBox(
+    //   height: 300,
+    //   width: MediaQuery.sizeOf(context).width * 0.75,
+    //   child: LineChart(
+    //     LineChartData(
+    //       lineBarsData: lineBars,
+    //       gridData: FlGridData(
+    //         show: true,
+    //         horizontalInterval: 1,
+    //         verticalInterval: 1,
+    //         getDrawingHorizontalLine: (value) =>
+    //             FlLine(color: gridColor, strokeWidth: 1),
+    //         getDrawingVerticalLine: (value) =>
+    //             FlLine(color: gridColor, strokeWidth: 1),
+    //       ),
+    //       titlesData: FlTitlesData(
+    //         show: false,
+    //         leftTitles: AxisTitles(
+    //           sideTitles: SideTitles(
+    //             showTitles: true,
+    //             getTitlesWidget: (value, meta) => MdSnsText(
+    //               value.toStringAsFixed(0),
+    //               variant: TextVariant.h4,
+    //               color: axisColor,
+    //             ),
+    //           ),
+    //         ),
+    //         bottomTitles: AxisTitles(
+    //           sideTitles: SideTitles(
+    //             showTitles: true,
+    //             getTitlesWidget: (value, meta) {
+    //               final index = value.toInt();
+    //               if (index >= 0 && index < categories.length) {
+    //                 return MdSnsText(
+    //                   categories[index],
+    //                   variant: TextVariant.h4,
+    //                   color: axisColor,
+    //                 );
+    //               }
+    //               return MdSnsText('');
+    //             },
+    //           ),
+    //         ),
+    //       ),
+    //       borderData: FlBorderData(show: false),
+    //     ),
+    //   ),
+    // );
   }
 
   /// Get color for series index
@@ -722,7 +865,11 @@ class ChartExample extends StatelessWidget {
                 ),
               ),
             )
-          : GPTEchartContainer(chartData: chartData),
+          : Padding(
+              padding: EdgeInsets.all(10),
+
+              child: GPTEchartContainer(chartData: chartData),
+            ),
     );
   }
 }

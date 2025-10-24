@@ -25,6 +25,7 @@ class CustomCandleChart extends StatefulWidget {
 }
 
 class _CustomCandleChartState extends State<CustomCandleChart> {
+  int currentZoomLevel = 1;
   double calculateInterval(double minY, double maxY, {int targetSteps = 6}) {
     final range = (maxY - minY).abs();
     if (range == 0) return 1; // avoid divide-by-zero
@@ -98,7 +99,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
               // The entire rod spans from 'low' to 'high'
               fromY: data.low,
               toY: data.high,
-              width: 1, // Set a fixed width for the candle
+              width: currentZoomLevel * 1, // Set a fixed width for the candle
               borderRadius: BorderRadius.zero,
 
               // We use stacked items to draw the wicks and the body
@@ -126,6 +127,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                   data.bodyMax,
                   data.high,
                   Colors.transparent,
+
                   // Use a thin border for the wick
                   borderSide: BorderSide(color: barColor, width: 1.0),
                 ),
@@ -301,6 +303,15 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
 
                 borderData: FlBorderData(show: false),
                 barGroups: getBarGroups(),
+                barTouchData: BarTouchData(
+                  enabled: true,
+                  touchCallback: (event, response) {
+                    if (event is FlPanUpdateEvent) {
+                      print("to");
+                      // Handle dragging horizontally by adjusting visibleMinX / visibleMaxX
+                    }
+                  },
+                ),
 
                 maxY: chartData.isNotEmpty
                     ? chartData

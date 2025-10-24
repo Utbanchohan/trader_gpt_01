@@ -39,6 +39,10 @@ abstract interface class SharedPrefService {
 
   String? get getEmail;
 
+  Future<bool> setPassword(String password);
+
+  String? get getPassword1;
+
   Future<void> setIsFirstTime(bool value);
 
   bool getIsFirstTime();
