@@ -147,6 +147,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   FinanceDataResponse? financeChartsDataModel;
   List<OverviewCandleChartModel>? overviewCandleChartModel;
   bool chartLoader = false;
+  bool ishowLoder = false;
+  bool isshowpriceTargetMatricsDataLoder = false;
+  bool isshowshareStructureLoder = false;
 
   //crypto Variable start
   List<OverviewCandleChartModel>? overviewCandleChartModelCrypto;
@@ -185,14 +188,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   getOverview(SymbolDto symbol) async {
     try {
+      ishowLoder = true;
       var res = await ref
           .read(analyticsProviderProvider.notifier)
           .getOverview(symbol);
       if (res != null) {
         stockResponse = res;
+        ishowLoder = false;
       }
     } catch (e) {
       print(e);
+      ishowLoder = false;
     }
   }
 
@@ -305,11 +311,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   priceTargetMatricsData(SymbolDto symbol) async {
+    isshowpriceTargetMatricsDataLoder = true;
     var res = await ref
         .read(analyticsProviderProvider.notifier)
         .priceTargetMatrics(symbol);
     if (res != null) {
       priceTargetMatrics = res;
+      isshowpriceTargetMatricsDataLoder = false;
     }
   }
 
@@ -2169,15 +2177,28 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             ),
             AppSpacing.h10,
 
-            stockResponse != null && stockResponse!.data.previousClose != null
+            ishowLoder == true
                 ? SizedBox(
                     height: 135.h,
                     child: ListView.separated(
-                      scrollDirection: Axis.horizontal, // Horizontal scrolling
-                      // padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      scrollDirection: Axis.horizontal,
                       itemCount: 5,
-                      physics:
-                          const BouncingScrollPhysics(), // Smooth scrolling
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return PriceCardShimmer();
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(width: 20.w);
+                      },
+                    ),
+                  )
+                : stockResponse != null
+                ? SizedBox(
+                    height: 135.h,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 5,
+                      physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         return index == 0
                             ? PriceCardWidget(
@@ -2211,7 +2232,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             ? PriceCardWidget(
                                 firstColor: AppColors.white,
                                 secondColor: AppColors.white,
-
                                 firstHeading: "TOTAL VOLUME",
                                 secondHeading: "AVERAGE VOLUME(3M)",
                                 previousPrice: stockResponse!.data.TotalVolume
@@ -2253,23 +2273,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       },
                     ),
                   )
-                : SizedBox(
-                    height: 122.h,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal, // Horizontal scrolling
-                      // padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      itemCount: 5,
-                      physics:
-                          const BouncingScrollPhysics(), // Smooth scrolling
-                      itemBuilder: (context, index) {
-                        return PriceCardShimmer();
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(width: 20.w);
-                      },
-                    ),
-                  ),
-
+                : SizedBox(), // 🔸 when response is null
             // : PriceCardShimmer(),
             SizedBox(height: 20.h),
             overviewCandleChartModel != null
@@ -2300,20 +2304,28 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
             // CustomCandleChartShimmer(),
             SizedBox(height: 20.h),
-            priceTargetMatrics != null && priceTargetMatrics!.data.length > 0
+
+            isshowpriceTargetMatricsDataLoder == true
+                ? SizedBox(height: 135.h, child: MetricsShimmer())
+                : priceTargetMatrics != null &&
+                      priceTargetMatrics!.data.length > 0
                 ? PriceTargetWidget(data: priceTargetMatrics!.data)
                 : SizedBox(),
+
             SizedBox(height: 20.h),
 
-            sharesResponse != null &&
-                    sharesResponse!.data.PercentInsiders != null
+            isshowshareStructureLoder == true
+                ? MetricsShimmer()
+                : sharesResponse != null &&
+                      sharesResponse!.data.PercentInsiders != null
                 ? ShareStructureCard(
                     matrics: null,
                     fundamentalData: null,
                     shareData: sharesResponse!.data,
                     heading: Headings.shareStructure,
                   )
-                : MetricsShimmer(),
+                : SizedBox(),
+
             SizedBox(height: 20.h),
             fundamentalResponse != null &&
                     fundamentalResponse!
@@ -2327,7 +2339,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     shareData: null,
                     heading: Headings.fundamental,
                   )
-                : MetricsShimmer(),
+                : SizedBox(),
+
             SizedBox(height: 20.h),
 
             matricData != null &&
