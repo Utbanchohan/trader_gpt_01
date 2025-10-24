@@ -1312,17 +1312,19 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     final stockManagerState = ref.watch(stocksManagerProvider);
 
     final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
-    double change =
-        PriceUtils.getChangesPercentage(
-              liveStock != null ? liveStock.price : widget.chatRouting!.price,
-              widget.chatRouting!.previousClose,
-            ) !=
-            null
+ String change = liveStock != null && liveStock.stockId.isNotEmpty
         ? PriceUtils.getChangesPercentage(
-            liveStock != null ? liveStock.price : widget.chatRouting!.price,
-            widget.chatRouting!.previousClose,
-          )!
-        : widget.chatRouting!.changePercentage;
+                    liveStock.price,
+                    liveStock.previousClose,
+                  ) !=
+                  null
+              ? 
+              PriceUtils.getChangesPercentage(
+                 liveStock.price,
+                    liveStock.previousClose,
+                )!.toStringAsFixed(2)
+            
+        : widget.chatRouting!.changePercentage.toStringAsFixed(2):widget.chatRouting!.changePercentage.toStringAsFixed(2);
 
     double _twoMonthIntervalMilliseconds() {
       const millisInDay = 86400000;
@@ -1459,7 +1461,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                           size: 20,
                         ),
                         MdSnsText(
-                          " ${change.toStringAsFixed(2)}%",
+                         " " +Filters.systemNumberConvention(change,isPrice: false,containerWidth: 50) +"%",
+                    
                           color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
@@ -1730,19 +1733,30 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   )
                 : AnalysisTableShimmer(),
 
-            SizedBox(height: 20.h),
+            SizedBox(height: priceComparisonModel != null &&
+                    priceComparisonModel!
+                            .data
+                            .data['${widget.chatRouting!.symbol}'] !=
+                        null &&   priceComparisonModel!
+                            .data
+                            .data['${widget.chatRouting!.symbol}']!.isNotEmpty? 20.h:0),
             priceComparisonModel != null &&
                     priceComparisonModel!
                             .data
                             .data['${widget.chatRouting!.symbol}'] !=
-                        null
+                        null &&   priceComparisonModel!
+                            .data
+                            .data['${widget.chatRouting!.symbol}']!.isNotEmpty
+                        
                 ? PriceComparisonChart(
                     priceComparisonModel: priceComparisonModel,
                     symbol: widget.chatRouting!.symbol,
                     twoCharts: false,
                   )
                 : SizedBox(),
-            SizedBox(height: 20.h),
+            SizedBox(height: priceRatioModel != null &&
+                    priceRatioModel!.data.data["price_ratio"] != null &&
+                    priceRatioModel!.data.data["price_ratio"]!.isNotEmpty? 20.h:0),
             priceRatioModel != null &&
                     priceRatioModel!.data.data["price_ratio"] != null &&
                     priceRatioModel!.data.data["price_ratio"]!.isNotEmpty
@@ -2062,17 +2076,19 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     final stockManagerState = ref.watch(stocksManagerProvider);
 
     final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
-    double change =
-        PriceUtils.getChangesPercentage(
-              liveStock != null ? liveStock.price : widget.chatRouting!.price,
-              widget.chatRouting!.previousClose,
-            ) !=
-            null
+    String change = liveStock != null && liveStock.stockId.isNotEmpty
         ? PriceUtils.getChangesPercentage(
-            liveStock != null ? liveStock.price : widget.chatRouting!.price,
-            widget.chatRouting!.previousClose,
-          )!
-        : widget.chatRouting!.changePercentage;
+                    liveStock.price,
+                    liveStock.previousClose,
+                  ) !=
+                  null
+              ? 
+              PriceUtils.getChangesPercentage(
+                 liveStock.price,
+                    liveStock.previousClose,
+                )!.toStringAsFixed(2)
+            
+        : widget.chatRouting!.changePercentage.toStringAsFixed(2):widget.chatRouting!.changePercentage.toStringAsFixed(2);
     List<ChartData> buildChartSpots(
       List<OverviewCandleChartModel> overviewCandle,
     ) {
@@ -2226,7 +2242,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                           size: 20,
                         ),
                         MdSnsText(
-                          " ${change.toStringAsFixed(2).replaceAll("-", "")}%",
+                        " " +Filters.systemNumberConvention(change,isPrice: false,containerWidth: 50) +"%",
                           color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,

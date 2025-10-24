@@ -46,12 +46,12 @@ class _ConversationChatAppBarState
     double change =
         PriceUtils.getChangesPercentage(
               liveStock != null ? liveStock.price : widget.chatRouting!.price,
-              widget.chatRouting!.previousClose,
+          liveStock != null ? liveStock.previousClose :    widget.chatRouting!.previousClose,
             ) !=
             null
         ? PriceUtils.getChangesPercentage(
             liveStock != null ? liveStock.price : widget.chatRouting!.price,
-            widget.chatRouting!.previousClose,
+           liveStock != null ?liveStock.previousClose:    widget.chatRouting!.previousClose,
           )!
         : widget.chatRouting!.changePercentage;
 
@@ -217,7 +217,7 @@ class _ConversationChatAppBarState
                       size: 20,
                     ),
                     MdSnsText(
-                      " ${change.toStringAsFixed(2).replaceAll("-", "")}%",
+                           " " +Filters.systemNumberConvention(change,isPrice: false,containerWidth: 50) +"%",
                       color: change < 0
                           ? AppColors.redFF3B3B
                           : AppColors.color06D54E,

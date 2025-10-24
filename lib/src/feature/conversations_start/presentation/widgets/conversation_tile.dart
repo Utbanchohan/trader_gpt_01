@@ -41,9 +41,10 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                     liveStock.previousClose,
                   ) !=
                   null
-              ? PriceUtils.getChangesPercentage(
-                  liveStock != null ? liveStock.price : widget.stocks.price,
-                  widget.stocks.previousClose,
+              ? 
+              PriceUtils.getChangesPercentage(
+                 liveStock.price,
+                    liveStock.previousClose,
                 )!.toStringAsFixed(2)
               : widget.stocks.pctChange.toStringAsFixed(2)
         : widget.stocks.pctChange.toStringAsFixed(2);
@@ -147,7 +148,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               ),
               SizedBox(height: 2.h),
               SizedBox(
-                width: MediaQuery.sizeOf(context).width / 2,
+                width: MediaQuery.sizeOf(context).width / 2.1,
                 child: MdSnsText(
                   widget.stock.companyName.isNotEmpty
                       ? widget.stock.companyName.split("-").first.trim()
@@ -162,12 +163,12 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               ),
               SizedBox(height: 5.h),
               SizedBox(
-                width: MediaQuery.sizeOf(context).width * 0.5,
+                width: MediaQuery.sizeOf(context).width / 2.1,
                 child: MdSnsText(
                   textOverflow: TextOverflow.ellipsis,
                   widget.stock.lastMessage != null
                       ? widget.stock.lastMessage!.message
-                      : "",
+                      : "No chat yet",
                   maxLines: 1,
                   color: AppColors.color677FA4,
                   variant: TextVariant.h4,
@@ -185,11 +186,13 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                         liveStock.price,
                         isPrice: true,
                         isAbs: false,
+                        containerWidth: 50
                       )
                     : Filters.systemNumberConvention(
                         widget.stocks.price,
                         isPrice: true,
                         isAbs: false,
+                            containerWidth: 50
                       ),
                 variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
@@ -201,7 +204,12 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                    change.replaceAll("-", "") + "%",
+                   Filters.systemNumberConvention(
+                        change,
+                        isPrice: false,
+                        isAbs: false,
+                        containerWidth: 50
+                      )+ "%",
                     color: change.contains("-")
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,

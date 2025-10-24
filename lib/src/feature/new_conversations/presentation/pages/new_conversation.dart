@@ -400,10 +400,12 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
 
     widget.change =
         PriceUtils.getChangesPercentage(
-          liveStock != null && liveStock.price > 0
+          liveStock != null 
               ? liveStock.price
               : widget.price,
-          widget.previousClose,
+         liveStock != null 
+              ? liveStock.previousClose
+              : widget.previousClose,
         ) ??
         widget.change;
 
@@ -524,7 +526,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                 size: 20,
               ),
               MdSnsText(
-                widget.change.toStringAsFixed(2).replaceAll("-", ""),
+                      " " +Filters.systemNumberConvention(widget.change,isPrice: false,containerWidth: 50) +"%",
                 color: widget.change.toString().contains("-")
                     ? AppColors.redFF3B3B
                     : AppColors.color06D54E,
