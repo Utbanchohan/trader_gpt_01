@@ -281,12 +281,12 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                                   child: Checkbox(
                                     value: isChecked,
                                     onChanged: (value) async {
-                                      setState(() {
-                                        isChecked = value!;
-                                      });
                                       if (value!) {
                                         if (email.text.isNotEmpty &&
-                                            password.text.isEmpty) {
+                                            password.text.isNotEmpty) {
+                                          setState(() {
+                                            isChecked = value;
+                                          });
                                           await ref
                                               .read(localDataProvider)
                                               .setEmail(email.text);
@@ -305,6 +305,9 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                                           );
                                         }
                                       } else {
+                                        setState(() {
+                                          isChecked = value;
+                                        });
                                         emptyLocalData();
                                       }
                                     },
