@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -574,8 +575,8 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     }
 
     return SizedBox(
-      height: 300,
-      width: MediaQuery.sizeOf(context).width,
+      height: MediaQuery.sizeOf(context).height * 0.29.h,
+      width: MediaQuery.sizeOf(context).width / 1.1,
       child: LineChart(
         duration: Duration(milliseconds: 1500),
         curve: Curves.easeIn,
@@ -650,9 +651,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           ),
           borderData: FlBorderData(
             show: false,
-            border: Border.fromBorderSide(
-              BorderSide(width: 1, color: Colors.red),
-            ),
+            border: Border.fromBorderSide(BorderSide(width: 1)),
           ),
         ),
       ),
@@ -817,66 +816,79 @@ class ChartExample extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       body: xLen > yLen || yLen > xLen
-          ? SizedBox(
-              height: 300,
-              child: LineChart(
-                LineChartData(
-                  borderData: FlBorderData(show: false),
-                  gridData: FlGridData(show: false),
-                  titlesData: FlTitlesData(
-                    show: false,
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: false,
-                        interval: horizontalInterval,
-                        getTitlesWidget: (value, meta) => MdSnsText(
-                          "${value.toInt()}",
-                          variant: TextVariant.h5,
-                          color: AppColors.white,
+          ? Container(
+              alignment: Alignment.center,
+              height: MediaQuery.sizeOf(context).height * 0.3.h,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.colorB3B3B3),
+                color: AppColors.color091224,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.29.h,
+                child: LineChart(
+                  LineChartData(
+                    borderData: FlBorderData(show: false),
+                    gridData: FlGridData(show: false),
+                    titlesData: FlTitlesData(
+                      show: false,
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: false,
+                          interval: horizontalInterval,
+                          getTitlesWidget: (value, meta) => MdSnsText(
+                            "${value.toInt()}",
+                            variant: TextVariant.h5,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: false,
+                          interval: verticalInterval,
+                          getTitlesWidget: (value, meta) {
+                            int index = value.toInt();
+                            if (index < xAxis.length) {
+                              return MdSnsText(
+                                xAxis[index],
+                                variant: TextVariant.h5,
+                              );
+                            }
+                            return MdSnsText(
+                              "$index",
+                            ); // fallback for extra yAxis points
+                          },
                         ),
                       ),
                     ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: false,
-                        interval: verticalInterval,
-                        getTitlesWidget: (value, meta) {
-                          int index = value.toInt();
-                          if (index < xAxis.length) {
-                            return MdSnsText(
-                              xAxis[index],
-                              variant: TextVariant.h5,
-                            );
-                          }
-                          return MdSnsText(
-                            "$index",
-                          ); // fallback for extra yAxis points
-                        },
-                      ),
-                    ),
-                  ),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: List.generate(
-                        data.length,
-                        (i) => FlSpot(i.toDouble(), data[i] / 1e9),
-                      ),
-                      isCurved: true,
-                      color: AppColors.secondaryColor,
-                      barWidth: 2,
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: List.generate(
+                          data.length,
+                          (i) => FlSpot(i.toDouble(), data[i] / 1e9),
+                        ),
+                        isCurved: true,
+                        color: AppColors.secondaryColor,
+                        barWidth: 2,
 
-                      isStrokeCapRound: true,
-                      dotData: const FlDotData(show: false),
-                    ),
-                  ],
+                        isStrokeCapRound: true,
+                        dotData: const FlDotData(show: false),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )
           : Container(
-              padding: EdgeInsets.all(16),
+              alignment: Alignment.center,
+              height: MediaQuery.sizeOf(context).height * 0.3.h,
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.fieldTextColor,
-                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.colorB3B3B3),
+                color: AppColors.color091224,
+                borderRadius: BorderRadius.circular(16),
               ),
               child: GPTEchartContainer(chartData: chartData),
             ),
