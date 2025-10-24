@@ -103,6 +103,7 @@ import '../../domain/model/share_stats/share_stats.dart';
 import '../../domain/model/short_volume/short_volume_model.dart' hide ChartData;
 import '../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../domain/model/weekly_model/weekly_model.dart';
+import '../provider/chart_data.dart';
 import '../provider/monthly_data/monthly_data.dart';
 import 'widgets/analytics_candle_stick_chart.dart';
 import 'widgets/operating_cash_flow.dart';
@@ -162,6 +163,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   final compactFormatter = NumberFormat.compact();
 
   //crypto Variable end
+
+  //chartData
+  final chartService = ChartService();
 
   financialData(String symbol) async {
     PriceRequestDto overview = PriceRequestDto(symbol: symbol, isYearly: true);
@@ -561,8 +565,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     if (overviewCandleChartModel == null) {
       try {
         await getOverviewCandleChart(
-          widget.chatRouting!.symbol + "_NASDAQ",
-          IntervalEnum.daily,
+          widget.chatRouting!.symbol,
+          IntervalEnum.hour,
         );
         if (!mounted) return;
         setState(() {});
@@ -754,45 +758,74 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   getOverviewCandleChart(symbol, IntervalEnum interval) async {
-    final now = DateTime.now().toUtc();
+    await chartService.fetchChartData(
+      cryptoApi: widget.chatRouting!.type == "crypto" ? true : false,
+      internalApi: widget.chatRouting!.type == "crypto" ? false : true,
+      selectedSymbol: widget.chatRouting!.symbol,
+      interval: interval.value,
+      onSuccess: (data) async {
+        overviewCandleChartModel = [];
+        for (var item in data) {
+          try {
+            overviewCandleChartModel!.add(
+              OverviewCandleChartModel(
+                symbol: widget.chatRouting!.symbol,
+                open: item['open'],
+                high: item['high'],
+                low: item['low'],
+                close: item['close'],
+                volume: item['volume'],
+                timestamp: DateTime.tryParse(item['date']) ?? DateTime.now(),
+              ),
+            );
+          } catch (e) {}
+        }
 
-    // Subtract 2 years for startDate
-    final startDate = DateTime.utc(
-      now.year - 10,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-      now.second,
-      now.millisecond,
+        print("✅ Chart data loaded: ${data.length} items");
+      },
+      onError: (err) {
+        print("❌ Error loading chart data: $err");
+      },
     );
-    final endDateString = now.toIso8601String();
-    final startDateString = startDate.toIso8601String();
-    if (!mounted) return;
-    setState(() {
-      chartLoader = true;
-    });
-    try {
-      overviewCandleChartModel = await ref
-          .read(overviewCandleChartProvider.notifier)
-          .overviewCandleChart(
-            symbol,
-            interval.value,
-            startDateString,
-            endDateString,
-            "1",
-            "122",
-          );
-      if (!mounted) return;
-      setState(() {
-        chartLoader = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        chartLoader = false;
-      });
-    }
+    // final now = DateTime.now().toUtc();
+
+    // // Subtract 2 years for startDate
+    // final startDate = DateTime.utc(
+    //   now.year - 10,
+    //   now.month,
+    //   now.day,
+    //   now.hour,
+    //   now.minute,
+    //   now.second,
+    //   now.millisecond,
+    // );
+    // final endDateString = now.toIso8601String();
+    // final startDateString = startDate.toIso8601String();
+    // if (!mounted) return;
+    // setState(() {
+    //   chartLoader = true;
+    // });
+    // try {
+    //   overviewCandleChartModel = await ref
+    //       .read(overviewCandleChartProvider.notifier)
+    //       .overviewCandleChart(
+    //         symbol,
+    //         interval.value,
+    //         startDateString,
+    //         endDateString,
+    //         "1",
+    //         "122",
+    //       );
+    //   if (!mounted) return;
+    //   setState(() {
+    //     chartLoader = false;
+    //   });
+    // } catch (e) {
+    //   if (!mounted) return;
+    //   setState(() {
+    //     chartLoader = false;
+    //   });
+    // }
   }
 
   getWeeklyData(symbol) async {
@@ -839,45 +872,76 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   getOverviewCandleChartCrypto(symbol, IntervalEnum interval) async {
-    final now = DateTime.now().toUtc();
+    await chartService.fetchChartData(
+      cryptoApi: widget.chatRouting!.type == "crypto" ? true : false,
+      internalApi: widget.chatRouting!.type == "crypto" ? false : true,
+      selectedSymbol: widget.chatRouting!.symbol,
+      interval: interval.value,
+      onSuccess: (data) async {
+        overviewCandleChartModelCrypto = [];
+        for (var item in data) {
+          try {
+            overviewCandleChartModelCrypto!.add(
+              OverviewCandleChartModel(
+                symbol: widget.chatRouting!.symbol,
+                open: item['OPEN'],
+                high: item['HIGH'],
+                low: item['LOW'],
+                close: item['CLOSE'],
+                volume: item['VOLUME'].toInt(),
+                timestamp: DateTime.fromMillisecondsSinceEpoch(
+                  item['TIMESTAMP'],
+                ),
+              ),
+            );
+          } catch (e) {}
+        }
 
-    // Subtract 2 years for startDate
-    final startDate = DateTime.utc(
-      now.year - 2,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-      now.second,
-      now.millisecond,
+        print("✅ Chart data loaded: ${data.length} items");
+      },
+      onError: (err) {
+        print("❌ Error loading chart data: $err");
+      },
     );
-    final endDateString = now.toIso8601String();
-    final startDateString = startDate.toIso8601String();
-    if (!mounted) return;
-    setState(() {
-      chartLoader = true;
-    });
-    try {
-      overviewCandleChartModelCrypto = await ref
-          .read(overviewCandleChartCryptoProvider.notifier)
-          .overviewCandleChart(
-            symbol + "-USD",
-            interval.value,
-            startDateString,
-            endDateString,
-            "1",
-            "732",
-          );
-      if (!mounted) return;
-      setState(() {
-        chartLoader = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        chartLoader = false;
-      });
-    }
+    // final now = DateTime.now().toUtc();
+
+    // // Subtract 2 years for startDate
+    // final startDate = DateTime.utc(
+    //   now.year - 2,
+    //   now.month,
+    //   now.day,
+    //   now.hour,
+    //   now.minute,
+    //   now.second,
+    //   now.millisecond,
+    // );
+    // final endDateString = now.toIso8601String();
+    // final startDateString = startDate.toIso8601String();
+    // if (!mounted) return;
+    // setState(() {
+    //   chartLoader = true;
+    // });
+    // try {
+    //   overviewCandleChartModelCrypto = await ref
+    //       .read(overviewCandleChartCryptoProvider.notifier)
+    //       .overviewCandleChart(
+    //         symbol + "-USD",
+    //         interval.value,
+    //         startDateString,
+    //         endDateString,
+    //         "1",
+    //         "732",
+    //       );
+    //   if (!mounted) return;
+    //   setState(() {
+    //     chartLoader = false;
+    //   });
+    // } catch (e) {
+    //   if (!mounted) return;
+    //   setState(() {
+    //     chartLoader = false;
+    //   });
+    // }
   }
 
   highlightTopRequest(HighlightRequest highlightRequest) async {
@@ -991,7 +1055,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       try {
         await getOverviewCandleChartCrypto(
           widget.chatRouting!.symbol,
-          IntervalEnum.daily,
+          IntervalEnum.hour,
         );
         if (!mounted) return;
         setState(() {});
@@ -1596,13 +1660,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     onPressed: (val) {
                       getOverviewCandleChartCrypto(
                         widget.chatRouting!.symbol,
-                        val == 'H'
-                            ? IntervalEnum.daily
-                            : val == 'D'
-                            ? IntervalEnum.daily
-                            : val == 'W'
-                            ? IntervalEnum.daily
-                            : IntervalEnum.monthly,
+                        val == 'Hour'
+                            ? IntervalEnum.hour
+                            : val == 'Min'
+                            ? IntervalEnum.min
+                            : val == 'Min'
+                            ? IntervalEnum.min
+                            : IntervalEnum.min,
                       );
                     },
                   )
@@ -2284,13 +2348,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     onPressed: (val) async {
                       await getOverviewCandleChart(
                         widget.chatRouting!.symbol,
-                        val == 'H'
-                            ? IntervalEnum.daily
-                            : val == 'D'
-                            ? IntervalEnum.daily
-                            : val == 'W'
-                            ? IntervalEnum.daily
-                            : IntervalEnum.monthly,
+                        val == 'Hour'
+                            ? IntervalEnum.hour
+                            : val == 'Min'
+                            ? IntervalEnum.min
+                            : val == 'Min'
+                            ? IntervalEnum.min
+                            : IntervalEnum.min,
                       );
                       if (!mounted) return;
                       setState(() {});
