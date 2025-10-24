@@ -305,6 +305,9 @@ class _SiginInState extends ConsumerState<SiginIn> with FormStateMixin {
                                           );
                                         }
                                       } else {
+                                        setState(() {
+                                          isChecked = value;
+                                        });
                                         emptyLocalData();
                                       }
                                     },
