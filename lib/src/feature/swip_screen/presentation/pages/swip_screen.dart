@@ -81,20 +81,23 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        children: [
-          ConversationStart(),
-          convo != null && convo.isNotEmpty && stocks.isNotEmpty
-              ? ChatConversation(
-                  chatRouting: widget.chatRouting,
-                  initialMessage: '',
-                )
-              : ChatPage(chatRouting: widget.chatRouting),
-          if (convo != null && convo.isNotEmpty && stocks.isNotEmpty)
-            AnalyticsScreen(chatRouting: widget.chatRouting),
-        ],
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: PageView(
+          controller: _pageController,
+          children: [
+            ConversationStart(),
+            convo != null && convo.isNotEmpty && stocks.isNotEmpty
+                ? ChatConversation(
+                    chatRouting: widget.chatRouting,
+                    initialMessage: '',
+                  )
+                : ChatPage(chatRouting: widget.chatRouting),
+            if (convo != null && convo.isNotEmpty && stocks.isNotEmpty)
+              AnalyticsScreen(chatRouting: widget.chatRouting),
+          ],
+        ),
       ),
     );
   }

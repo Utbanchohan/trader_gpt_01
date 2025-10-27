@@ -198,7 +198,7 @@ class _GPTDisplayableTableContainerState
           child: PaginatedDataTable(
             showFirstLastButtons: true,
             onPageChanged: (val) {},
-            showEmptyRows: true,
+            showEmptyRows: false,
             rowsPerPage: 5,
             headingRowHeight: 40.h,
             columnSpacing: 20,
@@ -249,7 +249,7 @@ class MyDataSource extends DataTableSource {
             (col) => DataCell(
               MdSnsText(
                 Filters.systemNumberConvention(
-                  row[col.key]?.toString() ?? '',
+                  row[col.key]?.toString() ?? 'N/A',
                   isPrice: false,
                   isAbs: false,
                 ),
