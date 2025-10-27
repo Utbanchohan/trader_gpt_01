@@ -201,7 +201,12 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                    change.replaceAll("-", "") + "%",
+                    Filters.systemNumberConvention(
+                          change,
+                          isPrice: false,
+                          isAbs: false,
+                        ) +
+                        "%",
                     color: change.contains("-")
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,
