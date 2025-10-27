@@ -25,22 +25,6 @@ class ModelOfAxis {
   const ModelOfAxis({required this.xAxis, required this.yAxis});
 }
 
-class ModelOfTable {
-  final String date;
-  final num revenueAvg;
-  final num ebitdaAvg;
-  final num netIncomeAvg;
-  final num epsAvg;
-
-  const ModelOfTable({
-    required this.date,
-    required this.revenueAvg,
-    required this.ebitdaAvg,
-    required this.netIncomeAvg,
-    required this.epsAvg,
-  });
-}
-
 // ignore: must_be_immutable
 class ChatMarkdownWidget extends StatefulWidget {
   String message;
@@ -66,7 +50,6 @@ class ChatMarkdownWidget extends StatefulWidget {
 class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
   List<dynamic> xAxis = [];
   List<dynamic> yAxis = [];
-  List<ModelOfTable> modelOfTable = [];
   List<TableColumn> headings = [];
   final List<Map<String, dynamic>> dataTable = [];
   ModelOfAxis? model;
@@ -104,15 +87,6 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
 
             for (var ij in data.data!) {
               dataTable.add(ij);
-              modelOfTable.add(
-                ModelOfTable(
-                  date: ij['date'] ?? "",
-                  revenueAvg: ij['revenueAvg'] ?? 0,
-                  ebitdaAvg: ij['ebitdaAvg'] ?? 0,
-                  netIncomeAvg: ij['netIncomeAvg'] ?? 0,
-                  epsAvg: ij['epsAvg'] ?? 0,
-                ),
-              );
             }
           }
         }
@@ -301,7 +275,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                       xAxis: model!.xAxis,
                                     ),
                                   )
-                                : modelOfTable.isNotEmpty && headings.isNotEmpty
+                                : dataTable.isNotEmpty && headings.isNotEmpty
                                 ? GPTDisplayableTableContainer(
                                     tableData: TableData(
                                       cols: headings,
@@ -327,7 +301,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                     model != null &&
                                     model!.xAxis.isNotEmpty &&
                                     model!.yAxis.isNotEmpty) ||
-                                (modelOfTable.isNotEmpty)
+                                (dataTable.isNotEmpty)
                             ? 10
                             : 0,
                       ),
