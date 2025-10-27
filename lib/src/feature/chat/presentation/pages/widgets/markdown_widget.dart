@@ -25,22 +25,6 @@ class ModelOfAxis {
   const ModelOfAxis({required this.xAxis, required this.yAxis});
 }
 
-class ModelOfTable {
-  final String date;
-  final num revenueAvg;
-  final num ebitdaAvg;
-  final num netIncomeAvg;
-  final num epsAvg;
-
-  const ModelOfTable({
-    required this.date,
-    required this.revenueAvg,
-    required this.ebitdaAvg,
-    required this.netIncomeAvg,
-    required this.epsAvg,
-  });
-}
-
 // ignore: must_be_immutable
 class ChatMarkdownWidget extends StatefulWidget {
   String message;
@@ -66,9 +50,8 @@ class ChatMarkdownWidget extends StatefulWidget {
 class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
   List<dynamic> xAxis = [];
   List<dynamic> yAxis = [];
-  List<ModelOfTable> modelOfTable = [];
-  List<String> headings = [];
-
+  List<TableColumn> headings = [];
+  final List<Map<String, dynamic>> dataTable = [];
   ModelOfAxis? model;
 
   ModelOfAxis changeDisplayAble(List<String> display) {
@@ -98,20 +81,12 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
             var data1 = decoded['cols'];
             if (data1 != null) {
               for (var uj in data1) {
-                headings.add(uj['header']);
+                headings.add(TableColumn(key: uj['key'], header: uj['header']));
               }
             }
 
             for (var ij in data.data!) {
-              modelOfTable.add(
-                ModelOfTable(
-                  date: ij['date'] ?? "",
-                  revenueAvg: ij['revenueAvg'] ?? 0,
-                  ebitdaAvg: ij['ebitdaAvg'] ?? 0,
-                  netIncomeAvg: ij['netIncomeAvg'] ?? 0,
-                  epsAvg: ij['epsAvg'] ?? 0,
-                ),
-              );
+              dataTable.add(ij);
             }
           }
         }
@@ -300,18 +275,23 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                       xAxis: model!.xAxis,
                                     ),
                                   )
-                                : modelOfTable.isNotEmpty && headings.isNotEmpty
-                                ? DisplayTableWidgets(
-                                    headings: headings,
+                                : dataTable.isNotEmpty && headings.isNotEmpty
+                                ? GPTDisplayableTableContainer(
+                                    tableData: TableData(
+                                      cols: headings,
+                                      data: dataTable,
+                                    ),
 
-                                    //  [
-                                    //   "Date",
-                                    //   "Revenue Avg",
-                                    //   "Ebita Avg",
-                                    //   "Net Income Avg",
-                                    //   "Eps Svg",
-                                    // ],
-                                    modelOfTable: modelOfTable,
+                                    // headings: headings,
+
+                                    // //  [
+                                    // //   "Date",
+                                    // //   "Revenue Avg",
+                                    // //   "Ebita Avg",
+                                    // //   "Net Income Avg",
+                                    // //   "Eps Svg",
+                                    // // ],
+                                    // modelOfTable: modelOfTable,
                                   )
                                 : SizedBox()
                           : SizedBox(),
@@ -321,7 +301,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                     model != null &&
                                     model!.xAxis.isNotEmpty &&
                                     model!.yAxis.isNotEmpty) ||
-                                (modelOfTable.isNotEmpty)
+                                (dataTable.isNotEmpty)
                             ? 10
                             : 0,
                       ),
