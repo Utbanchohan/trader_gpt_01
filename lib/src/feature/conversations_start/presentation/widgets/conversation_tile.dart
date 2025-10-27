@@ -41,10 +41,9 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                     liveStock.previousClose,
                   ) !=
                   null
-              ? 
-              PriceUtils.getChangesPercentage(
-                 liveStock.price,
-                    liveStock.previousClose,
+              ? PriceUtils.getChangesPercentage(
+                  liveStock.price,
+                  liveStock.previousClose,
                 )!.toStringAsFixed(2)
               : widget.stocks.pctChange.toStringAsFixed(2)
         : widget.stocks.pctChange.toStringAsFixed(2);
@@ -186,13 +185,13 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                         liveStock.price,
                         isPrice: true,
                         isAbs: false,
-                        containerWidth: 50
+                        containerWidth: 50,
                       )
                     : Filters.systemNumberConvention(
                         widget.stocks.price,
                         isPrice: true,
                         isAbs: false,
-                            containerWidth: 50
+                        containerWidth: 50,
                       ),
                 variant: TextVariant.h2,
                 fontWeight: TextFontWeightVariant.h1,
@@ -204,12 +203,13 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                   Filters.systemNumberConvention(
-                        change,
-                        isPrice: false,
-                        isAbs: false,
-                        containerWidth: 50
-                      )+ "%",
+                    Filters.systemNumberConvention(
+                          change,
+                          isPrice: false,
+                          isAbs: false,
+                          containerWidth: 50,
+                        ) +
+                        "%",
                     color: change.contains("-")
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,
