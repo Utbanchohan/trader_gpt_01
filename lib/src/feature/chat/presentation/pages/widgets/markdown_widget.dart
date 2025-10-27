@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/display_table_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/new_chart_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -22,6 +23,22 @@ class ModelOfAxis {
   final List<double> yAxis;
 
   const ModelOfAxis({required this.xAxis, required this.yAxis});
+}
+
+class ModelOfTable {
+  final String date;
+  final num revenueAvg;
+  final num ebitdaAvg;
+  final num netIncomeAvg;
+  final num epsAvg;
+
+  const ModelOfTable({
+    required this.date,
+    required this.revenueAvg,
+    required this.ebitdaAvg,
+    required this.netIncomeAvg,
+    required this.epsAvg,
+  });
 }
 
 // ignore: must_be_immutable
@@ -49,6 +66,8 @@ class ChatMarkdownWidget extends StatefulWidget {
 class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
   List<dynamic> xAxis = [];
   List<dynamic> yAxis = [];
+  List<ModelOfTable> modelOfTable = [];
+  List<String> headings = [];
 
   ModelOfAxis? model;
 
@@ -73,6 +92,27 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
             addNewyAxis.addAll(
               (data.data ?? []).map((e) => (e as num).toDouble()),
             );
+          }
+        } else {
+          if (data.data != null) {
+            var data1 = decoded['cols'];
+            if (data1 != null) {
+              for (var uj in data1) {
+                headings.add(uj['header']);
+              }
+            }
+
+            for (var ij in data.data!) {
+              modelOfTable.add(
+                ModelOfTable(
+                  date: ij['date'] ?? "",
+                  revenueAvg: ij['revenueAvg'] ?? 0,
+                  ebitdaAvg: ij['ebitdaAvg'] ?? 0,
+                  netIncomeAvg: ij['netIncomeAvg'] ?? 0,
+                  epsAvg: ij['epsAvg'] ?? 0,
+                ),
+              );
+            }
           }
         }
       } catch (e) {}
@@ -260,14 +300,28 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                       xAxis: model!.xAxis,
                                     ),
                                   )
+                                : modelOfTable.isNotEmpty && headings.isNotEmpty
+                                ? DisplayTableWidgets(
+                                    headings: headings,
+
+                                    //  [
+                                    //   "Date",
+                                    //   "Revenue Avg",
+                                    //   "Ebita Avg",
+                                    //   "Net Income Avg",
+                                    //   "Eps Svg",
+                                    // ],
+                                    modelOfTable: modelOfTable,
+                                  )
                                 : SizedBox()
                           : SizedBox(),
                       SizedBox(
                         height:
-                            widget.type != "user" &&
-                                model != null &&
-                                model!.xAxis.isNotEmpty &&
-                                model!.yAxis.isNotEmpty
+                            (widget.type != "user" &&
+                                    model != null &&
+                                    model!.xAxis.isNotEmpty &&
+                                    model!.yAxis.isNotEmpty) ||
+                                (modelOfTable.isNotEmpty)
                             ? 10
                             : 0,
                       ),

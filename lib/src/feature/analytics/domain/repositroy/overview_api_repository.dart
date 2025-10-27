@@ -38,6 +38,7 @@ import '../model/monthly_model/monthly_model.dart';
 import '../model/overview_candle_chart_model/overview_candle_chart_model.dart';
 import '../model/overview_model/overview_model.dart';
 import '../model/price_comparison_model/price_comparison_model.dart';
+import '../model/price_performance_model/price_performance_model.dart';
 import '../model/price_target_matrics_model/price_target_matrics_model.dart'
     show PriceTargetMatrics;
 import '../model/security_ownership_model/security_ownership_model.dart';
@@ -180,6 +181,13 @@ class OverviewApiRepository implements OverviewRepository {
   Future<FinanceDataResponse> financialCharts(SymbolDto symbol) async {
     return await AnalysisApi(client).financialCharts(symbol);
   }
+
+  @override
+  Future<PricePerformance> pricePerformance(SymbolDto symbol) async {
+    return await AnalysisApi(client).pricePerformance(symbol);
+  }
+
+  //crypto
 
   @override
   Future<AboutCryptoModel> aboutCrypto(String symbol) async {

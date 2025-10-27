@@ -7,6 +7,7 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 import '../../feature/analytics/domain/model/fundamental_model/fundamental_model.dart';
 import '../../feature/analytics/domain/model/matrics_data_model/matrics_data_model.dart';
 import '../../feature/analytics/domain/model/share_stats/share_stats.dart';
+import '../extensions/number_formatter_extension.dart';
 
 extension MatricsDataMapper on MatricsData {
   List<Map<String, dynamic>> toKeyValueList() {
@@ -283,9 +284,12 @@ class ShareStructureCard extends StatelessWidget {
                                 : index == 3
                                 ? fundamentalData!.fundamentals.shortInterest
                                 : index == 4
-                                ? fundamentalData!
-                                      .fundamentals
-                                      .shortPercentOfFloat
+                                ? Filters.systemNumberConvention(
+                                    fundamentalData!
+                                        .fundamentals
+                                        .shortPercentOfFloat,
+                                    isPrice: true,
+                                  )
                                 : fundamentalData!.fundamentals.daysToCover,
                             variant: TextVariant.h4,
                             fontWeight: TextFontWeightVariant.h1,
