@@ -52,6 +52,7 @@ import 'package:trader_gpt/src/shared/widgets/financialtable_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/insiderTrader_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/matrics_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/outstanding_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/pricePerformance_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/price_card_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/profileCard_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/profile_card_shimmer.dart';
@@ -1145,6 +1146,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           child: Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
                     onTap: () {
@@ -1159,7 +1161,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     child: Container(
                       width: 40.w,
                       height: 71.h,
-
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(Assets.images.shapeRightSide.path),
@@ -1168,78 +1169,34 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       padding: EdgeInsets.all(15),
                       child: Image.asset(
                         Assets.images.message.path,
-
                         width: 25.w,
                         height: 21.h,
                       ),
                     ),
                   ),
-                  SizedBox(width: 15.w),
-                  SizedBox(
-                    height: 44,
-                    child: TabBar(
-                      physics: NeverScrollableScrollPhysics(),
-                      isScrollable: true,
-                      tabAlignment: TabAlignment.start,
-                      dividerColor: Colors.transparent,
-                      indicator: BoxDecoration(
-                        color: Color(0xFF1B254B),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      indicatorPadding: EdgeInsets.zero,
-                      labelPadding: EdgeInsets.symmetric(horizontal: 10),
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Color(0xFFB2B2B7),
-                      tabs: [
-                        // ---- First Tab (with icon + text) ----
-                        Tab(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Image.asset(
-                                  "assets/images/analytics.png",
-                                  width: 20,
-                                  height: 20,
-                                ),
-                                SizedBox(width: 6),
-                                MdSnsText(
-                                  "ANALYTICS",
-                                  color: AppColors.white,
-                                  fontWeight: TextFontWeightVariant.h4,
-                                  variant: TextVariant.h3,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
 
-                        // ---- Second Tab (only text) ----
-                        Tab(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(right: 30),
+                      child: Center(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(
+                              "assets/images/analytics.png",
+                              width: 20,
+                              height: 20,
                             ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: MdSnsText(
-                              "History",
+                            SizedBox(width: 6),
+                            MdSnsText(
+                              "ANALYTICS",
+                              color: AppColors.white,
                               fontWeight: TextFontWeightVariant.h4,
                               variant: TextVariant.h3,
-                              color: AppColors.white,
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ],
@@ -2099,6 +2056,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         child: Column(
           children: [
             SizedBox(height: 14.h),
+
+            PricePerformanceWidget(),
             Row(
               children: [
                 // Image.asset(
@@ -2341,10 +2300,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             // : PriceCardShimmer(),
             SizedBox(height: 20.h),
             overviewCandleChartModel != null
-                ?
-                  // chartLoader
-                  //       ?
-                  CustomCandleChart(
+                ? CustomCandleChart(
                     key: UniqueKey(),
 
                     name: "OHLC/V Candlestick Chart",
