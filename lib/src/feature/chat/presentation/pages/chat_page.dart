@@ -211,6 +211,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               child: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
                         alignment: Alignment.centerLeft,
@@ -273,7 +274,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           ],
                         ),
                       ),
-                      Icon(Icons.close),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close),
+                      ),
                     ],
                   ),
                   SizedBox(height: 12.h),
