@@ -38,7 +38,6 @@ class PriceCardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // --- Previously Close Price ---
           MdSnsText(
             firstHeading,
             color: AppColors.color9EAAC0,

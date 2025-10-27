@@ -167,7 +167,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                   textOverflow: TextOverflow.ellipsis,
                   widget.stock.lastMessage != null
                       ? widget.stock.lastMessage!.message
-                      : "No chat yet",
+                      : "No Chats yet!",
                   maxLines: 1,
                   color: AppColors.color677FA4,
                   variant: TextVariant.h4,

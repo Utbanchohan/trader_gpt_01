@@ -183,43 +183,62 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
           child: SizedBox(
             height: 400.h,
             width: MediaQuery.sizeOf(context).width,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: workflows.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () async {
-                    _handleWorkflowSelection(index);
-                  },
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.close),
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 370.h,
+                  width: MediaQuery.sizeOf(context).width,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: workflows.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () async {
+                          _handleWorkflowSelection(index);
+                        },
 
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 12),
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.color1B254B,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MdSnsText(
-                          "/" + workflows[index].displayName,
-                          color: AppColors.white,
-                          variant: TextVariant.h2,
-                          fontWeight: TextFontWeightVariant.h4,
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 12),
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.color1B254B,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              MdSnsText(
+                                "/" + workflows[index].displayName,
+                                color: AppColors.white,
+                                variant: TextVariant.h2,
+                                fontWeight: TextFontWeightVariant.h4,
+                              ),
+                              SizedBox(height: 8),
+                              MdSnsText(
+                                workflows[index].description,
+                                color: AppColors.color9EAAC0,
+                                variant: TextVariant.h4,
+                                fontWeight: TextFontWeightVariant.h4,
+                              ),
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 8),
-                        MdSnsText(
-                          workflows[index].description,
-                          color: AppColors.color9EAAC0,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
           ),
         );
@@ -228,43 +247,58 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   }
 
   // 🔹 Helper widget — your original list untouched
-  Widget _buildWorkflowList(BuildContext context, List workflows) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: workflows.length,
-      itemBuilder: (BuildContext context, int index) {
-        return GestureDetector(
-          onTap: () async {
-            _handleWorkflowSelection(index);
+  Widget buildWorkflowList(BuildContext context, List workflows) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.close),
+            ),
+          ],
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: workflows.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () async {
+                _handleWorkflowSelection(index);
+              },
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.color1B254B,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MdSnsText(
+                      "/${workflows[index].displayName}",
+                      color: AppColors.white,
+                      variant: TextVariant.h2,
+                      fontWeight: TextFontWeightVariant.h4,
+                    ),
+                    const SizedBox(height: 8),
+                    MdSnsText(
+                      workflows[index].description,
+                      color: AppColors.color9EAAC0,
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h4,
+                    ),
+                  ],
+                ),
+              ),
+            );
           },
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.color1B254B,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MdSnsText(
-                  "/${workflows[index].displayName}",
-                  color: AppColors.white,
-                  variant: TextVariant.h2,
-                  fontWeight: TextFontWeightVariant.h4,
-                ),
-                const SizedBox(height: 8),
-                MdSnsText(
-                  workflows[index].description,
-                  color: AppColors.color9EAAC0,
-                  variant: TextVariant.h4,
-                  fontWeight: TextFontWeightVariant.h4,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+        ),
+      ],
     );
   }
 

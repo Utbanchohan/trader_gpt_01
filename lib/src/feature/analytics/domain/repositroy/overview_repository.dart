@@ -38,6 +38,7 @@ import '../model/monthly_model/monthly_model.dart';
 import '../model/overview_candle_chart_model/overview_candle_chart_model.dart';
 import '../model/overview_model/overview_model.dart';
 import '../model/price_comparison_model/price_comparison_model.dart';
+import '../model/price_performance_model/price_performance_model.dart';
 import '../model/price_target_matrics_model/price_target_matrics_model.dart';
 import '../model/security_ownership_model/security_ownership_model.dart';
 import '../model/security_short/short_security_model.dart';
@@ -82,6 +83,7 @@ abstract interface class OverviewRepository {
     String sub_points,
     String data_point,
   );
+  Future<PricePerformance> pricePerformance(SymbolDto symbol);
 
   //crypto apis
   Future<MarketCapResponse> marketCapChart(MarketCapRequest symbol);

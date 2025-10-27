@@ -470,7 +470,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             sideTitles: SideTitles(
               reservedSize: 40,
               showTitles: true,
-              interval: (categories.length / 2).floorToDouble(),
+              interval: (categories.length / 1).floorToDouble(),
               getTitlesWidget: (value, meta) => MdSnsText(
                 Filters.systemNumberConvention(
                   value.toInt(),

@@ -52,7 +52,7 @@ class InsiderTraderTable extends StatelessWidget {
                   label: MdSnsText(
                     "Name",
                     textAlign: TextAlign.center,
-                    variant: TextVariant.h5,
+                    variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -60,7 +60,7 @@ class InsiderTraderTable extends StatelessWidget {
                 DataColumn(
                   label: MdSnsText(
                     'Form Type',
-                    variant: TextVariant.h5,
+                    variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -68,7 +68,7 @@ class InsiderTraderTable extends StatelessWidget {
                 DataColumn(
                   label: MdSnsText(
                     'File Date',
-                    variant: TextVariant.h5,
+                    variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -76,7 +76,7 @@ class InsiderTraderTable extends StatelessWidget {
                 DataColumn(
                   label: MdSnsText(
                     'Transaction',
-                    variant: TextVariant.h5,
+                    variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -84,7 +84,7 @@ class InsiderTraderTable extends StatelessWidget {
                 DataColumn(
                   label: MdSnsText(
                     'Code',
-                    variant: TextVariant.h5,
+                    variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -92,7 +92,7 @@ class InsiderTraderTable extends StatelessWidget {
                 DataColumn(
                   label: MdSnsText(
                     'Shares',
-                    variant: TextVariant.h5,
+                    variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -100,7 +100,7 @@ class InsiderTraderTable extends StatelessWidget {
                 DataColumn(
                   label: MdSnsText(
                     'Values',
-                    variant: TextVariant.h5,
+                    variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),
@@ -108,7 +108,7 @@ class InsiderTraderTable extends StatelessWidget {
                 DataColumn(
                   label: MdSnsText(
                     'SEC Link',
-                    variant: TextVariant.h5,
+                    variant: TextVariant.h4,
                     fontWeight: TextFontWeightVariant.h2,
                     color: AppColors.white,
                   ),

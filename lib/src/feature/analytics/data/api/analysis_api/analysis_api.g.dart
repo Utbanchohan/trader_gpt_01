@@ -736,6 +736,33 @@ class _AnalysisApi implements AnalysisApi {
   }
 
   @override
+  Future<PricePerformance> pricePerformance(SymbolDto symbol) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<PricePerformance>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'api/v1/ticker/price/performance',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late PricePerformance _value;
+    try {
+      _value = PricePerformance.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<AboutCryptoModel> aboutCrypto(String symbol) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

@@ -31,6 +31,7 @@ import '../../../domain/model/monthly_model/monthly_model.dart';
 import '../../../domain/model/overview_candle_chart_model/overview_candle_chart_model.dart';
 import '../../../domain/model/overview_model/overview_model.dart';
 import '../../../domain/model/price_comparison_model/price_comparison_model.dart';
+import '../../../domain/model/price_performance_model/price_performance_model.dart';
 import '../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
 import '../../../domain/model/security_short/short_security_model.dart';
 import '../../../domain/model/share_stats/share_stats.dart';
@@ -139,6 +140,9 @@ abstract interface class AnalysisApi {
     @Path('sub_points') String sub_points,
     @Path('data_point') String data_point,
   );
+
+  @POST('api/v1/ticker/price/performance')
+  Future<PricePerformance> pricePerformance(SymbolDto symbol);
 
   //crypto apis
   @GET('api/v1/crypto/about?symbol={symbol}')

@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/display_table_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/new_chart_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -49,7 +50,8 @@ class ChatMarkdownWidget extends StatefulWidget {
 class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
   List<dynamic> xAxis = [];
   List<dynamic> yAxis = [];
-
+  List<TableColumn> headings = [];
+  final List<Map<String, dynamic>> dataTable = [];
   ModelOfAxis? model;
 
   ModelOfAxis changeDisplayAble(List<String> display) {
@@ -73,6 +75,19 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
             addNewyAxis.addAll(
               (data.data ?? []).map((e) => (e as num).toDouble()),
             );
+          }
+        } else {
+          if (data.data != null) {
+            var data1 = decoded['cols'];
+            if (data1 != null) {
+              for (var uj in data1) {
+                headings.add(TableColumn(key: uj['key'], header: uj['header']));
+              }
+            }
+
+            for (var ij in data.data!) {
+              dataTable.add(ij);
+            }
           }
         }
       } catch (e) {}
@@ -128,10 +143,12 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
     return Visibility(
       visible: widget.message.isNotEmpty,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: widget.type == "user"
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               widget.name == "TDGPT"
@@ -216,7 +233,9 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
           SizedBox(height: widget.name == "TDGPT" ? 0 : 10),
 
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: widget.type == "user"
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.end,
             children: [
               Container(
                 width: widget.type == "user"
@@ -256,14 +275,33 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                       xAxis: model!.xAxis,
                                     ),
                                   )
+                                : dataTable.isNotEmpty && headings.isNotEmpty
+                                ? GPTDisplayableTableContainer(
+                                    tableData: TableData(
+                                      cols: headings,
+                                      data: dataTable,
+                                    ),
+
+                                    // headings: headings,
+
+                                    // //  [
+                                    // //   "Date",
+                                    // //   "Revenue Avg",
+                                    // //   "Ebita Avg",
+                                    // //   "Net Income Avg",
+                                    // //   "Eps Svg",
+                                    // // ],
+                                    // modelOfTable: modelOfTable,
+                                  )
                                 : SizedBox()
                           : SizedBox(),
                       SizedBox(
                         height:
-                            widget.type != "user" &&
-                                model != null &&
-                                model!.xAxis.isNotEmpty &&
-                                model!.yAxis.isNotEmpty
+                            (widget.type != "user" &&
+                                    model != null &&
+                                    model!.xAxis.isNotEmpty &&
+                                    model!.yAxis.isNotEmpty) ||
+                                (dataTable.isNotEmpty)
                             ? 10
                             : 0,
                       ),
@@ -371,7 +409,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               SizedBox(
                 width: widget.type == "user" ? 50 : 150,
                 child: MessageLikeCopyIcon(
