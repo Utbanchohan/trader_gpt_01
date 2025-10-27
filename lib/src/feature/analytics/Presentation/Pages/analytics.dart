@@ -2057,7 +2057,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           children: [
             SizedBox(height: 14.h),
 
-            PricePerformanceWidget(),
             Row(
               children: [
                 // Image.asset(
@@ -2345,7 +2344,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     heading: Headings.shareStructure,
                   )
                 : SizedBox(),
-
+            SizedBox(height: 20.h),
+            PricePerformanceWidget(),
             SizedBox(height: 20.h),
             fundamentalResponse != null &&
                     fundamentalResponse!
