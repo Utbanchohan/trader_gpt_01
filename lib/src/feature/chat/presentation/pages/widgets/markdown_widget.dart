@@ -67,8 +67,8 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
   List<dynamic> xAxis = [];
   List<dynamic> yAxis = [];
   List<ModelOfTable> modelOfTable = [];
-  List<String> headings = [];
-
+  List<TableColumn> headings = [];
+  final List<Map<String, dynamic>> dataTable = [];
   ModelOfAxis? model;
 
   ModelOfAxis changeDisplayAble(List<String> display) {
@@ -98,11 +98,12 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
             var data1 = decoded['cols'];
             if (data1 != null) {
               for (var uj in data1) {
-                headings.add(uj['header']);
+                headings.add(TableColumn(key: uj['key'], header: uj['header']));
               }
             }
 
             for (var ij in data.data!) {
+              dataTable.add(ij);
               modelOfTable.add(
                 ModelOfTable(
                   date: ij['date'] ?? "",
@@ -301,17 +302,22 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                     ),
                                   )
                                 : modelOfTable.isNotEmpty && headings.isNotEmpty
-                                ? DisplayTableWidgets(
-                                    headings: headings,
+                                ? GPTDisplayableTableContainer(
+                                    tableData: TableData(
+                                      cols: headings,
+                                      data: dataTable,
+                                    ),
 
-                                    //  [
-                                    //   "Date",
-                                    //   "Revenue Avg",
-                                    //   "Ebita Avg",
-                                    //   "Net Income Avg",
-                                    //   "Eps Svg",
-                                    // ],
-                                    modelOfTable: modelOfTable,
+                                    // headings: headings,
+
+                                    // //  [
+                                    // //   "Date",
+                                    // //   "Revenue Avg",
+                                    // //   "Ebita Avg",
+                                    // //   "Net Income Avg",
+                                    // //   "Eps Svg",
+                                    // // ],
+                                    // modelOfTable: modelOfTable,
                                   )
                                 : SizedBox()
                           : SizedBox(),

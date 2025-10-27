@@ -27,11 +27,14 @@ class Filters {
       double? value;
       if (input is String) {
         value = double.tryParse(input);
+        if (value == null) {
+          return input;
+        }
       } else if (input is num) {
         value = input.toDouble();
       } else {
         // unknown type
-        return '0';
+        return input;
       }
       if (value == null || value.isNaN) return '0';
 
