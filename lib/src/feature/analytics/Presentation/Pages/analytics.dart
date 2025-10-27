@@ -2660,19 +2660,27 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 companyModel != null
                     ? CompanyDetailsCard(
                         items: [
-                          compactFormatter.format(
+                          Filters.systemNumberConvention(
                             companyModel!.general.SharesOutstanding ?? 0,
+                            isPrice: false,
+                            isAbs: false,
                           ),
 
                           companyModel!.general.PercentInstitutions.toString(),
-                          companyModel!.general.EBITDA.toString(),
+                          Filters.systemNumberConvention(
+                            companyModel!.general.EBITDA,
+                            isPrice: false,
+                            isAbs: false,
+                          ),
                           companyModel!.general.Exchange ?? "",
                           companyModel!.general.Symbol ?? "",
                           companyModel!.general.Sector ?? "",
                           companyModel!.general.Industry ?? "",
                           companyModel!.general.FiscalYearEnd ?? "",
-                          compactFormatter.format(
+                          Filters.systemNumberConvention(
                             companyModel!.general.MarketCapitalization ?? 0,
+                            isPrice: false,
+                            isAbs: false,
                           ),
                         ],
                       )

@@ -108,6 +108,7 @@ class OutstandingSharesChart extends StatelessWidget {
                           bottomTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
+                              interval: 5,
                               getTitlesWidget: (value, meta) {
                                 return Padding(
                                   padding: const EdgeInsets.only(
@@ -148,10 +149,26 @@ class OutstandingSharesChart extends StatelessWidget {
                             top: BorderSide(color: AppColors.color0x0x1AB3B3B3),
                           ),
                         ),
-                        minX: 2020,
-                        maxX: 2025,
-                        minY: 500,
-                        maxY: 590,
+                        minX: spots.isNotEmpty
+                            ? spots
+                                  .map((e) => e.x)
+                                  .reduce((a, b) => a < b ? a : b)
+                            : 0.0,
+                        maxX: spots.isNotEmpty
+                            ? spots
+                                  .map((e) => e.x)
+                                  .reduce((a, b) => a > b ? a : b)
+                            : 0.0,
+                        minY: spots.isNotEmpty
+                            ? spots
+                                  .map((e) => e.y)
+                                  .reduce((a, b) => a < b ? a : b)
+                            : 0.0,
+                        maxY: spots.isNotEmpty
+                            ? spots
+                                  .map((e) => e.y)
+                                  .reduce((a, b) => a > b ? a : b)
+                            : 0.0,
                         lineBarsData: [
                           LineChartBarData(
                             spots: spots,

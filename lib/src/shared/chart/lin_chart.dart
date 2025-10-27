@@ -71,7 +71,9 @@ class CustomLineChart extends StatelessWidget {
                   gridData: FlGridData(
                     show: true,
                     drawVerticalLine: false,
-                    horizontalInterval: (maxY - minY) / 5,
+                    horizontalInterval: (maxY - minY) / 5 > 0
+                        ? (maxY - minY) / 5
+                        : 1,
                     getDrawingHorizontalLine: (value) => FlLine(
                       color: Colors.white.withOpacity(0.1),
                       strokeWidth: 1,

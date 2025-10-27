@@ -182,6 +182,7 @@ class OverviewApiRepository implements OverviewRepository {
     return await AnalysisApi(client).financialCharts(symbol);
   }
 
+  @override
   Future<PricePerformance> pricePerformance(SymbolDto symbol) async {
     return await AnalysisApi(client).pricePerformance(symbol);
   }
