@@ -168,10 +168,12 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
     return Visibility(
       visible: widget.message.isNotEmpty,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: widget.type == "user"
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               widget.name == "TDGPT"
@@ -256,7 +258,9 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
           SizedBox(height: widget.name == "TDGPT" ? 0 : 10),
 
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: widget.type == "user"
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.end,
             children: [
               Container(
                 width: widget.type == "user"
@@ -425,7 +429,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               SizedBox(
                 width: widget.type == "user" ? 50 : 150,
                 child: MessageLikeCopyIcon(

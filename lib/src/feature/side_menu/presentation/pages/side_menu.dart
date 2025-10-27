@@ -164,18 +164,19 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       AppRoutes.swipeScreen.name,
                       extra: {"chatRouting": null, "initialIndex": 0},
                     ),
-                    _buildMenuItem(
-                      context,
-                      Assets.images.book.path,
-                      "Books",
-                      "",
-                    ),
-                    _buildMenuItem(
-                      context,
-                      Assets.images.statusUp.path,
-                      "Analytics",
-                      "",
-                    ),
+
+                    // _buildMenuItem(
+                    //   context,
+                    //   Assets.images.book.path,
+                    //   "Books",
+                    //   "",
+                    // ),
+                    // _buildMenuItem(
+                    //   context,
+                    //   Assets.images.statusUp.path,
+                    //   "Analytics",
+                    //   "",
+                    // ),
                     _buildMenuItem(
                       context,
                       Assets.images.setting2.path,
@@ -186,7 +187,6 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                 ),
               ),
 
-              // Bottom User Profile
               GestureDetector(
                 onTap: () {
                   context.pushNamed(AppRoutes.myProfileScreen.name);

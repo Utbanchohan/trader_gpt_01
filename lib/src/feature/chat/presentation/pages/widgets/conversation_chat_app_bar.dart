@@ -92,7 +92,7 @@ class _ConversationChatAppBarState
       /// Stock Detail AppBar
       return AppBar(
         scrolledUnderElevation: 0,
-        centerTitle: false,
+        centerTitle: true,
         backgroundColor: AppColors.primaryColor,
         elevation: 0,
         titleSpacing: 0,
@@ -111,6 +111,8 @@ class _ConversationChatAppBarState
           },
         ),
         title: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             InkWell(
               onTap: () {
@@ -176,7 +178,7 @@ class _ConversationChatAppBarState
                     ),
                     SizedBox(width: 4),
                     SizedBox(
-                      width: MediaQuery.sizeOf(context).width / 3,
+                      width: MediaQuery.sizeOf(context).width / 5,
                       child: MdSnsText(
                         " ${widget.chatRouting!.companyName!.split("-").first.trim()}",
                         color: AppColors.colorB2B2B7,
@@ -184,11 +186,11 @@ class _ConversationChatAppBarState
                         variant: TextVariant.h4,
                       ),
                     ),
-                    Icon(
-                      Icons.keyboard_arrow_down,
-                      color: AppColors.white,
-                      size: 20.sp,
-                    ),
+                    // Icon(
+                    //   Icons.keyboard_arrow_down,
+                    //   color: AppColors.white,
+                    //   size: 20.sp,
+                    // ),
                   ],
                 ),
                 Row(

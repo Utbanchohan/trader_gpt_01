@@ -100,10 +100,11 @@ class _FeedbackPopupState extends State<FeedbackPopup> {
             // Submit button
             ElevatedButton(
               onPressed: () {
-                final feedback = _feedbackController.text.trim();
-                if (feedback.isNotEmpty) {
-                  Navigator.pop(context);
-                }
+                // final feedback = _feedbackController.text.trim();
+                // if (feedback.isNotEmpty) {
+                //   Navigator.pop(context);
+                // }
+                Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.color4ade80,
