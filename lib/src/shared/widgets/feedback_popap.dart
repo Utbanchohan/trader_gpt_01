@@ -45,6 +45,7 @@ class _FeedbackPopupState extends State<FeedbackPopup> {
         child: TextFormField(
           controller: _feedbackController,
           maxLines: 3,
+          style: const TextStyle(color: AppColors.white),
           decoration: InputDecoration(
             hintText: "Comment (optional)",
             hintStyle: const TextStyle(color: AppColors.white),
@@ -66,7 +67,6 @@ class _FeedbackPopupState extends State<FeedbackPopup> {
         ),
       ),
 
-      // 👇 Uniform bottom + horizontal padding for actions
       actionsPadding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
 
       actions: [
@@ -75,20 +75,10 @@ class _FeedbackPopupState extends State<FeedbackPopup> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             // Cancel button
-            ElevatedButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 Navigator.pop(context);
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.fieldColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-              ),
               child: MdSnsText(
                 "Cancel",
                 variant: TextVariant.h3,
@@ -96,7 +86,8 @@ class _FeedbackPopupState extends State<FeedbackPopup> {
                 color: AppColors.color4ade80,
               ),
             ),
-            const SizedBox(width: 8),
+
+            const SizedBox(width: 10),
             // Submit button
             ElevatedButton(
               onPressed: () {

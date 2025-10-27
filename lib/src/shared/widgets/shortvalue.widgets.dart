@@ -83,7 +83,7 @@ class ShortVolumeChart extends StatelessWidget {
         .map((s) => s.points.length)
         .reduce((a, b) => a < b ? a : b);
 
-    // build line bars (3 lines)
+    // build line bars (3 lines)ha
     List<LineChartBarData> lineBars = series.map((s) {
       final spots = s.points.asMap().entries.map((e) {
         return FlSpot(e.key.toDouble(), e.value.value);
