@@ -32,10 +32,7 @@ class GradientDialog extends StatelessWidget {
             color: AppColors.primaryColor,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Material(
-            color: Colors.transparent,
-            child: child,
-          ),
+          child: Material(color: Colors.transparent, child: child),
         ),
       ),
     );
