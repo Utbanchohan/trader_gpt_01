@@ -211,17 +211,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   pricePerformance(SymbolDto symbol) async {
     try {
-      ishowLoder = true;
       var res = await ref
           .read(analyticsProviderProvider.notifier)
           .pricePerformance(symbol);
       if (res != null) {
         pricePerformanceData = res;
-        ishowLoder = false;
       }
     } catch (e) {
       print(e);
-      ishowLoder = false;
     }
   }
 
