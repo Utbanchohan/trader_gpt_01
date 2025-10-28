@@ -102,20 +102,69 @@ class PricePerformanceWidget extends StatelessWidget {
                 return DataRow(
                   cells: [
                     DataCell(
-                      MdSnsText(
-                        item.period.toString().capitalize(),
-                        variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h2,
-                        color: AppColors.white,
-                        overflow: TextOverflow.ellipsis,
+                      Row(
+                        children: [
+                          MdSnsText(
+                            item.periodLow.toString().capitalize(),
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h2,
+                            color: AppColors.white,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(width: 14.w), // small spacing before text
+
+                          Container(
+                            width: 100.w,
+                            alignment: Alignment.center,
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  height: 12.h,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.color091224,
+                                    borderRadius: BorderRadius.circular(20.r),
+                                  ),
+                                ),
+
+                                Positioned(
+                                  left: 0,
+                                  child: Container(
+                                    width: 70.w,
+                                    height: 12.h,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.redFF3B3B,
+                                      borderRadius: BorderRadius.horizontal(
+                                        left: Radius.circular(20.r),
+                                        right: Radius.zero,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                Positioned(
+                                  left: 78 - 1,
+                                  top: -2.h,
+                                  child: Container(
+                                    width: 4.w,
+                                    height: 16.h,
+                                    color: AppColors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+
                     DataCell(
                       Row(
                         children: [
                           MdSnsText(
-                            "",
-                            // item.formType,
+                            // "nsndnd",
+                            item.periodLow.toString().capitalize(),
+
                             variant: TextVariant.h4,
                             fontWeight: TextFontWeightVariant.h2,
                             color: AppColors.white,
@@ -124,9 +173,12 @@ class PricePerformanceWidget extends StatelessWidget {
                         ],
                       ),
                     ),
+
                     DataCell(
                       MdSnsText(
-                        "",
+                        // "kakakaka",
+                        item.periodHigh.toString().capitalize(),
+
                         // formatDateMMDDYYYY(item.fileDate),
                         variant: TextVariant.h4,
                         fontWeight: TextFontWeightVariant.h2,
@@ -135,13 +187,25 @@ class PricePerformanceWidget extends StatelessWidget {
                       ),
                     ),
                     DataCell(
-                      MdSnsText(
-                        "",
-                        // formatDateMMDDYYYY(item.transactionDate),
-                        variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h2,
-                        color: AppColors.white,
-                        overflow: TextOverflow.ellipsis,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          MdSnsText(
+                            // "",
+                            item.performance.toString().capitalize(),
+                            // formatDateMMDDYYYY(item.transactionDate),
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h2,
+                            color: AppColors.white,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(width: 45.w),
+                          Image.asset(
+                            Assets.images.stock.path,
+                            height: 20.h,
+                            width: 45.w,
+                          ),
+                        ],
                       ),
                     ),
                   ],
