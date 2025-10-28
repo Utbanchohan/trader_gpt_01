@@ -179,7 +179,25 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.newConversation.path,
         name: AppRoutes.newConversation.name,
         builder: (BuildContext context, GoRouterState state) {
-          return NewConversation();
+          final extras = state.extra as Map<String, dynamic>;
+          final chatRoutings = extras["chatRouting"] as List<ChatRouting>;
+          final chatRouting = state.extra != null
+              ? chatRoutings
+              : [
+                  ChatRouting(
+                    image: "",
+                    symbol: "",
+                    companyName: "",
+                    price: 0,
+                    changePercentage: 0,
+                    previousClose: 0,
+                    chatId: "",
+                    stockid: "",
+                    type: "",
+                    trendChart: FiveDayTrend(data: []),
+                  ),
+                ];
+          return NewConversation(chatRouting: chatRouting);
         },
         routes: [],
       ),

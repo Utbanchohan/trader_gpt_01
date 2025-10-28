@@ -24,7 +24,8 @@ import '../../../../shared/socket/providers/stocks_price.dart';
 import '../../../chat/domain/model/chat_stock_model.dart';
 
 class NewConversation extends ConsumerStatefulWidget {
-  const NewConversation({super.key});
+  final List<ChatRouting>? chatRouting;
+  const NewConversation({super.key, this.chatRouting});
 
   @override
   ConsumerState<NewConversation> createState() => _NewConversationState();
@@ -107,45 +108,75 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   }
 
   createChat(Stock stock) async {
-    var res = await ref
-        .read(createChatProviderProvider.notifier)
-        .createChate(
-          CreateChatDto(
-            companyName: stock.companyName,
-            stockId: stock.stockId,
-            symbol: stock.symbol,
-            type: stock.type,
-          ),
-        );
-    if (res != null) {
-      ChatHistory chatHistory = res;
-      if (mounted) {
-        pushNewStock(stock);
-        ref.read(stocksManagerProvider.notifier).watchStock(stock);
-
-        context.pushNamed(
-          AppRoutes.swipeScreen.name,
-          extra: {
-            "chatRouting": ChatRouting(
-              previousClose: stock.previousClose,
-              chatId: chatHistory.id,
+    if (widget.chatRouting != null && widget.chatRouting!.isNotEmpty) {
+      for (final chat in widget.chatRouting!) {
+        if (chat.symbol.toLowerCase() == stock.symbol.toLowerCase()) {
+          context.pushNamed(
+            AppRoutes.swipeScreen.name,
+            extra: {
+              "chatRouting": ChatRouting(
+                previousClose: stock.previousClose,
+                chatId: chat.chatId,
+                symbol: stock.symbol,
+                type: stock.type,
+                image: "",
+                companyName: stock.companyName,
+                price: stock.price,
+                changePercentage: stock.pctChange,
+                trendChart:
+                    stock.fiveDayTrend.isNotEmpty &&
+                        stock.fiveDayTrend[0].data != null
+                    ? stock.fiveDayTrend[0]
+                    : FiveDayTrend(data: [0, 0, 0, 0, 0]),
+                stockid: stock.stockId,
+              ),
+              "initialIndex": 1,
+            },
+          );
+          return;
+        }
+      }
+    } else {
+      var res = await ref
+          .read(createChatProviderProvider.notifier)
+          .createChate(
+            CreateChatDto(
+              companyName: stock.companyName,
+              stockId: stock.stockId,
               symbol: stock.symbol,
               type: stock.type,
-              image: "",
-              companyName: stock.companyName,
-              price: stock.price,
-              changePercentage: stock.pctChange,
-              trendChart:
-                  stock.fiveDayTrend.isNotEmpty &&
-                      stock.fiveDayTrend[0].data != null
-                  ? stock.fiveDayTrend[0]
-                  : FiveDayTrend(data: [0, 0, 0, 0, 0]),
-              stockid: stock.stockId,
             ),
-            "initialIndex": 1,
-          },
-        );
-        // socketService.dispose();
+          );
+      if (res != null) {
+        ChatHistory chatHistory = res;
+        if (mounted) {
+          pushNewStock(stock);
+          ref.read(stocksManagerProvider.notifier).watchStock(stock);
+
+          context.pushNamed(
+            AppRoutes.swipeScreen.name,
+            extra: {
+              "chatRouting": ChatRouting(
+                previousClose: stock.previousClose,
+                chatId: chatHistory.id,
+                symbol: stock.symbol,
+                type: stock.type,
+                image: "",
+                companyName: stock.companyName,
+                price: stock.price,
+                changePercentage: stock.pctChange,
+                trendChart:
+                    stock.fiveDayTrend.isNotEmpty &&
+                        stock.fiveDayTrend[0].data != null
+                    ? stock.fiveDayTrend[0]
+                    : FiveDayTrend(data: [0, 0, 0, 0, 0]),
+                stockid: stock.stockId,
+              ),
+              "initialIndex": 1,
+            },
+          );
+          // socketService.dispose();
+        }
       }
     }
   }
