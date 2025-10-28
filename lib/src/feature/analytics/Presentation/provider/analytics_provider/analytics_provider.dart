@@ -30,6 +30,7 @@ import '../../../domain/model/insider_transaction/insider_transaction_model.dart
 import '../../../domain/model/market_cap_model/market_cap_model.dart';
 import '../../../domain/model/overview_model/overview_model.dart';
 import '../../../domain/model/price_comparison_model/price_comparison_model.dart';
+import '../../../domain/model/price_performance_model/price_performance_model.dart';
 import '../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
 import '../../../domain/model/security_ownership_model/security_ownership_model.dart';
 import '../../../domain/model/security_short/short_security_model.dart';
@@ -360,6 +361,20 @@ class AnalyticsProvider extends _$AnalyticsProvider {
       } else {
         rethrow;
       }
+    }
+  }
+
+  Future<PricePerformance?> pricePerformance(SymbolDto symbol) async {
+    try {
+      var res = await ref.read(overviewRepositoryNrm).pricePerformance(symbol);
+      if (res.msg == "Success") {
+        return res;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
     }
   }
 
