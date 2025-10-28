@@ -259,6 +259,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         drawer: SideMenu(),
 
         backgroundColor: AppColors.primaryColor,
+
         appBar: AppBar(
           centerTitle: false,
 

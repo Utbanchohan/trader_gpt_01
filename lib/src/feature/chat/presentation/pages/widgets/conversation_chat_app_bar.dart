@@ -19,8 +19,13 @@ import '../../../../../shared/socket/providers/stocks_price.dart';
 class ConversationChatAppBar extends ConsumerStatefulWidget
     implements PreferredSizeWidget {
   ChatRouting? chatRouting;
+  final void Function() onPressed;
 
-  ConversationChatAppBar({super.key, required this.chatRouting});
+  ConversationChatAppBar({
+    super.key,
+    required this.chatRouting,
+    required this.onPressed,
+  });
 
   @override
   ConsumerState<ConversationChatAppBar> createState() =>
@@ -77,16 +82,16 @@ class _ConversationChatAppBarState
           },
         ),
         title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child: Image.asset(
-              Assets.images.searchNormal.path,
-              width: 20,
-              height: 20,
-            ),
-          ),
-        ],
+        // actions: [
+        //   Container(
+        //     margin: EdgeInsets.only(right: 20),
+        //     child: Image.asset(
+        //       Assets.images.searchNormal.path,
+        //       width: 20,
+        //       height: 20,
+        //     ),
+        //   ),
+        // ],
       );
     } else {
       /// Stock Detail AppBar
@@ -235,10 +240,7 @@ class _ConversationChatAppBarState
         actions: [
           GestureDetector(
             onTap: () {
-              context.pushNamed(
-                AppRoutes.analytics.name,
-                extra: widget.chatRouting,
-              );
+              widget.onPressed();
             },
             child: Container(
               width: 40.w,

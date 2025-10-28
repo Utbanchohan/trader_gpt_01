@@ -102,7 +102,12 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
           children: [
             Container(
               // height: isWorkSymbol ? 145.h : 115.h,
-              margin: EdgeInsets.all(18),
+              margin: EdgeInsets.only(
+                left: 15.w,
+                right: 15.w,
+                bottom: 10.h,
+                // top: 10.h,
+              ),
               padding: EdgeInsets.all(1),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25.r),
