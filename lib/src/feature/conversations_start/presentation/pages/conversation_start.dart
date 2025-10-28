@@ -260,6 +260,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         drawer: SideMenu(),
 
         backgroundColor: AppColors.primaryColor,
+
         appBar: AppBar(
           centerTitle: false,
 
@@ -1087,7 +1088,31 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blue,
           onPressed: () {
-            context.pushNamed(AppRoutes.newConversation.name);
+            List<ChatRouting> chatRoutings = [];
+            for (var convo1 in convo) {
+              int stockIndex = findRelatedStock(convo1.symbol);
+              chatRoutings.add(
+                ChatRouting(
+                  chatId: convo1.id,
+                  symbol: convo1.symbol,
+                  image: "",
+                  companyName: convo1.companyName,
+                  price: stocks[stockIndex].price,
+                  type: convo1.type,
+                  changePercentage: stocks[stockIndex].pctChange,
+                  trendChart: stocks[stockIndex].fiveDayTrend.isNotEmpty
+                      ? stocks[stockIndex].fiveDayTrend[0]
+                      : FiveDayTrend(data: [0, 0, 0, 0, 0]),
+                  stockid: convo1.stockId,
+                  previousClose: stocks[stockIndex].previousClose,
+                ),
+              );
+            }
+
+            context.pushNamed(
+              AppRoutes.newConversation.name,
+              extra: {"chatRouting": chatRoutings},
+            );
           },
           child: Icon(Icons.add),
         ),

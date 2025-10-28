@@ -142,7 +142,7 @@ abstract interface class AnalysisApi {
   );
 
   @POST('api/v1/ticker/price/performance')
-  Future<PricePerformance> pricePerformance(SymbolDto symbol);
+  Future<PricePerformance> pricePerformance(@Body() SymbolDto symbol);
 
   //crypto apis
   @GET('api/v1/crypto/about?symbol={symbol}')

@@ -25,16 +25,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   User? userModel;
 
   logout() {
-    ref.read(localDataProvider).setIsFirstTime(true);
-    ref.read(localDataProvider).saveUserName("");
-    String token = "";
-    List<Map<String, dynamic>> stocks = [];
-    ref.read(localDataProvider).setAccessToken(token);
-    ref.read(localDataProvider).setAccessTokenMarket(token);
-    ref.read(localDataProvider).setAccessTokenMarketNew(token);
-    ref.read(localDataProvider).setRefreshTokenMarket(token);
-    ref.read(localDataProvider).setRefreshTokenMarketNew(token);
-    ref.read(localDataProvider).saveStock(stocks);
+    ref.read(localDataProvider).clearAllData();
     ref.read(stocksManagerProvider.notifier).unWatchAllStock();
     context.goNamed(AppRoutes.signInPage.name);
   }
