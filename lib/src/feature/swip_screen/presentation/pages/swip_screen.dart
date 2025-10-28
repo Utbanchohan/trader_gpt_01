@@ -265,12 +265,11 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
         },
         children: [
           ConversationStart(),
-          convo != null && convo.isNotEmpty && stocks.isNotEmpty
-              ? ChatConversation(
-                  chatRouting: widget.chatRouting,
-                  initialMessage: '',
-                )
-              : ChatPage(chatRouting: widget.chatRouting),
+          // convo != null && convo.isNotEmpty && stocks.isNotEmpty
+          //     ?
+          ChatConversation(chatRouting: widget.chatRouting, initialMessage: ''),
+          // :
+          // ChatPage(chatRouting: widget.chatRouting),
           if (convo != null && convo.isNotEmpty && stocks.isNotEmpty)
             AnalyticsScreen(chatRouting: widget.chatRouting),
         ],
