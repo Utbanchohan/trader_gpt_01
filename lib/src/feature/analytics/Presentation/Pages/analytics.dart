@@ -2319,9 +2319,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       },
                     ),
                   )
-                : SizedBox(), // 🔸 when response is null
-            // : PriceCardShimmer(),
-            SizedBox(height: 20.h),
+                : SizedBox(),
+            SizedBox(height: overviewCandleChartModel != null ? 20.h : 0),
+
             overviewCandleChartModel != null
                 ? CustomCandleChart(
                     key: UniqueKey(),
