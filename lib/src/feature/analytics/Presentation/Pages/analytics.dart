@@ -1145,62 +1145,62 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           top: true,
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      context.pushNamed(
-                        AppRoutes.swipeScreen.name,
-                        extra: {
-                          "chatRouting": widget.chatRouting,
-                          "initialIndex": 1,
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: 40.w,
-                      height: 71.h,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(Assets.images.shapeRightSide.path),
-                        ),
-                      ),
-                      padding: EdgeInsets.all(15),
-                      child: Image.asset(
-                        Assets.images.message.path,
-                        width: 25.w,
-                        height: 21.h,
-                      ),
-                    ),
-                  ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     InkWell(
+              //       onTap: () {
+              //         context.pushNamed(
+              //           AppRoutes.swipeScreen.name,
+              //           extra: {
+              //             "chatRouting": widget.chatRouting,
+              //             "initialIndex": 1,
+              //           },
+              //         );
+              //       },
+              //       child: Container(
+              //         width: 40.w,
+              //         height: 71.h,
+              //         decoration: BoxDecoration(
+              //           image: DecorationImage(
+              //             image: AssetImage(Assets.images.shapeRightSide.path),
+              //           ),
+              //         ),
+              //         padding: EdgeInsets.all(15),
+              //         child: Image.asset(
+              //           Assets.images.message.path,
+              //           width: 25.w,
+              //           height: 21.h,
+              //         ),
+              //       ),
+              //     ),
 
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(right: 30),
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset(
-                              "assets/images/analytics.png",
-                              width: 20,
-                              height: 20,
-                            ),
-                            SizedBox(width: 6),
-                            MdSnsText(
-                              "ANALYTICS",
-                              color: AppColors.white,
-                              fontWeight: TextFontWeightVariant.h4,
-                              variant: TextVariant.h3,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              //     Expanded(
+              //       child: Container(
+              //         margin: EdgeInsets.only(right: 30),
+              //         child: Center(
+              //           child: Row(
+              //             mainAxisSize: MainAxisSize.min,
+              //             children: [
+              //               Image.asset(
+              //                 "assets/images/analytics.png",
+              //                 width: 20,
+              //                 height: 20,
+              //               ),
+              //               SizedBox(width: 6),
+              //               MdSnsText(
+              //                 "ANALYTICS",
+              //                 color: AppColors.white,
+              //                 fontWeight: TextFontWeightVariant.h4,
+              //                 variant: TextVariant.h3,
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
               Expanded(
                 child: TabBarView(
                   physics: NeverScrollableScrollPhysics(),

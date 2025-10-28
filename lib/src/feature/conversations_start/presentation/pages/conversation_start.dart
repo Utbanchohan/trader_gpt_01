@@ -259,82 +259,83 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
         drawer: SideMenu(),
 
         backgroundColor: AppColors.primaryColor,
-        appBar: AppBar(
-          centerTitle: false,
 
-          scrolledUnderElevation: 0,
-          backgroundColor: AppColors.primaryColor,
-          elevation: 0,
-          leadingWidth: 40.w,
+        // appBar: AppBar(
+        //   centerTitle: false,
 
-          leading: Builder(
-            builder: (context) {
-              return InkWell(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Image.asset(
-                  Assets.images.menu.path,
-                  width: 40,
-                  height: 40,
-                ),
-              );
-            },
-          ),
-          title: Row(
-            children: [
-              MdSnsText(
-                "Conversations",
-                variant: TextVariant.h1,
-                fontWeight: TextFontWeightVariant.h1,
+        //   scrolledUnderElevation: 0,
+        //   backgroundColor: AppColors.primaryColor,
+        //   elevation: 0,
+        //   leadingWidth: 40.w,
 
-                color: AppColors.fieldTextColor,
-              ),
-              SizedBox(width: 10.w),
-              Container(
-                alignment: Alignment.center,
-                height: 22.h,
-                width: 41.06.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.r),
-                  color: AppColors.fieldColor,
-                ),
-                child: MdSnsText(
-                  convo.length.toString(),
-                  variant: TextVariant.h2,
-                  fontWeight: TextFontWeightVariant.h4,
+        //   leading: Builder(
+        //     builder: (context) {
+        //       return InkWell(
+        //         onTap: () {
+        //           Scaffold.of(context).openDrawer();
+        //         },
+        //         child: Image.asset(
+        //           Assets.images.menu.path,
+        //           width: 40,
+        //           height: 40,
+        //         ),
+        //       );
+        //     },
+        //   ),
+        //   title: Row(
+        //     children: [
+        //       MdSnsText(
+        //         "Conversations",
+        //         variant: TextVariant.h1,
+        //         fontWeight: TextFontWeightVariant.h1,
 
-                  color: AppColors.fieldTextColor,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            if (!isSearching) // 👈 Agar search mode nahi hai to search button dikhao
-              IconButton(
-                icon: Image.asset(
-                  Assets.images.searchNormal.path,
-                  height: 20.h,
-                  width: 20.w,
-                ),
-                onPressed: () {
-                  setState(() {
-                    isSearching = true;
-                  });
-                },
-              )
-            else // 👈 Agar search mode ON hai to close button dikhao
-              IconButton(
-                icon: Icon(Icons.close, color: Colors.white),
-                onPressed: () {
-                  setState(() {
-                    isSearching = false;
-                    search.clear();
-                  });
-                },
-              ),
-          ],
-        ),
+        //         color: AppColors.fieldTextColor,
+        //       ),
+        //       SizedBox(width: 10.w),
+        //       Container(
+        //         alignment: Alignment.center,
+        //         height: 22.h,
+        //         width: 41.06.w,
+        //         decoration: BoxDecoration(
+        //           borderRadius: BorderRadius.circular(10.r),
+        //           color: AppColors.fieldColor,
+        //         ),
+        //         child: MdSnsText(
+        //           convo.length.toString(),
+        //           variant: TextVariant.h2,
+        //           fontWeight: TextFontWeightVariant.h4,
+
+        //           color: AppColors.fieldTextColor,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        //   actions: [
+        //     if (!isSearching) // 👈 Agar search mode nahi hai to search button dikhao
+        //       IconButton(
+        //         icon: Image.asset(
+        //           Assets.images.searchNormal.path,
+        //           height: 20.h,
+        //           width: 20.w,
+        //         ),
+        //         onPressed: () {
+        //           setState(() {
+        //             isSearching = true;
+        //           });
+        //         },
+        //       )
+        //     else // 👈 Agar search mode ON hai to close button dikhao
+        //       IconButton(
+        //         icon: Icon(Icons.close, color: Colors.white),
+        //         onPressed: () {
+        //           setState(() {
+        //             isSearching = false;
+        //             search.clear();
+        //           });
+        //         },
+        //       ),
+        //   ],
+        // ),
         body: Column(
           children: [
             AnimatedSwitcher(

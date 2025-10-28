@@ -600,7 +600,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
       ),
 
       backgroundColor: AppColors.primaryColor,
-      appBar: ConversationChatAppBar(chatRouting: widget.chatRouting),
+      // appBar: ConversationChatAppBar(chatRouting: widget.chatRouting),
       body: SingleChildScrollView(
         controller: sc,
         physics: const AlwaysScrollableScrollPhysics(),

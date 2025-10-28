@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
+import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/analytics.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
@@ -9,8 +13,12 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_conversation.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/chat_page.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/Onboarding_BottomSheet.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/chat_app_bar.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/conversation_chat_app_bar.dart';
 import 'package:trader_gpt/src/feature/conversations_start/presentation/pages/conversation_start.dart';
+import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class SwipeScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
@@ -26,6 +34,9 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
   late PageController _pageController;
   List<ChatHistory> convo = [];
   List<Stock> stocks = [];
+  bool isSearching = false;
+  TextEditingController search = TextEditingController();
+  int pgeIndex = 0;
 
   @override
   void initState() {
@@ -34,6 +45,7 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
     getStocks();
     bool isFirstTime = ref.read(localDataProvider).getIsFirstTime();
     int pageIndex = isFirstTime ? 0 : widget.initialIndex;
+    pgeIndex = pageIndex;
     _pageController = PageController(initialPage: pageIndex);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -82,8 +94,175 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      drawer: SideMenu(),
+      appBar: _pageController.hasClients
+          ? pgeIndex == 0
+                ? AppBar(
+                    centerTitle: false,
+
+                    scrolledUnderElevation: 0,
+                    backgroundColor: AppColors.primaryColor,
+                    elevation: 0,
+                    leadingWidth: 40.w,
+
+                    leading: Builder(
+                      builder: (context) {
+                        return InkWell(
+                          onTap: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                          child: Image.asset(
+                            Assets.images.menu.path,
+                            width: 40,
+                            height: 40,
+                          ),
+                        );
+                      },
+                    ),
+                    title: Row(
+                      children: [
+                        MdSnsText(
+                          "Conversations",
+                          variant: TextVariant.h1,
+                          fontWeight: TextFontWeightVariant.h1,
+
+                          color: AppColors.fieldTextColor,
+                        ),
+                        SizedBox(width: 10.w),
+                        Container(
+                          alignment: Alignment.center,
+                          height: 22.h,
+                          width: 41.06.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.r),
+                            color: AppColors.fieldColor,
+                          ),
+                          child: MdSnsText(
+                            convo.length.toString(),
+                            variant: TextVariant.h2,
+                            fontWeight: TextFontWeightVariant.h4,
+
+                            color: AppColors.fieldTextColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      if (!isSearching)
+                        IconButton(
+                          icon: Image.asset(
+                            Assets.images.searchNormal.path,
+                            height: 20.h,
+                            width: 20.w,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isSearching = true;
+                            });
+                          },
+                        )
+                      else // 👈 Agar search mode ON hai to close button dikhao
+                        IconButton(
+                          icon: Icon(Icons.close, color: Colors.white),
+                          onPressed: () {
+                            setState(() {
+                              isSearching = false;
+                              search.clear();
+                            });
+                          },
+                        ),
+                    ],
+                  )
+                : pgeIndex == 1
+                ? widget.chatRouting != null &&
+                          widget.chatRouting!.symbol.isNotEmpty
+                      ? ConversationChatAppBar(chatRouting: widget.chatRouting)
+                      : ChatAppBar()
+                : pgeIndex == 2
+                ? PreferredSize(
+                    preferredSize: Size.fromHeight(
+                      75.h,
+                    ), // Adjust height as needed
+                    child: AppBar(
+                      automaticallyImplyLeading: false,
+                      backgroundColor: AppColors.primaryColor,
+                      elevation: 0,
+                      flexibleSpace: SafeArea(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    context.pushNamed(
+                                      AppRoutes.swipeScreen.name,
+                                      extra: {
+                                        "chatRouting": widget.chatRouting,
+                                        "initialIndex": 1,
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    width: 40.w,
+                                    height: 71.h,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                          Assets.images.shapeRightSide.path,
+                                        ),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.all(15),
+                                    child: Image.asset(
+                                      Assets.images.message.path,
+                                      width: 25.w,
+                                      height: 21.h,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: 30),
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/analytics.png",
+                                            width: 20,
+                                            height: 20,
+                                          ),
+                                          SizedBox(width: 6),
+                                          MdSnsText(
+                                            "ANALYTICS",
+                                            color: AppColors.white,
+                                            fontWeight:
+                                                TextFontWeightVariant.h4,
+                                            variant: TextVariant.h3,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                : null
+          : ChatAppBar(),
       body: PageView(
         controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            pgeIndex = index;
+          });
+        },
         children: [
           ConversationStart(),
           convo != null && convo.isNotEmpty && stocks.isNotEmpty
