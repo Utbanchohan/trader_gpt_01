@@ -17,6 +17,7 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/provider/monthly_d
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/overview_candle_chart_crypto/overview_candle_chart_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data_crypto/weekly_data_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/highlights_widgets.dart';
+import 'package:trader_gpt/src/feature/analytics/domain/model/price_performance_model/price_performance_model.dart';
 import 'package:trader_gpt/src/shared/widgets/AnalysisTableShimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsTableShimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsTrendShimmer.dart';
@@ -148,6 +149,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   FinancialResponse? financialResponse;
   FinanceDataResponse? financeChartsDataModel;
   List<OverviewCandleChartModel>? overviewCandleChartModel;
+  PricePerformance? pricePerformanceData;
   bool chartLoader = false;
   bool ishowLoder = false;
   bool isshowpriceTargetMatricsDataLoder = false;
@@ -199,6 +201,22 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           .getOverview(symbol);
       if (res != null) {
         stockResponse = res;
+        ishowLoder = false;
+      }
+    } catch (e) {
+      print(e);
+      ishowLoder = false;
+    }
+  }
+
+  pricePerformance(SymbolDto symbol) async {
+    try {
+      ishowLoder = true;
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .pricePerformance(symbol);
+      if (res != null) {
+        pricePerformanceData = res;
         ishowLoder = false;
       }
     } catch (e) {
@@ -602,6 +620,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         setState(() {});
       } catch (e, s) {
         debugPrint("Error in getMatricsData: $e\n$s");
+      }
+    }
+    if (pricePerformanceData == null) {
+      try {
+        await pricePerformance(SymbolDto(symbol: widget.chatRouting!.symbol));
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in pricePerformance: $e\n$s");
       }
     }
 
@@ -2345,7 +2372,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   )
                 : SizedBox(),
             SizedBox(height: 20.h),
-            PricePerformanceWidget(),
+            pricePerformanceData != null
+                ? PricePerformanceWidget(data: pricePerformanceData!)
+                : SizedBox(),
             SizedBox(height: 20.h),
             fundamentalResponse != null &&
                     fundamentalResponse!
@@ -2622,7 +2651,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             isAbs: false,
                           ),
 
-                          companyModel!.general.PercentInstitutions.toString(),
+                          Filters.systemNumberConvention(
+                            companyModel!.general.PercentInstitutions ?? 0,
+                            isPrice: false,
+                            alwaysShowTwoDecimal: true,
+                          ),
+
                           Filters.systemNumberConvention(
                             companyModel!.general.EBITDA,
                             isPrice: false,

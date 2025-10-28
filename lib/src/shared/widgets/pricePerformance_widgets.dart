@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
+import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../feature/analytics/domain/model/price_performance_model/price_performance_model.dart';
+
 class PricePerformanceWidget extends StatelessWidget {
-  const PricePerformanceWidget({super.key});
+  final PricePerformance? data;
+  const PricePerformanceWidget({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -48,74 +52,171 @@ class PricePerformanceWidget extends StatelessWidget {
           // 🟡 Scrollable Table
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    _headerText("Period"),
-                    _headerText("Period Low"),
-                    SizedBox(width: 120.w),
-                    _headerText("Period High"),
-                    _headerText("Performance"),
-                    SizedBox(width: 45.w),
-                  ],
-                ),
+            child: DataTable(
+              headingRowHeight: 40.h,
+              columnSpacing: 20,
+              horizontalMargin: 15,
 
-                // Rows
-                _buildRow(
-                  "2-Month",
-                  20,
-                  80,
-                  "45",
-                  "3.58%",
-                  "49.12",
-                  "-5.1%",
-                  "-1.95",
-                  "-4.01%",
-                  Colors.green,
-                  AppColors.color0xFFFF2366,
+              dataRowMaxHeight: 60.h,
+              headingRowColor: WidgetStateProperty.resolveWith<Color?>((
+                Set<WidgetState> states,
+              ) {
+                return AppColors.color1B254B;
+              }),
+              columns: [
+                DataColumn(
+                  label: MdSnsText(
+                    "Period",
+                    textAlign: TextAlign.center,
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h2,
+                    color: AppColors.white,
+                  ),
                 ),
-                _buildRow(
-                  "6-Month",
-                  10,
-                  60,
-                  "33.53",
-                  "39.01%",
-                  "49.65",
-                  "-6.12%",
-                  "-4.28",
-                  "10.11%",
-                  Colors.green,
-                  AppColors.color0xFFFF2366,
+                DataColumn(
+                  label: MdSnsText(
+                    'Period Low',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h2,
+                    color: AppColors.white,
+                  ),
                 ),
-                _buildRow(
-                  "YTD",
-                  30,
-                  90,
-                  "5.95",
-                  "683.36%",
-                  "49.65",
-                  "-6.12%",
-                  "-4.28",
-                  "10.11%",
-                  Colors.green,
-                  AppColors.color0xFFFF2366,
+                DataColumn(
+                  label: MdSnsText(
+                    'Period High',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h2,
+                    color: AppColors.white,
+                  ),
                 ),
-                _buildRow(
-                  "52-Week",
-                  15,
-                  75,
-                  "5.95",
-                  "683.36%",
-                  "49.65",
-                  "-6.12%",
-                  "-4.28",
-                  "10.11%",
-                  Colors.green,
-                  AppColors.color0xFFFF2366,
+                DataColumn(
+                  label: MdSnsText(
+                    'Performance',
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h2,
+                    color: AppColors.white,
+                  ),
                 ),
               ],
+              rows: data!.data.map((item) {
+                return DataRow(
+                  cells: [
+                    DataCell(
+                      MdSnsText(
+                        item.period.toString().capitalize(),
+                        variant: TextVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
+                        color: AppColors.white,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    DataCell(
+                      Row(
+                        children: [
+                          MdSnsText(
+                            "",
+                            // item.formType,
+                            variant: TextVariant.h4,
+                            fontWeight: TextFontWeightVariant.h2,
+                            color: AppColors.white,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                    DataCell(
+                      MdSnsText(
+                        "",
+                        // formatDateMMDDYYYY(item.fileDate),
+                        variant: TextVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
+                        color: AppColors.white,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    DataCell(
+                      MdSnsText(
+                        "",
+                        // formatDateMMDDYYYY(item.transactionDate),
+                        variant: TextVariant.h4,
+                        fontWeight: TextFontWeightVariant.h2,
+                        color: AppColors.white,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
             ),
+
+            //  Column(
+            //   children: [
+            //     Row(
+            //       children: [
+            //         _headerText("Period"),
+            //         _headerText("Period Low"),
+            //         SizedBox(width: 120.w),
+            //         _headerText("Period High"),
+            //         _headerText("Performance"),
+            //         SizedBox(width: 45.w),
+            //       ],
+            //     ),
+
+            //     // Rows
+            //     _buildRow(
+            //       "2-Month",
+            //       20,
+            //       80,
+            //       "45",
+            //       "3.58%",
+            //       "49.12",
+            //       "-5.1%",
+            //       "-1.95",
+            //       "-4.01%",
+            //       Colors.green,
+            //       AppColors.color0xFFFF2366,
+            //     ),
+            //     _buildRow(
+            //       "6-Month",
+            //       10,
+            //       60,
+            //       "33.53",
+            //       "39.01%",
+            //       "49.65",
+            //       "-6.12%",
+            //       "-4.28",
+            //       "10.11%",
+            //       Colors.green,
+            //       AppColors.color0xFFFF2366,
+            //     ),
+            //     _buildRow(
+            //       "YTD",
+            //       30,
+            //       90,
+            //       "5.95",
+            //       "683.36%",
+            //       "49.65",
+            //       "-6.12%",
+            //       "-4.28",
+            //       "10.11%",
+            //       Colors.green,
+            //       AppColors.color0xFFFF2366,
+            //     ),
+            //     _buildRow(
+            //       "52-Week",
+            //       15,
+            //       75,
+            //       "5.95",
+            //       "683.36%",
+            //       "49.65",
+            //       "-6.12%",
+            //       "-4.28",
+            //       "10.11%",
+            //       Colors.green,
+            //       AppColors.color0xFFFF2366,
+            //     ),
+            //   ],
+            // ),
           ),
         ],
       ),

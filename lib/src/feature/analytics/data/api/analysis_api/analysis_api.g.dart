@@ -740,7 +740,7 @@ class _AnalysisApi implements AnalysisApi {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = symbol;
     final _options = _setStreamType<PricePerformance>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(

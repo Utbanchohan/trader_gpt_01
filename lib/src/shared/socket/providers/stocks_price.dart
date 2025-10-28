@@ -6,6 +6,7 @@ import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 
 import '../../../core/extensions/empty_stock.dart';
 import '../../../core/local/repository/local_storage_repository.dart';
+import '../../../core/routes/routes.dart';
 import '../domain/repository/repository.dart';
 import '../model/stock_model.dart/stock_model.dart';
 

@@ -5,7 +5,10 @@ import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint, Uint8List;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/src/shared/flavours.dart';
+import '../../shared/custom_message.dart';
+import '../../shared/socket/providers/stocks_price.dart';
 import '../local/repository/local_storage_repository.dart';
+import '../routes/routes.dart';
 part 'interceptors.dart';
 part 'pretty_logger.dart';
 
