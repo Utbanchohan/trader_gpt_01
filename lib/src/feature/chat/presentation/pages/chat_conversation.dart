@@ -197,7 +197,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                   ],
                 ),
                 Container(
-                  height: 370.h,
+                  height: 410.h,
                   width: MediaQuery.sizeOf(context).width,
                   child: ListView.builder(
                     shrinkWrap: true,
