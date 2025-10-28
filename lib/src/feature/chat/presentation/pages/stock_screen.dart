@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/shimmer_stock_list.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/stock_tile.dart';
 import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
