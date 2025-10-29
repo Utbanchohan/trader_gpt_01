@@ -116,7 +116,6 @@ class PriceTargetWidget extends StatelessWidget {
   }
 }
 
-// This represents the structure for the 'High' bar section
 Widget buildPriceTargetBar(
   String label,
   String price,

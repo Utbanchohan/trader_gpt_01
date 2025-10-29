@@ -12,7 +12,6 @@ part 'interceptors.dart';
 part 'pretty_logger.dart';
 
 /// A Dio Client Provider.
-/// This Provider gives us a Dio instance to make network calls
 final client = Provider.family<Dio, String>((ref, baseUrl) {
   const timeOut = Duration(seconds: 120000);
   return Dio(

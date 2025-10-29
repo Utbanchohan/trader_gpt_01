@@ -18,6 +18,7 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/provider/overview_
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data_crypto/weekly_data_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/highlights_widgets.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/price_performance_model/price_performance_model.dart';
+import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/widget/shimmer_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/AnalysisTableShimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsTableShimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsTrendShimmer.dart';
@@ -72,6 +73,7 @@ import '../../../../shared/widgets/security_short_widgets.dart';
 import '../../../../shared/widgets/securityownership_widgets.dart';
 import '../../../../shared/widgets/shortvalue.widgets.dart';
 import '../../../../shared/widgets/split_dividend.dart';
+import '../../../../shared/widgets/table_shimmer.dart';
 import '../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../data/dto/financial_dto/financial_dto.dart';
 import '../../data/dto/highlight_dto/highlight_dto_crypto.dart';
@@ -154,6 +156,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   bool ishowLoder = false;
   bool isshowpriceTargetMatricsDataLoder = false;
   bool isshowshareStructureLoder = false;
+  bool companyLoader = false;
+  bool financialLoader = false;
+  bool financialResponseLoader = false;
+  bool earningReportShimmer = false;
+  bool companyDetailShimmer = false;
+  bool earningChartModelLoader = false;
+  bool analysisDataModelLoader = false;
 
   //crypto Variable start
   List<OverviewCandleChartModel>? overviewCandleChartModelCrypto;
@@ -174,22 +183,58 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   final chartService = ChartService();
 
   financialData(String symbol) async {
-    PriceRequestDto overview = PriceRequestDto(symbol: symbol, isYearly: true);
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .financialData(overview);
-    if (res != null) {
-      financialResponse = res;
+    try {
+      setState(() {
+        financialResponseLoader = true;
+      });
+      PriceRequestDto overview = PriceRequestDto(
+        symbol: symbol,
+        isYearly: true,
+      );
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .financialData(overview);
+      if (res != null) {
+        financialResponse = res;
+        setState(() {
+          financialResponseLoader = false;
+        });
+      } else {
+        setState(() {
+          financialResponseLoader = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        financialResponseLoader = false;
+      });
     }
   }
 
   financialCharts(String symbol) async {
-    SymbolDto symbols = SymbolDto(symbol: symbol);
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .financialCharts(symbols);
-    if (res != null) {
-      financeChartsDataModel = res;
+    try {
+      setState(() {
+        financialLoader = true;
+      });
+      SymbolDto symbols = SymbolDto(symbol: symbol);
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .financialCharts(symbols);
+      if (res != null) {
+        financeChartsDataModel = res;
+        setState(() {
+          financialLoader = false;
+        });
+      } else {
+        setState(() {
+          financialLoader = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        financialLoader = false;
+      });
+      print(e);
     }
   }
 
@@ -223,11 +268,28 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   getCompanyDetail(SymbolDto symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .companyDetail(symbol);
-    if (res != null) {
-      companyDetailModel = res;
+    try {
+      setState(() {
+        companyDetailShimmer = true;
+      });
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .companyDetail(symbol);
+      if (res != null) {
+        companyDetailModel = res;
+        setState(() {
+          companyDetailShimmer = false;
+        });
+      } else {
+        setState(() {
+          companyDetailShimmer = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        companyDetailShimmer = false;
+      });
+      print(e);
     }
   }
 
@@ -286,11 +348,23 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   getcompanyData(SymbolDto symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .companyData(symbol);
-    if (res != null) {
-      companyModel = res.data;
+    try {
+      setState(() {
+        companyLoader = true;
+      });
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .companyData(symbol);
+      if (res != null) {
+        setState(() {
+          companyModel = res.data;
+          companyLoader = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        companyLoader = false;
+      });
     }
   }
 
@@ -351,60 +425,94 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   earningChartData(String symbol) async {
-    final now = DateTime.now().toUtc();
+    try {
+      setState(() {
+        earningChartModelLoader = true;
+      });
+      final now = DateTime.now().toUtc();
 
-    // Subtract 2 years for startDate
-    final startDate = DateTime.utc(
-      now.year - 2,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-      now.second,
-      now.millisecond,
-    );
-    final endDateString = now.toIso8601String();
-    final startDateString = startDate.toIso8601String();
-    ChartRequestDto overview = ChartRequestDto(
-      symbol: "NDAQ",
-      interval: IntervalEnum.quarterly.value,
-      startDate: startDateString,
-      endDate: endDateString,
-    );
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .earningChartData(overview);
-    if (res != null) {
-      earningChartModel = res;
+      // Subtract 2 years for startDate
+      final startDate = DateTime.utc(
+        now.year - 2,
+        now.month,
+        now.day,
+        now.hour,
+        now.minute,
+        now.second,
+        now.millisecond,
+      );
+      final endDateString = now.toIso8601String();
+      final startDateString = startDate.toIso8601String();
+      ChartRequestDto overview = ChartRequestDto(
+        symbol: "NDAQ",
+        interval: IntervalEnum.quarterly.value,
+        startDate: startDateString,
+        endDate: endDateString,
+      );
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .earningChartData(overview);
+      if (res != null) {
+        earningChartModel = res;
+        setState(() {
+          earningChartModelLoader = false;
+        });
+      } else {
+        setState(() {
+          earningChartModelLoader = false;
+        });
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        earningChartModelLoader = false;
+      });
     }
   }
 
   earningReportData(String symbol) async {
-    final now = DateTime.now().toUtc();
+    try {
+      setState(() {
+        earningReportShimmer = true;
+      });
+      final now = DateTime.now().toUtc();
 
-    // Subtract 2 years for startDate
-    final startDate = DateTime.utc(
-      now.year - 2,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-      now.second,
-      now.millisecond,
-    );
-    final endDateString = now.toIso8601String();
-    final startDateString = startDate.toIso8601String();
-    ChartRequestDto overview = ChartRequestDto(
-      symbol: symbol,
-      interval: IntervalEnum.quarterly.value,
-      startDate: startDateString,
-      endDate: endDateString,
-    );
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .earningReportData(overview);
-    if (res != null) {
-      earningReportsModel = res;
+      // Subtract 2 years for startDate
+      final startDate = DateTime.utc(
+        now.year - 2,
+        now.month,
+        now.day,
+        now.hour,
+        now.minute,
+        now.second,
+        now.millisecond,
+      );
+      final endDateString = now.toIso8601String();
+      final startDateString = startDate.toIso8601String();
+      ChartRequestDto overview = ChartRequestDto(
+        symbol: symbol,
+        interval: IntervalEnum.quarterly.value,
+        startDate: startDateString,
+        endDate: endDateString,
+      );
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .earningReportData(overview);
+      if (res != null) {
+        earningReportsModel = res;
+        setState(() {
+          earningReportShimmer = false;
+        });
+      } else {
+        setState(() {
+          earningReportShimmer = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        earningReportShimmer = false;
+      });
+      print(e);
     }
   }
 
@@ -1711,29 +1819,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   )
                 : AnalysisTableShimmer(),
 
-            SizedBox(
-              height:
-                  priceComparisonModel != null &&
-                      priceComparisonModel!
-                              .data
-                              .data['${widget.chatRouting!.symbol}'] !=
-                          null &&
-                      priceComparisonModel!
-                          .data
-                          .data['${widget.chatRouting!.symbol}']!
-                          .isNotEmpty
-                  ? 20.h
-                  : 0,
-            ),
+            SizedBox(height: 20.h),
             priceComparisonModel != null &&
                     priceComparisonModel!
                             .data
                             .data['${widget.chatRouting!.symbol}'] !=
-                        null &&
-                    priceComparisonModel!
-                        .data
-                        .data['${widget.chatRouting!.symbol}']!
-                        .isNotEmpty
+                        null
                 ? PriceComparisonChart(
                     priceComparisonModel: priceComparisonModel,
                     symbol: widget.chatRouting!.symbol,
@@ -2534,8 +2625,22 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 ),
                 SizedBox(height: 4.h),
 
-                companyModel != null &&
-                        companyModel!.general.Description != null
+                companyLoader == true
+                    ? Column(
+                        children: [
+                          shimmerBox(
+                            height: 10,
+                            width: MediaQuery.sizeOf(context).width / 1.1,
+                          ),
+                          SizedBox(height: 6.h),
+                          shimmerBox(
+                            height: 10,
+                            width: MediaQuery.sizeOf(context).width / 1.1,
+                          ),
+                        ],
+                      )
+                    : companyModel != null &&
+                          companyModel!.general.Description != null
                     ? ReadMoreText(
                         companyModel!.general.Description!,
 
@@ -2585,7 +2690,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 //       )
                 //     : SizedBox(),
                 SizedBox(height: 14.h),
-                companyModel != null && companyModel!.general.Address != null
+                companyLoader == true
+                    ? InfoBoxGrid(items: ["", "", "", ""])
+                    : companyModel != null &&
+                          companyModel!.general.Address != null
                     ? InfoBoxGrid(
                         items: [
                           companyModel!.general.Address ?? "",
@@ -2597,66 +2705,90 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     : SizedBox(),
 
                 SizedBox(height: 10.h),
-                companyModel != null &&
-                        companyModel!.general.Officers != null &&
-                        companyModel!.general.Officers!.isNotEmpty
-                    ? MdSnsText(
-                        "Key Executives",
-                        color: AppColors.fieldTextColor,
-                        variant: TextVariant.h2,
-                        fontWeight: TextFontWeightVariant.h1,
-                      )
-                    : SizedBox(),
-                SizedBox(height: 10.h),
+                MdSnsText(
+                  "Key Executives",
+                  color: AppColors.fieldTextColor,
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h1,
+                ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    companyModel != null &&
-                            companyModel!.general.Officers != null &&
-                            companyModel!.general.Officers!.isNotEmpty
-                        ? SizedBox(
+                SizedBox(height: 10.h),
+                companyLoader == true
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
                             height: 180.h,
                             width: MediaQuery.sizeOf(context).width / 1.1,
                             child: ListView.separated(
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
-                              itemCount: companyModel!.general.Officers!.length,
+                              itemCount: 5,
                               itemBuilder: (BuildContext context, int index) {
-                                return ProfileCardWidget(
-                                  imagePath:
-                                      companyModel!
-                                          .general
-                                          .Officers![index]
-                                          .Image ??
-                                      "",
-
-                                  designation:
-                                      companyModel!
-                                          .general
-                                          .Officers![index]
-                                          .Title ??
-                                      "",
-                                  name:
-                                      companyModel!
-                                          .general
-                                          .Officers![index]
-                                          .Name ??
-                                      "",
-                                );
+                                return ProfileCardShimmer();
                               },
                               separatorBuilder:
                                   (BuildContext context, int index) {
                                     return SizedBox(width: 10);
                                   },
                             ),
-                          )
-                        : ProfileCardShimmer(),
-                  ],
-                ),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          companyModel != null &&
+                                  companyModel!.general.Officers != null &&
+                                  companyModel!.general.Officers!.isNotEmpty
+                              ? SizedBox(
+                                  height: 180.h,
+                                  width: MediaQuery.sizeOf(context).width / 1.1,
+                                  child: ListView.separated(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount:
+                                        companyModel!.general.Officers!.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                          return ProfileCardWidget(
+                                            imagePath:
+                                                companyModel!
+                                                    .general
+                                                    .Officers![index]
+                                                    .Image ??
+                                                "",
+
+                                            designation:
+                                                companyModel!
+                                                    .general
+                                                    .Officers![index]
+                                                    .Title ??
+                                                "",
+                                            name:
+                                                companyModel!
+                                                    .general
+                                                    .Officers![index]
+                                                    .Name ??
+                                                "",
+                                          );
+                                        },
+                                    separatorBuilder:
+                                        (BuildContext context, int index) {
+                                          return SizedBox(width: 10);
+                                        },
+                                  ),
+                                )
+                              : SizedBox(),
+                        ],
+                      ),
 
                 // SizedBox(height: 14.h),
-                companyModel != null
+                companyLoader == true
+                    ? CompanyDetailsCard(
+                        items: ["", "", "", "", "", "", "", "", ""],
+                      )
+                    : companyModel != null
                     ? CompanyDetailsCard(
                         items: [
                           Filters.systemNumberConvention(
@@ -2688,7 +2820,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                           ),
                         ],
                       )
-                    : EarningsShimmer(),
+                    : SizedBox(),
                 SizedBox(height: 14.h),
                 earningdata != null
                     ? Earnings(
@@ -2930,18 +3062,21 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               child: Column(
                                 children: [
                                   SizedBox(height: 15),
-                                  financeChartsDataModel != null &&
-                                          financeChartsDataModel!
-                                                  .data
-                                                  .cashAndDebt
-                                                  .yearly !=
-                                              null &&
-                                          financeChartsDataModel!
-                                              .data
-                                              .cashAndDebt
-                                              .yearly!
-                                              .metrics
-                                              .isNotEmpty
+
+                                  financialLoader == true
+                                      ? CashDebtShimmer()
+                                      : financeChartsDataModel != null &&
+                                            financeChartsDataModel!
+                                                    .data
+                                                    .cashAndDebt
+                                                    .yearly !=
+                                                null &&
+                                            financeChartsDataModel!
+                                                .data
+                                                .cashAndDebt
+                                                .yearly!
+                                                .metrics
+                                                .isNotEmpty
                                       ? CashdebtWidgets(
                                           title: "Cash and Debt",
                                           cash: "Cash",
@@ -2962,21 +3097,22 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                               [],
                                         )
                                       : SizedBox(),
-                                  // CashDebtShimmer(),
                                   const SizedBox(height: 20),
 
-                                  financeChartsDataModel != null &&
-                                          financeChartsDataModel!
-                                                  .data
-                                                  .assetsAndStockHolders
-                                                  .yearly !=
-                                              null &&
-                                          financeChartsDataModel!
-                                              .data
-                                              .assetsAndStockHolders
-                                              .yearly!
-                                              .metrics
-                                              .isNotEmpty
+                                  financialLoader == true
+                                      ? CashDebtShimmer()
+                                      : financeChartsDataModel != null &&
+                                            financeChartsDataModel!
+                                                    .data
+                                                    .assetsAndStockHolders
+                                                    .yearly !=
+                                                null &&
+                                            financeChartsDataModel!
+                                                .data
+                                                .assetsAndStockHolders
+                                                .yearly!
+                                                .metrics
+                                                .isNotEmpty
                                       ? CashdebtWidgets(
                                           title: "Assets and Stockholders",
                                           cash: "Total Assets",
@@ -2997,21 +3133,21 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                               [],
                                         )
                                       : SizedBox(),
-                                  // CashDebtShimmer(),
                                   SizedBox(height: 20),
-
-                                  financeChartsDataModel != null &&
-                                          financeChartsDataModel!
-                                                  .data
-                                                  .outstandingSharesBuyback
-                                                  .yearly !=
-                                              null &&
-                                          financeChartsDataModel!
-                                              .data
-                                              .outstandingSharesBuyback
-                                              .yearly!
-                                              .metrics
-                                              .isNotEmpty
+                                  financialLoader == true
+                                      ? CashDebtShimmer()
+                                      : financeChartsDataModel != null &&
+                                            financeChartsDataModel!
+                                                    .data
+                                                    .outstandingSharesBuyback
+                                                    .yearly !=
+                                                null &&
+                                            financeChartsDataModel!
+                                                .data
+                                                .outstandingSharesBuyback
+                                                .yearly!
+                                                .metrics
+                                                .isNotEmpty
                                       ? CashdebtWidgets(
                                           title: "Outstanding Shares & Buyback",
                                           cash: "Outstanding Shares",
@@ -3034,19 +3170,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                       : SizedBox(),
                                   // CashDebtShimmer(),
                                   const SizedBox(height: 20),
-
-                                  financeChartsDataModel != null &&
-                                          financeChartsDataModel!
-                                                  .data
-                                                  .revenueAndIncome
-                                                  .yearly !=
-                                              null &&
-                                          financeChartsDataModel!
-                                              .data
-                                              .revenueAndIncome
-                                              .yearly!
-                                              .metrics
-                                              .isNotEmpty
+                                  financialLoader == true
+                                      ? CashDebtShimmer()
+                                      : financeChartsDataModel != null &&
+                                            financeChartsDataModel!
+                                                    .data
+                                                    .revenueAndIncome
+                                                    .yearly !=
+                                                null &&
+                                            financeChartsDataModel!
+                                                .data
+                                                .revenueAndIncome
+                                                .yearly!
+                                                .metrics
+                                                .isNotEmpty
                                       ? CashdebtWidgets(
                                           title: "Revenue and Income",
                                           cash: "Revenue",
@@ -3124,13 +3261,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
-                                  financialResponse != null &&
-                                          financialResponse!
-                                                  .data
-                                                  .financialsIncomeStatement
-                                                  .chart
-                                                  .researchDevelopment !=
-                                              null
+                                  financialResponseLoader == true
+                                      ? CashDebtShimmer()
+                                      : financialResponse != null &&
+                                            financialResponse!
+                                                    .data
+                                                    .financialsIncomeStatement
+                                                    .chart
+                                                    .researchDevelopment !=
+                                                null
                                       ? CustomLineChart(
                                           lineColor: Colors.green,
                                           areaColor: Colors.greenAccent,
@@ -3144,12 +3283,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                         )
                                       : SizedBox(),
                                   const SizedBox(height: 20),
-                                  financialResponse != null &&
-                                          financialResponse!
-                                              .data
-                                              .financialsIncomeStatement
-                                              .data
-                                              .isNotEmpty
+                                  financialResponseLoader == true
+                                      ? TableShimmer(title: "Income Statement")
+                                      : financialResponse != null &&
+                                            financialResponse!
+                                                .data
+                                                .financialsIncomeStatement
+                                                .data
+                                                .isNotEmpty
                                       ? FinancialTable(
                                           chart: financialResponse!
                                               .data
@@ -3171,13 +3312,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
-                                  financialResponse != null &&
-                                          financialResponse!
-                                                  .data
-                                                  .financialsBalanceSheet
-                                                  .chart
-                                                  .totalAssets !=
-                                              null
+                                  financialResponseLoader == true
+                                      ? CashDebtShimmer()
+                                      : financialResponse != null &&
+                                            financialResponse!
+                                                    .data
+                                                    .financialsBalanceSheet
+                                                    .chart
+                                                    .totalAssets !=
+                                                null
                                       ? CustomLineChart(
                                           lineColor: Colors.purpleAccent,
                                           areaColor: Colors.purple,
@@ -3191,12 +3334,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                         )
                                       : SizedBox(),
                                   const SizedBox(height: 20),
-                                  financialResponse != null &&
-                                          financialResponse!
-                                              .data
-                                              .financialsBalanceSheet
-                                              .data
-                                              .isNotEmpty
+                                  financialResponseLoader == true
+                                      ? TableShimmer(title: "Balance Sheet")
+                                      : financialResponse != null &&
+                                            financialResponse!
+                                                .data
+                                                .financialsBalanceSheet
+                                                .data
+                                                .isNotEmpty
                                       ? FinancialTable(
                                           chart: financialResponse!
                                               .data
@@ -3218,13 +3363,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
-                                  financialResponse != null &&
-                                          financialResponse!
-                                                  .data
-                                                  .financialsCashFlow
-                                                  .chart
-                                                  .investments !=
-                                              null
+                                  financialResponseLoader == true
+                                      ? CashDebtShimmer()
+                                      : financialResponse != null &&
+                                            financialResponse!
+                                                    .data
+                                                    .financialsCashFlow
+                                                    .chart
+                                                    .investments !=
+                                                null
                                       ? CustomLineChart(
                                           lineColor: Colors.purpleAccent,
                                           areaColor: Colors.purple,
@@ -3238,12 +3385,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                         )
                                       : SizedBox(),
                                   const SizedBox(height: 20),
-                                  financialResponse != null &&
-                                          financialResponse!
-                                              .data
-                                              .financialsCashFlow
-                                              .data
-                                              .isNotEmpty
+                                  financialResponseLoader == true
+                                      ? TableShimmer(title: "Cash Flow ")
+                                      : financialResponse != null &&
+                                            financialResponse!
+                                                .data
+                                                .financialsCashFlow
+                                                .data
+                                                .isNotEmpty
                                       ? FinancialTable(
                                           chart: financialResponse!
                                               .data
@@ -3283,25 +3432,32 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 15),
-
-              earningChartModel != null && earningChartModel!.data.isNotEmpty
+              earningChartModelLoader == true
+                  ? CashDebtShimmer()
+                  : earningChartModel != null &&
+                        earningChartModel!.data.isNotEmpty
                   ? QuarterlyPerformanceChart(data: earningChartModel!.data)
                   : SizedBox(),
               // SizedBox(height: 20),
               // QuarterlyPerformanceChartShimmer(),
               SizedBox(height: 20),
-              earningReportsModel != null &&
-                      earningReportsModel!.data.isNotEmpty
+              earningReportShimmer == true
+                  ? TableShimmer(title: "Earnings")
+                  : earningReportsModel != null &&
+                        earningReportsModel!.data.isNotEmpty
                   ? EarningsTable(data: earningReportsModel!.data)
-                  : EarningsTableShimmer(),
+                  : SizedBox(),
               SizedBox(height: 20),
-              companyDetailModel != null &&
-                      companyDetailModel!.data.fundamentalsEarningsTrend != null
+              companyDetailShimmer == true
+                  ? TableShimmer(title: "Earnings Trend")
+                  : companyDetailModel != null &&
+                        companyDetailModel!.data.fundamentalsEarningsTrend !=
+                            null
                   ? EarningsTrend(
                       title: "Earnings Trend",
                       data: companyDetailModel!.data.fundamentalsEarningsTrend,
                     )
-                  : EarningsTrendShimmer(),
+                  : SizedBox(),
             ],
           ),
         ),
@@ -3332,9 +3488,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           ),
 
           SizedBox(height: 20),
-          analysisDataModel != null &&
-                  analysisDataModel!.data != null &&
-                  analysisDataModel!.data!.chart != null
+          chartLoader == true
+              ? CashDebtShimmer()
+              : analysisDataModel != null &&
+                    analysisDataModel!.data != null &&
+                    analysisDataModel!.data!.chart != null
               ? Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: CustomCandleChart(
@@ -3357,9 +3515,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 )
               : CustomCandleChartShimmer(),
           SizedBox(height: 20),
-          analysisDataModel != null &&
-                  analysisDataModel!.data != null &&
-                  analysisDataModel!.data!.eodData != null
+          chartLoader == true
+              ? TableShimmer(title: "Earnings Trend")
+              : analysisDataModel != null &&
+                    analysisDataModel!.data != null &&
+                    analysisDataModel!.data!.eodData != null
               ? Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: AnalysisTable(
@@ -3367,7 +3527,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     eodData: analysisDataModel!.data!.eodData,
                   ),
                 )
-              : AnalysisTableShimmer(),
+              : SizedBox(),
         ],
       ),
     );
