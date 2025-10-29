@@ -1293,19 +1293,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     final stockManagerState = ref.watch(stocksManagerProvider);
 
     final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
- String change = liveStock != null && liveStock.stockId.isNotEmpty
+    String change = liveStock != null && liveStock.stockId.isNotEmpty
         ? PriceUtils.getChangesPercentage(
                     liveStock.price,
                     liveStock.previousClose,
                   ) !=
                   null
-              ? 
-              PriceUtils.getChangesPercentage(
-                 liveStock.price,
-                    liveStock.previousClose,
+              ? PriceUtils.getChangesPercentage(
+                  liveStock.price,
+                  liveStock.previousClose,
                 )!.toStringAsFixed(2)
-            
-        : widget.chatRouting!.changePercentage.toStringAsFixed(2):widget.chatRouting!.changePercentage.toStringAsFixed(2);
+              : widget.chatRouting!.changePercentage.toStringAsFixed(2)
+        : widget.chatRouting!.changePercentage.toStringAsFixed(2);
 
     double _twoMonthIntervalMilliseconds() {
       const millisInDay = 86400000;
@@ -1442,8 +1441,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                           size: 20,
                         ),
                         MdSnsText(
-                         " " +Filters.systemNumberConvention(change,isPrice: false,containerWidth: 50) +"%",
-                    
+                          " " +
+                              Filters.systemNumberConvention(
+                                change,
+                                isPrice: false,
+                                containerWidth: 50,
+                              ) +
+                              "%",
+
                           color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
@@ -1714,30 +1719,43 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   )
                 : AnalysisTableShimmer(),
 
-            SizedBox(height: priceComparisonModel != null &&
-                    priceComparisonModel!
-                            .data
-                            .data['${widget.chatRouting!.symbol}'] !=
-                        null &&   priceComparisonModel!
-                            .data
-                            .data['${widget.chatRouting!.symbol}']!.isNotEmpty? 20.h:0),
+            SizedBox(
+              height:
+                  priceComparisonModel != null &&
+                      priceComparisonModel!
+                              .data
+                              .data['${widget.chatRouting!.symbol}'] !=
+                          null &&
+                      priceComparisonModel!
+                          .data
+                          .data['${widget.chatRouting!.symbol}']!
+                          .isNotEmpty
+                  ? 20.h
+                  : 0,
+            ),
             priceComparisonModel != null &&
                     priceComparisonModel!
                             .data
                             .data['${widget.chatRouting!.symbol}'] !=
-                        null &&   priceComparisonModel!
-                            .data
-                            .data['${widget.chatRouting!.symbol}']!.isNotEmpty
-                        
+                        null &&
+                    priceComparisonModel!
+                        .data
+                        .data['${widget.chatRouting!.symbol}']!
+                        .isNotEmpty
                 ? PriceComparisonChart(
                     priceComparisonModel: priceComparisonModel,
                     symbol: widget.chatRouting!.symbol,
                     twoCharts: false,
                   )
                 : SizedBox(),
-            SizedBox(height: priceRatioModel != null &&
-                    priceRatioModel!.data.data["price_ratio"] != null &&
-                    priceRatioModel!.data.data["price_ratio"]!.isNotEmpty? 20.h:0),
+            SizedBox(
+              height:
+                  priceRatioModel != null &&
+                      priceRatioModel!.data.data["price_ratio"] != null &&
+                      priceRatioModel!.data.data["price_ratio"]!.isNotEmpty
+                  ? 20.h
+                  : 0,
+            ),
             priceRatioModel != null &&
                     priceRatioModel!.data.data["price_ratio"] != null &&
                     priceRatioModel!.data.data["price_ratio"]!.isNotEmpty
@@ -2063,13 +2081,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     liveStock.previousClose,
                   ) !=
                   null
-              ? 
-              PriceUtils.getChangesPercentage(
-                 liveStock.price,
-                    liveStock.previousClose,
+              ? PriceUtils.getChangesPercentage(
+                  liveStock.price,
+                  liveStock.previousClose,
                 )!.toStringAsFixed(2)
-            
-        : widget.chatRouting!.changePercentage.toStringAsFixed(2):widget.chatRouting!.changePercentage.toStringAsFixed(2);
+              : widget.chatRouting!.changePercentage.toStringAsFixed(2)
+        : widget.chatRouting!.changePercentage.toStringAsFixed(2);
     List<ChartData> buildChartSpots(
       List<OverviewCandleChartModel> overviewCandle,
     ) {
@@ -2224,7 +2241,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                           size: 20,
                         ),
                         MdSnsText(
-                        " " +Filters.systemNumberConvention(change,isPrice: false,containerWidth: 50) +"%",
+                          " " +
+                              Filters.systemNumberConvention(
+                                change,
+                                isPrice: false,
+                                containerWidth: 50,
+                              ) +
+                              "%",
                           color: change.toString().contains("-")
                               ? AppColors.redFF3B3B
                               : AppColors.color00FF55,
