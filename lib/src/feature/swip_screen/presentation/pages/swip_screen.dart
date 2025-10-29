@@ -179,7 +179,7 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
                     ),
                   )
                 : null
-          : ChatAppBar(),
+          : null,
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {

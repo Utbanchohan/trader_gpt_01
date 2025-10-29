@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -33,6 +34,8 @@ class Login extends _$Login {
   }) async {
     state = AppLoadingState.loading();
     try {
+      final completer = Completer<void>();
+
       final response = await ref
           .read(authRepository)
           .login(SignIn(email: email.toLowerCase(), password: password));
@@ -110,8 +113,9 @@ class Login extends _$Login {
             //           .toList(),
             //     );
             await ref.read(localDataProvider).saveStock(stocks);
+            completer.complete();
           });
-
+          await completer.future;
           state = AppLoadingState();
           return response.data!;
         } else {

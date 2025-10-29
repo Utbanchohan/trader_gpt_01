@@ -132,7 +132,7 @@ class _DateRangePickerWidgetState extends State<DateRangePickerWidget> {
     //   builder: (context, constraints) {
     //     final isTight = constraints.maxWidth < 600; // for smaller screens
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -171,13 +171,42 @@ class _WeeklySeasonalityChartState
                       isExpanded: true,
                       value: selectedValue,
                       items: ["Radar", "Bar"].map((value) {
+                        final bool isSelected = value == selectedValue;
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: MdSnsText(
-                            value,
-                            variant: TextVariant.h5,
-                            fontWeight: TextFontWeightVariant.h4,
-                            color: AppColors.fieldTextColor,
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            width: double.infinity, // 👈 make it full width
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? Colors.lightBlue[200]
+                                  : Colors.transparent,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                    horizontal: 8,
+                                  ),
+                                  child: MdSnsText(
+                                    value,
+                                    variant: TextVariant.h4,
+                                    fontWeight: TextFontWeightVariant.h4,
+                                    color: isSelected
+                                        ? Colors.black
+                                        : AppColors.white,
+                                  ),
+                                ),
+                                // if (value != "Bar")
+                                //   Divider(
+                                //     thickness: 1,
+                                //     height: 0,
+                                //     color: Colors.white.withOpacity(0.6),
+                                //   ),
+                              ],
+                            ),
                           ),
                         );
                       }).toList(),
@@ -186,8 +215,6 @@ class _WeeklySeasonalityChartState
                           selectedValue = value!;
                         });
                       },
-
-                      // 👇 Custom button with down arrow icon before text
                       customButton: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -198,21 +225,28 @@ class _WeeklySeasonalityChartState
                             color: AppColors.fieldTextColor,
                           ),
                           const SizedBox(width: 4),
-                          const Icon(
+                          Icon(
                             Icons.keyboard_arrow_down_rounded,
                             color: AppColors.fieldTextColor,
                             size: 18,
                           ),
                         ],
                       ),
-
                       dropdownStyleData: DropdownStyleData(
-                        offset: const Offset(0, 5),
+                        offset: const Offset(0, -3),
                         decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: AppColors.fieldTextColor,
+                            width: 0.5,
+                          ),
+                          color: AppColors.color091224,
                         ),
                         padding: EdgeInsets.zero,
+                      ),
+                      menuItemStyleData: const MenuItemStyleData(
+                        height: 30,
+                        padding: EdgeInsets
+                            .zero, // 👈 remove default horizontal padding
                       ),
                     ),
                   ),

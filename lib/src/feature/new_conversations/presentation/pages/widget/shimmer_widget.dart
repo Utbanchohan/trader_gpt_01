@@ -34,8 +34,8 @@ class ShimmerCardStock extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10.h),
-          shimmerBox(width: 60.w, height: 14.h), 
-                    SizedBox(height: 5.h),
+          shimmerBox(width: 60.w, height: 14.h),
+          SizedBox(height: 5.h),
 
           // Price shimmer
           Row(
@@ -46,29 +46,29 @@ class ShimmerCardStock extends StatelessWidget {
             ],
           ),
           SizedBox(height: 4.h),
-          shimmerBox(width: 86.w, height: 13.h, radius: 4), // Mini graph shimmer
+          shimmerBox(
+            width: 86.w,
+            height: 13.h,
+            radius: 4,
+          ), // Mini graph shimmer
         ],
       ),
     );
   }
 }
 
+Widget shimmerBox({double? width, double? height, double radius = 6}) {
+  return Shimmer.fromColors(
+    baseColor: AppColors.color1B254B.withOpacity(0.3),
+    highlightColor: AppColors.colorB3B3B3.withOpacity(0.2),
 
-Widget shimmerBox({
-    double? width,
-    double? height,
-    double radius = 6,
-  }) {
-    return Shimmer.fromColors(
-      baseColor:AppColors.bluishgrey404F81,
-      highlightColor: AppColors.fieldTextColor,
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          color: AppColors.bluishgrey404F81,
-          borderRadius: BorderRadius.circular(radius),
-        ),
+    child: Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: AppColors.bluishgrey404F81,
+        borderRadius: BorderRadius.circular(radius),
       ),
-    );
-  }
+    ),
+  );
+}
