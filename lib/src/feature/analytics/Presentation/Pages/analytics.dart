@@ -1711,12 +1711,29 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   )
                 : AnalysisTableShimmer(),
 
-            SizedBox(height: 20.h),
+            SizedBox(
+              height:
+                  priceComparisonModel != null &&
+                      priceComparisonModel!
+                              .data
+                              .data['${widget.chatRouting!.symbol}'] !=
+                          null &&
+                      priceComparisonModel!
+                          .data
+                          .data['${widget.chatRouting!.symbol}']!
+                          .isNotEmpty
+                  ? 20.h
+                  : 0,
+            ),
             priceComparisonModel != null &&
                     priceComparisonModel!
                             .data
                             .data['${widget.chatRouting!.symbol}'] !=
-                        null
+                        null &&
+                    priceComparisonModel!
+                        .data
+                        .data['${widget.chatRouting!.symbol}']!
+                        .isNotEmpty
                 ? PriceComparisonChart(
                     priceComparisonModel: priceComparisonModel,
                     symbol: widget.chatRouting!.symbol,
