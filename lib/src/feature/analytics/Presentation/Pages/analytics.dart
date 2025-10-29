@@ -899,35 +899,54 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   getOverviewCandleChart(symbol, IntervalEnum interval) async {
-    await chartService.fetchChartData(
-      cryptoApi: widget.chatRouting!.type == "crypto" ? true : false,
-      internalApi: widget.chatRouting!.type == "crypto" ? false : true,
-      selectedSymbol: widget.chatRouting!.symbol,
-      interval: interval.value,
-      onSuccess: (data) async {
-        overviewCandleChartModel = [];
-        for (var item in data) {
-          try {
-            overviewCandleChartModel!.add(
-              OverviewCandleChartModel(
-                symbol: widget.chatRouting!.symbol,
-                open: item['open'],
-                high: item['high'],
-                low: item['low'],
-                close: item['close'],
-                volume: item['volume'],
-                timestamp: DateTime.tryParse(item['date']) ?? DateTime.now(),
-              ),
-            );
-          } catch (e) {}
-        }
-
-        print("✅ Chart data loaded: ${data.length} items");
-      },
-      onError: (err) {
-        print("❌ Error loading chart data: $err");
-      },
-    );
+    try {
+      setState(() {
+        chartLoader = true;
+      });
+      await chartService.fetchChartData(
+        cryptoApi: widget.chatRouting!.type == "crypto" ? true : false,
+        internalApi: widget.chatRouting!.type == "crypto" ? false : true,
+        selectedSymbol: widget.chatRouting!.symbol,
+        interval: interval.value,
+        onSuccess: (data) async {
+          overviewCandleChartModel = [];
+          for (var item in data) {
+            try {
+              overviewCandleChartModel!.add(
+                OverviewCandleChartModel(
+                  symbol: widget.chatRouting!.symbol,
+                  open: item['open'],
+                  high: item['high'],
+                  low: item['low'],
+                  close: item['close'],
+                  volume: item['volume'],
+                  timestamp: DateTime.tryParse(item['date']) ?? DateTime.now(),
+                ),
+              );
+            } catch (e) {
+              setState(() {
+                chartLoader = false;
+              });
+            }
+          }
+          setState(() {
+            chartLoader = false;
+          });
+          print("✅ Chart data loaded: ${data.length} items");
+        },
+        onError: (err) {
+          setState(() {
+            chartLoader = false;
+          });
+          print("❌ Error loading chart data: $err");
+        },
+      );
+    } catch (e) {
+      setState(() {
+        chartLoader = false;
+      });
+      print("Error in getOverviewCandleChart: $e");
+    }
     // final now = DateTime.now().toUtc();
 
     // // Subtract 2 years for startDate
@@ -2428,9 +2447,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     ),
                   )
                 : SizedBox(),
-            SizedBox(height: overviewCandleChartModel != null ? 20.h : 0),
+            SizedBox(height: 20.h),
 
-            overviewCandleChartModel != null
+            chartLoader == true
+                ? CustomCandleChartShimmer()
+                : overviewCandleChartModel != null
                 ? CustomCandleChart(
                     key: UniqueKey(),
 
@@ -2457,7 +2478,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             SizedBox(height: 20.h),
 
             isshowpriceTargetMatricsDataLoder == true
-                ? SizedBox(height: 135.h, child: MetricsShimmer())
+                ? PriceTargetWidget(data: null)
                 : priceTargetMatrics != null &&
                       priceTargetMatrics!.data.length > 0
                 ? PriceTargetWidget(data: priceTargetMatrics!.data)
@@ -2476,11 +2497,21 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     heading: Headings.shareStructure,
                   )
                 : SizedBox(),
-            SizedBox(height: 20.h),
+            SizedBox(height: pricePerformanceData != null ? 20.h : 0),
             pricePerformanceData != null
                 ? PricePerformanceWidget(data: pricePerformanceData!)
                 : SizedBox(),
-            SizedBox(height: 20.h),
+            SizedBox(
+              height:
+                  fundamentalResponse != null &&
+                      fundamentalResponse!
+                          .data
+                          .fundamentals
+                          .annualIncome
+                          .isNotEmpty
+                  ? 20.h
+                  : 0,
+            ),
             fundamentalResponse != null &&
                     fundamentalResponse!
                         .data
@@ -2495,7 +2526,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   )
                 : SizedBox(),
 
-            SizedBox(height: 20.h),
+            SizedBox(
+              height:
+                  matricData != null &&
+                      matricData!.data != null &&
+                      matricData!.data!.isNotEmpty
+                  ? 20.h
+                  : 0,
+            ),
 
             matricData != null &&
                     matricData!.data != null &&
@@ -2506,7 +2544,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     shareData: null,
                     heading: Headings.matrics,
                   )
-                : MetricsShimmer(),
+                : SizedBox(),
 
             // SizedBox(height: 20.h),
             // CustomLineChart(
@@ -2514,7 +2552,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             //   lineColor: Colors.green,
             //   areaColor: Colors.greenAccent,
             // ),
-            SizedBox(height: 20.h),
+            SizedBox(height: monthlyData != null ? 20.h : 0),
             monthlyData != null
                 ? WeeklySeasonalityChart(
                     data: monthlyData!,
@@ -2531,7 +2569,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   )
                 : SizedBox(),
 
-            SizedBox(height: 20.h),
+            SizedBox(
+              height:
+                  priceComparisonModel != null &&
+                      priceComparisonModel!
+                              .data
+                              .data['${widget.chatRouting!.symbol}'] !=
+                          null &&
+                      priceComparisonModel!.data.data['SPY'] != null
+                  ? 20.h
+                  : 0,
+            ),
 
             // SizedBox(height: 20.h),
             // RevenueAnalysisChart(),
@@ -2594,7 +2642,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   )
                 : SizedBox(),
 
-            SizedBox(height: 20.h),
+            SizedBox(
+              height:
+                  analyticsRespinseData != null &&
+                      analyticsRespinseData!.data.isNotEmpty
+                  ? 20.h
+                  : 0,
+            ),
 
             analyticsRespinseData != null &&
                     analyticsRespinseData!.data.isNotEmpty
