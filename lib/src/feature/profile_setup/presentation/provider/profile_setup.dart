@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -35,6 +36,8 @@ class Profile extends _$Profile {
   }) async {
     state = AppLoadingState.loading();
     try {
+      final completer = Completer<void>();
+
       final response = await ref
           .read(authRepository)
           .completeRegistration(
@@ -114,10 +117,13 @@ class Profile extends _$Profile {
                     .toList(),
               );
           ref.read(localDataProvider).saveStock(stocks);
+          completer.complete();
         });
-
+        await completer.future;
+        state = AppLoadingState();
         return response.data!;
       } else {
+        state = AppLoadingState();
         $showMessage(response.message, isError: true);
       }
       state = AppLoadingState();

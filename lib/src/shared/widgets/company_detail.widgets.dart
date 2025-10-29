@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -23,13 +24,26 @@ class CompanyDetailsItem extends StatelessWidget {
             fontWeight: TextFontWeightVariant.h4,
             variant: TextVariant.h4,
           ),
-          MdSnsText(
-            value,
-            color: AppColors.white,
+          value.isEmpty
+              ? Shimmer.fromColors(
+                  baseColor: AppColors.color1B254B.withOpacity(0.3),
+                  highlightColor: AppColors.colorB3B3B3.withOpacity(0.1),
+                  child: Container(
+                    height: 16,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.fieldTextColor,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                )
+              : MdSnsText(
+                  value,
+                  color: AppColors.white,
 
-            fontWeight: TextFontWeightVariant.h1,
-            variant: TextVariant.h4,
-          ),
+                  fontWeight: TextFontWeightVariant.h1,
+                  variant: TextVariant.h4,
+                ),
         ],
       ),
     );

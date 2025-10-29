@@ -5,23 +5,6 @@ part of 'stock_model.dart';
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
-num parseNum(dynamic value) {
-  if (value == null) return 0;
-  if (value is num) return value;
-  if (value is String) return num.tryParse(value) ?? 0;
-  return 0;
-}
-
-bool parseBool(dynamic value) {
-  if (value is bool) return value;
-  if (value is String) {
-    return value.toLowerCase() == 'true' || value == '1';
-  }
-  if (value is num) {
-    return value == 1;
-  }
-  return false;
-}
 
 _Stock _$StockFromJson(Map<String, dynamic> json) => _Stock(
   id: json['_id'] as String? ?? '',
@@ -32,22 +15,22 @@ _Stock _$StockFromJson(Map<String, dynamic> json) => _Stock(
   source: json['source'] as String? ?? '',
   type: json['type'] as String? ?? '',
   companyName: json['companyName'] as String? ?? '',
-  isActivelyTrading: parseBool(json['isActivelyTrading']),
-  isAdr: parseBool(json['isAdr']),
-  isEtf: parseBool(json['isEtf']),
-  isFund: parseBool(json['isFund']),
+  isActivelyTrading: json['isActivelyTrading'] as bool? ?? false,
+  isAdr: json['isAdr'] as bool? ?? false,
+  isEtf: json['isEtf'] as bool? ?? false,
+  isFund: json['isFund'] as bool? ?? false,
   isin: json['isin'] as String? ?? '',
-  marketCap: parseNum(json['marketCap']).toDouble(),
-  price: parseNum(json['price']).toDouble(),
-  previousClose: parseNum(json['previousClose']).toDouble(),
-  pctChange: parseNum(json['pctChange']).toDouble(),
+  marketCap: (json['marketCap'] as num?)?.toDouble() ?? 0,
+  price: (json['price'] as num?)?.toDouble() ?? 0,
+  previousClose: (json['previousClose'] as num?)?.toDouble() ?? 0,
+  pctChange: (json['pctChange'] as num?)?.toDouble() ?? 0,
   key: json['key'] as String? ?? '',
   fiveDayTrend:
       (json['fiveDayTrend'] as List<dynamic>?)
           ?.map((e) => FiveDayTrend.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
-  isPositive: parseBool(json['isPositive']),
+  isPositive: json['isPositive'] as bool? ?? true,
 );
 
 Map<String, dynamic> _$StockToJson(_Stock instance) => <String, dynamic>{

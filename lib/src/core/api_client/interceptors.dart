@@ -27,7 +27,13 @@ class AuthorizationInterceptor extends Interceptor {
         err.type == DioExceptionType.unknown && err.error is SocketException) {
       $showMessage("No Internet Connection", isError: true);
     } else if (response?.statusCode == 401) {
+      String password = ref.read(localDataProvider).getPassword1 ?? "";
+      String email = ref.read(localDataProvider).getEmail ?? "";
+      String remamberMe = ref.read(localDataProvider).getRemamberMe ?? "";
       ref.read(localDataProvider).clearAllData();
+      ref.read(localDataProvider).setEmail(email);
+      ref.read(localDataProvider).setPassword(password);
+      ref.read(localDataProvider).setRememberMe(remamberMe);
       ref.read(stocksManagerProvider.notifier).unWatchAllStock();
     }
 

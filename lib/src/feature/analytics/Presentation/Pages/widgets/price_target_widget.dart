@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
 
 class PriceTargetWidget extends StatelessWidget {
-  final List<PriceTargetData> data;
+  final List<PriceTargetData>? data;
   PriceTargetWidget({required this.data});
   @override
   Widget build(BuildContext context) {
@@ -60,15 +61,31 @@ class PriceTargetWidget extends StatelessWidget {
                         ),
 
                         const SizedBox(height: 10),
-                        MdSnsText(
-                          // '\$94',
-                          "\$${data[0].high.toString()}",
+                        data == null
+                            ? Shimmer.fromColors(
+                                baseColor: AppColors.color1B254B.withOpacity(
+                                  0.3,
+                                ),
+                                highlightColor: AppColors.colorB3B3B3
+                                    .withOpacity(0.1),
+                                child: Container(
+                                  height: 20.h,
+                                  width: 100.w,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.fieldTextColor,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                              )
+                            : MdSnsText(
+                                // '\$94',
+                                "\$${data![0].high.toString()}",
 
-                          color: AppColors.color00FF55,
-                          variant: TextVariant.h1,
+                                color: AppColors.color00FF55,
+                                variant: TextVariant.h1,
 
-                          fontWeight: TextFontWeightVariant.h2,
-                        ),
+                                fontWeight: TextFontWeightVariant.h2,
+                              ),
                       ],
                     ),
                     // The circular icon on the top right
@@ -86,25 +103,24 @@ class PriceTargetWidget extends StatelessWidget {
                 // --- High Target Bar ---
                 buildPriceTargetBar(
                   'High',
-
-                  "\$${data[0].high.toString()}",
-                  data[0].highPercentage ?? 0,
+                  data != null ? "\$${data![0].high.toString()}" : "null",
+                  data != null ? data![0].highPercentage ?? 0 : -1,
                   AppColors.color00FF55,
                 ),
 
                 // --- Median Target Bar ---
                 buildPriceTargetBar(
                   'Medium',
-                  "\$${data[0].median.toString()}",
-                  data[0].medianPercentage ?? 0,
+                  data != null ? "\$${data![0].median.toString()}" : "null",
+                  data != null ? data![0].medianPercentage ?? 0 : -1,
                   AppColors.color00FF55,
                 ),
 
                 // --- Low Target Bar ---
                 buildPriceTargetBar(
                   'Low',
-                  "\$${data[0].low.toString()}",
-                  data[0].lowPercentage ?? 0,
+                  data != null ? "\$${data![0].low.toString()}" : "null",
+                  data != null ? data![0].lowPercentage ?? 0 : -1,
                   AppColors.color00FF55,
                 ),
               ],
@@ -116,7 +132,6 @@ class PriceTargetWidget extends StatelessWidget {
   }
 }
 
-// This represents the structure for the 'High' bar section
 Widget buildPriceTargetBar(
   String label,
   String price,
@@ -124,7 +139,11 @@ Widget buildPriceTargetBar(
   Color greenColor,
 ) {
   // Convert the visual percentage (9.92%) into a fraction (0.0992)
-  double fraction = percentage > 0 ? percentage / 100.0 : 0;
+  double fraction = percentage == -1
+      ? percentage > 0
+            ? percentage / 100.0
+            : 0
+      : -1;
 
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -140,12 +159,25 @@ Widget buildPriceTargetBar(
               variant: TextVariant.h3,
               fontWeight: TextFontWeightVariant.h4,
             ),
-            MdSnsText(
-              price,
-              color: AppColors.white,
-              variant: TextVariant.h3,
-              fontWeight: TextFontWeightVariant.h4,
-            ),
+            price == "null"
+                ? Shimmer.fromColors(
+                    baseColor: AppColors.color1B254B.withOpacity(0.3),
+                    highlightColor: AppColors.colorB3B3B3.withOpacity(0.1),
+                    child: Container(
+                      height: 20.h,
+                      width: 100.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.fieldTextColor,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  )
+                : MdSnsText(
+                    price,
+                    color: AppColors.white,
+                    variant: TextVariant.h3,
+                    fontWeight: TextFontWeightVariant.h4,
+                  ),
           ],
         ),
         const SizedBox(height: 6),
@@ -160,9 +192,12 @@ Widget buildPriceTargetBar(
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
+
             // 2. The green progress part
             FractionallySizedBox(
-              widthFactor: fraction, // e.g., 0.0992 for 9.92%
+              widthFactor: fraction == -1
+                  ? 0
+                  : fraction, // e.g., 0.0992 for 9.92%
               child: Container(
                 height: 30,
                 decoration: BoxDecoration(
@@ -175,13 +210,26 @@ Widget buildPriceTargetBar(
             Align(
               alignment: Alignment.center,
               // padding: const EdgeInsets.only(left: 10.0),
-              child: MdSnsText(
-                '${percentage.toStringAsFixed(2)}%',
+              child: percentage == -1
+                  ? Shimmer.fromColors(
+                      baseColor: AppColors.color1B254B.withOpacity(0.3),
+                      highlightColor: AppColors.colorB3B3B3.withOpacity(0.1),
+                      child: Container(
+                        height: 20.h,
+                        width: 100.w,
+                        decoration: BoxDecoration(
+                          color: AppColors.fieldTextColor,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    )
+                  : MdSnsText(
+                      '${percentage.toStringAsFixed(2)}%',
 
-                color: AppColors.white,
-                variant: TextVariant.h3,
-                fontWeight: TextFontWeightVariant.h1,
-              ),
+                      color: AppColors.white,
+                      variant: TextVariant.h3,
+                      fontWeight: TextFontWeightVariant.h1,
+                    ),
             ),
           ],
         ),

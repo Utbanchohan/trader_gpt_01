@@ -9,12 +9,10 @@ import '../../../flavors.dart';
 import '../../shared/custom_message.dart';
 import '../../shared/socket/providers/stocks_price.dart';
 import '../local/repository/local_storage_repository.dart';
-import '../routes/routes.dart';
 part 'interceptors.dart';
 part 'pretty_logger.dart';
 
 /// A Dio Client Provider.
-/// This Provider gives us a Dio instance to make network calls
 final client = Provider.family<Dio, String>((ref, baseUrl) {
   const timeOut = Duration(seconds: 120000);
   return Dio(
