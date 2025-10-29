@@ -107,78 +107,77 @@ class _NewConversationState extends ConsumerState<NewConversation> {
     });
   }
 
-  createChat(Stock stock) async {
-    if (widget.chatRouting != null && widget.chatRouting!.isNotEmpty) {
-      for (final chat in widget.chatRouting!) {
-        if (chat.symbol.toLowerCase() == stock.symbol.toLowerCase()) {
-          context.pushNamed(
-            AppRoutes.swipeScreen.name,
-            extra: {
-              "chatRouting": ChatRouting(
-                previousClose: stock.previousClose,
-                chatId: chat.chatId,
-                symbol: stock.symbol,
-                type: stock.type,
-                image: "",
-                companyName: stock.companyName,
-                price: stock.price,
-                changePercentage: stock.pctChange,
-                trendChart:
-                    stock.fiveDayTrend.isNotEmpty &&
-                        stock.fiveDayTrend[0].data != null
-                    ? stock.fiveDayTrend[0]
-                    : FiveDayTrend(data: [0, 0, 0, 0, 0]),
-                stockid: stock.stockId,
-              ),
-              "initialIndex": 1,
-            },
-          );
-          return;
-        }
-      }
-    } else {
-      var res = await ref
-          .read(createChatProviderProvider.notifier)
-          .createChate(
-            CreateChatDto(
-              companyName: stock.companyName,
-              stockId: stock.stockId,
-              symbol: stock.symbol,
-              type: stock.type,
-            ),
-          );
-      if (res != null) {
-        ChatHistory chatHistory = res;
-        if (mounted) {
-          pushNewStock(stock);
-          ref.read(stocksManagerProvider.notifier).watchStock(stock);
+  Future<void> createChat(Stock stock) async {
+    final existingChat = widget.chatRouting?.firstWhere(
+      (chat) => chat.symbol.toLowerCase() == stock.symbol.toLowerCase(),
+      orElse: () {
+        return ChatRouting(
+          previousClose: 0,
+          chatId: "",
+          symbol: "",
+          type: "",
+          image: "",
+          companyName: "",
+          price: 0,
+          changePercentage: 0,
+          trendChart: FiveDayTrend(data: []),
+          stockid: "",
+        );
+      },
+    );
 
-          context.pushNamed(
-            AppRoutes.swipeScreen.name,
-            extra: {
-              "chatRouting": ChatRouting(
-                previousClose: stock.previousClose,
-                chatId: chatHistory.id,
-                symbol: stock.symbol,
-                type: stock.type,
-                image: "",
-                companyName: stock.companyName,
-                price: stock.price,
-                changePercentage: stock.pctChange,
-                trendChart:
-                    stock.fiveDayTrend.isNotEmpty &&
-                        stock.fiveDayTrend[0].data != null
-                    ? stock.fiveDayTrend[0]
-                    : FiveDayTrend(data: [0, 0, 0, 0, 0]),
-                stockid: stock.stockId,
-              ),
-              "initialIndex": 1,
-            },
-          );
-          // socketService.dispose();
-        }
-      }
+    // If chat already exists → open it directly
+    if (existingChat != null && existingChat.chatId.isNotEmpty) {
+      _navigateToChat(stock: stock, chatId: existingChat.chatId);
+      return;
     }
+
+    // Otherwise create new chat
+    final res = await ref
+        .read(createChatProviderProvider.notifier)
+        .createChate(
+          CreateChatDto(
+            companyName: stock.companyName,
+            stockId: stock.stockId,
+            symbol: stock.symbol,
+            type: stock.type,
+          ),
+        );
+
+    if (res != null && mounted) {
+      final chatHistory = res;
+      pushNewStock(stock);
+      ref.read(stocksManagerProvider.notifier).watchStock(stock);
+
+      _navigateToChat(stock: stock, chatId: chatHistory.id);
+    }
+  }
+
+  /// Helper for navigation logic (no duplication)
+  void _navigateToChat({required Stock stock, required String chatId}) {
+    final trend =
+        (stock.fiveDayTrend.isNotEmpty && stock.fiveDayTrend[0].data != null)
+        ? stock.fiveDayTrend[0]
+        : FiveDayTrend(data: [0, 0, 0, 0, 0]);
+
+    context.pushNamed(
+      AppRoutes.swipeScreen.name,
+      extra: {
+        "chatRouting": ChatRouting(
+          previousClose: stock.previousClose,
+          chatId: chatId,
+          symbol: stock.symbol,
+          type: stock.type,
+          image: "",
+          companyName: stock.companyName,
+          price: stock.price,
+          changePercentage: stock.pctChange,
+          trendChart: trend,
+          stockid: stock.stockId,
+        ),
+        "initialIndex": 1,
+      },
+    );
   }
 
   pushNewStock(Stock stock) {
