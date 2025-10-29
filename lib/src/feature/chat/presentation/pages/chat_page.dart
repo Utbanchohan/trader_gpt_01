@@ -649,7 +649,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               data: (line) {
                 final text = line["buffer"] ?? "";
                 final chartText = line["chart"] ?? [];
-                print("Chart text: $chartText");
                 List<String> chartStrings = chartText
                     .map<String>((e) => e.toString())
                     .toList();

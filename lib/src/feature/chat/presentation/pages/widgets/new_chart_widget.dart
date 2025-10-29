@@ -78,7 +78,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
   final Color bgColor = AppColors.color01B254B;
   final Color legendTextColor = AppColors.secondaryColor;
 
-  double calculateInterval(double minY, double maxY, {int targetSteps = 6}) {
+  double calculateInterval(double minY, double maxY, {int targetSteps = 5}) {
     final range = (maxY - minY).abs();
     if (range == 0) return 1; // avoid divide-by-zero
     final rawInterval = range / targetSteps;
@@ -318,6 +318,22 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
       }
     }
 
+    final allY = spots.map((p) => p.y);
+    final minY = allY.isNotEmpty ? allY.reduce(min) : 0.0;
+    final maxY = allY.isNotEmpty ? allY.reduce(max) : 100.0;
+
+    // Desired number of labels (5 or 6)
+    final desiredLabels = 5;
+    final range = (maxY - minY) <= 0
+        ? maxY == 0
+              ? 1.0
+              : maxY
+        : (maxY - minY);
+    final interval = range / (desiredLabels - 1);
+
+    // Prevent interval being too small (defensive)
+    final safeInterval = interval <= 0 ? 1.0 : interval;
+
     return ScatterChart(
       ScatterChartData(
         scatterSpots: spots
@@ -330,10 +346,14 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               ),
             )
             .toList(),
-        minX: 0,
-        maxX: spots.isEmpty ? 10 : spots.length.toDouble() - 1,
-        minY: spots.isEmpty ? 0 : spots.map((s) => s.y).reduce(math.min),
-        maxY: spots.isEmpty ? 10 : spots.map((s) => s.y).reduce(math.max),
+        minX: spots.isNotEmpty
+            ? spots.map((e) => e.x).reduce((a, b) => a < b ? a : b)
+            : 0.0,
+        maxX: spots.isNotEmpty
+            ? spots.map((e) => e.x).reduce((a, b) => a > b ? a : b)
+            : 0.0,
+        minY: minY,
+        maxY: maxY,
         backgroundColor: Colors.transparent,
         borderData: FlBorderData(show: false),
 
@@ -347,32 +367,29 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           getDrawingVerticalLine: (value) =>
               FlLine(color: gridColor, strokeWidth: 1),
         ),
+
         titlesData: FlTitlesData(
           show: true,
           topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
+              maxIncluded: false,
               showTitles: true,
               reservedSize: 50,
-              interval: calculateInterval(
-                spots.isNotEmpty
-                    ? spots.map((e) => e.y).reduce((a, b) => a < b ? a : b)
-                    : 0.0,
-                spots.isNotEmpty
-                    ? spots.map((e) => e.y).reduce((a, b) => a > b ? a : b)
-                    : 0.0,
-              ),
-              getTitlesWidget: (value, meta) => MdSnsText(
-                Filters.systemNumberConvention(
-                  value.toInt(),
-                  isPrice: false,
-                  isAbs: false,
-                  containerWidth: 40,
-                ),
-                variant: TextVariant.h4,
-                color: axisColor,
-              ),
+              interval: safeInterval,
+              getTitlesWidget: (value, meta) {
+                return MdSnsText(
+                  Filters.systemNumberConvention(
+                    value.toInt(),
+                    isPrice: false,
+                    isAbs: false,
+                    containerWidth: 40,
+                  ),
+                  variant: TextVariant.h4,
+                  color: axisColor,
+                );
+              },
             ),
           ),
           bottomTitles: AxisTitles(
@@ -407,6 +424,39 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
   Widget _buildBarChart({bool stacked = false}) {
     final categories = _getCategories();
     final data = widget.chartData.data;
+
+    Map<String, double> calculateBarBounds(List<BarChartGroupData> barGroups) {
+      if (barGroups.isEmpty) {
+        return {'minY': 0, 'maxY': 1};
+      }
+
+      // Extract all Y values from rods
+      final allYValues = barGroups.expand(
+        (group) => group.barRods.map((rod) => rod.toY),
+      );
+
+      double minY = allYValues.reduce(min);
+      double maxY = allYValues.reduce(max);
+
+      // Add padding (10% of range)
+      final yPadding = (maxY - minY).abs() * 0.1;
+      minY -= yPadding;
+      maxY += yPadding;
+
+      // Edge case: all bars same height
+      if (minY == maxY) {
+        minY -= 1;
+        maxY += 1;
+      }
+
+      // Ensure chart always starts at 0 for positive-only data
+      if (minY > 0) minY = 0;
+
+      return {'minY': minY, 'maxY': maxY};
+    }
+
+    // final double range = maxY - minY;
+    // final double interval = range <= 0 ? 1 : range / 5;
 
     if (data is! List)
       return Center(child: MdSnsText('Invalid bar chart data'));
@@ -462,6 +512,8 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           getDrawingHorizontalLine: (value) =>
               FlLine(color: gridColor, strokeWidth: 1),
         ),
+        minY: calculateBarBounds(barGroups)['minY'],
+        maxY: calculateBarBounds(barGroups)['maxY'],
         titlesData: FlTitlesData(
           show: true,
           topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -470,7 +522,10 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             sideTitles: SideTitles(
               reservedSize: 40,
               showTitles: true,
-              interval: (categories.length / 1).floorToDouble(),
+              interval: calculateInterval(
+                calculateBarBounds(barGroups)['minY'] ?? 0,
+                calculateBarBounds(barGroups)['maxY'] ?? 0,
+              ),
               getTitlesWidget: (value, meta) => MdSnsText(
                 Filters.systemNumberConvention(
                   value.toInt(),
@@ -574,6 +629,22 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
       }
     }
 
+    final allY = lineBars.expand((s) => s.spots.map((p) => p.y)).toList();
+    final minY = allY.isNotEmpty ? allY.reduce(min) : 0.0;
+    final maxY = allY.isNotEmpty ? allY.reduce(max) : 100.0;
+
+    // Desired number of labels (5 or 6)
+    final desiredLabels = 5;
+    final range = (maxY - minY) <= 0
+        ? maxY == 0
+              ? 1.0
+              : maxY
+        : (maxY - minY);
+    final interval = range / (desiredLabels - 1);
+
+    // Prevent interval being too small (defensive)
+    final safeInterval = interval <= 0 ? 1.0 : interval;
+
     return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.29.h,
       width: MediaQuery.sizeOf(context).width / 1.1,
@@ -581,6 +652,8 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
         duration: Duration(milliseconds: 1500),
         curve: Curves.easeIn,
         LineChartData(
+          minY: minY,
+          maxY: maxY,
           lineBarsData: lineBars,
           gridData: FlGridData(
             show: false,
@@ -597,31 +670,24 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
+                maxIncluded: false,
                 showTitles: true,
                 reservedSize: 40,
-                interval: calculateInterval(
-                  lineBars.isNotEmpty
-                      ? lineBars[0].spots
-                            .map((e) => e.y)
-                            .reduce((a, b) => a < b ? a : b)
-                      : 0.0,
-                  lineBars.isNotEmpty
-                      ? lineBars[0].spots
-                            .map((e) => e.y)
-                            .reduce((a, b) => a > b ? a : b)
-                      : 0.0,
-                ), // 👈 set fixed step to avoid too many labels
-                getTitlesWidget: (value, meta) => MdSnsText(
-                  Filters.systemNumberConvention(
-                    value.toInt(),
+                interval: safeInterval,
 
-                    containerWidth: 40,
-                    isRound: true,
-                    fromChart: true,
-                  ),
-                  variant: TextVariant.h4,
-                  color: axisColor,
-                ),
+                getTitlesWidget: (value, meta) {
+                  return MdSnsText(
+                    Filters.systemNumberConvention(
+                      value.toInt(),
+
+                      containerWidth: 40,
+                      isRound: true,
+                      fromChart: true,
+                    ),
+                    variant: TextVariant.h4,
+                    color: axisColor,
+                  );
+                },
               ),
             ),
             bottomTitles: AxisTitles(
@@ -895,3 +961,75 @@ class ChartExample extends StatelessWidget {
     );
   }
 }
+
+
+
+
+// import 'dart:math';
+// import 'package:fl_chart/fl_chart.dart';
+// import 'package:flutter/material.dart';
+
+// class MyLineChart extends StatelessWidget {
+//   final List<LineChartBarData> series; // your series
+//   MyLineChart({required this.series});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // compute minY and maxY from your series data
+//     final allY = series.expand((s) => s.spots.map((p) => p.y)).toList();
+//     final minY = allY.isNotEmpty ? allY.reduce(min) : 0.0;
+//     final maxY = allY.isNotEmpty ? allY.reduce(max) : 100.0;
+
+//     // Desired number of labels (5 or 6)
+//     final desiredLabels = 5;
+//     final range = (maxY - minY) <= 0 ? maxY == 0 ? 1.0 : maxY : (maxY - minY);
+//     final interval = range / (desiredLabels - 1);
+
+//     // Prevent interval being too small (defensive)
+//     final safeInterval = interval <= 0 ? 1.0 : interval;
+
+//     return LineChart(
+//       LineChartData(
+//         minY: minY,
+//         maxY: maxY,
+//         lineBarsData: series,
+//         titlesData: FlTitlesData(
+//           leftTitles: AxisTitles(
+//             sideTitles: SideTitles(
+//               showTitles: true,
+//               interval: safeInterval, // key: controls density
+//               reservedSize: 46, // give space for text on small screens
+//               getTitlesWidget: (double value, TitleMeta meta) {
+//                 // Only show nicely formatted labels (rounding)
+//                 // You can change formatting to percent or compact format
+//                 final textStyle = TextStyle(
+//                   color: Colors.white70,
+//                   fontSize: 11,
+//                 );
+
+//                 // Format value — remove trailing .0 when possible
+//                 String label;
+//                 if (value % 1 == 0) {
+//                   label = value.toInt().toString();
+//                 } else {
+//                   label = value.toStringAsFixed(1);
+//                 }
+//                 // Example: if you want a percent suffix:
+//                 // label = '${label}%';
+
+//                 return Padding(
+//                   padding: const EdgeInsets.only(right: 8.0),
+//                   child: Text(label, style: textStyle, textAlign: TextAlign.right),
+//                 );
+//               },
+//             ),
+//           ),
+//           bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
+//           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+//           topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+//         ),
+//         gridData: FlGridData(show: true),
+//       ),
+//     );
+//   }
+// }

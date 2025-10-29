@@ -45,6 +45,7 @@ class OutstandingSharesChart extends StatelessWidget {
       return FlSpot(x, y);
     }).toList();
     print(spots.toString());
+
     return Container(
       decoration: BoxDecoration(
         // color: AppColors.white,
