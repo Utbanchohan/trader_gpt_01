@@ -25,7 +25,13 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   User? userModel;
 
   logout() {
+    String password = ref.read(localDataProvider).getPassword1 ?? "";
+    String email = ref.read(localDataProvider).getEmail ?? "";
+    String remamberMe = ref.read(localDataProvider).getRemamberMe ?? "";
     ref.read(localDataProvider).clearAllData();
+    ref.read(localDataProvider).setEmail(email);
+    ref.read(localDataProvider).setPassword(password);
+    ref.read(localDataProvider).setRememberMe(remamberMe);
     ref.read(stocksManagerProvider.notifier).unWatchAllStock();
     context.goNamed(AppRoutes.signInPage.name);
   }
