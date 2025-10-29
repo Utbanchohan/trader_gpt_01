@@ -68,7 +68,7 @@ class PricePerformanceWidget extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: DataTable(
               headingRowHeight: 40.h,
-              columnSpacing: 20,
+              columnSpacing: 40.w,
               horizontalMargin: 15,
 
               dataRowMaxHeight: 60.h,
@@ -504,19 +504,6 @@ class PricePerformanceWidget extends StatelessWidget {
             // ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _headerText(String title) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      width: 120.w,
-      child: MdSnsText(
-        title,
-        color: AppColors.color9EAAC0,
-        variant: TextVariant.h4,
-        fontWeight: TextFontWeightVariant.h4,
       ),
     );
   }
