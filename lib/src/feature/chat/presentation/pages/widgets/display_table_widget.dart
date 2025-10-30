@@ -224,9 +224,14 @@ class _GPTDisplayableTableContainerState
 
       width: double.infinity,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 630.h,
+            height: _totalItems >= 10
+                ? 630.h
+                : _totalItems >= 5
+                ? 300
+                : 100.h,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(
