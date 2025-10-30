@@ -10,6 +10,7 @@ import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/display_table_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/new_chart_widget.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
