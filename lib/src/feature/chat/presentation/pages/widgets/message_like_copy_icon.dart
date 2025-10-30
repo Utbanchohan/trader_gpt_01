@@ -13,12 +13,14 @@ class MessageLikeCopyIcon extends ConsumerStatefulWidget {
   final String message;
   final String type;
   final String messageId;
+  final String runId;
 
   const MessageLikeCopyIcon({
     super.key,
     required this.message,
     required this.type,
     required this.messageId,
+    required this.runId,
   });
 
   @override
@@ -36,7 +38,7 @@ class _MessageLikeCopyIconState extends ConsumerState<MessageLikeCopyIcon> {
         key: 'user_feedback',
         messageId: widget.messageId,
         score: score,
-        traceId: '042fb86a-1b38-45a5-853d-27a76518de03',
+        traceId: widget.runId,
       );
       var res = await ref.read(chatRepository).postFeedback(feedBack);
       if (res.message == "Feedback submitted successfull") {}
