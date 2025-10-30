@@ -35,6 +35,7 @@ class ChatMarkdownWidget extends StatefulWidget {
   String type;
   String symbolType;
   List<String> display;
+  String messageId;
 
   ChatMarkdownWidget({
     super.key,
@@ -44,6 +45,7 @@ class ChatMarkdownWidget extends StatefulWidget {
     required this.type,
     required this.display,
     required this.symbolType,
+    required this.messageId,
   });
   @override
   State<ChatMarkdownWidget> createState() => _ChatMarkdownWidgetState();
@@ -463,6 +465,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                 child: MessageLikeCopyIcon(
                   type: widget.type,
                   message: widget.message,
+                  messageId: widget.messageId,
                 ),
               ),
               SizedBox(height: 10),

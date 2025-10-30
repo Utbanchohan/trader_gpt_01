@@ -650,6 +650,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                       symbolType:
                                           widget.chatRouting?.type ?? "",
                                       display: chartStrings,
+                                      messageId: "",
                                     ),
                                   ],
                                 )

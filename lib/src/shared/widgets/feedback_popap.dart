@@ -3,7 +3,9 @@ import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class FeedbackPopup extends StatefulWidget {
-  const FeedbackPopup({super.key});
+  final void Function(String text) onPressed;
+
+  FeedbackPopup({super.key, required this.onPressed});
 
   @override
   State<FeedbackPopup> createState() => _FeedbackPopupState();
@@ -91,10 +93,10 @@ class _FeedbackPopupState extends State<FeedbackPopup> {
             // Submit button
             ElevatedButton(
               onPressed: () {
-                // final feedback = _feedbackController.text.trim();
-                // if (feedback.isNotEmpty) {
-                //   Navigator.pop(context);
-                // }
+                final feedback = _feedbackController.text.trim();
+                if (feedback.isNotEmpty) {
+                  widget.onPressed(_feedbackController.text);
+                }
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
