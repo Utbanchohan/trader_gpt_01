@@ -10,12 +10,13 @@ import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/display_table_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/new_chart_widget.dart';
-import 'package:trader_gpt/src/shared/widgets/InfoWidget_widgets.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/extensions/symbol_image.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../shared/widgets/InfoWidget_widgets.dart';
 import '../../../domain/model/chat_response/chat_message_model.dart';
 import 'chart_widget.dart';
 
@@ -62,8 +63,8 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
     final addNewyAxis = <double>[];
 
     for (final e in display) {
-      final decoded = jsonDecode(e) as Map<String, dynamic>;
       try {
+        final decoded = jsonDecode(e) as Map<String, dynamic>;
         final data = DisplayData.fromJson(decoded);
         if (data.chartType != null) {
           if (data.xAxis?.data != null) {
