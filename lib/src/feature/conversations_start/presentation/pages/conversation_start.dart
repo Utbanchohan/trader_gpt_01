@@ -215,11 +215,13 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
   }
 
   getStocks() async {
-    var res = await ref.read(localDataProvider).getStocks();
-    if (res != null) {
-      for (var stock in res) {
-        stocks.add(Stock.fromJson(stock));
-        watchStockes.add(Stock.fromJson(stock));
+    if (mounted) {
+      var res = await ref.read(localDataProvider).getStocks();
+      if (res != null) {
+        for (var stock in res) {
+          stocks.add(Stock.fromJson(stock));
+          watchStockes.add(Stock.fromJson(stock));
+        }
       }
     }
   }
