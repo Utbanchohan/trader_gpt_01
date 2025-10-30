@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/extensions/symbol_image.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../shared/widgets/InfoWidget_widgets.dart';
 import '../../../domain/model/chat_response/chat_message_model.dart';
 import 'chart_widget.dart';
 
@@ -219,14 +220,60 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
               SizedBox(width: 6),
               Visibility(
                 visible: widget.name != "TDGPT",
-                child: MdSnsText(
-                  widget.type == "user"
-                      ? widget.name.capitalize()
-                      : "TradersGPT : #" + widget.name,
-                  variant: TextVariant.h4,
-                  fontWeight: TextFontWeightVariant.h3,
+                child: Row(
+                  children: [
+                    MdSnsText(
+                      widget.type == "user"
+                          ? widget.name.capitalize()
+                          : "TradersGPT : #" + widget.name,
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h3,
 
-                  color: AppColors.white,
+                      color: AppColors.white,
+                    ),
+                    SizedBox(width: 6),
+
+                    GestureDetector(
+                      onTap: () {
+                        final RenderBox button =
+                            context.findRenderObject() as RenderBox;
+                        final RenderBox overlay =
+                            Overlay.of(context).context.findRenderObject()
+                                as RenderBox;
+
+                        final RelativeRect position = RelativeRect.fromRect(
+                          Rect.fromPoints(
+                            button.localToGlobal(
+                              Offset.zero,
+                              ancestor: overlay,
+                            ),
+                            button.localToGlobal(
+                              Offset.zero,
+                              ancestor: overlay,
+                            ),
+                          ),
+                          Offset.zero & overlay.size,
+                        );
+
+                        showMenu(
+                          context: context,
+                          color: Colors.transparent,
+                          position: position,
+                          items: [
+                            PopupMenuItem(
+                              padding: EdgeInsets.zero,
+                              enabled: false,
+                              child: InfoWidget(),
+                            ),
+                          ],
+                        );
+                      },
+                      child: const Icon(
+                        Icons.keyboard_arrow_down_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
