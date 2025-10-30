@@ -37,6 +37,7 @@ class ChatMarkdownWidget extends StatefulWidget {
   List<String> display;
   String messageId;
   String runId;
+  bool? isStreaming;
 
   ChatMarkdownWidget({
     super.key,
@@ -48,6 +49,7 @@ class ChatMarkdownWidget extends StatefulWidget {
     required this.symbolType,
     required this.messageId,
     required this.runId,
+    required this.isStreaming,
   });
   @override
   State<ChatMarkdownWidget> createState() => _ChatMarkdownWidgetState();
@@ -237,44 +239,47 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                     ),
                     SizedBox(width: 6),
 
-                    GestureDetector(
-                      onTap: () {
-                        final RenderBox button =
-                            context.findRenderObject() as RenderBox;
-                        final RenderBox overlay =
-                            Overlay.of(context).context.findRenderObject()
-                                as RenderBox;
+                    Visibility(
+                      visible: widget.isStreaming ?? false,
+                      child: GestureDetector(
+                        onTap: () {
+                          final RenderBox button =
+                              context.findRenderObject() as RenderBox;
+                          final RenderBox overlay =
+                              Overlay.of(context).context.findRenderObject()
+                                  as RenderBox;
 
-                        final RelativeRect position = RelativeRect.fromRect(
-                          Rect.fromPoints(
-                            button.localToGlobal(
-                              Offset.zero,
-                              ancestor: overlay,
+                          final RelativeRect position = RelativeRect.fromRect(
+                            Rect.fromPoints(
+                              button.localToGlobal(
+                                Offset.zero,
+                                ancestor: overlay,
+                              ),
+                              button.localToGlobal(
+                                Offset.zero,
+                                ancestor: overlay,
+                              ),
                             ),
-                            button.localToGlobal(
-                              Offset.zero,
-                              ancestor: overlay,
-                            ),
-                          ),
-                          Offset.zero & overlay.size,
-                        );
+                            Offset.zero & overlay.size,
+                          );
 
-                        showMenu(
-                          context: context,
-                          color: Colors.transparent,
-                          position: position,
-                          items: [
-                            PopupMenuItem(
-                              padding: EdgeInsets.zero,
-                              enabled: false,
-                              child: InfoWidget(),
-                            ),
-                          ],
-                        );
-                      },
-                      child: const Icon(
-                        Icons.keyboard_arrow_down_outlined,
-                        color: Colors.white,
+                          showMenu(
+                            context: context,
+                            color: Colors.transparent,
+                            position: position,
+                            items: [
+                              PopupMenuItem(
+                                padding: EdgeInsets.zero,
+                                enabled: false,
+                                child: InfoWidget(),
+                              ),
+                            ],
+                          );
+                        },
+                        child: const Icon(
+                          Icons.keyboard_arrow_down_outlined,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],

@@ -47,6 +47,7 @@ class ChatMessagesView extends StatelessWidget {
               : [],
           messageId: chats.chatId,
           runId: chats.runId,
+          isStreaming: false,
         ),
       ],
     );
