@@ -88,7 +88,8 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
+      height: MediaQuery.of(context).size.height * 0.74,
+
       decoration: BoxDecoration(
         color: AppColors.shadowColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
