@@ -95,56 +95,38 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     height: 41.h,
                     width: 166.w,
                   ),
-                  SizedBox(height: 20.h),
+                ],
+              ),
+              SizedBox(height: 36.h),
 
-                  // Free Trial card
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.color1B254B,
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            MdSnsText(
-                              "Free Trial",
-                              color: AppColors.white,
-                              variant: TextVariant.h2,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                            MdSnsText(
-                              "6 days left",
-                              color: AppColors.color9EAAC0,
-                              variant: TextVariant.h2,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 8.h),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10.r),
-                          child: LinearProgressIndicator(
-                            value: 0.6,
-                            minHeight: 6.h,
-                            backgroundColor: AppColors.primaryColor,
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                              AppColors.color06D54E,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        Assets.images.plusbox.path,
+                        height: 22.h,
+                        width: 21.w,
+                      ),
+                      SizedBox(width: 11.w),
+                      MdSnsText(
+                        "Start New Chat",
+                        color: AppColors.color0xFF40C4FF,
+                        variant: TextVariant.h2,
+                        fontWeight: TextFontWeightVariant.h4,
+                      ),
+                    ],
+                  ),
+
+                  Image.asset(
+                    Assets.images.arrow.path,
+                    height: 21.h,
+                    width: 22.w,
                   ),
                 ],
               ),
-
               SizedBox(height: 20.h),
-
-              // Menu Items
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.zero,
@@ -184,7 +166,48 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   ],
                 ),
               ),
-
+              Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: AppColors.color1B254B,
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        MdSnsText(
+                          "Free Trial",
+                          color: AppColors.white,
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        MdSnsText(
+                          "6 days left",
+                          color: AppColors.color9EAAC0,
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10.r),
+                      child: LinearProgressIndicator(
+                        value: 0.6,
+                        minHeight: 6.h,
+                        backgroundColor: AppColors.primaryColor,
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          AppColors.color06D54E,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20.h),
               GestureDetector(
                 onTap: () {
                   context.pushNamed(AppRoutes.myProfileScreen.name);
@@ -233,6 +256,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   ],
                 ),
               ),
+              SizedBox(height: 10.h),
             ],
           ),
         ),

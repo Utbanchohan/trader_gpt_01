@@ -103,6 +103,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/apple.png
   AssetGenImage get apple => const AssetGenImage('assets/images/apple.png');
 
+  /// File path: assets/images/arrow.png
+  AssetGenImage get arrow => const AssetGenImage('assets/images/arrow.png');
+
   /// File path: assets/images/arrow_back.png
   AssetGenImage get arrowBack =>
       const AssetGenImage('assets/images/arrow_back.png');
@@ -227,6 +230,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
+  /// File path: assets/images/logoutupdate.png
+  AssetGenImage get logoutupdate =>
+      const AssetGenImage('assets/images/logoutupdate.png');
+
   /// File path: assets/images/manicon.png
   AssetGenImage get manicon => const AssetGenImage('assets/images/manicon.png');
 
@@ -250,6 +257,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/notification7.png
   AssetGenImage get notification7 =>
       const AssetGenImage('assets/images/notification7.png');
+
+  /// File path: assets/images/plusbox.png
+  AssetGenImage get plusbox => const AssetGenImage('assets/images/plusbox.png');
 
   /// File path: assets/images/prefixIcon.png
   AssetGenImage get prefixIcon =>
@@ -372,6 +382,7 @@ class $AssetsImagesGen {
     analytics,
     appIcon,
     apple,
+    arrow,
     arrowBack,
     book,
     bulb,
@@ -408,6 +419,7 @@ class $AssetsImagesGen {
     like,
     lock,
     logo,
+    logoutupdate,
     manicon,
     menu,
     messageSearch5,
@@ -415,6 +427,7 @@ class $AssetsImagesGen {
     netFilex,
     note,
     notification7,
+    plusbox,
     prefixIcon,
     profile,
     radar2,
