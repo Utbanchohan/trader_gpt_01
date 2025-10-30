@@ -36,6 +36,7 @@ class ChatMarkdownWidget extends StatefulWidget {
   String symbolType;
   List<String> display;
   String messageId;
+  String runId;
 
   ChatMarkdownWidget({
     super.key,
@@ -46,6 +47,7 @@ class ChatMarkdownWidget extends StatefulWidget {
     required this.display,
     required this.symbolType,
     required this.messageId,
+    required this.runId,
   });
   @override
   State<ChatMarkdownWidget> createState() => _ChatMarkdownWidgetState();
@@ -466,6 +468,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                   type: widget.type,
                   message: widget.message,
                   messageId: widget.messageId,
+                  runId: widget.runId,
                 ),
               ),
               SizedBox(height: 10),

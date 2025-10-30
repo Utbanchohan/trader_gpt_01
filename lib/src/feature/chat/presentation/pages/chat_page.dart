@@ -665,6 +665,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             type: "ai",
                             display: chartStrings,
                             messageId: "",
+                            runId: "",
                           ),
                         ],
                       )
