@@ -664,6 +664,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             symbolType: widget.chatRouting?.type ?? "",
                             type: "ai",
                             display: chartStrings,
+                            messageId: "",
                           ),
                         ],
                       )

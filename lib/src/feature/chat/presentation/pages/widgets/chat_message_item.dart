@@ -45,6 +45,7 @@ class ChatMessagesView extends StatelessWidget {
               chats.displayable != null && chats.displayable!.Display.isNotEmpty
               ? chats.displayable!.Display
               : [],
+          messageId: chats.chatId,
         ),
       ],
     );
