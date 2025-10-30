@@ -61,8 +61,8 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
     final addNewyAxis = <double>[];
 
     for (final e in display) {
-      final decoded = jsonDecode(e) as Map<String, dynamic>;
       try {
+        final decoded = jsonDecode(e) as Map<String, dynamic>;
         final data = DisplayData.fromJson(decoded);
         if (data.chartType != null) {
           if (data.xAxis?.data != null) {
@@ -130,10 +130,13 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
 
   @override
   void initState() {
-    model = changeDisplayAble(widget.display);
-
+    setModel();
     // TODO: implement initState
     super.initState();
+  }
+
+  setModel() {
+    model = changeDisplayAble(widget.display);
   }
 
   @override
