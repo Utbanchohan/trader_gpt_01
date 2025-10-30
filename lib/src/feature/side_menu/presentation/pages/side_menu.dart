@@ -247,10 +247,10 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                       onTap: () {
                         _showLogoutDialog(context);
                       },
-                      child: Icon(
-                        Icons.logout,
-                        color: Colors.lightBlueAccent,
-                        size: 20.sp,
+                      child: Image.asset(
+                        Assets.images.logoutupdate.path,
+                        height: 22.h,
+                        width: 21.w,
                       ),
                     ),
                   ],
