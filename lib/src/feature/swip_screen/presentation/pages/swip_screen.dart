@@ -96,88 +96,145 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
-      appBar: _pageController.hasClients
-          ? pgeIndex == 0
-                ? null
-                : pgeIndex == 1
-                ? widget.chatRouting != null &&
-                          widget.chatRouting!.symbol.isNotEmpty
-                      ? ConversationChatAppBar(
-                          chatRouting: widget.chatRouting,
-                          onPressed: () {
-                            _pageController.jumpToPage(2);
-                          },
-                        )
-                      : ChatAppBar()
-                : pgeIndex == 2
-                ? PreferredSize(
-                    preferredSize: Size.fromHeight(75.h),
-                    child: AppBar(
-                      automaticallyImplyLeading: false,
-                      backgroundColor: AppColors.primaryColor,
-                      elevation: 0,
-                      flexibleSpace: SafeArea(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: AppColors.primaryColor,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+        elevation: 0,
+        titleSpacing: 0,
+        bottom: PreferredSize(
+          preferredSize: Size(
+            double.infinity,
+            _pageController.hasClients
+                ? pgeIndex == 0
+                      ? 0.h
+                      : pgeIndex == 1
+                      ? 60.h
+                      : 65.h
+                : 0.h,
+          ),
+          child: _pageController.hasClients
+              ? pgeIndex == 0
+                    ? SizedBox()
+                    : pgeIndex == 1
+                    ? widget.chatRouting != null &&
+                              widget.chatRouting!.symbol.isNotEmpty
+                          ? ConversationChatAppBar(
+                              chatRouting: widget.chatRouting,
+                              onPressed: () {
+                                _pageController.jumpToPage(2);
+                              },
+                            )
+                          : ChatAppBar()
+                    : pgeIndex == 2
+                    ? PreferredSize(
+                        preferredSize: Size.fromHeight(75.h),
+                        child: AppBar(
+                          automaticallyImplyLeading: false,
+                          backgroundColor: AppColors.primaryColor,
+                          elevation: 0,
+                          flexibleSpace: SafeArea(
+                            child: Column(
                               children: [
-                                InkWell(
-                                  onTap: () {
-                                    _pageController.jumpToPage(1);
-                                  },
-                                  child: Container(
-                                    width: 40.w,
-                                    height: 71.h,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                          Assets.images.shapeRightSide.path,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        _pageController.jumpToPage(1);
+                                      },
+                                      child: Container(
+                                        width: 40.w,
+                                        height: 71.h,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                              Assets.images.shapeRightSide.path,
+                                            ),
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.all(15),
+                                        child: Image.asset(
+                                          Assets.images.message.path,
+                                          width: 25.w,
+                                          height: 21.h,
                                         ),
                                       ),
                                     ),
-                                    padding: EdgeInsets.all(15),
-                                    child: Image.asset(
-                                      Assets.images.message.path,
-                                      width: 25.w,
-                                      height: 21.h,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    margin: EdgeInsets.only(right: 30),
-                                    child: Center(
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Image.asset(
-                                            "assets/images/analytics.png",
-                                            width: 20,
-                                            height: 20,
+                                    Expanded(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          right: 30,
+                                        ),
+                                        child: Center(
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Image.asset(
+                                                "assets/images/analytics.png",
+                                                width: 20,
+                                                height: 20,
+                                              ),
+                                              const SizedBox(width: 6),
+                                              MdSnsText(
+                                                "ANALYTICS",
+                                                color: AppColors.white,
+                                                fontWeight:
+                                                    TextFontWeightVariant.h4,
+                                                variant: TextVariant.h3,
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(width: 6),
-                                          MdSnsText(
-                                            "ANALYTICS",
-                                            color: AppColors.white,
-                                            fontWeight:
-                                                TextFontWeightVariant.h4,
-                                            variant: TextVariant.h3,
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  )
-                : null
-          : null,
+                      )
+                    : SizedBox()
+              : SizedBox(),
+        ),
+        leading: Builder(
+          builder: (context) {
+            return InkWell(
+              onTap: () {
+                Scaffold.of(context).openDrawer();
+              },
+              child: Image.asset(
+                Assets.images.menu.path,
+                width: 28,
+                height: 38,
+              ),
+            );
+          },
+        ),
+        title: Image.asset(
+          Assets.images.appLogo.path,
+          height: 30.h,
+          width: 121.96.w,
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: ClipOval(
+              child: Image.asset(
+                Assets.images.placeholderimage.path,
+                height: 40.h,
+                width: 40.h,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ],
+      ),
+
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {

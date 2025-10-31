@@ -61,26 +61,12 @@ class _ConversationChatAppBarState
         : widget.chatRouting!.changePercentage;
 
     if (widget.chatRouting == null || widget.chatRouting!.companyName.isEmpty) {
-      /// Default AppBar (Logo wala)
       return AppBar(
         scrolledUnderElevation: 0,
         centerTitle: false,
         backgroundColor: AppColors.primaryColor,
         elevation: 0,
-        leading: Builder(
-          builder: (context) {
-            return InkWell(
-              onTap: () {
-                Scaffold.of(context).openDrawer();
-              },
-              child: Image.asset(
-                Assets.images.menu.path,
-                width: 40,
-                height: 40,
-              ),
-            );
-          },
-        ),
+
         title: Image.asset(Assets.images.logo.path, width: 187, height: 35.27),
         // actions: [
         //   Container(
@@ -94,29 +80,17 @@ class _ConversationChatAppBarState
         // ],
       );
     } else {
-      /// Stock Detail AppBar
       return AppBar(
         scrolledUnderElevation: 0,
         centerTitle: true,
         backgroundColor: AppColors.primaryColor,
         elevation: 0,
-        titleSpacing: 0,
-        leading: Builder(
-          builder: (context) {
-            return InkWell(
-              onTap: () {
-                Scaffold.of(context).openDrawer();
-              },
-              child: Image.asset(
-                Assets.images.menu.path,
-                width: 40,
-                height: 40,
-              ),
-            );
-          },
-        ),
+        titleSpacing: 15,
+        automaticallyImplyLeading: false,
+
         title: Row(
-          mainAxisSize: MainAxisSize.min,
+          // mainAxisSize: MainAxisSize.,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             InkWell(

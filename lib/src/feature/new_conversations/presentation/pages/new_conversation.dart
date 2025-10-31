@@ -7,12 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/price_calculation.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/create_chat_dto/create_chat_dto.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chats/chats_model.dart';
 import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/widget/shimmer_widget.dart';
 import 'package:trader_gpt/src/feature/new_conversations/presentation/provider/create_chat/create_chat.dart';
+import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/shared/socket/domain/repository/repository.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -212,25 +214,78 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
+      resizeToAvoidBottomInset: true,
+      drawer: SideMenu(),
       appBar: AppBar(
         scrolledUnderElevation: 0,
         backgroundColor: AppColors.primaryColor,
         centerTitle: false,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.close, color: Colors.white),
-          onPressed: () {
-            context.pop();
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+
+        // ✅ Menu icon
+        leading: Builder(
+          builder: (context) {
+            return InkWell(
+              onTap: () {
+                Scaffold.of(context).openDrawer();
+              },
+              child: Image.asset(
+                Assets.images.menu.path,
+                width: 28,
+                height: 38,
+              ),
+            );
           },
         ),
 
-        title: MdSnsText(
-          "Start New Conversation",
-          color: AppColors.color9EAAC0,
-          variant: TextVariant.h1,
-          fontWeight: TextFontWeightVariant.h2,
+        // ✅ App logo in the middle
+        title: Image.asset(
+          Assets.images.appLogo.path,
+          height: 28.h,
+          width: 110.w,
+          fit: BoxFit.contain,
+        ),
+
+        // ✅ Profile image on the right
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 16.w),
+            child: ClipOval(
+              child: Image.asset(
+                Assets.images.placeholderimage.path,
+                height: 40.h,
+                width: 40.h,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ],
+
+        bottom: PreferredSize(
+          preferredSize: Size(double.infinity, 60.h),
+          // preferredSize: Size.fromHeight(50.h),
+          child: Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.close, color: AppColors.color9EAAC0),
+                onPressed: () {
+                  context.pop();
+                },
+              ),
+              SizedBox(width: 4.w),
+              MdSnsText(
+                "Start New Conversation",
+                color: AppColors.color9EAAC0,
+                variant: TextVariant.h1,
+                fontWeight: TextFontWeightVariant.h2,
+              ),
+            ],
+          ),
         ),
       ),
+
       body: Column(
         children: [
           // 🔍 Search box
