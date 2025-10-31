@@ -652,6 +652,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                       display: chartStrings,
                                       messageId: "",
                                       runId: "",
+                                      isStreaming: true,
                                     ),
                                   ],
                                 )
