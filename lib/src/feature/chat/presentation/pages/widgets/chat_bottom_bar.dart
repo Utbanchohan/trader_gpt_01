@@ -50,7 +50,9 @@ class ChatBottomBar extends StatefulWidget {
 }
 
 class _ChatBottomBarState extends State<ChatBottomBar> {
+  final GlobalKey _popupKey = GlobalKey();
   final SpeechToText _speechToText = SpeechToText();
+
   bool speechEnabled = false;
   String lastWords = '';
 
@@ -95,7 +97,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child:
-          // Container(
+          //         Container(
           //   color: Colors.transparent,
           //   // height: isWorkSymbol ? 190.h : 160.h,
           //   child: Column(
@@ -126,7 +128,8 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
           //           ),
           //           child: Column(
           //             crossAxisAlignment: CrossAxisAlignment.start,
-          //             mainAxisSize: MainAxisSize.min, // jitni zarurat utni height
+          //             mainAxisSize:
+          //                 MainAxisSize.min, // jitni zarurat utni height
           //             children: [
           //               TextField(
           //                 controller: widget.messageController,
@@ -137,7 +140,10 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
           //                 scrollController: widget.textScrollController,
           //                 onChanged: (value) {
           //                   widget.textScrollController.jumpTo(
-          //                     widget.textScrollController.position.maxScrollExtent,
+          //                     widget
+          //                         .textScrollController
+          //                         .position
+          //                         .maxScrollExtent,
           //                   );
           //                   if (value.endsWith("/")) {
           //                     widget.onSlashDetected(context);
@@ -159,10 +165,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
           //                   ),
           //                   suffixIcon: widget.isWorkFlow
           //                       ? IconButton(
-          //                           icon: const Icon(
-          //                             Icons.delete,
-          //                             color: Colors.red,
-          //                           ),
+          //                           icon: Icon(Icons.delete, color: Colors.red),
           //                           onPressed: widget.onDeleteWorkflow,
           //                         )
           //                       : null,
@@ -225,14 +228,16 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
           //                                   MdSnsText(
           //                                     "Web Mode",
           //                                     variant: TextVariant.h4,
-          //                                     fontWeight: TextFontWeightVariant.h4,
+          //                                     fontWeight:
+          //                                         TextFontWeightVariant.h4,
           //                                     color: AppColors.colorB2B2B7,
           //                                   ),
           //                                   Spacer(),
           //                                   Transform.scale(
           //                                     scale: 0.6,
           //                                     child: Switch(
-          //                                       activeColor: Colors.lightBlueAccent,
+          //                                       activeColor:
+          //                                           Colors.lightBlueAccent,
           //                                       activeTrackColor:
           //                                           AppColors.secondaryColor,
           //                                       inactiveThumbColor:
@@ -275,14 +280,16 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
           //                                   MdSnsText(
           //                                     "Report",
           //                                     variant: TextVariant.h4,
-          //                                     fontWeight: TextFontWeightVariant.h4,
+          //                                     fontWeight:
+          //                                         TextFontWeightVariant.h4,
           //                                     color: AppColors.colorB2B2B7,
           //                                   ),
           //                                   Spacer(),
           //                                   Transform.scale(
           //                                     scale: 0.6,
           //                                     child: Switch(
-          //                                       activeColor: Colors.lightBlueAccent,
+          //                                       activeColor:
+          //                                           Colors.lightBlueAccent,
           //                                       activeTrackColor:
           //                                           AppColors.secondaryColor,
           //                                       inactiveThumbColor:
@@ -326,14 +333,16 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
           //                                   MdSnsText(
           //                                     "Deep Analysis",
           //                                     variant: TextVariant.h4,
-          //                                     fontWeight: TextFontWeightVariant.h4,
+          //                                     fontWeight:
+          //                                         TextFontWeightVariant.h4,
           //                                     color: AppColors.colorB2B2B7,
           //                                   ),
           //                                   Spacer(),
           //                                   Transform.scale(
           //                                     scale: 0.6,
           //                                     child: Switch(
-          //                                       activeColor: Colors.lightBlueAccent,
+          //                                       activeColor:
+          //                                           Colors.lightBlueAccent,
           //                                       activeTrackColor:
           //                                           AppColors.secondaryColor,
           //                                       inactiveThumbColor:
@@ -343,9 +352,12 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
           //                                       value: widget.deepAnalysis,
           //                                       onChanged: (val) {
           //                                         localSetState(
-          //                                           () => widget.deepAnalysis = val,
+          //                                           () => widget.deepAnalysis =
+          //                                               val,
           //                                         );
-          //                                         widget.onDeepAnalysisChanged(val);
+          //                                         widget.onDeepAnalysisChanged(
+          //                                           val,
+          //                                         );
           //                                       },
           //                                     ),
           //                                   ),
@@ -458,35 +470,247 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
           Container(
             margin: EdgeInsets.only(left: 15, bottom: 10),
             color: Colors.transparent,
-            // height: isWorkSymbol ? 190.h : 160.h,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center, // 👈 center horizontally
-                  crossAxisAlignment:
-                      CrossAxisAlignment.center, // 👈 vertically center align
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      height: 45.h,
-                      width: 45.w,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.bubbleColor,
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.add,
-                          size: 24,
-                          color: AppColors.color0xFFB2B2B7,
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            final dynamic popupMenu = _popupKey.currentState;
+                            popupMenu.showButtonMenu();
+                          },
+                          child: Container(
+                            height: 45.h,
+                            width: 45.w,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.bubbleColor,
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.add,
+                                size: 24,
+                                color: AppColors.color0xFFB2B2B7,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+
+                        PopupMenuButton<String>(
+                          key: _popupKey,
+                          offset: Offset(-45.w, -280.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          color: AppColors.bubbleColor,
+                          onSelected: (value) {},
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              enabled: false,
+                              padding: EdgeInsets.all(10.w),
+                              child: SizedBox(
+                                height: 20.h,
+                                child: StatefulBuilder(
+                                  builder: (context, localSetState) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).pop();
+                                        widget.onPrefixTap?.call();
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            Assets.images.textfieldicon2.path,
+                                            height: 18,
+                                            width: 18,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          MdSnsText(
+                                            "Related Q/A",
+                                            variant: TextVariant.h4,
+                                            fontWeight:
+                                                TextFontWeightVariant.h4,
+                                            color: AppColors.colorB2B2B7,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+
+                            PopupMenuDivider(
+                              color: AppColors.white.withOpacity(0.3),
+                            ),
+
+                            /// Web Mode
+                            PopupMenuItem(
+                              enabled: false,
+                              padding: EdgeInsets.all(10.w),
+                              child: SizedBox(
+                                height: 20.h,
+                                child: StatefulBuilder(
+                                  builder: (context, localSetState) {
+                                    return Row(
+                                      children: [
+                                        Image.asset(
+                                          Assets.images.global.path,
+                                          height: 18,
+                                          width: 18,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        MdSnsText(
+                                          "Web Mode",
+                                          variant: TextVariant.h4,
+                                          fontWeight: TextFontWeightVariant.h4,
+                                          color: AppColors.colorB2B2B7,
+                                        ),
+                                        const Spacer(),
+                                        Transform.scale(
+                                          scale: 0.6,
+                                          child: Switch(
+                                            activeColor: Colors.lightBlueAccent,
+                                            activeTrackColor:
+                                                AppColors.secondaryColor,
+                                            inactiveThumbColor:
+                                                Colors.lightBlueAccent,
+                                            inactiveTrackColor:
+                                                AppColors.primaryColor,
+                                            value: widget.webMode,
+                                            onChanged: (val) {
+                                              localSetState(
+                                                () => widget.webMode = val,
+                                              );
+                                              widget.onWebModeChanged(val);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+
+                            PopupMenuDivider(
+                              color: AppColors.white.withOpacity(0.3),
+                            ),
+
+                            /// Report
+                            PopupMenuItem(
+                              padding: EdgeInsets.all(10.w),
+                              child: SizedBox(
+                                height: 20.h,
+                                child: StatefulBuilder(
+                                  builder: (context, localSetState) {
+                                    return Row(
+                                      children: [
+                                        Image.asset(
+                                          Assets.images.note.path,
+                                          height: 18,
+                                          width: 18,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        MdSnsText(
+                                          "Report",
+                                          variant: TextVariant.h4,
+                                          fontWeight: TextFontWeightVariant.h4,
+                                          color: AppColors.colorB2B2B7,
+                                        ),
+                                        const Spacer(),
+                                        Transform.scale(
+                                          scale: 0.6,
+                                          child: Switch(
+                                            activeColor: Colors.lightBlueAccent,
+                                            activeTrackColor:
+                                                AppColors.secondaryColor,
+                                            inactiveThumbColor:
+                                                Colors.lightBlueAccent,
+                                            inactiveTrackColor:
+                                                AppColors.primaryColor,
+                                            value: widget.report,
+                                            onChanged: (val) {
+                                              localSetState(
+                                                () => widget.report = val,
+                                              );
+                                              widget.onReportChanged(val);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+
+                            PopupMenuDivider(
+                              color: AppColors.white.withOpacity(0.3),
+                            ),
+
+                            /// Deep Analysis
+                            PopupMenuItem(
+                              enabled: false,
+                              padding: EdgeInsets.all(10.w),
+                              child: SizedBox(
+                                height: 20.h,
+                                child: StatefulBuilder(
+                                  builder: (context, localSetState) {
+                                    return Row(
+                                      children: [
+                                        Image.asset(
+                                          Assets.images.radar.path,
+                                          height: 18,
+                                          width: 18,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        MdSnsText(
+                                          "Deep Analysis",
+                                          variant: TextVariant.h4,
+                                          fontWeight: TextFontWeightVariant.h4,
+                                          color: AppColors.colorB2B2B7,
+                                        ),
+                                        const Spacer(),
+                                        Transform.scale(
+                                          scale: 0.6,
+                                          child: Switch(
+                                            activeColor: Colors.lightBlueAccent,
+                                            activeTrackColor:
+                                                AppColors.secondaryColor,
+                                            inactiveThumbColor:
+                                                Colors.lightBlueAccent,
+                                            inactiveTrackColor:
+                                                AppColors.primaryColor,
+                                            value: widget.deepAnalysis,
+                                            onChanged: (val) {
+                                              localSetState(
+                                                () => widget.deepAnalysis = val,
+                                              );
+                                              widget.onDeepAnalysisChanged(val);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                          child: const SizedBox.shrink(),
+                        ),
+                      ],
                     ),
 
                     SizedBox(width: 8.w),
 
-                    // 💬 Text Field Box
+                    /// Text Field
                     Expanded(
                       child: Container(
                         height: 50.h,
