@@ -12,7 +12,11 @@ import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/logout_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../../../shared/socket/model/stock_model.dart/stock_model.dart';
 import '../../../../shared/socket/providers/stocks_price.dart';
+import '../../../chat/domain/model/chat_stock_model.dart';
+import '../../../chat/domain/model/chats/chats_model.dart';
+import '../../../chat/domain/repository/chat_repository.dart';
 
 class SideMenu extends ConsumerStatefulWidget {
   const SideMenu({super.key});
@@ -24,6 +28,7 @@ class SideMenu extends ConsumerStatefulWidget {
 class _SideMenuState extends ConsumerState<SideMenu> {
   String? selectedMenu;
   User? userModel;
+  List<ChatHistory> convo = [];
 
   logout() {
     String password = ref.read(localDataProvider).getPassword1 ?? "";
@@ -74,6 +79,29 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     });
   }
 
+  getChats() async {
+    var res = await ref.read(chatRepository).chats();
+    if (res.isSuccess != null && res.isSuccess == false) return false;
+
+    for (final chat in res.data!.results) {
+      if (chat.symbol.toLowerCase() != "tdgpt") {
+        convo.add(chat);
+      }
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    // getStocks();
+    getChats();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     getUser();
@@ -99,32 +127,58 @@ class _SideMenuState extends ConsumerState<SideMenu> {
               ),
               SizedBox(height: 36.h),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        Assets.images.plusbox.path,
-                        height: 22.h,
-                        width: 21.w,
+              InkWell(
+                onTap: () {
+                  List<ChatRouting> chatRoutings = [];
+                  for (var convo1 in convo) {
+                    chatRoutings.add(
+                      ChatRouting(
+                        chatId: convo1.id,
+                        symbol: convo1.symbol,
+                        image: "",
+                        companyName: convo1.companyName,
+                        price: 0,
+                        type: convo1.type,
+                        changePercentage: 0,
+                        trendChart: FiveDayTrend(data: [0, 0, 0, 0, 0]),
+                        stockid: convo1.stockId,
+                        previousClose: 0,
                       ),
-                      SizedBox(width: 11.w),
-                      MdSnsText(
-                        "Start New Chat",
-                        color: AppColors.color0xFF40C4FF,
-                        variant: TextVariant.h2,
-                        fontWeight: TextFontWeightVariant.h4,
-                      ),
-                    ],
-                  ),
+                    );
+                  }
 
-                  Image.asset(
-                    Assets.images.arrow.path,
-                    height: 21.h,
-                    width: 22.w,
-                  ),
-                ],
+                  context.pushNamed(
+                    AppRoutes.newConversation.name,
+                    extra: {"chatRouting": chatRoutings},
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset(
+                          Assets.images.plusbox.path,
+                          height: 22.h,
+                          width: 21.w,
+                        ),
+                        SizedBox(width: 11.w),
+                        MdSnsText(
+                          "Start New Chat",
+                          color: AppColors.color0xFF40C4FF,
+                          variant: TextVariant.h2,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+
+                    Image.asset(
+                      Assets.images.arrow.path,
+                      height: 21.h,
+                      width: 22.w,
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 20.h),
               Expanded(

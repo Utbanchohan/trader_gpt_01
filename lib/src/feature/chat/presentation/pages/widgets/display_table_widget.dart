@@ -227,9 +227,11 @@ class _GPTDisplayableTableContainerState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: _totalItems >= 10
+            height: _totalItems >= 8
                 ? 630.h
                 : _totalItems >= 5
+                ? 500
+                : _totalItems < 5 && _totalItems > 1
                 ? 300
                 : 100.h,
             child: SingleChildScrollView(
