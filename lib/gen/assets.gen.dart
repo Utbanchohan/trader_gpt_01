@@ -258,6 +258,9 @@ class $AssetsImagesGen {
   AssetGenImage get notification7 =>
       const AssetGenImage('assets/images/notification7.png');
 
+  /// File path: assets/images/onboard.png
+  AssetGenImage get onboard => const AssetGenImage('assets/images/onboard.png');
+
   /// File path: assets/images/plusbox.png
   AssetGenImage get plusbox => const AssetGenImage('assets/images/plusbox.png');
 
@@ -427,6 +430,7 @@ class $AssetsImagesGen {
     netFilex,
     note,
     notification7,
+    onboard,
     plusbox,
     prefixIcon,
     profile,
