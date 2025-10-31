@@ -36,6 +36,7 @@ class ChatMessagesView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         ChatMarkdownWidget(
+          updatesAskStream: [],
           message: chats.message,
           name: name,
           image: image,

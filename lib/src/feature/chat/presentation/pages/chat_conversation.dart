@@ -29,6 +29,7 @@ import '../../../analytics/Presentation/provider/analytics_provider/analytics_pr
 import '../../../analytics/data/dto/overview_dto/overview_dto.dart';
 import '../../../analytics/domain/model/overview_model/overview_model.dart';
 import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
+import '../../domain/model/updates_questions_model/updates_questions_model.dart';
 import 'widgets/loading_widget.dart';
 
 class ChatConversation extends ConsumerStatefulWidget {
@@ -73,6 +74,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   int chatPage = 1;
   bool boolLoadMoreLoader = false;
   StockResponse? stockResponse;
+  List<AnalysisTask> updatesAskQuestions = [];
 
   @override
   void initState() {
@@ -535,12 +537,22 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
     getUser();
     final asyncStream = startStream
         ? ref.watch(sseProvider(body))
-        : const AsyncValue.data({'buffer': "", "followUp": [], "chart": []});
+        : const AsyncValue.data({
+            'buffer': "",
+            "followUp": [],
+            "chart": [],
+            "updates": "",
+          });
 
     asyncStream.whenData((data) {
       followupQuestions = data["followUp"].isNotEmpty
           ? (data["followUp"] as List<String>?) ?? []
           : [];
+      if (data["updates"].isNotEmpty) {
+        for (var data in data["updates"]) {
+          updatesAskQuestions.add(AnalysisTask.fromJson(data));
+        }
+      }
 
       if (followupQuestions.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -642,6 +654,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                     SizedBox(height: 20),
 
                                     ChatMarkdownWidget(
+                                      updatesAskStream: updatesAskQuestions,
                                       message: text.toString(),
                                       name:
                                           widget.chatRouting?.symbol ?? "TDGPT",

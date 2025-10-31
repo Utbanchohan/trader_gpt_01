@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trader_gpt/src/core/local/repository/local_storage_repository.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/data/dto/chat_message_dto/chat_message_dto.dart';
@@ -26,7 +25,8 @@ import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../../core/extensions/empty_stock.dart';
 import '../../../../shared/widgets/loading_widget.dart';
-import 'widgets/message_like_copy_icon.dart';
+import '../../domain/model/updates_questions_model/updates_questions_model.dart'
+    show AnalysisTask;
 
 class ChatPage extends ConsumerStatefulWidget {
   ChatRouting? chatRouting;
@@ -43,6 +43,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   final TextEditingController limit = TextEditingController();
   final ScrollController _textScrollController = ScrollController();
   final ScrollController sc = ScrollController();
+  List<AnalysisTask> updatesAskQuestions = [];
 
   // states
   Stock? selectedStock;
@@ -595,6 +596,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       followupQuestions = data["followUp"].isNotEmpty
           ? (data["followUp"] as List<String>?) ?? []
           : [];
+      updatesAskQuestions = data["updates"].isNotEmpty
+          ? (data["updates"] as List<AnalysisTask>?) ?? []
+          : [];
       if (followupQuestions.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (!dialogOpen) {
@@ -658,6 +662,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         children: [
                           SizedBox(height: 10),
                           ChatMarkdownWidget(
+                            updatesAskStream: updatesAskQuestions,
                             message: text.toString(),
                             name: widget.chatRouting?.symbol ?? "TDGPT",
                             image: widget.chatRouting?.image ?? "",

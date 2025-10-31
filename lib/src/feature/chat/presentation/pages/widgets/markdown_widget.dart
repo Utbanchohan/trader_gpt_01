@@ -18,6 +18,7 @@ import '../../../../../core/extensions/symbol_image.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../shared/widgets/InfoWidget_widgets.dart';
 import '../../../domain/model/chat_response/chat_message_model.dart';
+import '../../../domain/model/updates_questions_model/updates_questions_model.dart';
 import 'chart_widget.dart';
 
 class ModelOfAxis {
@@ -38,6 +39,7 @@ class ChatMarkdownWidget extends StatefulWidget {
   String messageId;
   String runId;
   bool? isStreaming;
+  List<AnalysisTask> updatesAskStream;
 
   ChatMarkdownWidget({
     super.key,
@@ -50,6 +52,7 @@ class ChatMarkdownWidget extends StatefulWidget {
     required this.messageId,
     required this.runId,
     required this.isStreaming,
+    required this.updatesAskStream,
   });
   @override
   State<ChatMarkdownWidget> createState() => _ChatMarkdownWidgetState();
@@ -271,7 +274,9 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                               PopupMenuItem(
                                 padding: EdgeInsets.zero,
                                 enabled: false,
-                                child: InfoWidget(),
+                                child: InfoWidget(
+                                  updatesAskStream: widget.updatesAskStream,
+                                ),
                               ),
                             ],
                           );
