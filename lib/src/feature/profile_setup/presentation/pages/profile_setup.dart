@@ -14,6 +14,7 @@ import 'package:trader_gpt/src/feature/s3_uploader/domain/models/media_model.dar
 import 'package:trader_gpt/src/feature/s3_uploader/presentation/image_pickert.dart';
 import 'package:trader_gpt/src/feature/s3_uploader/providers/upload_provider.dart';
 import 'package:trader_gpt/src/shared/custom_message.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/states/app_loading_state.dart';
 import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';

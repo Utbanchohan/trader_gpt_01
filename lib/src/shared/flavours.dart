@@ -1,6 +1,6 @@
 class BaseUrl {
   static String get baseUrl {
-    return 'http://stage.tradersgpt.io/';
+    return 'https://stage.tradersgpt.io/';
   }
 
   static String get socketurl {

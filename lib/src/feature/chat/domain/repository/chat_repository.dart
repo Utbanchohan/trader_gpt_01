@@ -13,9 +13,11 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_api_repositor
 
 import '../../../../../flavors.dart';
 import '../../../../core/api_client/client.dart';
+import '../../data/dto/feedback_dto/feedback_dto.dart';
 import '../model/delete_all_memories/delete_all_memories.dart';
 import '../model/delete_memory_model/delete_memory_model.dart';
 import '../model/delete_model/delete_model.dart';
+import '../model/feedback_model/feedback_model.dart';
 import '../model/memory_model/memory_model.dart';
 
 abstract interface class ChatRepository {
@@ -31,6 +33,7 @@ abstract interface class ChatRepository {
   Future<MemoryModel> getMemories(String limit);
   Future<DeleteAllMemoriesModel> deleteAllMemory(String memoryId);
   Future<DeleteMemoryModel> deleteMemory(String memoryId);
+  Future<FeedbackModel> postFeedback(FeedbackDto feedbackModel);
 }
 
 final chatRepository = Provider<ChatRepository>(

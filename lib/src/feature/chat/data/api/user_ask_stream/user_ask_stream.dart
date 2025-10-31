@@ -4,7 +4,9 @@ import 'package:trader_gpt/src/feature/chat/domain/model/work_flow_model/work_fl
 
 import '../../../domain/model/delete_all_memories/delete_all_memories.dart';
 import '../../../domain/model/delete_memory_model/delete_memory_model.dart';
+import '../../../domain/model/feedback_model/feedback_model.dart';
 import '../../../domain/model/memory_model/memory_model.dart';
+import '../../dto/feedback_dto/feedback_dto.dart';
 import '../../dto/task_dto/task_dto.dart';
 part 'user_ask_stream.g.dart';
 
@@ -30,4 +32,7 @@ abstract interface class UserAskStreamApi {
 
   @DELETE('memories')
   Future<DeleteAllMemoriesModel> deleteAllMemory();
+
+  @POST('feedback')
+  Future<FeedbackModel> postFeedback(@Body() FeedbackDto feedbackModel);
 }

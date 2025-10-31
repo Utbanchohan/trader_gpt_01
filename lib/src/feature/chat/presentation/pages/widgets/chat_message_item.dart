@@ -36,6 +36,7 @@ class ChatMessagesView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         ChatMarkdownWidget(
+          updatesAskStream: [],
           message: chats.message,
           name: name,
           image: image,
@@ -45,6 +46,9 @@ class ChatMessagesView extends StatelessWidget {
               chats.displayable != null && chats.displayable!.Display.isNotEmpty
               ? chats.displayable!.Display
               : [],
+          messageId: chats.chatId,
+          runId: chats.runId,
+          isStreaming: false,
         ),
       ],
     );

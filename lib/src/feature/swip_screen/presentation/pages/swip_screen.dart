@@ -111,9 +111,7 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
                       : ChatAppBar()
                 : pgeIndex == 2
                 ? PreferredSize(
-                    preferredSize: Size.fromHeight(
-                      75.h,
-                    ), // Adjust height as needed
+                    preferredSize: Size.fromHeight(75.h),
                     child: AppBar(
                       automaticallyImplyLeading: false,
                       backgroundColor: AppColors.primaryColor,

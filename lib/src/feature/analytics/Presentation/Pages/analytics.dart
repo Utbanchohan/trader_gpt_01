@@ -14,15 +14,11 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/cryp
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/about_crypto/about_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/info_crypto/info_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/monthly_data_crypto/monthly_data_crypto.dart';
-import 'package:trader_gpt/src/feature/analytics/Presentation/provider/overview_candle_chart_crypto/overview_candle_chart_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data_crypto/weekly_data_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/highlights_widgets.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/price_performance_model/price_performance_model.dart';
 import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/widget/shimmer_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/AnalysisTableShimmer.dart';
-import 'package:trader_gpt/src/shared/widgets/EarningsTableShimmer.dart';
-import 'package:trader_gpt/src/shared/widgets/EarningsTrendShimmer.dart';
-import 'package:trader_gpt/src/shared/widgets/QuarterlyPerformanceChartShimmer.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analysis_table.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analytics_widget.dart'
     show AnalyticsWidget;
@@ -30,7 +26,6 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/date
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/earning_chart.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
-import 'package:trader_gpt/src/feature/analytics/Presentation/provider/overview_candle_chart/overview_candle_chart.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/company_detail/company_detail_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
@@ -42,7 +37,6 @@ import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.
 import 'package:trader_gpt/src/shared/widgets/CustomCandleChartShimmer%20.dart';
 import 'package:trader_gpt/src/shared/widgets/EarningsTrend_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/InfoBox_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/WeeklyBarChart_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/cashdebt_shimmer_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/cashdebt_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/company_detail.widgets.dart';
@@ -63,7 +57,6 @@ import 'package:trader_gpt/utils/constant.dart';
 
 import '../../../../core/extensions/price_calculation.dart';
 import '../../../../core/extensions/symbol_image.dart';
-import '../../../../core/routes/routes.dart';
 import '../../../../shared/extensions/number_formatter_extension.dart';
 import '../../../../shared/socket/providers/stocks_price.dart';
 import '../../../../shared/widgets/esg_score_table.dart';
@@ -1285,7 +1278,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   //crypto apis end
 
   @override
-  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
@@ -2182,6 +2174,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   Widget _overviewContent() {
+    List<String> questions = [
+      "Provide a comprehensive company analysis of ${widget.chatRouting!.companyName}",
+      "Technical analysis for ${widget.chatRouting!.companyName}",
+      "Analyze analyst sentiment for ${widget.chatRouting!.companyName}",
+      "Perform DCF valuation analysis for  ${widget.chatRouting!.companyName}",
+      "Perform DCF valuation analysis for ${widget.chatRouting!.companyName}",
+      "Analyze analyst sentiment for ${widget.chatRouting!.companyName}",
+    ];
     final stockManagerState = ref.watch(stocksManagerProvider);
 
     final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
@@ -2292,6 +2292,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                           color: AppColors.white,
                         ),
                         SizedBox(width: 6),
+
                         Container(
                           width: 5, // dot size
                           height: 5,

@@ -10,12 +10,15 @@ import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/display_table_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/new_chart_widget.dart';
+import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/extensions/symbol_image.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../shared/widgets/InfoWidget_widgets.dart';
 import '../../../domain/model/chat_response/chat_message_model.dart';
+import '../../../domain/model/updates_questions_model/updates_questions_model.dart';
 import 'chart_widget.dart';
 
 class ModelOfAxis {
@@ -33,6 +36,10 @@ class ChatMarkdownWidget extends StatefulWidget {
   String type;
   String symbolType;
   List<String> display;
+  String messageId;
+  String runId;
+  bool? isStreaming;
+  List<AnalysisTask> updatesAskStream;
 
   ChatMarkdownWidget({
     super.key,
@@ -42,6 +49,10 @@ class ChatMarkdownWidget extends StatefulWidget {
     required this.type,
     required this.display,
     required this.symbolType,
+    required this.messageId,
+    required this.runId,
+    required this.isStreaming,
+    required this.updatesAskStream,
   });
   @override
   State<ChatMarkdownWidget> createState() => _ChatMarkdownWidgetState();
@@ -221,14 +232,230 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
               SizedBox(width: 6),
               Visibility(
                 visible: widget.name != "TDGPT",
-                child: MdSnsText(
-                  widget.type == "user"
-                      ? widget.name.capitalize()
-                      : "TradersGPT : #" + widget.name,
-                  variant: TextVariant.h4,
-                  fontWeight: TextFontWeightVariant.h3,
+                child: Row(
+                  children: [
+                    MdSnsText(
+                      widget.type == "user"
+                          ? widget.name.capitalize()
+                          : "TradersGPT : #" + widget.name,
+                      variant: TextVariant.h4,
+                      fontWeight: TextFontWeightVariant.h3,
 
-                  color: AppColors.white,
+                      color: AppColors.white,
+                    ),
+                    SizedBox(width: 6),
+
+                    Visibility(
+                      visible: widget.isStreaming ?? false,
+                      child: GestureDetector(
+                        onTap: () {
+                          if (widget.updatesAskStream != null &&
+                              widget.updatesAskStream!.isNotEmpty) {
+                            // WidgetsBinding.instance.addPostFrameCallback((_) {
+                            final RenderBox button =
+                                context.findRenderObject() as RenderBox;
+                            final RenderBox overlay =
+                                Overlay.of(context).context.findRenderObject()
+                                    as RenderBox;
+
+                            final RelativeRect position = RelativeRect.fromRect(
+                              Rect.fromPoints(
+                                button.localToGlobal(
+                                  Offset.zero,
+                                  ancestor: overlay,
+                                ),
+                                button.localToGlobal(
+                                  Offset.zero,
+                                  ancestor: overlay,
+                                ),
+                              ),
+                              Offset.zero & overlay.size,
+                            );
+                            setState(() {});
+                            showMenu(
+                              context: context,
+                              color: Colors.transparent,
+                              position: position,
+                              items: [
+                                PopupMenuItem(
+                                  padding: EdgeInsets.zero,
+                                  enabled: false,
+                                  child: Container(
+                                    width: 350,
+                                    margin: EdgeInsets.only(top: 20.h),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.color0xFF1B254B,
+                                      borderRadius: BorderRadius.circular(5.r),
+                                    ),
+                                    padding: EdgeInsets.all(16.w),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        MdSnsText(
+                                          widget
+                                              .updatesAskStream![0]
+                                              .definition,
+                                          color: AppColors.white,
+                                          variant: TextVariant.h2,
+                                          fontWeight: TextFontWeightVariant.h4,
+                                        ),
+
+                                        SizedBox(height: 5.h),
+
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.circle,
+                                              color: AppColors.color0xFF12B981,
+                                              size: 12,
+                                            ),
+                                            SizedBox(width: 8.w),
+                                            MdSnsText(
+                                              "Completed",
+                                              color: AppColors.color0xFF9EAAC0,
+                                              variant: TextVariant.h4,
+                                              fontWeight:
+                                                  TextFontWeightVariant.h4,
+                                            ),
+                                          ],
+                                        ),
+
+                                        SizedBox(height: 10.h),
+
+                                        widget.updatesAskStream.isNotEmpty &&
+                                                widget
+                                                        .updatesAskStream[0]
+                                                        .childTasks!
+                                                        .length >
+                                                    0
+                                            ? SizedBox(
+                                                height: 100.h,
+                                                width: double.infinity,
+                                                child: ListView.builder(
+                                                  itemCount: widget
+                                                      .updatesAskStream[0]
+                                                      .childTasks!
+                                                      .length,
+                                                  itemBuilder: (context, index) {
+                                                    return MdSnsText(
+                                                      widget
+                                                          .updatesAskStream[0]
+                                                          .childTasks![index]
+                                                          .description,
+                                                      color: AppColors
+                                                          .color0xFF9EAAC0,
+                                                      variant: TextVariant.h4,
+                                                      fontWeight:
+                                                          TextFontWeightVariant
+                                                              .h4,
+                                                    );
+                                                  },
+                                                ),
+                                              )
+                                            : SizedBox(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+
+                            // showDialog(
+                            //   context: context,
+                            //   builder: (context) => AlertDialog(
+                            //     backgroundColor: Colors.transparent,
+                            //     content: Container(
+                            //       width: 350,
+                            //       margin: EdgeInsets.only(top: 20.h),
+                            //       decoration: BoxDecoration(
+                            //         color: AppColors.color0xFF1B254B,
+                            //         borderRadius: BorderRadius.circular(5.r),
+                            //       ),
+                            //       padding: EdgeInsets.all(16.w),
+                            //       child: Column(
+                            //         mainAxisSize: MainAxisSize.min,
+                            //         crossAxisAlignment:
+                            //             CrossAxisAlignment.start,
+                            //         children: [
+                            //           MdSnsText(
+                            //             widget
+                            //                 .updatesAskStream![0]
+                            //                 .definition,
+                            //             color: AppColors.white,
+                            //             variant: TextVariant.h2,
+                            //             fontWeight: TextFontWeightVariant.h4,
+                            //           ),
+
+                            //           SizedBox(height: 5.h),
+
+                            //           Row(
+                            //             children: [
+                            //               Icon(
+                            //                 Icons.circle,
+                            //                 color: AppColors.color0xFF12B981,
+                            //                 size: 12,
+                            //               ),
+                            //               SizedBox(width: 8.w),
+                            //               MdSnsText(
+                            //                 "Completed",
+                            //                 color: AppColors.color0xFF9EAAC0,
+                            //                 variant: TextVariant.h4,
+                            //                 fontWeight:
+                            //                     TextFontWeightVariant.h4,
+                            //               ),
+                            //             ],
+                            //           ),
+
+                            //           SizedBox(height: 10.h),
+
+                            //           widget.updatesAskStream.isNotEmpty &&
+                            //                   widget
+                            //                           .updatesAskStream[0]
+                            //                           .childTasks!
+                            //                           .length >
+                            //                       0
+                            //               ? SizedBox(
+                            //                   height: 100.h,
+                            //                   width: double.infinity,
+                            //                   child: ListView.builder(
+                            //                     itemCount: widget
+                            //                         .updatesAskStream[0]
+                            //                         .childTasks!
+                            //                         .length,
+                            //                     itemBuilder: (context, index) {
+                            //                       return MdSnsText(
+                            //                         widget
+                            //                             .updatesAskStream[0]
+                            //                             .childTasks![index]
+                            //                             .description,
+                            //                         color: AppColors
+                            //                             .color0xFF9EAAC0,
+                            //                         variant: TextVariant.h4,
+                            //                         fontWeight:
+                            //                             TextFontWeightVariant
+                            //                                 .h4,
+                            //                       );
+                            //                     },
+                            //                   ),
+                            //                 )
+                            //               : SizedBox(),
+                            //         ],
+                            //       ),
+                            //     ),
+                            //   ),
+                            // );
+                            // });
+                          }
+                        },
+                        child: const Icon(
+                          Icons.keyboard_arrow_down_outlined,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -418,6 +645,8 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                 child: MessageLikeCopyIcon(
                   type: widget.type,
                   message: widget.message,
+                  messageId: widget.messageId,
+                  runId: widget.runId,
                 ),
               ),
               SizedBox(height: 10),

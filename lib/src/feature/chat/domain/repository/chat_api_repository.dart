@@ -12,10 +12,12 @@ import 'package:trader_gpt/src/feature/chat/domain/repository/chat_repository.da
 
 import '../../data/dto/archive_chat_dto/archive_chat_dto.dart';
 import '../../data/dto/chat_message_dto/chat_message_dto.dart';
+import '../../data/dto/feedback_dto/feedback_dto.dart';
 import '../model/base_model/base_model.dart';
 import '../model/delete_all_memories/delete_all_memories.dart';
 import '../model/delete_memory_model/delete_memory_model.dart';
 import '../model/delete_model/delete_model.dart';
+import '../model/feedback_model/feedback_model.dart';
 import '../model/memory_model/memory_model.dart';
 
 class ChatApiRepository implements ChatRepository {
@@ -87,5 +89,9 @@ class ChatApiRepository implements ChatRepository {
   @override
   Future<DeleteMemoryModel> deleteMemory(String memoryId) async {
     return await UserAskStreamApi(client).deleteMemory(memoryId);
+  }
+
+  Future<FeedbackModel> postFeedback(FeedbackDto feedbackModel) async {
+    return UserAskStreamApi(client).postFeedback(feedbackModel);
   }
 }

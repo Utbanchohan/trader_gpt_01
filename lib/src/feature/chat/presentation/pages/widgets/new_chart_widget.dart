@@ -385,6 +385,8 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                     isPrice: false,
                     isAbs: false,
                     containerWidth: 40,
+                    isRound: true,
+                    fromChart: true,
                   ),
                   variant: TextVariant.h4,
                   color: axisColor,
@@ -533,6 +535,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                   isAbs: false,
                   containerWidth: 40,
                   isRound: true,
+                  fromChart: true,
                 ),
                 variant: TextVariant.h4,
                 color: axisColor,
@@ -672,7 +675,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               sideTitles: SideTitles(
                 maxIncluded: false,
                 showTitles: true,
-                reservedSize: 40,
+                reservedSize: 50,
                 interval: safeInterval,
 
                 getTitlesWidget: (value, meta) {

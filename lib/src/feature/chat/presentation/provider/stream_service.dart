@@ -11,6 +11,7 @@ class SseService {
   final buffer = StringBuffer();
   List<String> followupList = [];
   bool streamEnd = false;
+  var resUpdates;
 
   Stream<Map<String, dynamic>> connect(
     Map<String, dynamic> body,
@@ -49,6 +50,7 @@ class SseService {
                   "buffer": buffer.toString(),
                   "followUp": [],
                   "chart": chartText,
+                  "updates": "",
                 };
                 break;
 
@@ -58,7 +60,22 @@ class SseService {
 
               case "display":
                 chartText.add(json["chunk"]);
-                yield {"buffer": '', "followUp": [], "chart": chartText};
+                yield {
+                  "buffer": '',
+                  "followUp": [],
+                  "chart": chartText,
+                  "updates": "",
+                };
+                break;
+
+              case "updates":
+                resUpdates = json["chunk"];
+                yield {
+                  "buffer": '',
+                  "followUp": [],
+                  "chart": chartText,
+                  "updates": json["chunk"],
+                };
                 break;
 
               default:
@@ -84,6 +101,7 @@ class SseService {
                     "buffer": buffer.toString(),
                     "followUp": [],
                     "chart": chartText,
+                    "updates": "",
                   };
                   break;
 
@@ -93,7 +111,22 @@ class SseService {
 
                 case "display":
                   chartText.add(json["chunk"]);
-                  yield {"buffer": '', "followUp": [], "chart": chartText};
+                  yield {
+                    "buffer": '',
+                    "followUp": [],
+                    "chart": chartText,
+                    "updates": "",
+                  };
+                  break;
+
+                case "updates":
+                  resUpdates = json["chunk"];
+                  yield {
+                    "buffer": '',
+                    "followUp": [],
+                    "chart": chartText,
+                    "updates": json["chunk"],
+                  };
                   break;
               }
             }
@@ -152,6 +185,7 @@ class SseService {
         "buffer": buffer.toString(),
         "followUp": followupList,
         "chart": chartText,
+        "updates": resUpdates,
       };
     }
   }

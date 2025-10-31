@@ -111,7 +111,7 @@ class Filters {
           if (!fromChart) {
             result = '-\$${result}';
           } else {
-            result = '-$result';
+            result = '-${int.tryParse(result) ?? result}';
           }
         } else {
           if (alwaysShowTwoDecimal) {

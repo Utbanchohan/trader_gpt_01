@@ -425,14 +425,13 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
 
     final liveStock = stockManagerState[widget.stockId];
 
-    widget.change =
-        PriceUtils.getChangesPercentage(
-          liveStock != null && liveStock.price > 0
-              ? liveStock.price
-              : widget.price,
-          widget.previousClose,
-        ) ??
-        widget.change;
+    widget.change = liveStock != null
+        ? PriceUtils.getChangesPercentage(
+                liveStock.price,
+                liveStock.previousClose,
+              ) ??
+              widget.change
+        : widget.change;
 
     return Container(
       decoration: BoxDecoration(
@@ -551,7 +550,13 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                 size: 20,
               ),
               MdSnsText(
-                widget.change.toStringAsFixed(2).replaceAll("-", ""),
+                Filters.systemNumberConvention(
+                  widget.change,
+                  isPrice: false,
+                  isAbs: false,
+                  alwaysShowTwoDecimal: true,
+                ),
+
                 color: widget.change.toString().contains("-")
                     ? AppColors.redFF3B3B
                     : AppColors.color06D54E,
@@ -582,7 +587,15 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
               fillGradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.transparent, Colors.transparent],
+                colors: widget.change < 0
+                    ? [
+                        AppColors.redFF3B3B.withOpacity(0.5),
+                        AppColors.redFF3B3B.withOpacity(0.2),
+                      ]
+                    : [
+                        AppColors.color06D54E.withOpacity(0.5),
+                        AppColors.color06D54E.withOpacity(0.2),
+                      ],
               ),
             ),
           ),
