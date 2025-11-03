@@ -70,6 +70,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   Workflow? selectedWorkFlow;
 
   bool isWorkFlow = false;
+  bool isWorkLimit = false;
+
   bool isWorkSymbol = false;
   int chatPage = 1;
   bool boolLoadMoreLoader = false;
@@ -153,27 +155,40 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   Future<void> _handleWorkflowSelection(int index) async {
     setState(() => isWorkFlow = true);
+    setState(() => isWorkLimit = true);
 
     final workflow = workflows[index];
-
     final params = workflow.parameters ?? [];
 
     if (params.isNotEmpty && params.first.name == "symbol") {
-      setState(() => isWorkSymbol = true);
+      setState(() {
+        isWorkSymbol = true;
+        isWorkLimit = false;
+      });
 
       _setMessage(workflow.displayName);
       _closeDialogs();
 
       selectedWorkFlow = workflow;
     } else if (params.isNotEmpty && params.first.name == "limit") {
+      setState(() {
+        isWorkLimit = true;
+        isWorkSymbol = false;
+      });
+
       _setMessage(workflow.displayName);
       selectedWorkFlow = workflow;
       _closeDialogs();
     } else {
+      setState(() {
+        isWorkSymbol = false;
+        isWorkLimit = false;
+      });
+
       _setMessage(workflow.displayName);
       selectedWorkFlow = workflow;
       _closeDialogs();
-    } //
+    }
   }
 
   void questionDialog(BuildContext context) async {
@@ -587,6 +602,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
           isWorkFlow: isWorkFlow,
           isWorkSymbol: isWorkSymbol,
           selectedStock: selectedStock,
+          isWorkLimit: isWorkLimit,
           webMode: webMode ?? false,
           report: report ?? false,
           deepAnalysis: deepAnalysis ?? false,
