@@ -20,6 +20,8 @@ import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.da
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../../sign_in/domain/model/sign_in_response_model/login_response_model.dart';
+
 class SwipeScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
   final int initialIndex;
@@ -37,6 +39,7 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
   bool isSearching = false;
   TextEditingController search = TextEditingController();
   int pgeIndex = 0;
+  User? userModel;
 
   @override
   void initState() {
@@ -91,8 +94,18 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
     }
   }
 
+  getUser() async {
+    dynamic userData = await ref.watch(localDataProvider).getUser();
+    if (userData != null) {
+      setState(() {
+        userModel = User.fromJson(userData);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    getUser();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
@@ -221,14 +234,34 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
           width: 121.96.w,
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: ClipOval(
-              child: Image.asset(
-                Assets.images.placeholderimage.path,
-                height: 40.h,
-                width: 40.h,
-                fit: BoxFit.cover,
+          InkWell(
+            onTap: () {
+              context.pushNamed(AppRoutes.myProfileScreen.name);
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: ClipOval(
+                child: userModel != null && userModel!.imgUrl.isNotEmpty
+                    ? Image.network(
+                        userModel!.imgUrl,
+                        height: 40.h,
+                        width: 40.h,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            Assets.images.placeholderimage.path,
+                            height: 40.h,
+                            width: 40.h,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        Assets.images.placeholderimage.path,
+                        height: 40.h,
+                        width: 40.h,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
           ),
