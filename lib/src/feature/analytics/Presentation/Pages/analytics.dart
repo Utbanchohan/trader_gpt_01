@@ -2019,40 +2019,39 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       child: Column(
         children: [
           /// 🔹 SEARCH BAR
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: SizedBox(
-              height: 55,
-              child: TextFormField(
-                controller: search,
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColors.color091224,
-                  hintText: 'Search here',
-                  hintStyle: TextStyle(color: Color(0xFF8B8B97)),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  suffixIcon: InkWell(
-                    onTap: () {
-                      // debounceSearch(search.text);
-                    },
-                    child: Image.asset(
-                      Assets.images.searchNormal.path,
-                      scale: 5,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-
+          // Padding(
+          //   padding: EdgeInsets.all(16),
+          //   child: SizedBox(
+          //     height: 55,
+          //     child: TextFormField(
+          //       controller: search,
+          //       style: TextStyle(color: Colors.white),
+          //       decoration: InputDecoration(
+          //         filled: true,
+          //         fillColor: AppColors.color091224,
+          //         hintText: 'Search here',
+          //         hintStyle: TextStyle(color: Color(0xFF8B8B97)),
+          //         contentPadding: EdgeInsets.symmetric(
+          //           horizontal: 20,
+          //           vertical: 10,
+          //         ),
+          //         border: OutlineInputBorder(
+          //           borderRadius: BorderRadius.circular(50.0),
+          //           borderSide: BorderSide.none,
+          //         ),
+          //         suffixIcon: InkWell(
+          //           onTap: () {
+          //             // debounceSearch(search.text);
+          //           },
+          //           child: Image.asset(
+          //             Assets.images.searchNormal.path,
+          //             scale: 5,
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Container(
             margin: EdgeInsets.only(left: 10.w),
             child: TabBar(

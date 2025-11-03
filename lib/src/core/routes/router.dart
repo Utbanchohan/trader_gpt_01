@@ -50,7 +50,7 @@ final routerConfigProvider = Provider((ref) {
       } else if (!isLogin && isPublic) {
         state.fullPath;
       } else if (!isLogin && !isPublic) {
-        return AppRoutes.getStartedScreen.path;
+        return AppRoutes.onboardingScreen.path;
       }
       return null;
     },
@@ -63,7 +63,7 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.splash.path,
         name: AppRoutes.splash.name,
         builder: (BuildContext context, GoRouterState state) {
-          return Splash();
+          return OnboardingScreen();
         },
         routes: [],
       ),

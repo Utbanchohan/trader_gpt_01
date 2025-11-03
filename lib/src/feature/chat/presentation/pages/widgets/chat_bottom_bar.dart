@@ -13,6 +13,7 @@ class ChatBottomBar extends StatefulWidget {
   final ScrollController textScrollController;
   final bool isWorkFlow;
   final bool isWorkSymbol;
+  final bool isWorkLimit;
   final Stock? selectedStock;
   bool webMode;
   bool report;
@@ -43,6 +44,7 @@ class ChatBottomBar extends StatefulWidget {
     required this.onWebModeChanged,
     required this.onReportChanged,
     required this.onDeepAnalysisChanged,
+    required this.isWorkLimit,
   });
 
   @override
@@ -712,129 +714,250 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
 
                     /// Text Field
                     Expanded(
-                      child: Container(
-                        height: 50.h,
-                        margin: EdgeInsets.only(right: 15.w),
-                        padding: EdgeInsets.all(1),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50.r),
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: AppColors.gradient,
-                          ),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: 50.h, // starting height (single line)
+                          maxHeight: 150.h, // maximum when it expands
                         ),
                         child: Container(
+                          margin: EdgeInsets.only(right: 15.w),
+                          padding: EdgeInsets.all(1),
                           decoration: BoxDecoration(
-                            color: AppColors.color0E1738,
-                            borderRadius: BorderRadius.circular(50.r),
+                            borderRadius: BorderRadius.circular(10.r),
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: AppColors.gradient,
+                            ),
                           ),
-                          child: Center(
-                            child: TextField(
-                              controller: widget.messageController,
-                              style: const TextStyle(
-                                color: AppColors.white,
-                                fontSize: 14,
-                              ),
-                              keyboardType: TextInputType.multiline,
-                              maxLines: 1,
-                              scrollController: widget.textScrollController,
-                              onChanged: (value) {
-                                widget.textScrollController.jumpTo(
-                                  widget
-                                      .textScrollController
-                                      .position
-                                      .maxScrollExtent,
-                                );
-                                if (value.endsWith("/")) {
-                                  widget.onSlashDetected(context);
-                                }
-                              },
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.transparent,
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.h,
-                                  horizontal: 12.w,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.color0E1738,
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 80.w),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // ✅ TextField
+                                      TextField(
+                                        controller: widget.messageController,
+                                        style: const TextStyle(
+                                          color: AppColors.white,
+                                          fontSize: 14,
+                                        ),
+                                        keyboardType: TextInputType.multiline,
+                                        minLines: 1,
+                                        maxLines: 5,
+                                        scrollController:
+                                            widget.textScrollController,
+                                        onChanged: (value) {
+                                          if (value.endsWith("/")) {
+                                            widget.onSlashDetected(context);
+                                          }
+                                        },
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Colors.transparent,
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            vertical: 12.h,
+                                            horizontal: 8.w,
+                                          ),
+                                          border: InputBorder.none,
+                                          hintText:
+                                              "Ask anything about the market",
+                                          hintMaxLines: 1,
+                                          hintStyle: const TextStyle(
+                                            color: AppColors.bluishgrey404F81,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+
+                                      // ✅ Optional Symbol Chip (Inside Column)
+                                      if (widget.isWorkSymbol &&
+                                          widget.selectedStock != null)
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 5.h,
+                                            horizontal: 10.w,
+                                          ),
+                                          child: Container(
+                                            // margin: EdgeInsets.only(top: 8.h),
+                                            padding: EdgeInsets.all(4.w),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.r),
+                                              border: Border.all(
+                                                color: AppColors.redFF3B3B,
+                                              ),
+                                            ),
+                                            child: MdSnsText(
+                                              "Symbol | ${widget.selectedStock!.symbol}",
+                                              variant: TextVariant.h2,
+                                              fontWeight:
+                                                  TextFontWeightVariant.h4,
+                                              color: AppColors.fieldTextColor,
+                                            ),
+                                          ),
+                                        ),
+
+                                      if (widget.isWorkLimit)
+                                        TextField(
+                                          controller: widget.limitController,
+                                          style: const TextStyle(
+                                            color: AppColors.white,
+                                            fontSize: 14,
+                                          ),
+
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.transparent,
+                                            isDense: true,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                  vertical: 12.h,
+                                                  horizontal: 8.w,
+                                                ),
+                                            border: InputBorder.none,
+                                            hintText:
+                                                "Ask anything about the ;",
+                                            hintMaxLines: 1,
+                                            hintStyle: const TextStyle(
+                                              color: AppColors.bluishgrey404F81,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+
+                                      ///lalalalala
+                                      ///   if (widget.isWorkSymbol &&
+                                      if (widget.isWorkLimit)
+                                        Container(
+                                          margin: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.circular(
+                                              8.r,
+                                            ),
+                                            border: Border.all(
+                                              color: AppColors.bluishgrey404F81
+                                                  .withOpacity(0.5),
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: TextField(
+                                            controller: widget.limitController,
+                                            keyboardType: TextInputType.number,
+                                            style: const TextStyle(
+                                              color: AppColors.white,
+                                              fontSize: 14,
+                                            ),
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              filled: true,
+                                              fillColor: Colors.transparent,
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                    vertical: 8.h,
+                                                    horizontal: 10.w,
+                                                  ),
+                                              border: InputBorder.none,
+                                              hintText: "Enter limit...",
+                                              hintMaxLines: 1,
+                                              hintStyle: const TextStyle(
+                                                color:
+                                                    AppColors.bluishgrey404F81,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
-                                border: InputBorder.none,
-                                hintText: "Ask anything about the market",
-                                hintStyle: const TextStyle(
-                                  color: AppColors.bluishgrey404F81,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                suffixIconConstraints: BoxConstraints(
-                                  minHeight: 28.h,
-                                  minWidth: 28.w,
-                                ),
-                                suffixIcon: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: _speechToText.isNotListening
-                                          ? _startListening
-                                          : _stopListening,
-                                      child: Container(
+
+                                // ✅ Mic + Send buttons (fixed bottom-right)
+                                Positioned(
+                                  right: 10.w,
+                                  bottom: 8.h,
+                                  child: Row(
+                                    children: [
+                                      // 🎤 Mic button
+                                      GestureDetector(
+                                        onTap: _speechToText.isNotListening
+                                            ? _startListening
+                                            : _stopListening,
+                                        child: Container(
+                                          height: 28.h,
+                                          width: 28.w,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColors.bubbleColor,
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: _speechToText.isNotListening
+                                              ? Image.asset(
+                                                  Assets
+                                                      .images
+                                                      .textfieldicon4
+                                                      .path,
+                                                  height: 14.h,
+                                                  width: 12.w,
+                                                )
+                                              : Container(
+                                                  height: 14.h,
+                                                  width: 14.w,
+                                                  color: AppColors.redFF3B3B,
+                                                  alignment: Alignment.center,
+                                                  child: const Icon(
+                                                    Icons.square,
+                                                    size: 11,
+                                                    color: AppColors.black,
+                                                  ),
+                                                ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 6.w),
+
+                                      // ⬆️ Send button
+                                      Container(
                                         height: 28.h,
                                         width: 28.w,
                                         decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: AppColors.bubbleColor,
+                                          color: AppColors.color046297,
                                         ),
-                                        alignment: Alignment.center,
-                                        child: _speechToText.isNotListening
-                                            ? Image.asset(
-                                                Assets
-                                                    .images
-                                                    .textfieldicon4
-                                                    .path,
-                                                height: 14.h,
-                                                width: 12.w,
-                                              )
-                                            : Container(
-                                                height: 14.h,
-                                                width: 14.w,
-                                                color: AppColors.redFF3B3B,
-                                                alignment: Alignment.center,
-                                                child: const Icon(
-                                                  Icons.square,
-                                                  size: 11,
-                                                  color: AppColors.black,
-                                                ),
-                                              ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 6.w),
-                                    Container(
-                                      height: 28.h,
-                                      width: 28.w,
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.color046297,
-                                      ),
-                                      child: IconButton(
-                                        padding: EdgeInsets.zero,
-                                        icon: const Icon(
-                                          Icons.arrow_upward_rounded,
-                                          color: AppColors.white,
-                                          size: 15,
+                                        child: IconButton(
+                                          padding: EdgeInsets.zero,
+                                          icon: const Icon(
+                                            Icons.arrow_upward_rounded,
+                                            color: AppColors.white,
+                                            size: 15,
+                                          ),
+                                          onPressed: () {
+                                            FocusScope.of(context).unfocus();
+                                            if (!_speechToText.isNotListening) {
+                                              _stopListening();
+                                            }
+                                            widget.onSend();
+                                          },
                                         ),
-                                        onPressed: () {
-                                          FocusScope.of(context).unfocus();
-                                          if (!_speechToText.isNotListening) {
-                                            _stopListening();
-                                          }
-                                          widget.onSend();
-                                        },
                                       ),
-                                    ),
-                                    SizedBox(width: 6.w),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                         ),
