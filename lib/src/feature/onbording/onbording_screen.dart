@@ -48,7 +48,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _startAutoScroll() {
-    _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (_pageController.hasClients) {
         int nextPage = currentPage + 1;
         if (nextPage >= pages.length) {
@@ -56,7 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         }
         _pageController.animateToPage(
           nextPage,
-          duration: const Duration(milliseconds: 500),
+          duration: Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         );
       }
@@ -179,7 +179,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             SizedBox(height: 10.h),
 
                             SizedBox(
-                              height: 50.h,
+                              height: 40.h,
                               child: ButtonWidget(
                                 onPressed: () {
                                   context.goNamed(AppRoutes.signInPage.name);

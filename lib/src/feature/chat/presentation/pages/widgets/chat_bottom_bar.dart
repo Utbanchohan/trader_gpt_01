@@ -533,7 +533,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                           ),
                                           const SizedBox(width: 8),
                                           MdSnsText(
-                                            "Related Q/A",
+                                            "Trending Q/A",
                                             variant: TextVariant.h4,
                                             fontWeight:
                                                 TextFontWeightVariant.h4,
@@ -748,6 +748,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                       // ✅ TextField
                                       TextField(
                                         controller: widget.messageController,
+
                                         style: const TextStyle(
                                           color: AppColors.white,
                                           fontSize: 14,
@@ -760,6 +761,9 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                         onChanged: (value) {
                                           if (value.endsWith("/")) {
                                             widget.onSlashDetected(context);
+                                          }
+                                          if (value.isEmpty) {
+                                            widget.onDeleteWorkflow();
                                           }
                                         },
                                         decoration: InputDecoration(
@@ -784,15 +788,17 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
 
                                       // ✅ Optional Symbol Chip (Inside Column)
                                       if (widget.isWorkSymbol &&
-                                          widget.selectedStock != null)
+                                          widget.isWorkFlow)
                                         Padding(
                                           padding: EdgeInsets.symmetric(
                                             vertical: 5.h,
                                             horizontal: 10.w,
                                           ),
                                           child: Container(
-                                            // margin: EdgeInsets.only(top: 8.h),
-                                            padding: EdgeInsets.all(4.w),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8.w,
+                                              vertical: 4.h,
+                                            ),
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(5.r),
@@ -800,44 +806,63 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                                 color: AppColors.redFF3B3B,
                                               ),
                                             ),
-                                            child: MdSnsText(
-                                              "Symbol | ${widget.selectedStock!.symbol}",
-                                              variant: TextVariant.h2,
-                                              fontWeight:
-                                                  TextFontWeightVariant.h4,
-                                              color: AppColors.fieldTextColor,
-                                            ),
-                                          ),
-                                        ),
-
-                                      if (widget.isWorkLimit)
-                                        TextField(
-                                          controller: widget.limitController,
-                                          style: const TextStyle(
-                                            color: AppColors.white,
-                                            fontSize: 14,
-                                          ),
-
-                                          decoration: InputDecoration(
-                                            filled: true,
-                                            fillColor: Colors.transparent,
-                                            isDense: true,
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                  vertical: 12.h,
-                                                  horizontal: 8.w,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                MdSnsText(
+                                                  "Symbol | ${widget.selectedStock!.symbol}",
+                                                  variant: TextVariant.h2,
+                                                  fontWeight:
+                                                      TextFontWeightVariant.h4,
+                                                  color:
+                                                      AppColors.fieldTextColor,
                                                 ),
-                                            border: InputBorder.none,
-                                            hintText:
-                                                "Ask anything about the ;",
-                                            hintMaxLines: 1,
-                                            hintStyle: const TextStyle(
-                                              color: AppColors.bluishgrey404F81,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
+                                                if (widget.isWorkSymbol) ...[
+                                                  SizedBox(width: 8.w),
+                                                  GestureDetector(
+                                                    onTap:
+                                                        widget.onDeleteWorkflow,
+                                                    child: Icon(
+                                                      Icons.delete,
+                                                      size: 18,
+                                                      color:
+                                                          AppColors.redFF3B3B,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ],
                                             ),
                                           ),
                                         ),
+
+                                      // if (widget.isWorkLimit)
+                                      //   TextField(
+                                      //     controller: widget.limitController,
+                                      //     style: const TextStyle(
+                                      //       color: AppColors.white,
+                                      //       fontSize: 14,
+                                      //     ),
+
+                                      //     decoration: InputDecoration(
+                                      //       filled: true,
+                                      //       fillColor: Colors.transparent,
+                                      //       isDense: true,
+                                      //       contentPadding:
+                                      //           EdgeInsets.symmetric(
+                                      //             vertical: 12.h,
+                                      //             horizontal: 8.w,
+                                      //           ),
+                                      //       border: InputBorder.none,
+                                      //       hintText:
+                                      //           "Ask anything about the ;",
+                                      //       hintMaxLines: 1,
+                                      //       hintStyle: const TextStyle(
+                                      //         color: AppColors.bluishgrey404F81,
+                                      //         fontSize: 14,
+                                      //         fontWeight: FontWeight.w400,
+                                      //       ),
+                                      //     ),
+                                      //   ),
 
                                       ///lalalalala
                                       ///   if (widget.isWorkSymbol &&
@@ -855,30 +880,54 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                               width: 1,
                                             ),
                                           ),
-                                          child: TextField(
-                                            controller: widget.limitController,
-                                            keyboardType: TextInputType.number,
-                                            style: const TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: 14,
-                                            ),
-                                            decoration: InputDecoration(
-                                              isDense: true,
-                                              filled: true,
-                                              fillColor: Colors.transparent,
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                    vertical: 8.h,
-                                                    horizontal: 10.w,
-                                                  ),
-                                              border: InputBorder.none,
-                                              hintText: "Enter limit...",
-                                              hintMaxLines: 1,
-                                              hintStyle: const TextStyle(
-                                                color:
-                                                    AppColors.bluishgrey404F81,
+                                          child: SizedBox(
+                                            height: 40
+                                                .h, // 👈 fixed height to keep vertical alignment perfect
+                                            child: TextField(
+                                              controller:
+                                                  widget.limitController,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              style: const TextStyle(
+                                                color: AppColors.white,
                                                 fontSize: 14,
-                                                fontWeight: FontWeight.w400,
+                                              ),
+                                              textAlignVertical: TextAlignVertical
+                                                  .center, // 👈 centers text vertically
+                                              decoration: InputDecoration(
+                                                isDense: true,
+                                                filled: true,
+                                                fillColor: Colors.transparent,
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                      horizontal: 10.w,
+                                                    ),
+                                                border: InputBorder.none,
+                                                hintText: "Enter limit...",
+                                                hintMaxLines: 1,
+                                                hintStyle: const TextStyle(
+                                                  color: AppColors
+                                                      .bluishgrey404F81,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                                suffixIcon: widget.isWorkLimit
+                                                    ? Padding(
+                                                        padding: EdgeInsets.only(
+                                                          right: 6.w,
+                                                        ), // 👈 aligns icon properly
+                                                        child: IconButton(
+                                                          icon: const Icon(
+                                                            Icons.delete,
+                                                            color: Colors.red,
+                                                            size: 20,
+                                                          ),
+                                                          onPressed: widget
+                                                              .onDeleteWorkflow,
+                                                          splashRadius: 20,
+                                                        ),
+                                                      )
+                                                    : null,
                                               ),
                                             ),
                                           ),

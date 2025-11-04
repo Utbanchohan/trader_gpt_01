@@ -63,7 +63,7 @@ final routerConfigProvider = Provider((ref) {
         path: AppRoutes.splash.path,
         name: AppRoutes.splash.name,
         builder: (BuildContext context, GoRouterState state) {
-          return OnboardingScreen();
+          return Splash();
         },
         routes: [],
       ),
