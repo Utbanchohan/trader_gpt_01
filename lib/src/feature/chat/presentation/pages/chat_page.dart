@@ -694,6 +694,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       bottomNavigationBar: SafeArea(
         bottom: true,
         child: ChatBottomBar(
+          isWorkLimit: isWorkFlow,
           messageController: message,
           limitController: limit,
           textScrollController: _textScrollController,

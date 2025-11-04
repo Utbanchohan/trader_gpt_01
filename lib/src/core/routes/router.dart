@@ -16,6 +16,7 @@ import 'package:trader_gpt/src/feature/forget_password/presentation/forget_passw
 import 'package:trader_gpt/src/feature/get_start/presentation/pages/getstart.dart';
 import 'package:trader_gpt/src/feature/my_profile/Presentation/my_profile.dart';
 import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/new_conversation.dart';
+import 'package:trader_gpt/src/feature/onbording/onbording_screen.dart';
 import 'package:trader_gpt/src/feature/profile_setup/presentation/pages/profile_setup.dart';
 import 'package:trader_gpt/src/feature/s3_uploader/presentation/image_pickert.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
@@ -49,7 +50,7 @@ final routerConfigProvider = Provider((ref) {
       } else if (!isLogin && isPublic) {
         state.fullPath;
       } else if (!isLogin && !isPublic) {
-        return AppRoutes.getStartedScreen.path;
+        return AppRoutes.onboardingScreen.path;
       }
       return null;
     },
@@ -279,6 +280,15 @@ final routerConfigProvider = Provider((ref) {
           final email = state.uri.queryParameters['email'] ?? "";
           return UpdatePassword(otp: otp, email: email);
         },
+      ),
+
+      GoRoute(
+        path: AppRoutes.onboardingScreen.path,
+        name: AppRoutes.onboardingScreen.name,
+        builder: (BuildContext context, GoRouterState state) {
+          return OnboardingScreen();
+        },
+        routes: [],
       ),
     ],
   );

@@ -259,32 +259,17 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        drawer: SideMenu(),
-
         backgroundColor: AppColors.primaryColor,
 
         appBar: AppBar(
           centerTitle: false,
+          automaticallyImplyLeading: false,
 
           scrolledUnderElevation: 0,
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: Colors.transparent,
           elevation: 0,
           leadingWidth: 40.w,
 
-          leading: Builder(
-            builder: (context) {
-              return InkWell(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Image.asset(
-                  Assets.images.menu.path,
-                  width: 40,
-                  height: 40,
-                ),
-              );
-            },
-          ),
           title: Row(
             children: [
               MdSnsText(
@@ -314,7 +299,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
             ],
           ),
           actions: [
-            if (!isSearching) // 👈 Agar search mode nahi hai to search button dikhao
+            if (!isSearching)
               IconButton(
                 icon: Image.asset(
                   Assets.images.searchNormal.path,
@@ -327,7 +312,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                   });
                 },
               )
-            else // 👈 Agar search mode ON hai to close button dikhao
+            else
               IconButton(
                 icon: Icon(Icons.close, color: Colors.white),
                 onPressed: () {
@@ -430,7 +415,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                     ),
             ),
 
-            // Yeh Expanded me rakho
             Expanded(
               child: TabBarView(
                 physics: NeverScrollableScrollPhysics(),

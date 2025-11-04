@@ -100,7 +100,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
               child: IconButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {
-                  context.goNamed(AppRoutes.getStartedScreen.name);
+                  context.goNamed(AppRoutes.onboardingScreen.name);
                 },
                 icon: Image.asset(
                   Assets.images.arrowBack.path,

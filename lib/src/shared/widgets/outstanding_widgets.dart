@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/extensions/number_formatter_extension.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../feature/analytics/domain/model/company_detail/company_detail_model.dart';
@@ -94,11 +95,19 @@ class OutstandingSharesChart extends StatelessWidget {
                         titlesData: FlTitlesData(
                           leftTitles: AxisTitles(
                             sideTitles: SideTitles(
+                              maxIncluded: false,
+                              minIncluded: false,
                               showTitles: true,
-                              reservedSize: 45,
+                              reservedSize: 45.w,
                               getTitlesWidget: (value, meta) {
                                 return MdSnsText(
-                                  "\$${value.toStringAsFixed(0)}M",
+                                  Filters.systemNumberConvention(
+                                    value,
+                                    isPrice: false,
+                                    isAbs: false,
+                                    fromChart: true,
+                                  ).replaceAll("\$", ""),
+                                  // "\$${value.toStringAsFixed(0)}M",
                                   fontWeight: TextFontWeightVariant.h4,
                                   variant: TextVariant.h8,
                                   color: AppColors.color0xB3FFFFFF,

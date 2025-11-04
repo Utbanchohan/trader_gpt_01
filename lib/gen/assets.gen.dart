@@ -23,6 +23,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/AppLogo.png
   AssetGenImage get appLogo => const AssetGenImage('assets/images/AppLogo.png');
 
+  /// File path: assets/images/BG.png
+  AssetGenImage get bg => const AssetGenImage('assets/images/BG.png');
+
   /// File path: assets/images/Conversation.png
   AssetGenImage get conversation =>
       const AssetGenImage('assets/images/Conversation.png');
@@ -112,6 +115,10 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/book.png
   AssetGenImage get book => const AssetGenImage('assets/images/book.png');
+
+  /// File path: assets/images/bording3.png
+  AssetGenImage get bording3 =>
+      const AssetGenImage('assets/images/bording3.png');
 
   /// File path: assets/images/bulb.svg
   SvgGenImage get bulb => const SvgGenImage('assets/images/bulb.svg');
@@ -258,6 +265,17 @@ class $AssetsImagesGen {
   AssetGenImage get notification7 =>
       const AssetGenImage('assets/images/notification7.png');
 
+  /// File path: assets/images/onboard.png
+  AssetGenImage get onboard => const AssetGenImage('assets/images/onboard.png');
+
+  /// File path: assets/images/onboard2.png
+  AssetGenImage get onboard2 =>
+      const AssetGenImage('assets/images/onboard2.png');
+
+  /// File path: assets/images/onboarding1.png
+  AssetGenImage get onboarding1 =>
+      const AssetGenImage('assets/images/onboarding1.png');
+
   /// File path: assets/images/plusbox.png
   AssetGenImage get plusbox => const AssetGenImage('assets/images/plusbox.png');
 
@@ -359,6 +377,7 @@ class $AssetsImagesGen {
   List<dynamic> get values => [
     a4,
     appLogo,
+    bg,
     conversation,
     frame1171275460,
     frame1171275790,
@@ -385,6 +404,7 @@ class $AssetsImagesGen {
     arrow,
     arrowBack,
     book,
+    bording3,
     bulb,
     c2,
     calendar1,
@@ -427,6 +447,9 @@ class $AssetsImagesGen {
     netFilex,
     note,
     notification7,
+    onboard,
+    onboard2,
+    onboarding1,
     plusbox,
     prefixIcon,
     profile,

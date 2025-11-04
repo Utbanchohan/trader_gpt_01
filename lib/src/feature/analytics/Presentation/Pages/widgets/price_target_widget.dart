@@ -139,7 +139,7 @@ Widget buildPriceTargetBar(
   Color greenColor,
 ) {
   // Convert the visual percentage (9.92%) into a fraction (0.0992)
-  double fraction = percentage == -1
+  double fraction = percentage != -1
       ? percentage > 0
             ? percentage / 100.0
             : 0
@@ -195,9 +195,7 @@ Widget buildPriceTargetBar(
 
             // 2. The green progress part
             FractionallySizedBox(
-              widthFactor: fraction == -1
-                  ? 0
-                  : fraction, // e.g., 0.0992 for 9.92%
+              widthFactor: fraction == -1 ? 0 : fraction,
               child: Container(
                 height: 30,
                 decoration: BoxDecoration(
