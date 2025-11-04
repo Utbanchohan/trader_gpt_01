@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
@@ -24,7 +25,7 @@ class SecurityShortVolume extends StatelessWidget {
         children: [
           /// Title
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             child: MdSnsText(
               "Security Short Volume",
               color: AppColors.fieldTextColor,
@@ -93,14 +94,15 @@ class SecurityShortVolume extends StatelessWidget {
   Widget _buildHeaderCell(String text) {
     return Container(
       alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
+      padding: EdgeInsets.symmetric(vertical: 14.w, horizontal: 4.h),
+
       child: MdSnsText(
         text,
 
         variant: TextVariant.h5,
         fontWeight: TextFontWeightVariant.h2,
         color: AppColors.white,
-        textAlign: TextAlign.center,
+        // textAlign: TextAlign.center,
       ),
     );
   }
@@ -114,6 +116,7 @@ class SecurityShortVolume extends StatelessWidget {
         variant: TextVariant.h4,
         fontWeight: TextFontWeightVariant.h2,
         color: color,
+        maxLines: 1,
         textAlign: TextAlign.center,
       ),
     );

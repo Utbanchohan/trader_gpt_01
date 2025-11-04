@@ -145,11 +145,12 @@ class _WeeklySeasonalityChartState
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Left side text
+                // 👇 Heading changes based on dropdown value
                 MdSnsText(
                   widget.isWeekly
                       ? "Weekly Seasonality"
                       : "Monthly Seasonality",
+
                   variant: TextVariant.h3,
                   fontWeight: TextFontWeightVariant.h3,
                   color: AppColors.fieldTextColor,
@@ -176,36 +177,25 @@ class _WeeklySeasonalityChartState
                           value: value,
                           alignment: Alignment.centerLeft,
                           child: Container(
-                            width: double.infinity, // 👈 make it full width
+                            width: double.infinity,
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? Colors.lightBlue[200]
                                   : Colors.transparent,
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 8,
-                                  ),
-                                  child: MdSnsText(
-                                    value,
-                                    variant: TextVariant.h4,
-                                    fontWeight: TextFontWeightVariant.h4,
-                                    color: isSelected
-                                        ? Colors.black
-                                        : AppColors.white,
-                                  ),
-                                ),
-                                // if (value != "Bar")
-                                //   Divider(
-                                //     thickness: 1,
-                                //     height: 0,
-                                //     color: Colors.white.withOpacity(0.6),
-                                //   ),
-                              ],
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: 8,
+                              ),
+                              child: MdSnsText(
+                                value,
+                                variant: TextVariant.h4,
+                                fontWeight: TextFontWeightVariant.h4,
+                                color: isSelected
+                                    ? Colors.black
+                                    : AppColors.fieldTextColor,
+                              ),
                             ),
                           ),
                         );
@@ -245,8 +235,7 @@ class _WeeklySeasonalityChartState
                       ),
                       menuItemStyleData: const MenuItemStyleData(
                         height: 30,
-                        padding: EdgeInsets
-                            .zero, // 👈 remove default horizontal padding
+                        padding: EdgeInsets.zero,
                       ),
                     ),
                   ),
@@ -317,15 +306,7 @@ class _WeeklySeasonalityChartState
               ),
 
             if (selectedValue == "Bar")
-              WeeklyBarChartWidget(
-                weeklyData: [
-                  {"day": "Mon", "value": 40.0, "amount": 123.45},
-                  {"day": "Tue", "value": 70.0, "amount": 89.12},
-                  {"day": "Wed", "value": 50.0, "amount": 54.33},
-                  {"day": "Thu", "value": 80.0, "amount": 142.11},
-                  {"day": "Fri", "value": 65.0, "amount": 99.99},
-                ],
-              ),
+              WeeklyBarChartWidget(weeklyData: weeklyData),
             SizedBox(height: 12),
             Center(
               child: MdSnsText(

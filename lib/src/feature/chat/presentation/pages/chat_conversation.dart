@@ -618,7 +618,9 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
           onDeleteWorkflow: () {
             isWorkSymbol = false;
             isWorkFlow = false;
+            isWorkLimit = false;
             message.clear();
+            setState(() {});
           },
           onSlashDetected: (ctx) => questionDialog(ctx),
           onWebModeChanged: (val) => setState(() => webMode = val),
