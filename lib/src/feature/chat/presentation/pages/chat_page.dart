@@ -62,6 +62,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   bool? report;
   bool? deepAnalysis;
   List<Workflow> workflows = [];
+  bool isWorkLimit = false;
+
   List<Workflow> cryptoWorkFLows = [];
   List<Workflow> stockWorkFlows = [];
 
@@ -160,6 +162,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   Future<void> _handleWorkflowSelection(int index) async {
     if (mounted) {
       setState(() => isWorkFlow = true);
+      setState(() => isWorkLimit = true);
     }
 
     final workflow = workflows[index];
@@ -170,8 +173,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       if (params.isNotEmpty && params.first.name == "symbol") {
         if (mounted) {
           setState(() => isWorkSymbol = true);
+          isWorkLimit = false;
         }
-        _setMessage(workflow.displayName);
         _closeDialogs();
 
         selectedStock = await showDialog<Stock>(
@@ -179,21 +182,30 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           barrierDismissible: true,
           builder: (_) => GradientDialog(child: StockScreen()),
         );
+        _setMessage(
+          workflow.query.replaceAll(
+            "{symbol}",
+            selectedStock != null ? selectedStock!.symbol : "TDGPT",
+          ),
+        );
 
         selectedWorkFlow = workflow;
       } else if (params.isNotEmpty && params.first.name == "limit") {
         _setMessage(workflow.displayName);
         selectedWorkFlow = workflow;
+
         _closeDialogs();
       } else {
         _setMessage(workflow.displayName);
         selectedWorkFlow = workflow;
+
         _closeDialogs();
       }
     }
     // Case 2: Chat routing exists with a symbol
     else {
       _setMessage(workflow.displayName);
+
       _closeDialogs();
     }
   }
@@ -456,20 +468,24 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       context: context,
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          alignment: Alignment.center,
-          backgroundColor: AppColors.primaryColor,
-          insetPadding: EdgeInsets.all(0),
-          contentPadding: EdgeInsets.all(0),
-          content: AskingPopupWidget(
-            showSheet:
-                widget.chatRouting == null || widget.chatRouting!.symbol.isEmpty
-                ? true
-                : false,
-            index: index,
-            questions: questions,
-            relatedQuestion: relatedQuestion,
-            controller: message,
+        return Container(
+          margin: EdgeInsets.only(top: 80.h),
+          child: AlertDialog(
+            alignment: Alignment.center,
+            backgroundColor: AppColors.primaryColor,
+            insetPadding: EdgeInsets.all(0),
+            contentPadding: EdgeInsets.all(0),
+            content: AskingPopupWidget(
+              showSheet:
+                  widget.chatRouting == null ||
+                      widget.chatRouting!.symbol.isEmpty
+                  ? true
+                  : false,
+              index: index,
+              questions: questions,
+              relatedQuestion: relatedQuestion,
+              controller: message,
+            ),
           ),
         );
       },
@@ -499,6 +515,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           replyId: "68c1d2c86d162417bca6fc8e",
           workflowObject: isWorkFlow
               ? WorkflowObject(
+                  isStock: selectedWorkFlow!.isStock ?? false,
                   name: selectedWorkFlow!.name,
                   displayName: selectedWorkFlow!.displayName,
                   description: selectedWorkFlow!.description,
@@ -556,6 +573,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             startStream = true;
             isWorkFlow = false;
             isWorkSymbol = false;
+            isWorkLimit = false;
           });
         }
         scrollToBottom();
@@ -694,7 +712,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       bottomNavigationBar: SafeArea(
         bottom: true,
         child: ChatBottomBar(
-          isWorkLimit: isWorkFlow,
+          isWorkLimit: isWorkLimit,
           messageController: message,
           limitController: limit,
           textScrollController: _textScrollController,
@@ -716,6 +734,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           onDeleteWorkflow: () {
             isWorkSymbol = false;
             isWorkFlow = false;
+            isWorkLimit = false;
             message.clear();
           },
           onSlashDetected: (ctx) => questionDialog(ctx),

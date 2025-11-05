@@ -917,7 +917,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                                           right: 6.w,
                                                         ), // 👈 aligns icon properly
                                                         child: IconButton(
-                                                          icon: const Icon(
+                                                          icon: Icon(
                                                             Icons.delete,
                                                             color: Colors.red,
                                                             size: 20,
@@ -979,7 +979,6 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                       ),
                                       SizedBox(width: 6.w),
 
-                                      // ⬆️ Send button
                                       Container(
                                         height: 28.h,
                                         width: 28.w,

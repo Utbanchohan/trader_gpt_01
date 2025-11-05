@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-
 import '../../../../../shared/widgets/loading_widget.dart';
 
 class DateRangePickerWidget extends StatefulWidget {
@@ -27,10 +26,28 @@ class _DateRangePickerWidgetState extends State<DateRangePickerWidget> {
   final TextEditingController _fromController = TextEditingController();
   final TextEditingController _toController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    final now = DateTime.now();
+
+    // 👇 Default dates set
+    _fromDate = DateTime(now.year - 2, now.month, now.day);
+    _toDate = now;
+
+    // 👇 Fill text fields with default formatted values
+    _fromController.text = _fmt.format(_fromDate!);
+    _toController.text = _fmt.format(_toDate!);
+  }
+
   Future<void> _pickDate({required bool isFrom}) async {
+    final now = DateTime.now();
+
+    // 👇 Default initial values
     final initial = isFrom
-        ? (_fromDate ?? DateTime.now())
-        : (_toDate ?? DateTime.now());
+        ? (_fromDate ?? DateTime(now.year - 2, now.month, now.day))
+        : (_toDate ?? now);
+
     final firstDate = DateTime(1970);
     final lastDate = DateTime(2100);
 
@@ -128,11 +145,8 @@ class _DateRangePickerWidgetState extends State<DateRangePickerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // return LayoutBuilder(
-    //   builder: (context, constraints) {
-    //     final isTight = constraints.maxWidth < 600; // for smaller screens
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -178,7 +192,7 @@ class _DateRangePickerWidgetState extends State<DateRangePickerWidget> {
                         color: AppColors.white,
                       ),
                     )
-                  : Text(
+                  : const Text(
                       'SHOW',
                       style: TextStyle(
                         color: Colors.white,
@@ -191,8 +205,5 @@ class _DateRangePickerWidgetState extends State<DateRangePickerWidget> {
         ],
       ),
     );
-
-    // },
-    // );
   }
 }

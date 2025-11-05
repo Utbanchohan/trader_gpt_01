@@ -2,18 +2,29 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
+import 'package:trader_gpt/src/shared/widgets/showinfopopap.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
+import '../../../../../core/routes/routes.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/model/analytics_model/analytics_model.dart';
 
 class AnalyticsWidget extends StatelessWidget {
   final List<AnalystRatingData> data;
-  const AnalyticsWidget({super.key, required this.data});
+  final ChatRouting chatRouting;
+  const AnalyticsWidget({
+    super.key,
+    required this.data,
+    required this.chatRouting,
+  });
 
   @override
   Widget build(BuildContext context) {
+    String question =
+        "Analyze analyst sentiment for ${chatRouting!.companyName}";
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
@@ -27,12 +38,18 @@ class AnalyticsWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            MdSnsText(
-              'ANALYST RATINGS'.capitalize(),
-              variant: TextVariant.h3,
-              color: AppColors.fieldTextColor,
-              fontWeight: TextFontWeightVariant.h3,
+            ShowInfoPopup(
+              chatRouting: chatRouting,
+              question: question,
+              text: "Analyst Sentiment",
+              child: MdSnsText(
+                'ANALYST RATINGS'.capitalize(),
+                variant: TextVariant.h3,
+                fontWeight: TextFontWeightVariant.h3,
+                color: AppColors.fieldTextColor,
+              ),
             ),
+
             SizedBox(height: 10.h),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,

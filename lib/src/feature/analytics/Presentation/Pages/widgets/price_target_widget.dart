@@ -3,13 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/showinfopopap.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
 
 class PriceTargetWidget extends StatelessWidget {
   final List<PriceTargetData>? data;
-  PriceTargetWidget({required this.data});
+  final ChatRouting chatRouting;
+  PriceTargetWidget({required this.data, required this.chatRouting});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,13 +39,19 @@ class PriceTargetWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            MdSnsText(
-                              "Price Target",
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h3,
-
-                              color: AppColors.fieldTextColor,
+                            ShowInfoPopup(
+                              chatRouting: chatRouting,
+                              question:
+                                  "Analyze analyst sentiment for ${chatRouting!.companyName}",
+                              text: "Analyst Sentiment",
+                              child: MdSnsText(
+                                "Price Target",
+                                variant: TextVariant.h3,
+                                fontWeight: TextFontWeightVariant.h3,
+                                color: AppColors.fieldTextColor,
+                              ),
                             ),
+
                             SizedBox(width: 5.w),
                             Icon(
                               Icons.info_outline,

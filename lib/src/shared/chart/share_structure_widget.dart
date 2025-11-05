@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
+import 'package:trader_gpt/src/shared/widgets/showinfopopap.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../feature/analytics/domain/model/fundamental_model/fundamental_model.dart';
@@ -24,6 +26,7 @@ class ShareStructureCard extends StatelessWidget {
   SharesData? shareData;
   FundamentalData? fundamentalData;
   Headings heading;
+  ChatRouting chatRouting;
 
   ShareStructureCard({
     super.key,
@@ -31,6 +34,7 @@ class ShareStructureCard extends StatelessWidget {
     this.fundamentalData,
     this.shareData,
     required this.heading,
+    required this.chatRouting,
   });
 
   final double _radius = 20.0;
@@ -89,13 +93,31 @@ class ShareStructureCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    MdSnsText(
-                      heading.value,
-                      variant: TextVariant.h3,
-                      fontWeight: TextFontWeightVariant.h3,
-                      color: AppColors.fieldTextColor,
-                    ),
+                    // 👇 Conditional check
+                    if (heading.value == "Fundamental" ||
+                        heading.value == "Metrics")
+                      ShowInfoPopup(
+                        chatRouting: chatRouting,
+                        question:
+                            "Perform DCF valuation analysis for ${chatRouting!.companyName}",
+                        text: "DCF Valuation",
+                        child: MdSnsText(
+                          heading.value,
+                          variant: TextVariant.h3,
+                          fontWeight: TextFontWeightVariant.h3,
+                          color: AppColors.fieldTextColor,
+                        ),
+                      )
+                    else
+                      MdSnsText(
+                        heading.value,
+                        variant: TextVariant.h3,
+                        fontWeight: TextFontWeightVariant.h3,
+                        color: AppColors.fieldTextColor,
+                      ),
+
                     SizedBox(width: 5.w),
+
                     Icon(
                       Icons.info_outline,
                       size: 14.sp,

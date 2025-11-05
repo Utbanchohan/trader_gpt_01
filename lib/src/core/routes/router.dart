@@ -21,7 +21,8 @@ import 'package:trader_gpt/src/feature/profile_setup/presentation/pages/profile_
 import 'package:trader_gpt/src/feature/s3_uploader/presentation/image_pickert.dart';
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
-import 'package:trader_gpt/src/feature/sign_in/presentation/pages/sigin_in.dart';
+import 'package:trader_gpt/src/feature/sign_in/presentation/pages/login.dart';
+import 'package:trader_gpt/src/feature/sign_in/presentation/provider/sign_in.dart';
 import 'package:trader_gpt/src/feature/splash/presentation/pages/splash.dart';
 import 'package:trader_gpt/src/feature/swip_screen/presentation/pages/swip_screen.dart';
 import 'package:trader_gpt/src/feature/update_password/presentation/update_password.dart';
@@ -98,11 +99,12 @@ final routerConfigProvider = Provider((ref) {
         },
         routes: [],
       ),
+
       GoRoute(
-        path: AppRoutes.signInPage.path,
-        name: AppRoutes.signInPage.name,
+        path: AppRoutes.loginPage.path,
+        name: AppRoutes.loginPage.name,
         builder: (BuildContext context, GoRouterState state) {
-          return SiginIn();
+          return LoginScreen();
         },
         routes: [],
       ),
@@ -224,10 +226,12 @@ final routerConfigProvider = Provider((ref) {
               );
 
           final initialIndex = extra?["initialIndex"] as int? ?? 1;
+          final question = extra?["question"] as String? ?? "";
 
           return SwipeScreen(
             chatRouting: chatRouting,
             initialIndex: initialIndex,
+            question: question,
           );
         },
         routes: [],
