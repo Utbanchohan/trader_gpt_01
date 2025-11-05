@@ -4,7 +4,7 @@ enum AppRoutes {
   splash('splash', '/splash'),
   getStartedScreen('getStartedScreen', '/get-started'),
   chatPage('chatPage', '/chat-page'),
-  signInPage('signInPage', '/sign-in'),
+  loginPage('loginPage', '/login-in'),
   signUpPage('signUpPage', '/sign-up'),
   verifaction('verifaction', '/verifaction'),
   profilePage('profilePage', '/profilePage'),
@@ -34,7 +34,7 @@ enum AppRoutes {
   static List<AppRoutes> get publicRoutes => [
     AppRoutes.splash,
     AppRoutes.getStartedScreen,
-    AppRoutes.signInPage,
+    AppRoutes.loginPage,
     AppRoutes.signUpPage,
     AppRoutes.verifaction,
     AppRoutes.profilePage,

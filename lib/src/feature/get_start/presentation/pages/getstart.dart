@@ -89,7 +89,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
               width: 1.sw,
               child: ButtonWidget(
                 onPressed: () {
-                  context.goNamed(AppRoutes.signInPage.name);
+                  context.goNamed(AppRoutes.loginPage.name);
                 },
                 title: 'Sign in',
                 borderRadius: 50.r,

@@ -27,6 +27,7 @@ abstract class StreamDto with _$StreamDto {
 abstract class WorkflowObject with _$WorkflowObject {
   const factory WorkflowObject({
     required String name,
+    required bool isStock,
     @JsonKey(name: "display_name") required String displayName,
     required String description,
     required String query,

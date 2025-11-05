@@ -45,7 +45,7 @@ class _UpdatePasswordState extends ConsumerState<UpdatePassword>
           );
       if (result != null) {
         if (mounted) {
-          context.pushNamed(AppRoutes.signInPage.name);
+          context.pushNamed(AppRoutes.loginPage.name);
         }
       }
     } else {

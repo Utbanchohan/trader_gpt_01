@@ -42,6 +42,7 @@ Map<String, dynamic> _$StreamDtoToJson(_StreamDto instance) =>
 _WorkflowObject _$WorkflowObjectFromJson(Map<String, dynamic> json) =>
     _WorkflowObject(
       name: json['name'] as String,
+      isStock: json['isStock'] as bool,
       displayName: json['display_name'] as String,
       description: json['description'] as String,
       query: json['query'] as String,
@@ -55,6 +56,7 @@ _WorkflowObject _$WorkflowObjectFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$WorkflowObjectToJson(_WorkflowObject instance) =>
     <String, dynamic>{
       'name': instance.name,
+      'isStock': instance.isStock,
       'display_name': instance.displayName,
       'description': instance.description,
       'query': instance.query,
