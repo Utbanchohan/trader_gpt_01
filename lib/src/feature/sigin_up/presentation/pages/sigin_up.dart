@@ -72,7 +72,7 @@ class _SignUpState extends ConsumerState<SignUp> with FormStateMixin {
               children: [
                 TextButton(
                   onPressed: () {
-                    context.goNamed(AppRoutes.signInPage.name);
+                    context.goNamed(AppRoutes.loginPage.name);
                   },
                   child: MdSnsText(
                     "Already have an account? Sign in",

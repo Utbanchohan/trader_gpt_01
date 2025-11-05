@@ -42,7 +42,7 @@ class _ChangePasswordState extends ConsumerState<ChangePassword>
           );
       if (result != null) {
         if (mounted) {
-          context.pushNamed(AppRoutes.signInPage.name);
+          context.pushNamed(AppRoutes.loginPage.name);
         }
       }
     } else {

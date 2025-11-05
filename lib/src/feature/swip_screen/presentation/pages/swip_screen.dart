@@ -25,8 +25,14 @@ import '../../../sign_in/domain/model/sign_in_response_model/login_response_mode
 class SwipeScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
   final int initialIndex;
+  final String question;
 
-  const SwipeScreen({super.key, this.chatRouting, this.initialIndex = 1});
+  const SwipeScreen({
+    super.key,
+    this.chatRouting,
+    this.initialIndex = 1,
+    required this.question,
+  });
 
   @override
   ConsumerState<SwipeScreen> createState() => _SwipeScreenState();
@@ -279,7 +285,10 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
           ConversationStart(),
           // convo != null && convo.isNotEmpty && stocks.isNotEmpty
           //     ?
-          ChatConversation(chatRouting: widget.chatRouting, initialMessage: ''),
+          ChatConversation(
+            chatRouting: widget.chatRouting,
+            initialMessage: widget.question,
+          ),
           // :
           // ChatPage(chatRouting: widget.chatRouting),
           if (convo != null && convo.isNotEmpty && stocks.isNotEmpty)

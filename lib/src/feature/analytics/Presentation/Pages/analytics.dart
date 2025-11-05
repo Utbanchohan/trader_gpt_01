@@ -52,6 +52,7 @@ import 'package:trader_gpt/src/shared/widgets/pricePerformance_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/price_card_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/profileCard_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/profile_card_shimmer.dart';
+import 'package:trader_gpt/src/shared/widgets/showinfopopap.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:trader_gpt/utils/constant.dart';
 
@@ -2181,6 +2182,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       "Perform DCF valuation analysis for ${widget.chatRouting!.companyName}",
       "Analyze analyst sentiment for ${widget.chatRouting!.companyName}",
     ];
+    List<String> popaplist = [
+      "Complete company analysis ${widget.chatRouting!.companyName}",
+      "Analyst sentiment ${widget.chatRouting!.companyName}",
+      "DCF valuation ${widget.chatRouting!.companyName}",
+      "Analyst sentiment ${widget.chatRouting!.companyName}",
+    ];
     final stockManagerState = ref.watch(stocksManagerProvider);
 
     final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
@@ -2281,44 +2288,54 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        MdSnsText(
-                          "#${selectedStock!.symbol}",
-                          variant: TextVariant.h3,
-                          fontWeight: TextFontWeightVariant.h1,
-
-                          color: AppColors.white,
-                        ),
-                        SizedBox(width: 6),
-
-                        Container(
-                          width: 5, // dot size
-                          height: 5,
-                          decoration: BoxDecoration(
-                            color: AppColors.colorB2B2B7,
-                            shape: BoxShape.circle,
+                    GestureDetector(
+                      child: Row(
+                        children: [
+                          ShowInfoPopup(
+                            chatRouting: widget.chatRouting!,
+                            question: questions[0],
+                            text: "Complete Company Analysis",
+                            child: MdSnsText(
+                              "#${selectedStock!.symbol}",
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h1,
+                              color: AppColors.white,
+                            ),
                           ),
-                        ),
 
-                        SizedBox(width: 6),
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width / 1.7,
-                          child: MdSnsText(
-                            selectedStock!.companyName.split("-").first.trim(),
-                            color: AppColors.colorB2B2B7,
-                            variant: TextVariant.h4,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            fontWeight: TextFontWeightVariant.h4,
+                          SizedBox(width: 6),
+
+                          Container(
+                            width: 5, // dot size
+                            height: 5,
+                            decoration: BoxDecoration(
+                              color: AppColors.colorB2B2B7,
+                              shape: BoxShape.circle,
+                            ),
                           ),
-                        ),
-                        // Icon(
-                        //   Icons.keyboard_arrow_down,
-                        //   color: AppColors.white,
-                        //   size: 20.sp,
-                        // ),
-                      ],
+
+                          SizedBox(width: 6),
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width / 1.7,
+                            child: MdSnsText(
+                              selectedStock!.companyName
+                                  .split("-")
+                                  .first
+                                  .trim(),
+                              color: AppColors.colorB2B2B7,
+                              variant: TextVariant.h4,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: TextFontWeightVariant.h4,
+                            ),
+                          ),
+                          // Icon(
+                          //   Icons.keyboard_arrow_down,
+                          //   color: AppColors.white,
+                          //   size: 20.sp,
+                          // ),
+                        ],
+                      ),
                     ),
                     Row(
                       children: [
@@ -2500,10 +2517,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             SizedBox(height: 20.h),
 
             isshowpriceTargetMatricsDataLoder == true
-                ? PriceTargetWidget(data: null)
+                ? PriceTargetWidget(
+                    data: null,
+                    chatRouting: widget.chatRouting!,
+                  )
                 : priceTargetMatrics != null &&
                       priceTargetMatrics!.data.length > 0
-                ? PriceTargetWidget(data: priceTargetMatrics!.data)
+                ? PriceTargetWidget(
+                    data: priceTargetMatrics!.data,
+                    chatRouting: widget.chatRouting!,
+                  )
                 : SizedBox(),
 
             SizedBox(height: 20.h),
@@ -2513,6 +2536,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 : sharesResponse != null &&
                       sharesResponse!.data.PercentInsiders != null
                 ? ShareStructureCard(
+                    chatRouting: widget.chatRouting!,
+
                     matrics: null,
                     fundamentalData: null,
                     shareData: sharesResponse!.data,
@@ -2541,6 +2566,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         .annualIncome
                         .isNotEmpty
                 ? ShareStructureCard(
+                    chatRouting: widget.chatRouting!,
                     matrics: null,
                     fundamentalData: fundamentalResponse!.data,
                     shareData: null,
@@ -2561,6 +2587,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     matricData!.data != null &&
                     matricData!.data!.isNotEmpty
                 ? ShareStructureCard(
+                    chatRouting: widget.chatRouting!,
+
                     matrics: matricData!.data,
                     fundamentalData: null,
                     shareData: null,
@@ -2674,7 +2702,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
             analyticsRespinseData != null &&
                     analyticsRespinseData!.data.isNotEmpty
-                ? AnalyticsWidget(data: analyticsRespinseData!.data)
+                ? AnalyticsWidget(
+                    chatRouting: widget.chatRouting!,
+
+                    data: analyticsRespinseData!.data,
+                  )
                 : SizedBox(),
             SizedBox(height: 20.h),
           ],

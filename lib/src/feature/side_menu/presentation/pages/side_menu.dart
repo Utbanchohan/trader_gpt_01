@@ -39,7 +39,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     ref.read(localDataProvider).setPassword(password);
     ref.read(localDataProvider).setRememberMe(remamberMe);
     ref.read(stocksManagerProvider.notifier).unWatchAllStock();
-    context.goNamed(AppRoutes.signInPage.name);
+    context.goNamed(AppRoutes.loginPage.name);
   }
 
   void _showLogoutDialog(BuildContext context) {

@@ -332,7 +332,7 @@ $WorkflowObjectCopyWith<$Res>? get workflowObject {
 /// @nodoc
 mixin _$WorkflowObject {
 
- String get name;@JsonKey(name: "display_name") String get displayName; String get description; String get query; List<WorkflowParameter> get parameters; String get label; String? get companyName;
+ String get name; bool get isStock;@JsonKey(name: "display_name") String get displayName; String get description; String get query; List<WorkflowParameter> get parameters; String get label; String? get companyName;
 /// Create a copy of WorkflowObject
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -345,16 +345,16 @@ $WorkflowObjectCopyWith<WorkflowObject> get copyWith => _$WorkflowObjectCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkflowObject&&(identical(other.name, name) || other.name == name)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.description, description) || other.description == description)&&(identical(other.query, query) || other.query == query)&&const DeepCollectionEquality().equals(other.parameters, parameters)&&(identical(other.label, label) || other.label == label)&&(identical(other.companyName, companyName) || other.companyName == companyName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkflowObject&&(identical(other.name, name) || other.name == name)&&(identical(other.isStock, isStock) || other.isStock == isStock)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.description, description) || other.description == description)&&(identical(other.query, query) || other.query == query)&&const DeepCollectionEquality().equals(other.parameters, parameters)&&(identical(other.label, label) || other.label == label)&&(identical(other.companyName, companyName) || other.companyName == companyName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,displayName,description,query,const DeepCollectionEquality().hash(parameters),label,companyName);
+int get hashCode => Object.hash(runtimeType,name,isStock,displayName,description,query,const DeepCollectionEquality().hash(parameters),label,companyName);
 
 @override
 String toString() {
-  return 'WorkflowObject(name: $name, displayName: $displayName, description: $description, query: $query, parameters: $parameters, label: $label, companyName: $companyName)';
+  return 'WorkflowObject(name: $name, isStock: $isStock, displayName: $displayName, description: $description, query: $query, parameters: $parameters, label: $label, companyName: $companyName)';
 }
 
 
@@ -365,7 +365,7 @@ abstract mixin class $WorkflowObjectCopyWith<$Res>  {
   factory $WorkflowObjectCopyWith(WorkflowObject value, $Res Function(WorkflowObject) _then) = _$WorkflowObjectCopyWithImpl;
 @useResult
 $Res call({
- String name,@JsonKey(name: "display_name") String displayName, String description, String query, List<WorkflowParameter> parameters, String label, String? companyName
+ String name, bool isStock,@JsonKey(name: "display_name") String displayName, String description, String query, List<WorkflowParameter> parameters, String label, String? companyName
 });
 
 
@@ -382,10 +382,11 @@ class _$WorkflowObjectCopyWithImpl<$Res>
 
 /// Create a copy of WorkflowObject
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? displayName = null,Object? description = null,Object? query = null,Object? parameters = null,Object? label = null,Object? companyName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? isStock = null,Object? displayName = null,Object? description = null,Object? query = null,Object? parameters = null,Object? label = null,Object? companyName = freezed,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
+as String,isStock: null == isStock ? _self.isStock : isStock // ignore: cast_nullable_to_non_nullable
+as bool,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,query: null == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
 as String,parameters: null == parameters ? _self.parameters : parameters // ignore: cast_nullable_to_non_nullable
@@ -476,10 +477,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name, @JsonKey(name: "display_name")  String displayName,  String description,  String query,  List<WorkflowParameter> parameters,  String label,  String? companyName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  bool isStock, @JsonKey(name: "display_name")  String displayName,  String description,  String query,  List<WorkflowParameter> parameters,  String label,  String? companyName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WorkflowObject() when $default != null:
-return $default(_that.name,_that.displayName,_that.description,_that.query,_that.parameters,_that.label,_that.companyName);case _:
+return $default(_that.name,_that.isStock,_that.displayName,_that.description,_that.query,_that.parameters,_that.label,_that.companyName);case _:
   return orElse();
 
 }
@@ -497,10 +498,10 @@ return $default(_that.name,_that.displayName,_that.description,_that.query,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name, @JsonKey(name: "display_name")  String displayName,  String description,  String query,  List<WorkflowParameter> parameters,  String label,  String? companyName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  bool isStock, @JsonKey(name: "display_name")  String displayName,  String description,  String query,  List<WorkflowParameter> parameters,  String label,  String? companyName)  $default,) {final _that = this;
 switch (_that) {
 case _WorkflowObject():
-return $default(_that.name,_that.displayName,_that.description,_that.query,_that.parameters,_that.label,_that.companyName);case _:
+return $default(_that.name,_that.isStock,_that.displayName,_that.description,_that.query,_that.parameters,_that.label,_that.companyName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -517,10 +518,10 @@ return $default(_that.name,_that.displayName,_that.description,_that.query,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name, @JsonKey(name: "display_name")  String displayName,  String description,  String query,  List<WorkflowParameter> parameters,  String label,  String? companyName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  bool isStock, @JsonKey(name: "display_name")  String displayName,  String description,  String query,  List<WorkflowParameter> parameters,  String label,  String? companyName)?  $default,) {final _that = this;
 switch (_that) {
 case _WorkflowObject() when $default != null:
-return $default(_that.name,_that.displayName,_that.description,_that.query,_that.parameters,_that.label,_that.companyName);case _:
+return $default(_that.name,_that.isStock,_that.displayName,_that.description,_that.query,_that.parameters,_that.label,_that.companyName);case _:
   return null;
 
 }
@@ -532,10 +533,11 @@ return $default(_that.name,_that.displayName,_that.description,_that.query,_that
 @JsonSerializable()
 
 class _WorkflowObject implements WorkflowObject {
-  const _WorkflowObject({required this.name, @JsonKey(name: "display_name") required this.displayName, required this.description, required this.query, required final  List<WorkflowParameter> parameters, required this.label, this.companyName}): _parameters = parameters;
+  const _WorkflowObject({required this.name, required this.isStock, @JsonKey(name: "display_name") required this.displayName, required this.description, required this.query, required final  List<WorkflowParameter> parameters, required this.label, this.companyName}): _parameters = parameters;
   factory _WorkflowObject.fromJson(Map<String, dynamic> json) => _$WorkflowObjectFromJson(json);
 
 @override final  String name;
+@override final  bool isStock;
 @override@JsonKey(name: "display_name") final  String displayName;
 @override final  String description;
 @override final  String query;
@@ -562,16 +564,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkflowObject&&(identical(other.name, name) || other.name == name)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.description, description) || other.description == description)&&(identical(other.query, query) || other.query == query)&&const DeepCollectionEquality().equals(other._parameters, _parameters)&&(identical(other.label, label) || other.label == label)&&(identical(other.companyName, companyName) || other.companyName == companyName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkflowObject&&(identical(other.name, name) || other.name == name)&&(identical(other.isStock, isStock) || other.isStock == isStock)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.description, description) || other.description == description)&&(identical(other.query, query) || other.query == query)&&const DeepCollectionEquality().equals(other._parameters, _parameters)&&(identical(other.label, label) || other.label == label)&&(identical(other.companyName, companyName) || other.companyName == companyName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,displayName,description,query,const DeepCollectionEquality().hash(_parameters),label,companyName);
+int get hashCode => Object.hash(runtimeType,name,isStock,displayName,description,query,const DeepCollectionEquality().hash(_parameters),label,companyName);
 
 @override
 String toString() {
-  return 'WorkflowObject(name: $name, displayName: $displayName, description: $description, query: $query, parameters: $parameters, label: $label, companyName: $companyName)';
+  return 'WorkflowObject(name: $name, isStock: $isStock, displayName: $displayName, description: $description, query: $query, parameters: $parameters, label: $label, companyName: $companyName)';
 }
 
 
@@ -582,7 +584,7 @@ abstract mixin class _$WorkflowObjectCopyWith<$Res> implements $WorkflowObjectCo
   factory _$WorkflowObjectCopyWith(_WorkflowObject value, $Res Function(_WorkflowObject) _then) = __$WorkflowObjectCopyWithImpl;
 @override @useResult
 $Res call({
- String name,@JsonKey(name: "display_name") String displayName, String description, String query, List<WorkflowParameter> parameters, String label, String? companyName
+ String name, bool isStock,@JsonKey(name: "display_name") String displayName, String description, String query, List<WorkflowParameter> parameters, String label, String? companyName
 });
 
 
@@ -599,10 +601,11 @@ class __$WorkflowObjectCopyWithImpl<$Res>
 
 /// Create a copy of WorkflowObject
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? displayName = null,Object? description = null,Object? query = null,Object? parameters = null,Object? label = null,Object? companyName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? isStock = null,Object? displayName = null,Object? description = null,Object? query = null,Object? parameters = null,Object? label = null,Object? companyName = freezed,}) {
   return _then(_WorkflowObject(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
+as String,isStock: null == isStock ? _self.isStock : isStock // ignore: cast_nullable_to_non_nullable
+as bool,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,query: null == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
 as String,parameters: null == parameters ? _self._parameters : parameters // ignore: cast_nullable_to_non_nullable

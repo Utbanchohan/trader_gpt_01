@@ -22,19 +22,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, String>> pages = [
     {
-      "title": "Meet Your AI Trading Companion",
+      "title": "Meet Your AI Trading\nCompanion",
       "subtitle":
           "Your AI-powered trading companion for quick market insights and confident decisions.",
       "image": Assets.images.onboarding1.path,
     },
     {
-      "title": "Understand the Market Instantly",
+      "title": "Understand\nthe Market Instantly",
       "subtitle":
           "TradersGPT turns complex market data into clear insights for smarter trading decisions.",
       "image": Assets.images.onboard2.path,
     },
     {
-      "title": "Make Confident Decisions",
+      "title": "Make Confident\nDecisions",
       "subtitle":
           "TradersGPT transforms complex data into clear, instant strategies for confident trading.",
       "image": Assets.images.bording3.path,
@@ -74,6 +74,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     return Scaffold(
+      bottomNavigationBar: TextButton(
+        onPressed: () {
+          context.goNamed(AppRoutes.signUpPage.name);
+        },
+        child: RichText(
+          text: TextSpan(
+            style: const TextStyle(
+              color: AppColors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+            children: [
+              const TextSpan(text: "Don't have an account, "),
+              TextSpan(
+                text: "Signup Here",
+                style: TextStyle(
+                  color: AppColors.color0098E4,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+
       backgroundColor: AppColors.primaryColor,
       body: SafeArea(
         child: Column(
@@ -155,11 +180,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                         child: Column(
                           children: [
-                            SizedBox(height: 10.h),
+                            SizedBox(height: 20.h),
 
                             MdSnsText(
                               page["title"]!,
-                              height: 1.4,
+                              // height: 1.4,
                               variant: TextVariant.h6,
                               fontWeight: TextFontWeightVariant.h1,
                               textAlign: TextAlign.center,
@@ -171,18 +196,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             MdSnsText(
                               page["subtitle"]!,
                               textAlign: TextAlign.center,
-                              variant: TextVariant.h2,
+                              variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h4,
                               color: AppColors.white,
                             ),
 
-                            SizedBox(height: 10.h),
+                            SizedBox(height: 20.h),
 
                             SizedBox(
                               height: 40.h,
                               child: ButtonWidget(
                                 onPressed: () {
-                                  context.goNamed(AppRoutes.signInPage.name);
+                                  context.goNamed(AppRoutes.loginPage.name);
                                 },
                                 title: 'Sign in',
                                 borderRadius: 50.r,
@@ -190,35 +215,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 fontWeight: FontWeight.w600,
                                 textColor: AppColors.white,
                                 bgColor: AppColors.color0098E4,
-                              ),
-                            ),
-
-                            SizedBox(height: 20.h),
-
-                            TextButton(
-                              onPressed: () {
-                                context.goNamed(AppRoutes.signUpPage.name);
-                              },
-                              child: RichText(
-                                text: TextSpan(
-                                  style: const TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  children: [
-                                    const TextSpan(
-                                      text: "Don't have an account, ",
-                                    ),
-                                    TextSpan(
-                                      text: "Signup Here",
-                                      style: TextStyle(
-                                        color: AppColors.color0098E4,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ),
                             ),
                           ],

@@ -34,12 +34,9 @@ import 'widgets/loading_widget.dart';
 
 class ChatConversation extends ConsumerStatefulWidget {
   ChatRouting? chatRouting;
+  final String initialMessage;
 
-  ChatConversation({
-    super.key,
-    this.chatRouting,
-    required String initialMessage,
-  });
+  ChatConversation({super.key, this.chatRouting, required this.initialMessage});
 
   @override
   ConsumerState<ChatConversation> createState() => _ChatConversationState();
@@ -80,6 +77,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   @override
   void initState() {
+    message.text = widget.initialMessage;
     getChatsId();
 
     selectedStock = _mapChatRoutingToStock(widget.chatRouting);
@@ -155,7 +153,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   Future<void> _handleWorkflowSelection(int index) async {
     setState(() => isWorkFlow = true);
-    setState(() => isWorkLimit = true);
+    setState(() => isWorkLimit = false);
 
     final workflow = workflows[index];
     final params = workflow.parameters ?? [];
@@ -166,7 +164,11 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         isWorkLimit = false;
       });
 
-      _setMessage(workflow.displayName);
+      String message = workflow.query.replaceAll(
+        "{symbol}",
+        selectedStock!.symbol,
+      );
+      _setMessage(message);
       _closeDialogs();
 
       selectedWorkFlow = workflow;
@@ -175,8 +177,11 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         isWorkLimit = true;
         isWorkSymbol = false;
       });
-
-      _setMessage(workflow.displayName);
+      String message = workflow.query.replaceAll(
+        "{symbol}",
+        selectedStock!.symbol,
+      );
+      _setMessage(message);
       selectedWorkFlow = workflow;
       _closeDialogs();
     } else {
@@ -184,8 +189,11 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         isWorkSymbol = false;
         isWorkLimit = false;
       });
-
-      _setMessage(workflow.displayName);
+      String message = workflow.query.replaceAll(
+        "{symbol}",
+        selectedStock!.symbol,
+      );
+      _setMessage(message);
       selectedWorkFlow = workflow;
       _closeDialogs();
     }
@@ -424,20 +432,24 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
       context: context,
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          alignment: Alignment.center,
-          backgroundColor: AppColors.primaryColor,
-          insetPadding: EdgeInsets.all(0),
-          contentPadding: EdgeInsets.all(0),
-          content: AskingPopupWidget(
-            showSheet:
-                widget.chatRouting == null || widget.chatRouting!.symbol.isEmpty
-                ? true
-                : false,
-            index: index,
-            questions: questions,
-            relatedQuestion: relatedQuestion,
-            controller: message,
+        return Container(
+          margin: EdgeInsets.only(top: 80.h),
+          child: AlertDialog(
+            alignment: Alignment.center,
+            backgroundColor: AppColors.primaryColor,
+            insetPadding: EdgeInsets.all(0),
+            contentPadding: EdgeInsets.all(0),
+            content: AskingPopupWidget(
+              showSheet:
+                  widget.chatRouting == null ||
+                      widget.chatRouting!.symbol.isEmpty
+                  ? true
+                  : false,
+              index: index,
+              questions: questions,
+              relatedQuestion: relatedQuestion,
+              controller: message,
+            ),
           ),
         );
       },
@@ -467,6 +479,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
           replyId: "68c1d2c86d162417bca6fc8e",
           workflowObject: isWorkFlow
               ? WorkflowObject(
+                  isStock: selectedWorkFlow!.isStock ?? false,
                   name: selectedWorkFlow!.name,
                   displayName: selectedWorkFlow!.displayName,
                   description: selectedWorkFlow!.description,
@@ -484,6 +497,10 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                 selectedWorkFlow!.parameters![0].isRequired,
                             description:
                                 selectedWorkFlow!.parameters![0].description!,
+                            value: selectedStock != null
+                                ? selectedStock!.symbol
+                                : "TDGPT",
+                            disabled: true,
                           ),
                         ]
                       : [],
@@ -524,6 +541,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
           startStream = true;
           isWorkFlow = false;
           isWorkSymbol = false;
+          isWorkLimit = false;
+          setState(() {});
         });
         scrollToBottom();
       }
@@ -597,6 +616,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         bottom: true,
         child: ChatBottomBar(
           messageController: message,
+
           limitController: limit,
           textScrollController: _textScrollController,
           isWorkFlow: isWorkFlow,
