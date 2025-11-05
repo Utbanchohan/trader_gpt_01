@@ -556,6 +556,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                 selectedWorkFlow!.parameters![0].isRequired,
                             description:
                                 selectedWorkFlow!.parameters![0].description!,
+                            value: selectedStock != null
+                                ? selectedStock!.symbol
+                                : "TDGPT",
+                            disabled: true,
                           ),
                         ]
                       : [],

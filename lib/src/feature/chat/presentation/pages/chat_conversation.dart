@@ -164,8 +164,11 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         isWorkLimit = false;
       });
 
-    String message=workflow.query.replaceAll("{symbol}", selectedStock!.symbol);
-       _setMessage(message);
+      String message = workflow.query.replaceAll(
+        "{symbol}",
+        selectedStock!.symbol,
+      );
+      _setMessage(message);
       _closeDialogs();
 
       selectedWorkFlow = workflow;
@@ -174,8 +177,11 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         isWorkLimit = true;
         isWorkSymbol = false;
       });
-String message=workflow.query.replaceAll("{symbol}", selectedStock!.symbol);
-       _setMessage(message);
+      String message = workflow.query.replaceAll(
+        "{symbol}",
+        selectedStock!.symbol,
+      );
+      _setMessage(message);
       selectedWorkFlow = workflow;
       _closeDialogs();
     } else {
@@ -183,7 +189,10 @@ String message=workflow.query.replaceAll("{symbol}", selectedStock!.symbol);
         isWorkSymbol = false;
         isWorkLimit = false;
       });
-String message=workflow.query.replaceAll("{symbol}", selectedStock!.symbol);
+      String message = workflow.query.replaceAll(
+        "{symbol}",
+        selectedStock!.symbol,
+      );
       _setMessage(message);
       selectedWorkFlow = workflow;
       _closeDialogs();
@@ -488,6 +497,10 @@ String message=workflow.query.replaceAll("{symbol}", selectedStock!.symbol);
                                 selectedWorkFlow!.parameters![0].isRequired,
                             description:
                                 selectedWorkFlow!.parameters![0].description!,
+                            value: selectedStock != null
+                                ? selectedStock!.symbol
+                                : "TDGPT",
+                            disabled: true,
                           ),
                         ]
                       : [],
