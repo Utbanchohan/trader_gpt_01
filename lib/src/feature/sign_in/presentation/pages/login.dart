@@ -46,6 +46,13 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
         ? true
         : false;
     password.text = ref.read(localDataProvider).getPassword1 ?? "";
+    setState(() {
+      
+    });
+  }
+
+  locatelocaldata(){
+    getLocalData();
   }
 
   emptyLocalData() {
@@ -56,7 +63,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
 
   @override
   void initState() {
-    getLocalData();
+    locatelocaldata();
     // TODO: implement initState
     super.initState();
   }
