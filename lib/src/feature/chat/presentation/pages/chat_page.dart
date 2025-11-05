@@ -162,7 +162,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   Future<void> _handleWorkflowSelection(int index) async {
     if (mounted) {
       setState(() => isWorkFlow = true);
-      setState(() => isWorkLimit = true);
     }
 
     final workflow = workflows[index];
@@ -172,8 +171,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
       if (params.isNotEmpty && params.first.name == "symbol") {
         if (mounted) {
-          setState(() => isWorkSymbol = true);
-          isWorkLimit = false;
+          setState(() {
+            isWorkSymbol = true;
+            isWorkLimit = false;
+          });
         }
         _closeDialogs();
 
@@ -182,21 +183,43 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           barrierDismissible: true,
           builder: (_) => GradientDialog(child: StockScreen()),
         );
-        _setMessage(
+        String message = workflow.query.replaceAll(
+          "{symbol}",
           workflow.query.replaceAll(
             "{symbol}",
             selectedStock != null ? selectedStock!.symbol : "TDGPT",
           ),
         );
+        _setMessage(message);
 
         selectedWorkFlow = workflow;
       } else if (params.isNotEmpty && params.first.name == "limit") {
-        _setMessage(workflow.displayName);
+        if (mounted) {
+          setState(() {
+            isWorkLimit = true;
+            isWorkSymbol = false;
+          });
+        }
+        String message = workflow.query.replaceAll(
+          "{symbol}",
+          workflow.query.replaceAll(
+            "{symbol}",
+            selectedStock != null ? selectedStock!.symbol : "TDGPT",
+          ),
+        );
+        _setMessage(message);
         selectedWorkFlow = workflow;
 
         _closeDialogs();
       } else {
-        _setMessage(workflow.displayName);
+        String message = workflow.query.replaceAll(
+          "{symbol}",
+          workflow.query.replaceAll(
+            "{symbol}",
+            selectedStock != null ? selectedStock!.symbol : "TDGPT",
+          ),
+        );
+        _setMessage(message);
         selectedWorkFlow = workflow;
 
         _closeDialogs();

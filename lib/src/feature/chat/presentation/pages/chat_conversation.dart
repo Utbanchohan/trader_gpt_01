@@ -164,7 +164,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         isWorkLimit = false;
       });
 
-      _setMessage(workflow.query.replaceAll("{symbol}", selectedStock!.symbol));
+    String message=workflow.query.replaceAll("{symbol}", selectedStock!.symbol);
+       _setMessage(message);
       _closeDialogs();
 
       selectedWorkFlow = workflow;
@@ -173,8 +174,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         isWorkLimit = true;
         isWorkSymbol = false;
       });
-
-      _setMessage(workflow.displayName);
+String message=workflow.query.replaceAll("{symbol}", selectedStock!.symbol);
+       _setMessage(message);
       selectedWorkFlow = workflow;
       _closeDialogs();
     } else {
@@ -182,8 +183,8 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
         isWorkSymbol = false;
         isWorkLimit = false;
       });
-
-      _setMessage(workflow.displayName);
+String message=workflow.query.replaceAll("{symbol}", selectedStock!.symbol);
+      _setMessage(message);
       selectedWorkFlow = workflow;
       _closeDialogs();
     }
