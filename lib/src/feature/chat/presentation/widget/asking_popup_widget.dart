@@ -75,7 +75,7 @@ class _AskingPopupWidgetState extends State<AskingPopupWidget>
               dividerHeight: 0,
               tabs: const [
                 Tab(text: 'Trending Q/A'),
-                Tab(text: 'Related Q/A'),
+                // Tab(text: 'Related Q/A'),
               ],
             ),
             const SizedBox(height: 25),

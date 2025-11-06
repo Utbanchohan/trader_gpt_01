@@ -2119,12 +2119,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               ),
                             if (categoryImages[index] != null)
                               SizedBox(width: 8.w),
-                            Text(
+                            MdSnsText(
                               categories[index],
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
                             ),
                           ],
                         ),

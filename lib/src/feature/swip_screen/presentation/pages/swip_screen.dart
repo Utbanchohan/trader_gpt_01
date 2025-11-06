@@ -185,19 +185,19 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
                                     ),
                                     Expanded(
                                       child: Container(
-                                        margin: const EdgeInsets.only(
-                                          right: 30,
-                                        ),
+                                        margin: EdgeInsets.only(left: 20),
                                         child: Center(
                                           child: Row(
-                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
                                             children: [
                                               Image.asset(
-                                                "assets/images/analytics.png",
-                                                width: 20,
+                                                Assets.images.analytics.path,
+                                                width: 20.w,
                                                 height: 20,
                                               ),
-                                              const SizedBox(width: 6),
+
+                                              SizedBox(width: 6),
                                               MdSnsText(
                                                 "ANALYTICS",
                                                 color: AppColors.white,

@@ -74,27 +74,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     return Scaffold(
-      bottomNavigationBar: TextButton(
-        onPressed: () {
-          context.goNamed(AppRoutes.signUpPage.name);
-        },
-        child: RichText(
-          text: TextSpan(
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-            children: [
-              const TextSpan(text: "Don't have an account, "),
-              TextSpan(
-                text: "Signup Here",
-                style: TextStyle(
-                  color: AppColors.color0098E4,
-                  fontWeight: FontWeight.w400,
-                ),
+      bottomNavigationBar: Container(
+        margin: EdgeInsets.only(bottom: 10.h),
+        child: TextButton(
+          onPressed: () {
+            context.goNamed(AppRoutes.signUpPage.name);
+          },
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(
+                color: AppColors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
               ),
-            ],
+              children: [
+                const TextSpan(text: "Don't have an account, "),
+                TextSpan(
+                  text: "Signup Here",
+                  style: TextStyle(
+                    color: AppColors.color0098E4,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -130,8 +133,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           Column(
                             children: [
                               // SizedBox(height: 20.h),
-
-                              /// App Logo
                               Image.asset(
                                 Assets.images.appLogo.path,
                                 height: 50.h,
@@ -165,17 +166,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               SizedBox(height: 15.h),
 
                               /// Page-specific Image
-                              Image.asset(page["image"]!, height: 293.h),
+                              Container(
+                                margin: EdgeInsets.only(left: 10, right: 10),
+                                child: Image.asset(
+                                  page["image"]!,
+                                  height: 293.h,
+                                ),
+                              ),
                             ],
                           ),
                         ],
                       ),
 
-                      /// 🔹 Title + Subtitle + Buttons (no background here)
                       Container(
                         margin: EdgeInsets.only(
-                          left: 15,
-                          right: 15,
+                          left: 15.w,
+                          right: 15.w,
                           bottom: 10.h,
                         ),
                         child: Column(
