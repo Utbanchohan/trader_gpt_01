@@ -14,7 +14,6 @@ import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../shared/mixin/form_state_mixin.dart';
-import '../../../../shared/states/app_loading_state.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -63,14 +62,14 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(loginProvider) == AppLoadingState.loading();
+    // final isLoading = ref.watch(loginProvider) == AppLoadingState.loading();
 
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       body: SafeArea(
         top: true,
         child: Padding(
-          padding: EdgeInsets.only(top: 30.h, left: 20.w, right: 20.w),
+          padding: EdgeInsets.only(top: 30, left: 20, right: 20),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,14 +81,10 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
 
                   color: AppColors.white,
                 ),
-                // SizedBox(height: 5.h),
-                Image.asset(
-                  Assets.images.appLogo.path,
-                  width: 203.w,
-                  height: 50.h,
-                ),
+                // SizedBox(height: 5),
+                Image.asset(Assets.images.appLogo.path, width: 203, height: 50),
 
-                SizedBox(height: 20.h),
+                SizedBox(height: 20),
                 MdSnsText(
                   "Ready to start where you left of?",
                   variant: TextVariant.h2,
@@ -97,7 +92,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
 
                   color: AppColors.white,
                 ),
-                SizedBox(height: 40.h),
+                SizedBox(height: 40),
 
                 // Google button
 
@@ -111,10 +106,10 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                         children: [
                           Image.asset(
                             Assets.images.sms.path,
-                            height: 15.h,
-                            width: 15.w,
+                            height: 15,
+                            width: 15,
                           ),
-                          SizedBox(width: 5.w),
+                          SizedBox(width: 5),
                           MdSnsText(
                             "Email Address",
                             variant: TextVariant.h4,
@@ -124,7 +119,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                           ),
                         ],
                       ),
-                      SizedBox(height: 9.h),
+                      SizedBox(height: 9),
 
                       // Email field
                       TextFormField(
@@ -167,8 +162,8 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                           ),
 
                           contentPadding: EdgeInsets.symmetric(
-                            horizontal: 24.w,
-                            vertical: 10.h,
+                            horizontal: 24,
+                            vertical: 10,
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.r),
@@ -185,17 +180,17 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                         ),
                       ),
 
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 16),
 
                       // Password label
                       Row(
                         children: [
                           Image.asset(
                             Assets.images.lock.path,
-                            height: 15.h,
-                            width: 15.w,
+                            height: 15,
+                            width: 15,
                           ),
-                          SizedBox(width: 5.w),
+                          SizedBox(width: 5),
                           MdSnsText(
                             "Password",
                             variant: TextVariant.h4,
@@ -205,7 +200,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                           ),
                         ],
                       ),
-                      SizedBox(height: 9.h),
+                      SizedBox(height: 9),
 
                       // Password field
                       TextFormField(
@@ -240,8 +235,8 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                             fontWeight: FontWeight.w400,
                           ),
                           contentPadding: EdgeInsets.symmetric(
-                            horizontal: 24.w,
-                            vertical: 10.h,
+                            horizontal: 24,
+                            vertical: 10,
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.r),
@@ -261,7 +256,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                   ),
                 ),
 
-                SizedBox(height: 10.h),
+                SizedBox(height: 10),
 
                 // Forgot password
                 Row(
@@ -326,7 +321,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                                         MaterialTapTargetSize.shrinkWrap,
                                   ),
                                 ),
-                                SizedBox(width: 4.w),
+                                SizedBox(width: 4),
                                 MdSnsText(
                                   "Remember Me",
                                   variant: TextVariant.h4,
@@ -356,16 +351,16 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                   ],
                 ),
 
-                SizedBox(height: 35.h),
+                SizedBox(height: 35),
 
                 // Sign in button
                 SizedBox(
-                  height: 50.h,
+                  height: 50,
                   child: ButtonWidget(
                     onPressed: () {
                       submitter();
                     },
-                    isLoading: isLoading,
+                    isLoading: false,
                     title: 'Sign in',
                     borderRadius: 50.r,
                     fontSize: 18,
@@ -375,13 +370,13 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                   ),
                 ),
 
-                SizedBox(height: 35.h),
+                SizedBox(height: 35),
 
                 Row(
                   children: [
                     Expanded(child: Divider(color: AppColors.colorB2B2B7)),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      padding: EdgeInsets.symmetric(horizontal: 16),
                       child: MdSnsText(
                         "Or",
                         variant: TextVariant.h4,
@@ -393,13 +388,13 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                   ],
                 ),
 
-                SizedBox(height: 35.h),
+                SizedBox(height: 35),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: 162.w,
-                      height: 55.h,
+                      width: 162,
+                      height: 55,
                       child: OutlinedButton(
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
@@ -413,10 +408,10 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                           children: [
                             Image.asset(
                               Assets.images.google.path,
-                              height: 24.h,
-                              width: 24.w,
+                              height: 24,
+                              width: 24,
                             ),
-                            SizedBox(width: 10.w),
+                            SizedBox(width: 10),
                             MdSnsText(
                               "Google",
                               variant: TextVariant.h1,
@@ -429,8 +424,8 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                       ),
                     ),
                     SizedBox(
-                      width: 162.w,
-                      height: 55.h,
+                      width: 162,
+                      height: 55,
                       child: OutlinedButton(
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
@@ -444,10 +439,10 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                           children: [
                             Image.asset(
                               Assets.images.apple.path,
-                              height: 24.h,
-                              width: 24.w,
+                              height: 24,
+                              width: 24,
                             ),
-                            SizedBox(width: 10.w),
+                            SizedBox(width: 10),
                             MdSnsText(
                               "Apple",
 
@@ -464,7 +459,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                 ),
 
                 // Apple button
-                SizedBox(height: 35.h),
+                SizedBox(height: 35),
 
                 // Sign up text
                 Center(
