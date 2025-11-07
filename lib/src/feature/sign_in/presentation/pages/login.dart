@@ -14,6 +14,7 @@ import 'package:trader_gpt/src/shared/widgets/app_button/button.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../shared/mixin/form_state_mixin.dart';
+import '../../../../shared/states/app_loading_state.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -62,7 +63,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // final isLoading = ref.watch(loginProvider) == AppLoadingState.loading();
+    final isLoading = ref.watch(loginProvider) == AppLoadingState.loading();
 
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
@@ -360,7 +361,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                     onPressed: () {
                       submitter();
                     },
-                    isLoading: false,
+                    isLoading: isLoading,
                     title: 'Sign in',
                     borderRadius: 50.r,
                     fontSize: 18,
@@ -393,7 +394,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: 162,
+                      width: 180,
                       height: 55,
                       child: OutlinedButton(
                         onPressed: () {},
@@ -424,7 +425,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                       ),
                     ),
                     SizedBox(
-                      width: 162,
+                      width: 180,
                       height: 55,
                       child: OutlinedButton(
                         onPressed: () {},
