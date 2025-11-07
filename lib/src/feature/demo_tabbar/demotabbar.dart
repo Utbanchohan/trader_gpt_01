@@ -39,7 +39,6 @@ class _DemoTabBarState extends State<DemoTabBar>
 
     final offset = scrollController.offset;
 
-    // ✅ Prevent premature switching before offsets calculated
     if (statsOffset == 0 || settingsOffset == 0) return;
 
     if (offset >= settingsOffset - 200) {
