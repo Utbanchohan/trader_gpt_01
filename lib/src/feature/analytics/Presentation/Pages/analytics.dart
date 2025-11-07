@@ -120,6 +120,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     with TickerProviderStateMixin {
   late TabController tabController;
   late TabController financeialTabController;
+  final ScrollController scrollController = ScrollController();
+
   StockPriceModel? stockPrices;
   StockResponse? stockResponse;
   PriceComparisonModel? priceComparisonModel;
@@ -157,6 +159,50 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   bool companyDetailShimmer = false;
   bool earningChartModelLoader = false;
   bool analysisDataModelLoader = false;
+  //nimmo
+  final GlobalKey overviewKey = GlobalKey();
+  final GlobalKey companyKey = GlobalKey();
+  final GlobalKey financialKey = GlobalKey();
+  final GlobalKey earningsKey = GlobalKey();
+  final GlobalKey analysisKey = GlobalKey();
+  final List<String> categories = [
+    'Overview',
+    'Company',
+    'Financials',
+    'Earnings',
+    'Analysis',
+  ];
+  final Map<int, double> sectionOffsets = {};
+  void _storeSectionOffsets() {
+    final keys = [
+      overviewKey,
+      companyKey,
+      financialKey,
+      earningsKey,
+      analysisKey,
+    ];
+
+    for (int i = 0; i < keys.length; i++) {
+      final box = keys[i].currentContext?.findRenderObject() as RenderBox?;
+      if (box != null) {
+        sectionOffsets[i] =
+            box.localToGlobal(Offset.zero).dy + scrollController.offset;
+      }
+    }
+  }
+
+  void _handleScroll() {
+    double offset = scrollController.offset;
+
+    for (int i = sectionOffsets.length - 1; i >= 0; i--) {
+      if (offset >= (sectionOffsets[i] ?? 0) - 100) {
+        if (tabController.index != i) {
+          tabController.animateTo(i);
+        }
+        break;
+      }
+    }
+  }
 
   //crypto Variable start
   List<OverviewCandleChartModel>? overviewCandleChartModelCrypto;
@@ -565,13 +611,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     "Balance Sheet",
     "Cash Flow",
   ];
-  final List<String> categories = [
-    "Overview",
-    "Company",
-    "Financial",
-    "Earning",
-    "Analysis",
-  ];
+  //tabbar
 
   bool isTabSelected = true; // Default delivery tab selected
 
@@ -863,10 +903,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   @override
+  void dispose() {
+    scrollController.dispose();
+    tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 5, vsync: this);
 
+    // ✅ Initialize TabController
+    tabController = TabController(length: categories.length, vsync: this);
+
+    // ✅ Existing logic (chatRouting handling)
     if (widget.chatRouting != null) {
       if (widget.chatRouting!.type.toLowerCase() == "crypto") {
         cryptoApis();
@@ -875,6 +925,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       }
     }
 
+    // ✅ Existing selectedStock initialization
     selectedStock =
         widget.chatRouting != null && widget.chatRouting!.companyName.isNotEmpty
         ? Stock(
@@ -890,6 +941,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             type: widget.chatRouting!.type,
           )
         : emptyStock();
+
+    // ✅ Wait till layout is built, then measure section positions
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _storeSectionOffsets();
+    });
+
+    // ✅ Update tab automatically while scrolling
+    scrollController.addListener(_handleScroll);
   }
 
   getOverviewCandleChart(symbol, IntervalEnum interval) async {
@@ -2054,102 +2113,64 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           //   ),
           // ),
           Container(
-            margin: EdgeInsets.only(left: 10.w),
+            margin: EdgeInsets.only(left: 10.w, bottom: 8.h, top: 10.h),
             child: TabBar(
               controller: tabController,
               isScrollable: true,
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabAlignment: TabAlignment.start,
               indicator: BoxDecoration(
-                color: AppColors.color1B254B,
+                color: const Color(0xFF1B254B),
                 borderRadius: BorderRadius.circular(50),
               ),
-              indicatorPadding: EdgeInsets.symmetric(
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.grey,
+              indicatorPadding: const EdgeInsets.symmetric(
                 horizontal: 6,
                 vertical: 6,
               ),
-              labelColor: Colors.white,
-              unselectedLabelColor: AppColors.colorB2B2B7,
-              dividerColor: Colors.transparent,
-              labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
-              onTap: (val) {
-                if (val == 1) {
-                  secondIndexTap();
-                } else if (val == 3) {
-                  fourthTap();
-                } else if (val == 0) {
-                  firstIndexData();
-                } else if (val == 4) {
-                  fifthTap();
-                } else if (val == 2) {
-                  thirdTap(0);
-                }
-              },
               tabs: List.generate(
                 categories.length,
                 (index) => Tab(
-                  child: AnimatedBuilder(
-                    animation: tabController,
-                    builder: (context, _) {
-                      bool isSelected = tabController.index == index;
-
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(
-                            color: isSelected
-                                ? Colors
-                                      .transparent // 👈 no border when selected
-                                : AppColors.colorB2B2B7.withOpacity(0.4),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (categoryImages[index] != null)
-                              Image.asset(
-                                categoryImages[index]!,
-                                width: 14.w,
-                                height: 14.h,
-                              ),
-                            if (categoryImages[index] != null)
-                              SizedBox(width: 8.w),
-                            Text(
-                              categories[index],
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    child: Text(
+                      categories[index],
+                      style: const TextStyle(fontSize: 14),
+                    ),
                   ),
                 ),
               ),
+              onTap: (index) {
+                // Scroll to the tapped section
+                final targetOffset = sectionOffsets[index];
+                if (targetOffset != null) {
+                  scrollController.animateTo(
+                    targetOffset,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
             ),
           ),
 
-          /// 🔹 Nested TabBarView
           Expanded(
-            child: TabBarView(
-              controller: tabController,
-
-              physics: NeverScrollableScrollPhysics(),
-
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// Overview Tab Content
-                _overviewContent(),
-                _companyContent(),
-                _financialContent(),
-                _earningsContent(),
-                _analysisContent(),
+                // _section(overviewKey, 'Overview Section', Colors.blue[50]!),
+                // SizedBox(height: 20.h), // optional spacing between sections
+                // _section(companyKey, 'Company Section', Colors.green[50]!),
+                // SizedBox(height: 20.h),
+                // _section(
+                //   financialKey,
+                //   'Financials Section',
+                //   Colors.orange[50]!,
+                // ),
+                // SizedBox(height: 20.h),
+                // _section(earningsKey, 'Earnings Section', Colors.pink[50]!),
+                // SizedBox(height: 20.h),
+                // _section(analysisKey, 'Analysis Section', Colors.purple[50]!),
+                // SizedBox(height: 20.h),
               ],
             ),
           ),
@@ -2208,19 +2229,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     }
 
     return SafeArea(
+      key: overviewKey, // <-- KEY ADDED HERE
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
             SizedBox(height: 14.h),
-
             Row(
               children: [
-                // Image.asset(
-                //   Assets.images.frame1171275460.path,
-                //   height: 53.h,
-                //   width: 53.w,
-                // ),
                 SizedBox(width: 10),
                 Container(
                   height: 26.h,
@@ -2247,7 +2263,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         : SvgPicture.network(
                             getItemImage(
                               ImageType.stock,
-
                               selectedStock!.symbol,
                             ),
                             fit: BoxFit.cover,
@@ -2286,18 +2301,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               color: AppColors.white,
                             ),
                           ),
-
                           SizedBox(width: 6),
-
                           Container(
-                            width: 5, // dot size
+                            width: 5,
                             height: 5,
                             decoration: BoxDecoration(
                               color: AppColors.colorB2B2B7,
                               shape: BoxShape.circle,
                             ),
                           ),
-
                           SizedBox(width: 6),
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width / 1.7,
@@ -2313,11 +2325,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                               fontWeight: TextFontWeightVariant.h4,
                             ),
                           ),
-                          // Icon(
-                          //   Icons.keyboard_arrow_down,
-                          //   color: AppColors.white,
-                          //   size: 20.sp,
-                          // ),
                         ],
                       ),
                     ),
@@ -2696,6 +2703,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   Widget _companyContent() {
     return SafeArea(
       child: SingleChildScrollView(
+        key: companyKey,
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
@@ -3020,6 +3028,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   Widget _financialContent() {
     return Container(
+      key: financialKey,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
 
       child: Column(
@@ -3511,6 +3520,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   Widget _earningsContent() {
     return SafeArea(
       child: SingleChildScrollView(
+        key: earningsKey,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
 
@@ -3556,6 +3566,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     DateTime toDate;
 
     return SingleChildScrollView(
+      key: analysisKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
