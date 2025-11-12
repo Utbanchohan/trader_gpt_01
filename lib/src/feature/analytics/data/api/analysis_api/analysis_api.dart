@@ -132,7 +132,7 @@ abstract interface class AnalysisApi {
   @GET(
     "chartapi/stocks?symbol={symbol}&interval={interval}&start_date={start_date}&end_date={end_date}&sub_points={sub_points}&data_point={data_point}",
   )
-  Future<List<OverviewCandleChartModel>> overviewCandleChart(
+  Future<OverviewCandleResponse> overviewCandleChart(
     @Path('symbol') String symbol,
     @Path('interval') String interval,
     @Path('start_date') String start_date,
@@ -157,7 +157,7 @@ abstract interface class AnalysisApi {
   @GET(
     "chartapi/crypto?symbol={symbol}&interval={interval}&start_date={start_date}&end_date={end_date}&sub_points={sub_points}&data_point={data_point}",
   )
-  Future<List<OverviewCandleChartModel>> cryptoCandleChart(
+  Future<OverviewCandleResponse> cryptoCandleChart(
     @Path('symbol') String symbol,
     @Path('interval') String interval,
     @Path('start_date') String start_date,

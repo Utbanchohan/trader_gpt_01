@@ -12,12 +12,13 @@ class CustomCandleChart extends StatefulWidget {
   final String name;
   final List<ChartData> data;
   final void Function(String id) onPressed;
-  const CustomCandleChart({
+  String? selectedItem;
+  CustomCandleChart({
     super.key,
     required this.data,
     required this.onPressed,
     required this.name,
-    th,
+    this.selectedItem,
   });
 
   @override
@@ -49,12 +50,11 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
   final List<String> labels = ['H', 'D', 'W', 'M'];
   final List<String> labels1 = ['Hour', 'MIn'];
 
-  String selectedIndex = 'D';
   String selectedIndex1 = "Hour";
 
   setItem(index) {
     setState(() {
-      selectedIndex = index;
+      widget.selectedItem = index;
     });
   }
 
@@ -180,71 +180,71 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
 
               // Right side buttons (wrap in Row)
               Row(
-                children: widget.name.isNotEmpty
-                    ? List.generate(labels1.length, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedIndex1 = labels1[index];
-                            });
-                            widget.onPressed(labels1[index]);
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: selectedIndex1 == labels1[index]
-                                  ? AppColors.color0E1738
-                                  : AppColors.colo2C3754,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: MdSnsText(
-                              labels1[index],
-                              color: selectedIndex1 == labels1[index]
-                                  ? Colors.white
-                                  : Colors.white70,
-                              variant: TextVariant.h5,
-                              fontWeight: TextFontWeightVariant.h2,
-                            ),
+                children:
+                    //  widget.name.isNotEmpty
+                    //     ? List.generate(labels1.length, (index) {
+                    //         return GestureDetector(
+                    //           onTap: () {
+                    //             setState(() {
+                    //               selectedIndex1 = labels1[index];
+                    //             });
+                    //             widget.onPressed(labels1[index]);
+                    //           },
+                    //           child: AnimatedContainer(
+                    //             duration: const Duration(milliseconds: 200),
+                    //             margin: const EdgeInsets.symmetric(horizontal: 4),
+                    //             padding: const EdgeInsets.symmetric(
+                    //               horizontal: 8,
+                    //               vertical: 5,
+                    //             ),
+                    //             decoration: BoxDecoration(
+                    //               color: selectedIndex1 == labels1[index]
+                    //                   ? AppColors.color0E1738
+                    //                   : AppColors.colo2C3754,
+                    //               borderRadius: BorderRadius.circular(8),
+                    //             ),
+                    //             child: MdSnsText(
+                    //               labels1[index],
+                    //               color: selectedIndex1 == labels1[index]
+                    //                   ? Colors.white
+                    //                   : Colors.white70,
+                    //               variant: TextVariant.h5,
+                    //               fontWeight: TextFontWeightVariant.h2,
+                    //             ),
+                    //           ),
+                    //         );
+                    //       })
+                    //     :
+                    List.generate(labels.length, (index) {
+                      return GestureDetector(
+                        onTap: () {
+                          widget.onPressed(labels[index]);
+                          setItem(labels[index]);
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 5,
                           ),
-                        );
-                      })
-                    : List.generate(labels.length, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedIndex = labels[index];
-                            });
-                            widget.onPressed(labels[index]);
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: selectedIndex == labels[index]
-                                  ? AppColors.color0E1738
-                                  : AppColors.colo2C3754,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: MdSnsText(
-                              labels[index],
-                              color: selectedIndex == labels[index]
-                                  ? Colors.white
-                                  : Colors.white70,
-                              variant: TextVariant.h5,
-                              fontWeight: TextFontWeightVariant.h2,
-                            ),
+                          decoration: BoxDecoration(
+                            color: labels[index] == widget.selectedItem
+                                ? AppColors.color0E1738
+                                : AppColors.colo2C3754,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        );
-                      }),
+                          child: MdSnsText(
+                            labels[index],
+                            color: widget.selectedItem == labels[index]
+                                ? Colors.white
+                                : Colors.white70,
+                            variant: TextVariant.h5,
+                            fontWeight: TextFontWeightVariant.h2,
+                          ),
+                        ),
+                      );
+                    }),
               ),
             ],
           ),

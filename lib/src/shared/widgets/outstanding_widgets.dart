@@ -45,7 +45,7 @@ class OutstandingSharesChart extends StatelessWidget {
       final y = (item.sharesMillion as num).toDouble();
       return FlSpot(x, y);
     }).toList();
-    print(spots.toString());
+    // print(spots.toString());
 
     return Container(
       decoration: BoxDecoration(
