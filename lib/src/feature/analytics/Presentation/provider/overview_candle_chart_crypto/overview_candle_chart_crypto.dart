@@ -12,7 +12,7 @@ class OverviewCandleChartCrypto extends _$OverviewCandleChartCrypto {
     return state.value!;
   }
 
-  Future<List<OverviewCandleChartModel>> overviewCandleChart(
+  Future<OverviewCandleResponse> overviewCandleChart(
     String symbol,
     String interval,
     String start_date,

@@ -6,6 +6,26 @@ part of 'overview_candle_chart_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_OverviewCandleResponse _$OverviewCandleResponseFromJson(
+  Map<String, dynamic> json,
+) => _OverviewCandleResponse(
+  isSuccess: json['isSuccess'] as bool,
+  message: json['message'] as String,
+  count: (json['count'] as num).toInt(),
+  data: (json['data'] as List<dynamic>)
+      .map((e) => OverviewCandleChartModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
+
+Map<String, dynamic> _$OverviewCandleResponseToJson(
+  _OverviewCandleResponse instance,
+) => <String, dynamic>{
+  'isSuccess': instance.isSuccess,
+  'message': instance.message,
+  'count': instance.count,
+  'data': instance.data,
+};
+
 _OverviewCandleChartModel _$OverviewCandleChartModelFromJson(
   Map<String, dynamic> json,
 ) => _OverviewCandleChartModel(

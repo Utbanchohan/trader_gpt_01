@@ -7,7 +7,7 @@ part of 'overview_candle_chart_crypto.dart';
 // **************************************************************************
 
 String _$overviewCandleChartCryptoHash() =>
-    r'7b52ee8eeba794450102425c2401c864b714dd69';
+    r'db9c5a51fa6e100de431c83ab02b0c2ad2f60f38';
 
 /// See also [OverviewCandleChartCrypto].
 @ProviderFor(OverviewCandleChartCrypto)
