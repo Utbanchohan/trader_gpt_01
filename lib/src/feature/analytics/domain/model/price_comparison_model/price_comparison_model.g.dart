@@ -27,7 +27,7 @@ Map<String, dynamic> _$PriceComparisonModelToJson(
 _PriceComparisonData _$PriceComparisonDataFromJson(Map<String, dynamic> json) =>
     _PriceComparisonData(
       data: const _DynamicSymbolsConverter().fromJson(
-        json['data'] as Map<String, dynamic>,
+        json as Map<String, dynamic>,
       ),
     );
 
