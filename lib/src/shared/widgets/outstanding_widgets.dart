@@ -40,12 +40,12 @@ class OutstandingSharesChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<FlSpot> spots = fundamentalsOutstandingShares!.map((item) {
       double date = parseDateToDouble(item.Date);
-      print(date.toString());
+      // print(date.toString());
       final x = (date as num).toDouble();
       final y = (item.sharesMillion as num).toDouble();
       return FlSpot(x, y);
     }).toList();
-    print(spots.toString());
+    // print(spots.toString());
 
     return Container(
       decoration: BoxDecoration(
