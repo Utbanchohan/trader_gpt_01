@@ -256,20 +256,20 @@ class _NewConversationState extends ConsumerState<NewConversation> {
         // ✅ App logo in the middle
         title: Image.asset(
           Assets.images.appLogo.path,
-          height: 28.h,
-          width: 110.w,
+          height: 28,
+          width: 110,
           fit: BoxFit.contain,
         ),
 
         // ✅ Profile image on the right
         // actions: [
         //   Padding(
-        //     padding: EdgeInsets.only(right: 16.w),
+        //     padding: EdgeInsets.only(right: 16),
         //     child: ClipOval(
         //       child: Image.asset(
         //         Assets.images.placeholderimage.path,
-        //         height: 40.h,
-        //         width: 40.h,
+        //         height: 40,
+        //         width: 40,
         //         fit: BoxFit.cover,
         //       ),
         //     ),
@@ -286,22 +286,22 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                 child: userModel != null && userModel!.imgUrl.isNotEmpty
                     ? Image.network(
                         userModel!.imgUrl,
-                        height: 40.h,
-                        width: 40.h,
+                        height: 40,
+                        width: 40,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.asset(
                             Assets.images.placeholderimage.path,
-                            height: 40.h,
-                            width: 40.h,
+                            height: 40,
+                            width: 40,
                             fit: BoxFit.cover,
                           );
                         },
                       )
                     : Image.asset(
                         Assets.images.placeholderimage.path,
-                        height: 40.h,
-                        width: 40.h,
+                        height: 40,
+                        width: 40,
                         fit: BoxFit.cover,
                       ),
               ),
@@ -310,8 +310,8 @@ class _NewConversationState extends ConsumerState<NewConversation> {
         ],
 
         bottom: PreferredSize(
-          preferredSize: Size(double.infinity, 60.h),
-          // preferredSize: Size.fromHeight(50.h),
+          preferredSize: Size(double.infinity, 60),
+          // preferredSize: Size.fromHeight(50),
           child: Row(
             children: [
               IconButton(
@@ -320,7 +320,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                   context.pop();
                 },
               ),
-              SizedBox(width: 4.w),
+              SizedBox(width: 4),
               MdSnsText(
                 "Start New Conversation",
                 color: AppColors.color9EAAC0,
@@ -374,7 +374,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           ),
           Row(
             children: [
-              SizedBox(width: 12.w),
+              SizedBox(width: 12),
               Container(
                 width: 10,
                 height: 10,
@@ -431,7 +431,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                         crossAxisCount: 3,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
-                        childAspectRatio: 0.789.h,
+                        childAspectRatio: 0.789,
                       ),
                       itemBuilder: (context, index) {
                         Stock stock =
@@ -470,7 +470,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                         crossAxisCount: 3, // 3 cards per row
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
-                        childAspectRatio: 0.85.h,
+                        childAspectRatio: 0.85,
                       ),
                       itemBuilder: (context, index) {
                         return ShimmerCardStock();
@@ -558,8 +558,8 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
               // widget.image.isNotEmpty
               //     ?
               Container(
-                height: 16.h,
-                width: 3.w,
+                height: 16,
+                width: 3,
                 decoration: BoxDecoration(
                   color: widget.image.toLowerCase() == "crypto"
                       ? AppColors.secondaryColor
@@ -567,10 +567,10 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              SizedBox(width: 6.47.w),
+              SizedBox(width: 6.47),
               Container(
-                width: 26.w,
-                height: 26.h,
+                width: 26,
+                height: 26,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
                 ),
@@ -591,8 +591,8 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                           getItemImage(ImageType.stock, widget.symbol),
                           fit: BoxFit.cover,
                           placeholderBuilder: (context) => SizedBox(
-                            width: 26.w,
-                            height: 26.h,
+                            width: 26,
+                            height: 26,
                             child: SvgPicture.network(
                               "https://cdn-images.traderverse.io/stock_dummy.svg",
                               fit: BoxFit.cover,
@@ -607,13 +607,13 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                         ),
                 ),
               ),
-              // : shimmerBox(width: 26.w, height: 26.h),
-              SizedBox(width: 6.w),
+              // : shimmerBox(width: 26, height: 26),
+              SizedBox(width: 6),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 40.w,
+                    width: 40,
                     child: MdSnsText(
                       widget.symbol,
                       color: Colors.white,
@@ -624,7 +624,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
                     ),
                   ),
                   SizedBox(
-                    width: 45.w,
+                    width: 45,
                     child: MdSnsText(
                       widget.company.split("-").first.trim(),
                       color: AppColors.color677FA4,
@@ -638,7 +638,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
               ),
             ],
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 10),
           MdSnsText(
             liveStock != null
                 ? Filters.systemNumberConvention(
@@ -687,8 +687,8 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
           SizedBox(height: 4),
 
           SizedBox(
-            width: 86.w,
-            height: 15.h,
+            width: 86,
+            height: 15,
             child: Sparkline(
               data: widget.trendchart.data!,
 
