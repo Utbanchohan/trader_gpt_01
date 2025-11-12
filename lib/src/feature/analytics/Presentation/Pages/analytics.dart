@@ -3286,7 +3286,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         },
                       ),
 
-                      // ✅ TabBarView below
                       Expanded(
                         child: TabBarView(
                           physics: NeverScrollableScrollPhysics(),
