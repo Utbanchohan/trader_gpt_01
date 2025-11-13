@@ -176,61 +176,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   //crypto Variable end
 
-  ///dummy list scroller
-  late ScrollController _scrollController;
-  final Map<String, GlobalKey> _keys = {};
-  String _activeSection = 'overview';
-
-  final List<Map<String, dynamic>> sections = [
-    {'id': 'overview', 'title': 'Overview', 'color': Colors.red},
-    {'id': 'company', 'title': 'Company', 'color': Colors.green},
-    {'id': 'financial', 'title': 'Financial', 'color': Colors.blue},
-    {'id': 'earnings', 'title': 'Earnings', 'color': Colors.orange},
-    {'id': 'analytics', 'title': 'Analytics', 'color': Colors.orange},
-  ];
-
-  void _onScroll() {
-    for (var section in sections) {
-      final key = _keys[section['id']]!;
-      final context = key.currentContext;
-      if (context != null) {
-        final box = context.findRenderObject() as RenderBox;
-        final offset = box.localToGlobal(Offset.zero).dy;
-
-        if (offset < 200 && offset > -400) {
-          if (_activeSection != section['id']) {
-            setState(() {
-              _activeSection = section['id'];
-            });
-          }
-          break;
-        }
-      }
-    }
-  }
-
-  void _scrollToSection(String id) {
-    _activeSection = id;
-    final key = _keys[id];
-    if (key?.currentContext != null) {
-      Scrollable.ensureVisible(
-        key!.currentContext!,
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  ///dummy list scrollr end
   String? selectedCandleOverview;
   String? selectedItemCandleAnalysis;
   String? selectedItemCandleCrypto;
+
   //chartData
   final chartService = ChartService();
 
@@ -652,7 +601,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   Future<void> secondIndexTap() async {
     if (companyModel == null) {
       try {
-        getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        await getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -662,7 +611,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (insiderTransactionResponse == null) {
       try {
-        insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
+        await insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -672,7 +621,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (shortVolumeModel == null) {
       try {
-        getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        await getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -682,7 +631,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (securityOwnership == null) {
       try {
-        getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
+        await getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -692,7 +641,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (securityShortVolume == null) {
       try {
-        getSecurityShortVolumeData(
+        await getSecurityShortVolumeData(
           SymbolDto(symbol: widget.chatRouting!.symbol),
         );
         if (!mounted) return;
@@ -704,7 +653,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (esgScoreData == null) {
       try {
-        esgScore(widget.chatRouting!.symbol);
+        await esgScore(widget.chatRouting!.symbol);
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -714,7 +663,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (earningdata == null) {
       try {
-        getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        await getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -724,7 +673,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (companyDetailModel == null) {
       try {
-        getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+        await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -890,7 +839,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     if (val == 0) {
       if (financeChartsDataModel == null) {
         try {
-          financialCharts(widget.chatRouting!.symbol);
+          await financialCharts(widget.chatRouting!.symbol);
           if (!mounted) return;
           setState(() {});
         } catch (e) {
@@ -923,17 +872,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   @override
   void initState() {
     super.initState();
-
-    ///dummy scroller
-    _scrollController = ScrollController();
-    for (var section in sections) {
-      _keys[section['id']] = GlobalKey();
-    }
-    _scrollController.addListener(_onScroll);
-
-    ///dummy scroller end
-    ///
-    ///
     tabController = TabController(length: 5, vsync: this);
 
     if (widget.chatRouting != null) {
@@ -941,10 +879,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         cryptoApis();
       } else {
         firstIndexData();
-        secondIndexTap();
-        thirdTap(0);
-        fourthTap();
-        fifthTap();
       }
     }
 
@@ -2202,224 +2136,149 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   /// Analytics Tab Content
   Widget _buildAnalyticsTab() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // ✅ Horizontal Tabs (Row)
-        Container(
-          height: 60,
-          color: Colors.grey[200],
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              children: sections.map((section) {
-                final bool isActive = _activeSection == section['id'];
-                return GestureDetector(
-                  onTap: () => _scrollToSection(section['id']!),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isActive ? Colors.blue : Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Text(
-                      section['title'] as String,
-                      style: TextStyle(
-                        color: isActive ? Colors.white : Colors.black,
-                        fontWeight: isActive
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ),
+    return DefaultTabController(
+      length:
+          categories.length, // <- overview categories ko nested TabBar banaya
+      child: Column(
+        children: [
+          /// 🔹 SEARCH BAR
+          // Padding(
+          //   padding: EdgeInsets.all(16),
+          //   child: SizedBox(
+          //     height: 55,
+          //     child: TextFormField(
+          //       controller: search,
+          //       style: TextStyle(color: Colors.white),
+          //       decoration: InputDecoration(
+          //         filled: true,
+          //         fillColor: AppColors.color091224,
+          //         hintText: 'Search here',
+          //         hintStyle: TextStyle(color: Color(0xFF8B8B97)),
+          //         contentPadding: EdgeInsets.symmetric(
+          //           horizontal: 20,
+          //           vertical: 10,
+          //         ),
+          //         border: OutlineInputBorder(
+          //           borderRadius: BorderRadius.circular(50.0),
+          //           borderSide: BorderSide.none,
+          //         ),
+          //         suffixIcon: InkWell(
+          //           onTap: () {
+          //             // debounceSearch(search.text);
+          //           },
+          //           child: Image.asset(
+          //             Assets.images.searchNormal.path,
+          //             scale: 5,
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          Container(
+            margin: EdgeInsets.only(left: 10.w),
+            child: TabBar(
+              controller: tabController,
+              isScrollable: true,
+              indicatorSize: TabBarIndicatorSize.tab,
+              tabAlignment: TabAlignment.start,
+              indicator: BoxDecoration(
+                color: AppColors.color1B254B,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              indicatorPadding: EdgeInsets.symmetric(
+                horizontal: 6,
+                vertical: 6,
+              ),
+              labelColor: Colors.white,
+              unselectedLabelColor: AppColors.colorB2B2B7,
+              dividerColor: Colors.transparent,
+              labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
+              onTap: (val) {
+                if (val == 1) {
+                  secondIndexTap();
+                } else if (val == 3) {
+                  fourthTap();
+                } else if (val == 0) {
+                  firstIndexData();
+                } else if (val == 4) {
+                  fifthTap();
+                } else if (val == 2) {
+                  thirdTap(0);
+                }
+              },
+              tabs: List.generate(
+                categories.length,
+                (index) => Tab(
+                  child: AnimatedBuilder(
+                    animation: tabController,
+                    builder: (context, _) {
+                      bool isSelected = tabController.index == index;
 
-        // ✅ Scrollable Content
-        Expanded(
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: sections.map((section) {
-                return section['id'] == "overview"
-                    ? _overviewContent(_keys[section['id']])
-                    : section['id'] == "company"
-                    ? _companyContent(_keys[section['id']])
-                    : section['id'] == "financial"
-                    ? _financialContent(_keys[section['id']])
-                    : section['id'] == "earnings"
-                    ? _earningsContent(_keys[section['id']])
-                    : section['id'] == "analytics"
-                    ? _analysisContent(_keys[section['id']])
-                    : Container(
-                        key: _keys[section['id']],
-                        height: 600,
-                        color: section['color'],
-                        alignment: Alignment.center,
-                        child: Text("data"),
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(
+                            color: isSelected
+                                ? Colors
+                                      .transparent // 👈 no border when selected
+                                : AppColors.colorB2B2B7.withOpacity(0.4),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (categoryImages[index] != null)
+                              Image.asset(
+                                categoryImages[index]!,
+                                width: 14.w,
+                                height: 14.h,
+                              ),
+                            if (categoryImages[index] != null)
+                              SizedBox(width: 8.w),
+                            MdSnsText(
+                              categories[index],
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h4,
+                              color: AppColors.white,
+                            ),
+                          ],
+                        ),
                       );
-              }).toList(),
+                    },
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
-      ],
+
+          Expanded(
+            child: TabBarView(
+              controller: tabController,
+
+              physics: NeverScrollableScrollPhysics(),
+
+              children: [
+                /// Overview Tab Content
+                _overviewContent(),
+                _companyContent(),
+                _financialContent(),
+                _earningsContent(),
+                _analysisContent(),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
-
-    // DefaultTabController(
-    //   length:
-    //       categories.length, // <- overview categories ko nested TabBar banaya
-    //   child: Column(
-    //     children: [
-    //       /// 🔹 SEARCH BAR
-    //       // Padding(
-    //       //   padding: EdgeInsets.all(16),
-    //       //   child: SizedBox(
-    //       //     height: 55,
-    //       //     child: TextFormField(
-    //       //       controller: search,
-    //       //       style: TextStyle(color: Colors.white),
-    //       //       decoration: InputDecoration(
-    //       //         filled: true,
-    //       //         fillColor: AppColors.color091224,
-    //       //         hintText: 'Search here',
-    //       //         hintStyle: TextStyle(color: Color(0xFF8B8B97)),
-    //       //         contentPadding: EdgeInsets.symmetric(
-    //       //           horizontal: 20,
-    //       //           vertical: 10,
-    //       //         ),
-    //       //         border: OutlineInputBorder(
-    //       //           borderRadius: BorderRadius.circular(50.0),
-    //       //           borderSide: BorderSide.none,
-    //       //         ),
-    //       //         suffixIcon: InkWell(
-    //       //           onTap: () {
-    //       //             // debounceSearch(search.text);
-    //       //           },
-    //       //           child: Image.asset(
-    //       //             Assets.images.searchNormal.path,
-    //       //             scale: 5,
-    //       //           ),
-    //       //         ),
-    //       //       ),
-    //       //     ),
-    //       //   ),
-    //       // ),
-    //       Container(
-    //         margin: EdgeInsets.only(left: 10.w),
-    //         child: TabBar(
-    //           controller: tabController,
-    //           isScrollable: true,
-    //           indicatorSize: TabBarIndicatorSize.tab,
-    //           tabAlignment: TabAlignment.start,
-    //           indicator: BoxDecoration(
-    //             color: AppColors.color1B254B,
-    //             borderRadius: BorderRadius.circular(50),
-    //           ),
-    //           indicatorPadding: EdgeInsets.symmetric(
-    //             horizontal: 6,
-    //             vertical: 6,
-    //           ),
-    //           labelColor: Colors.white,
-    //           unselectedLabelColor: AppColors.colorB2B2B7,
-    //           dividerColor: Colors.transparent,
-    //           labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
-    //           onTap: (val) {
-    //             if (val == 1) {
-    //               secondIndexTap();
-    //             } else if (val == 3) {
-    //               fourthTap();
-    //             } else if (val == 0) {
-    //               firstIndexData();
-    //             } else if (val == 4) {
-    //               fifthTap();
-    //             } else if (val == 2) {
-    //               thirdTap(0);
-    //             }
-    //           },
-    //           tabs: List.generate(
-    //             categories.length,
-    //             (index) => Tab(
-    //               child: AnimatedBuilder(
-    //                 animation: tabController,
-    //                 builder: (context, _) {
-    //                   bool isSelected = tabController.index == index;
-
-    //                   return Container(
-    //                     padding: EdgeInsets.symmetric(
-    //                       horizontal: 12,
-    //                       vertical: 6,
-    //                     ),
-    //                     decoration: BoxDecoration(
-    //                       borderRadius: BorderRadius.circular(50),
-    //                       border: Border.all(
-    //                         color: isSelected
-    //                             ? Colors
-    //                                   .transparent // 👈 no border when selected
-    //                             : AppColors.colorB2B2B7.withOpacity(0.4),
-    //                         width: 1,
-    //                       ),
-    //                     ),
-    //                     child: Row(
-    //                       mainAxisAlignment: MainAxisAlignment.center,
-    //                       children: [
-    //                         if (categoryImages[index] != null)
-    //                           Image.asset(
-    //                             categoryImages[index]!,
-    //                             width: 14.w,
-    //                             height: 14.h,
-    //                           ),
-    //                         if (categoryImages[index] != null)
-    //                           SizedBox(width: 8.w),
-    //                         MdSnsText(
-    //                           categories[index],
-    //                           variant: TextVariant.h3,
-    //                           fontWeight: TextFontWeightVariant.h4,
-    //                           color: AppColors.white,
-    //                         ),
-    //                       ],
-    //                     ),
-    //                   );
-    //                 },
-    //               ),
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-
-    //       Expanded(
-    //         child: TabBarView(
-    //           controller: tabController,
-
-    //           physics: NeverScrollableScrollPhysics(),
-
-    //           children: [
-    //             /// Overview Tab Content
-    //             _overviewContent(),
-    //             _companyContent(),
-    //             _financialContent(),
-    //             _earningsContent(),
-    //             _analysisContent(),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 
-  Widget _overviewContent(dynamic id) {
+  Widget _overviewContent() {
     List<String> questions = [
       "Provide a comprehensive company analysis of ${widget.chatRouting!.companyName}",
       "Technical analysis for ${widget.chatRouting!.companyName}",
@@ -2469,9 +2328,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     }
 
     return SafeArea(
-      key: id,
       child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
@@ -2960,11 +2817,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     );
   }
 
-  Widget _companyContent(dynamic id) {
+  Widget _companyContent() {
     return SafeArea(
-      key: id,
       child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
@@ -3287,11 +3142,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     );
   }
 
-  Widget _financialContent(dynamic id) {
+  Widget _financialContent() {
     return Container(
-      height: MediaQuery.sizeOf(context).height,
-
-      key: id,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
 
       child: Column(
@@ -3410,14 +3262,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         },
                       ),
 
+                      // ✅ TabBarView below
                       Expanded(
                         child: TabBarView(
                           physics: NeverScrollableScrollPhysics(),
                           controller: financeialTabController,
                           children: [
                             SingleChildScrollView(
-                              physics: NeverScrollableScrollPhysics(),
-
                               child: Column(
                                 children: [
                                   SizedBox(height: 15),
@@ -3617,8 +3468,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             ),
 
                             SingleChildScrollView(
-                              physics: NeverScrollableScrollPhysics(),
-
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
@@ -3670,8 +3519,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             ),
 
                             SingleChildScrollView(
-                              physics: NeverScrollableScrollPhysics(),
-
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
@@ -3723,8 +3570,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             ),
 
                             SingleChildScrollView(
-                              physics: NeverScrollableScrollPhysics(),
-
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
@@ -3785,14 +3630,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         ],
       ),
     );
-    // );
   }
 
-  Widget _earningsContent(dynamic id) {
+  Widget _earningsContent() {
     return SafeArea(
-      key: id,
       child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
 
@@ -3833,13 +3675,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     );
   }
 
-  Widget _analysisContent(dynamic id) {
+  Widget _analysisContent() {
     DateTime fromDate;
     DateTime toDate;
 
     return SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
-      key: id,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
