@@ -510,18 +510,35 @@ class BuildStockCard extends ConsumerStatefulWidget {
   ConsumerState<BuildStockCard> createState() => _BuildStockCardState();
 }
 
-class _BuildStockCardState extends ConsumerState<BuildStockCard> {
-  List<Stock> stocks = [];
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+class _BuildStockCardState extends ConsumerState<BuildStockCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController animationController;
+  late Animation<double> animation;
 
   @override
   void initState() {
     super.initState();
+
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+
+    animation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.easeOutCubic,
+    );
+
+    animationController.forward();
   }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
+  List<Stock> stocks = [];
 
   @override
   Widget build(BuildContext context) {
@@ -690,6 +707,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard> {
             width: 86,
             height: 15,
             child: Sparkline(
+              animationController: animationController,
               data: widget.trendchart.data!,
 
               lineWidth: 2.0,
