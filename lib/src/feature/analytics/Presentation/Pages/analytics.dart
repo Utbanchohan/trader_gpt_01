@@ -1895,6 +1895,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             ? IntervalEnum.monthly
                             : IntervalEnum.daily,
                       );
+                      if (!mounted) return;
+                      setState(() {
+                        selectedItemCandleCrypto = val;
+                      });
                     },
                   )
                 : CustomCandleChartShimmer(),
