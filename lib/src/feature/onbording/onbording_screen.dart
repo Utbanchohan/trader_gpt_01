@@ -74,27 +74,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     return Scaffold(
-      bottomNavigationBar: TextButton(
-        onPressed: () {
-          context.goNamed(AppRoutes.signUpPage.name);
-        },
-        child: RichText(
-          text: TextSpan(
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-            children: [
-              const TextSpan(text: "Don't have an account, "),
-              TextSpan(
-                text: "Signup Here",
-                style: TextStyle(
-                  color: AppColors.color0098E4,
-                  fontWeight: FontWeight.w400,
-                ),
+      bottomNavigationBar: Container(
+        margin: EdgeInsets.only(bottom: 15.h),
+        child: TextButton(
+          onPressed: () {
+            context.goNamed(AppRoutes.signUpPage.name);
+          },
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(
+                color: AppColors.white,
+                fontSize: 12.h,
+                fontWeight: FontWeight.w400,
               ),
-            ],
+              children: [
+                TextSpan(text: "Don't have an account, "),
+                TextSpan(
+                  text: "Signup Here",
+                  style: TextStyle(
+                    fontSize: 12.h,
+                    color: AppColors.color0098E4,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -129,13 +133,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           /// 🩶 Foreground content
                           Column(
                             children: [
-                              // SizedBox(height: 20.h),
-
-                              /// App Logo
+                              SizedBox(height: 30.h),
                               Image.asset(
                                 Assets.images.appLogo.path,
-                                height: 50.h,
-                                width: 203.w,
+                                height: 45.h,
+                                width: 153.w,
                               ),
 
                               SizedBox(height: 15.h),
@@ -150,8 +152,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     margin: EdgeInsets.symmetric(
                                       horizontal: 2.w,
                                     ),
-                                    height: 4.h,
-                                    width: 24.w,
+                                    height: 3.h,
+                                    width: 18.w,
                                     decoration: BoxDecoration(
                                       color: currentPage == i
                                           ? AppColors.white
@@ -162,46 +164,50 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 ),
                               ),
 
-                              SizedBox(height: 15.h),
+                              SizedBox(height: 10.h),
 
                               /// Page-specific Image
-                              Image.asset(page["image"]!, height: 293.h),
+                              Container(
+                                margin: EdgeInsets.only(left: 10, right: 10),
+                                child: Image.asset(
+                                  page["image"]!,
+                                  height: 293.h,
+                                ),
+                              ),
                             ],
                           ),
                         ],
                       ),
 
-                      /// 🔹 Title + Subtitle + Buttons (no background here)
                       Container(
-                        margin: EdgeInsets.only(
-                          left: 15,
-                          right: 15,
-                          bottom: 10.h,
-                        ),
+                        margin: EdgeInsets.only(left: 15.w, right: 15.w),
                         child: Column(
                           children: [
-                            SizedBox(height: 20.h),
+                            SizedBox(height: 10.h),
 
                             MdSnsText(
                               page["title"]!,
                               // height: 1.4,
-                              variant: TextVariant.h6,
+                              variant: TextVariant.h9,
                               fontWeight: TextFontWeightVariant.h1,
                               textAlign: TextAlign.center,
                               color: AppColors.white,
                             ),
 
                             SizedBox(height: 10.h),
+                            Container(
+                              margin: EdgeInsets.only(left: 20.w, right: 20.w),
 
-                            MdSnsText(
-                              page["subtitle"]!,
-                              textAlign: TextAlign.center,
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
-                              color: AppColors.white,
+                              child: MdSnsText(
+                                page["subtitle"]!,
+                                textAlign: TextAlign.center,
+                                variant: TextVariant.h10,
+                                fontWeight: TextFontWeightVariant.h4,
+                                color: AppColors.white,
+                              ),
                             ),
 
-                            SizedBox(height: 20.h),
+                            SizedBox(height: 10.h),
 
                             SizedBox(
                               height: 40.h,
@@ -217,6 +223,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 bgColor: AppColors.color0098E4,
                               ),
                             ),
+                            SizedBox(height: 15.h),
                           ],
                         ),
                       ),

@@ -7,7 +7,7 @@ part of 'overview_candle_chart.dart';
 // **************************************************************************
 
 String _$overviewCandleChartHash() =>
-    r'00c617d3f1e4f421d2da3dbef8b6eb2218e79bc7';
+    r'de3a47166d685484b809c119965369b767a7a753';
 
 /// See also [OverviewCandleChart].
 @ProviderFor(OverviewCandleChart)

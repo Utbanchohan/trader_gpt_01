@@ -45,7 +45,7 @@ class OutstandingSharesChart extends StatelessWidget {
       final y = (item.sharesMillion as num).toDouble();
       return FlSpot(x, y);
     }).toList();
-    print(spots.toString());
+    // print(spots.toString());
 
     return Container(
       decoration: BoxDecoration(
@@ -123,7 +123,8 @@ class OutstandingSharesChart extends StatelessWidget {
                                 return Padding(
                                   padding: const EdgeInsets.only(
                                     top: 8,
-                                  ), // 👈 thoda sa gap diya
+                                    right: 20,
+                                  ),
                                   child: MdSnsText(
                                     value.toInt().toString(),
                                     fontWeight: TextFontWeightVariant.h4,

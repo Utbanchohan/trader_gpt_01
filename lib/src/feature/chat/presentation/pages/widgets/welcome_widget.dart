@@ -35,7 +35,8 @@ class WelcomeWidget extends StatelessWidget {
             width: 82.w,
           ),
           SizedBox(height: 17.h),
-          SizedBox(
+          Container(
+            // margin: EdgeInsets.only(left: 10, right: 10),
             child: MdSnsText(
               "Welcome to TradersGPT",
               textAlign: TextAlign.center,

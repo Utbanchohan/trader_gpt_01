@@ -783,6 +783,17 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                             fontSize: 14,
                                             fontWeight: FontWeight.w400,
                                           ),
+                                          suffixIcon: widget.isWorkFlow
+                                              ? GestureDetector(
+                                                  onTap:
+                                                      widget.onDeleteWorkflow,
+                                                  child: const Icon(
+                                                    Icons.delete,
+                                                    size: 18,
+                                                    color: Color(0xFFFF3B3B),
+                                                  ),
+                                                )
+                                              : null,
                                         ),
                                       ),
 

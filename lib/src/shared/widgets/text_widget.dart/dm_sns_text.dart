@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-enum TextVariant { h1, h2, h3, h4, h5, h6, h7, h8 }
+enum TextVariant { h1, h2, h3, h4, h5, h6, h7, h8, h9, h10 }
 
 enum TextFontWeightVariant { h1, h2, h3, h4, h5, h6, h7 }
 
@@ -52,6 +52,10 @@ class MdSnsText extends Text {
         return 20;
       case TextVariant.h8:
         return 11;
+      case TextVariant.h9:
+        return 28;
+      case TextVariant.h10:
+        return 13;
     }
   }
 

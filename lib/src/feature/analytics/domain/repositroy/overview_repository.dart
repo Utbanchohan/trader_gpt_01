@@ -75,7 +75,7 @@ abstract interface class OverviewRepository {
   Future<EarningReportsModel> earningReportData(ChartRequestDto overview);
   Future<FinancialResponse> financialData(PriceRequestDto overview);
   Future<FinanceDataResponse> financialCharts(SymbolDto symbol);
-  Future<List<OverviewCandleChartModel>> overviewCandleChart(
+  Future<OverviewCandleResponse> overviewCandleChart(
     String symbol,
     String interval,
     String start_date,
@@ -87,7 +87,7 @@ abstract interface class OverviewRepository {
 
   //crypto apis
   Future<MarketCapResponse> marketCapChart(MarketCapRequest symbol);
-  Future<List<OverviewCandleChartModel>> cryptoCandleChart(
+  Future<OverviewCandleResponse> cryptoCandleChart(
     String symbol,
     String interval,
     String start_date,
