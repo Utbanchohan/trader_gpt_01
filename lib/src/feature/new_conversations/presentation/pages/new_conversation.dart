@@ -431,7 +431,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                         crossAxisCount: 3,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
-                        childAspectRatio: 0.789,
+                        childAspectRatio: 0.89,
                       ),
                       itemBuilder: (context, index) {
                         Stock stock =
@@ -686,11 +686,12 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
               ),
               MdSnsText(
                 Filters.systemNumberConvention(
-                  widget.change,
-                  isPrice: false,
-                  isAbs: false,
-                  alwaysShowTwoDecimal: true,
-                ),
+                      widget.change,
+                      isPrice: false,
+                      isAbs: false,
+                      alwaysShowTwoDecimal: true,
+                    ) +
+                    "%",
 
                 color: widget.change.toString().contains("-")
                     ? AppColors.redFF3B3B
