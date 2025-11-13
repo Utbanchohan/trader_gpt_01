@@ -50,12 +50,15 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
   @override
   void initState() {
     super.initState();
-    getChats();
-    getStocks();
+
     bool isFirstTime = ref.read(localDataProvider).getIsFirstTime();
     int pageIndex = isFirstTime ? 0 : widget.initialIndex;
     pgeIndex = pageIndex;
     _pageController = PageController(initialPage: pageIndex);
+    if (_pageController.hasClients && pgeIndex == 0) {
+      getChats();
+      getStocks();
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       openSheet(isFirstTime);
