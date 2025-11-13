@@ -12,13 +12,14 @@ class CustomCandleChart extends StatefulWidget {
   final String name;
   final List<ChartData> data;
   final void Function(String id) onPressed;
-  String? selectedItem;
-  CustomCandleChart({
+  final String selectedItem;
+
+  const CustomCandleChart({
     super.key,
     required this.data,
     required this.onPressed,
     required this.name,
-    this.selectedItem,
+    required this.selectedItem,
   });
 
   @override
@@ -27,6 +28,7 @@ class CustomCandleChart extends StatefulWidget {
 
 class _CustomCandleChartState extends State<CustomCandleChart> {
   int currentZoomLevel = 1;
+
   double calculateInterval(double minY, double maxY, {int targetSteps = 6}) {
     final range = (maxY - minY).abs();
     if (range == 0) return 1; // avoid divide-by-zero
@@ -48,15 +50,10 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
   }
 
   final List<String> labels = ['H', 'D', 'W', 'M'];
+
   final List<String> labels1 = ['Hour', 'MIn'];
 
   String selectedIndex1 = "Hour";
-
-  setItem(index) {
-    setState(() {
-      widget.selectedItem = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +216,6 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                       return GestureDetector(
                         onTap: () {
                           widget.onPressed(labels[index]);
-                          setItem(labels[index]);
                         },
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),

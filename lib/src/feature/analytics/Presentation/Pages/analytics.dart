@@ -176,6 +176,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   //crypto Variable end
 
+  String? selectedCandleOverview;
+  String? selectedItemCandleAnalysis;
+  String? selectedItemCandleCrypto;
+
   //chartData
   final chartService = ChartService();
 
@@ -1872,6 +1876,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             overviewCandleChartModelCrypto != null
                 ? CustomCandleChart(
                     key: UniqueKey(),
+                    selectedItem: selectedItemCandleCrypto ?? "D",
 
                     name: "OHLC/V Candlestick Chart",
                     data: buildCryptoChartSpots(
@@ -1880,13 +1885,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     onPressed: (val) {
                       getOverviewCandleChartCrypto(
                         widget.chatRouting!.symbol,
-                        val == 'Hour'
+                        val == 'H'
                             ? IntervalEnum.hour
-                            : val == 'Min'
-                            ? IntervalEnum.min
-                            : val == 'Min'
-                            ? IntervalEnum.min
-                            : IntervalEnum.min,
+                            : val == 'D'
+                            ? IntervalEnum.daily
+                            : val == 'W'
+                            ? IntervalEnum.weekly
+                            : val == 'M'
+                            ? IntervalEnum.monthly
+                            : IntervalEnum.daily,
                       );
                     },
                   )
@@ -2268,7 +2275,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   Widget _overviewContent() {
-    String? selectedCandle = "D";
     List<String> questions = [
       "Provide a comprehensive company analysis of ${widget.chatRouting!.companyName}",
       "Technical analysis for ${widget.chatRouting!.companyName}",
@@ -2580,11 +2586,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 ? CustomCandleChartShimmer()
                 : overviewCandleChartModel != null
                 ? CustomCandleChart(
-                    key: UniqueKey(),
-
+                    // key: UniqueKey(),
                     name: "OHLC/V Candlestick Chart",
                     data: buildChartSpots(overviewCandleChartModel!),
-                    selectedItem: selectedCandle,
+                    selectedItem: selectedCandleOverview ?? "D",
                     onPressed: (val) async {
                       await getOverviewCandleChart(
                         widget.chatRouting!.symbol,
@@ -2600,7 +2605,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       );
                       if (!mounted) return;
                       setState(() {
-                        selectedCandle = val;
+                        selectedCandleOverview = val;
                       });
                     },
                   )
@@ -3697,6 +3702,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               ? Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: CustomCandleChart(
+                    selectedItem: selectedItemCandleAnalysis ?? "H",
                     key: UniqueKey(),
                     name: "",
                     data: analysisDataModel!.data!.chart!,
