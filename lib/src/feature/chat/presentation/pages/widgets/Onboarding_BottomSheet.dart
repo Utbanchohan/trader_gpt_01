@@ -61,10 +61,10 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(child: Image.asset(mainImage)),
-        SizedBox(height: 20.h),
+        SizedBox(height: 20),
 
-        Image.asset(imagePath, width: 60.w, height: 60.h, fit: BoxFit.contain),
-        SizedBox(height: 24.h),
+        Image.asset(imagePath, width: 60, height: 60, fit: BoxFit.contain),
+        SizedBox(height: 24),
 
         MdSnsText(
           title,
@@ -73,7 +73,7 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
           color: AppColors.white,
         ),
 
-        SizedBox(height: 10.h),
+        SizedBox(height: 10),
         MdSnsText(
           subtitle,
           textAlign: TextAlign.center,
@@ -121,17 +121,14 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
           ),
 
           Padding(
-            padding: EdgeInsets.only(bottom: 24.h),
+            padding: EdgeInsets.only(bottom: 24),
             child: ElevatedButton(
               onPressed: () {
                 context.pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.color0098E4,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 130.w,
-                  vertical: 14.h,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 130, vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
