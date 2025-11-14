@@ -44,7 +44,7 @@ class _AskingPopupWidgetState extends State<AskingPopupWidget>
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 1,
       child: Container(
         width: MediaQuery.sizeOf(context).width,
         padding: EdgeInsets.all(16),

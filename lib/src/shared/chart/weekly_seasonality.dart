@@ -35,99 +35,92 @@ class _WeeklySeasonalityChartState
         ? [
             {
               "day": "Monday",
-              "value": widget.weeklyModel.probability!.monday! * 100,
-              "amount": widget.weeklyModel.probability!.monday!,
+              "value": (widget.weeklyModel.probability?.monday ?? 0) * 100,
+              "amount": widget.weeklyModel.probability?.monday ?? 0,
             },
             {
               "day": "Tuesday",
-              "value": widget.weeklyModel.probability!.tuesday! * 100,
-              "amount": widget.weeklyModel.probability!.tuesday,
+              "value": (widget.weeklyModel.probability?.tuesday ?? 0) * 100,
+              "amount": widget.weeklyModel.probability?.tuesday ?? 0,
             },
             {
               "day": "Wednesday",
-              "value": widget.weeklyModel.probability!.wednesday! * 100,
-              "amount": widget.weeklyModel.probability!.wednesday!,
+              "value": (widget.weeklyModel.probability?.wednesday ?? 0) * 100,
+              "amount": widget.weeklyModel.probability?.wednesday ?? 0,
             },
             {
               "day": "Thursday",
-              "value": widget.weeklyModel.probability!.thursday! * 100,
-              "amount": widget.weeklyModel.probability!.thursday,
+              "value": (widget.weeklyModel.probability?.thursday ?? 0) * 100,
+              "amount": widget.weeklyModel.probability?.thursday ?? 0,
             },
             {
               "day": "Friday",
-              "value": widget.weeklyModel.probability!.friday! * 100,
-              "amount": widget.weeklyModel.probability!.friday,
+              "value": (widget.weeklyModel.probability?.friday ?? 0) * 100,
+              "amount": widget.weeklyModel.probability?.friday ?? 0,
             },
           ]
         : [
             {
               "day": "Jan",
-              "value": widget.data.probability!.january! * 100,
-              "amount": widget.data.probability!.january,
+              "value": (widget.data.probability?.january ?? 0) * 100,
+              "amount": widget.data.probability?.january ?? 0,
             },
             {
               "day": "Feb",
-              "value": widget.data.probability!.february! * 100,
-              "amount": widget.data.probability!.february,
+              "value": (widget.data.probability?.february ?? 0) * 100,
+              "amount": widget.data.probability?.february ?? 0,
             },
             {
               "day": "Mar",
-              "value": widget.data.probability!.march! * 100,
-              "amount": widget.data.probability!.march,
+              "value": (widget.data.probability?.march ?? 0) * 100,
+              "amount": widget.data.probability?.march ?? 0,
             },
             {
               "day": "Apr",
-              "value": widget.data.probability!.april! * 100,
-              "amount": widget.data.probability!.april,
+              "value": (widget.data.probability?.april ?? 0) * 100,
+              "amount": widget.data.probability?.april ?? 0,
             },
             {
               "day": "May",
-              "value": widget.data.probability!.may! * 100,
-              "amount": widget.data.probability!.may,
+              "value": (widget.data.probability?.may ?? 0) * 100,
+              "amount": widget.data.probability?.may ?? 0,
             },
             {
               "day": "Jun",
-              "value": widget.data.probability!.june! * 100,
-              "amount": widget.data.probability!.june,
+              "value": (widget.data.probability?.june ?? 0) * 100,
+              "amount": widget.data.probability?.june ?? 0,
             },
             {
               "day": "Jul",
-              "value": widget.data.probability!.july! * 100,
-              "amount": widget.data.probability!.july,
+              "value": (widget.data.probability?.july ?? 0) * 100,
+              "amount": widget.data.probability?.july ?? 0,
             },
             {
               "day": "Aug",
-              "value": widget.data.probability!.august! * 100,
-              "amount": widget.data.probability!.august,
+              "value": (widget.data.probability?.august ?? 0) * 100,
+              "amount": widget.data.probability?.august ?? 0,
             },
             {
               "day": "Sep",
-              "value": widget.data.probability!.september! * 100,
-              "amount": widget.data.probability!.september,
+              "value": (widget.data.probability?.september ?? 0) * 100,
+              "amount": widget.data.probability?.september ?? 0,
             },
             {
               "day": "Oct",
-              "value": widget.data.probability!.october! * 100,
-              "amount": widget.data.probability!.october,
+              "value": (widget.data.probability?.october ?? 0) * 100,
+              "amount": widget.data.probability?.october ?? 0,
             },
             {
               "day": "Nov",
-              "value": widget.data.probability!.november! * 100,
-              "amount": widget.data.probability!.november,
+              "value": (widget.data.probability?.november ?? 0) * 100,
+              "amount": widget.data.probability?.november ?? 0,
             },
             {
               "day": "Dec",
-              "value": widget.data.probability!.december! * 100,
-              "amount": widget.data.probability!.december,
+              "value": (widget.data.probability?.december ?? 0) * 100,
+              "amount": widget.data.probability?.december ?? 0,
             },
           ];
-    final bar = [
-      {"day": "Mon", "value": 40.0, "amount": 123.45},
-      {"day": "Tue", "value": 70.0, "amount": 89.12},
-      {"day": "Wed", "value": 50.0, "amount": 54.33},
-      {"day": "Thu", "value": 80.0, "amount": 142.11},
-      {"day": "Fri", "value": 65.0, "amount": 99.99},
-    ];
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
 
