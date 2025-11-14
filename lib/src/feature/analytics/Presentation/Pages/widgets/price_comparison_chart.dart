@@ -137,9 +137,8 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
           ),
           SizedBox(height: 16.h),
 
-          // 🟢 Chart
           SizedBox(
-            height: 180,
+            height: 190,
             child: LineChart(
               LineChartData(
                 backgroundColor: AppColors.color091224,
@@ -184,10 +183,12 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: lines,
-                minX: setSpots(spots1, spots2)[0],
-                maxX: setSpots(spots1, spots2)[1],
-                minY: setSpots(spots1, spots2)[2],
-                maxY: setSpots(spots1, spots2)[3],
+
+                // ❌ REMOVE these or set to null
+                minX: null,
+                maxX: null,
+                minY: null,
+                maxY: null,
               ),
             ),
           ),
