@@ -42,7 +42,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                   ) !=
                   null
               ? PriceUtils.getChangesPercentage(
-                  liveStock != null ? liveStock.price : widget.stocks.price,
+                  widget.stocks.price,
                   widget.stocks.previousClose,
                 )!.toStringAsFixed(2)
               : widget.stocks.pctChange.toStringAsFixed(2)
