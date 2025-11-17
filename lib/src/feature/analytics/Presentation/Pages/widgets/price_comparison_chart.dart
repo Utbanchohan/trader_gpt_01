@@ -135,10 +135,10 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
             fontWeight: TextFontWeightVariant.h3,
             color: AppColors.fieldTextColor,
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 20.h),
 
           SizedBox(
-            height: 190,
+            height: 240.h,
             child: LineChart(
               LineChartData(
                 backgroundColor: AppColors.color091224,
@@ -154,23 +154,32 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 28,
+                      reservedSize: 35, // ⬅️ zara bada kiya spacing ke liye
                       interval: 100,
-                      getTitlesWidget: (value, meta) => MdSnsText(
-                        value.toInt().toString(),
-                        color: AppColors.white,
-                        variant: TextVariant.h5,
+                      getTitlesWidget: (value, meta) => Padding(
+                        padding: EdgeInsets.only(bottom: 6), // ⬅️ extra spacing
+                        child: MdSnsText(
+                          value.toInt().toString(),
+                          color: AppColors.white,
+                          variant: TextVariant.h5,
+                          height: 1.4, // ⬅️ line height (spacing)
+                          letterSpacing: 0.8, // ⬅️ little extra spacing
+                        ),
                       ),
                     ),
                   ),
+
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
                       interval: 50,
-                      getTitlesWidget: (value, meta) => MdSnsText(
-                        value.toInt().toString(),
-                        color: AppColors.white,
-                        variant: TextVariant.h5,
+                      getTitlesWidget: (value, meta) => Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: MdSnsText(
+                          value.toInt().toString(),
+                          color: AppColors.white,
+                          variant: TextVariant.h5,
+                        ),
                       ),
                     ),
                   ),
@@ -184,7 +193,6 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
                 borderData: FlBorderData(show: false),
                 lineBarsData: lines,
 
-                // ❌ REMOVE these or set to null
                 minX: null,
                 maxX: null,
                 minY: null,
@@ -193,9 +201,8 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
             ),
           ),
 
-          SizedBox(height: 10),
+          SizedBox(height: 15),
 
-          // 🟣 Toggle buttons (GOOGL / SPY)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
