@@ -24,7 +24,8 @@ class WelcomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.sizeOf(context).height * 0.6.h,
+      // margin: EdgeInsets.only(left: 10.w, right: 10.w),
+      height: MediaQuery.sizeOf(context).height * 0.8.h,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -36,6 +37,7 @@ class WelcomeWidget extends StatelessWidget {
           ),
           SizedBox(height: 17.h),
           Container(
+            alignment: Alignment.center,
             // margin: EdgeInsets.only(left: 10, right: 10),
             child: MdSnsText(
               "Welcome to TradersGPT",

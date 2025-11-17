@@ -428,7 +428,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                         crossAxisCount: 3,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
-                        childAspectRatio: 0.89,
+                        childAspectRatio: 0.95,
                       ),
                       itemBuilder: (context, index) {
                         Stock stock =

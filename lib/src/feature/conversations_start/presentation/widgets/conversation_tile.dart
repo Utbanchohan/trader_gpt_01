@@ -48,8 +48,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               : widget.stocks.pctChange.toStringAsFixed(2)
         : widget.stocks.pctChange.toStringAsFixed(2);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
-      margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 7.w),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(12),
@@ -112,7 +112,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               //   height: 41.h,
               //   fit: BoxFit.cover,
               // ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 10),
               MdSnsText(
                 widget.stock.lastMessage != null
                     ? DateFormat('hh:mm a').format(
@@ -135,7 +135,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               ),
             ],
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -145,7 +145,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 fontWeight: TextFontWeightVariant.h1,
                 color: AppColors.white,
               ),
-              SizedBox(height: 2.h),
+              SizedBox(height: 2),
               SizedBox(
                 width: MediaQuery.sizeOf(context).width / 2.1,
                 child: MdSnsText(
@@ -160,7 +160,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                   textOverflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(height: 5.h),
+              SizedBox(height: 5),
               SizedBox(
                 width: MediaQuery.sizeOf(context).width / 2.1,
                 child: MdSnsText(
@@ -219,8 +219,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 ],
               ),
               SizedBox(
-                width: 85.w,
-                height: 15.h,
+                width: 85,
+                height: 15,
                 child: Sparkline(
                   data:
                       ref.watch(stocksStreamProvider) != null &&

@@ -677,10 +677,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : Container(
-                          // margin: EdgeInsets.only(left: 20.w, right: 20.w),
-                          child: WelcomeWidget(),
-                        ),
+                      : WelcomeWidget(),
 
                   // Second tab
                   stocksChat != null &&
@@ -806,10 +803,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : Container(
-                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
-                          child: WelcomeWidget(),
-                        ),
+                      : WelcomeWidget(),
 
                   cryptoChats != null &&
                           cryptoChats.isNotEmpty &&
@@ -934,10 +928,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : Container(
-                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
-                          child: WelcomeWidget(),
-                        ),
+                      : WelcomeWidget(),
                   // Third tab
                   eftsChats != null && eftsChats.isNotEmpty && stocks.isNotEmpty
                       ? ListView.separated(
@@ -1060,10 +1051,7 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                             );
                           },
                         )
-                      : Container(
-                          margin: EdgeInsets.only(left: 20.w, right: 20.w),
-                          child: WelcomeWidget(),
-                        ),
+                      : WelcomeWidget(),
                 ],
               ),
             ),
@@ -1127,7 +1115,7 @@ Widget buildCustomTab(String text, int index, TabController tabController) {
           child: MdSnsText(
             text,
             color: isSelected ? AppColors.white : AppColors.color677FA4,
-            variant: isSelected ? TextVariant.h2 : TextVariant.h3,
+            variant: isSelected ? TextVariant.h3 : TextVariant.h3,
 
             fontWeight: isSelected
                 ? TextFontWeightVariant.h1
