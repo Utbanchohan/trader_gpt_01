@@ -176,10 +176,71 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   //crypto Variable end
 
+  ///dummy list scroller
+  late ScrollController _scrollController;
+  final Map<String, GlobalKey> _keys = {};
+  String _activeSection = 'overview';
+
+  final List<Map<String, dynamic>> sections = [
+    {'id': 'overview', 'title': 'Overview', 'color': Colors.red},
+    {'id': 'company', 'title': 'Company', 'color': Colors.green},
+    {'id': 'financial', 'title': 'Financial', 'color': Colors.blue},
+    {'id': 'earnings', 'title': 'Earnings', 'color': Colors.orange},
+    {'id': 'analytics', 'title': 'Analytics', 'color': Colors.orange},
+  ];
+
+  void _onScroll() {
+    for (var section in sections) {
+      final key = _keys[section['id']]!;
+
+      final context = key.currentContext;
+      if (context != null) {
+        final box = context.findRenderObject() as RenderBox;
+        final offset = box.localToGlobal(Offset.zero).dy;
+
+        if (offset < 200 && offset > -400) {
+          if (_activeSection != section['id']) {
+            setState(() {
+              _activeSection = section['id'];
+              if (section['id'] == "financial") {
+                thirdTap(0);
+              } else if (section['id'] == "company") {
+                secondIndexTap();
+              } else if (section['id'] == "earnings") {
+                fourthTap();
+              } else if (section['id'] == "analytics") {
+                fifthTap();
+              }
+            });
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  void _scrollToSection(String id) {
+    _activeSection = id;
+    final key = _keys[id];
+    if (key?.currentContext != null) {
+      Scrollable.ensureVisible(
+        key!.currentContext!,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  ///dummy list scrollr end
   String? selectedCandleOverview;
   String? selectedItemCandleAnalysis;
   String? selectedItemCandleCrypto;
-
   //chartData
   final chartService = ChartService();
 
@@ -601,7 +662,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   Future<void> secondIndexTap() async {
     if (companyModel == null) {
       try {
-        await getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -611,7 +672,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (insiderTransactionResponse == null) {
       try {
-        await insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
+        insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -621,7 +682,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (shortVolumeModel == null) {
       try {
-        await getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -631,7 +692,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (securityOwnership == null) {
       try {
-        await getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
+        getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -641,7 +702,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (securityShortVolume == null) {
       try {
-        await getSecurityShortVolumeData(
+        getSecurityShortVolumeData(
           SymbolDto(symbol: widget.chatRouting!.symbol),
         );
         if (!mounted) return;
@@ -653,7 +714,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (esgScoreData == null) {
       try {
-        await esgScore(widget.chatRouting!.symbol);
+        esgScore(widget.chatRouting!.symbol);
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -663,7 +724,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (earningdata == null) {
       try {
-        await getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -673,7 +734,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (companyDetailModel == null) {
       try {
-        await getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+        getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
@@ -839,7 +900,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     if (val == 0) {
       if (financeChartsDataModel == null) {
         try {
-          await financialCharts(widget.chatRouting!.symbol);
+          financialCharts(widget.chatRouting!.symbol);
           if (!mounted) return;
           setState(() {});
         } catch (e) {
@@ -872,6 +933,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   @override
   void initState() {
     super.initState();
+
+    ///dummy scroller
+    _scrollController = ScrollController();
+    for (var section in sections) {
+      _keys[section['id']] = GlobalKey();
+    }
+    _scrollController.addListener(_onScroll);
+
+    ///dummy scroller end
+    ///
+    ///
     tabController = TabController(length: 5, vsync: this);
 
     if (widget.chatRouting != null) {
@@ -879,6 +951,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         cryptoApis();
       } else {
         firstIndexData();
+        // secondIndexTap();
+        // thirdTap(0);
+        // fourthTap();
+        // fifthTap();
       }
     }
 
@@ -2136,149 +2212,224 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   /// Analytics Tab Content
   Widget _buildAnalyticsTab() {
-    return DefaultTabController(
-      length:
-          categories.length, // <- overview categories ko nested TabBar banaya
-      child: Column(
-        children: [
-          /// 🔹 SEARCH BAR
-          // Padding(
-          //   padding: EdgeInsets.all(16),
-          //   child: SizedBox(
-          //     height: 55,
-          //     child: TextFormField(
-          //       controller: search,
-          //       style: TextStyle(color: Colors.white),
-          //       decoration: InputDecoration(
-          //         filled: true,
-          //         fillColor: AppColors.color091224,
-          //         hintText: 'Search here',
-          //         hintStyle: TextStyle(color: Color(0xFF8B8B97)),
-          //         contentPadding: EdgeInsets.symmetric(
-          //           horizontal: 20,
-          //           vertical: 10,
-          //         ),
-          //         border: OutlineInputBorder(
-          //           borderRadius: BorderRadius.circular(50.0),
-          //           borderSide: BorderSide.none,
-          //         ),
-          //         suffixIcon: InkWell(
-          //           onTap: () {
-          //             // debounceSearch(search.text);
-          //           },
-          //           child: Image.asset(
-          //             Assets.images.searchNormal.path,
-          //             scale: 5,
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          Container(
-            margin: EdgeInsets.only(left: 10.w),
-            child: TabBar(
-              controller: tabController,
-              isScrollable: true,
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabAlignment: TabAlignment.start,
-              indicator: BoxDecoration(
-                color: AppColors.color1B254B,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              indicatorPadding: EdgeInsets.symmetric(
-                horizontal: 6,
-                vertical: 6,
-              ),
-              labelColor: Colors.white,
-              unselectedLabelColor: AppColors.colorB2B2B7,
-              dividerColor: Colors.transparent,
-              labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
-              onTap: (val) {
-                if (val == 1) {
-                  secondIndexTap();
-                } else if (val == 3) {
-                  fourthTap();
-                } else if (val == 0) {
-                  firstIndexData();
-                } else if (val == 4) {
-                  fifthTap();
-                } else if (val == 2) {
-                  thirdTap(0);
-                }
-              },
-              tabs: List.generate(
-                categories.length,
-                (index) => Tab(
-                  child: AnimatedBuilder(
-                    animation: tabController,
-                    builder: (context, _) {
-                      bool isSelected = tabController.index == index;
-
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(
-                            color: isSelected
-                                ? Colors
-                                      .transparent // 👈 no border when selected
-                                : AppColors.colorB2B2B7.withOpacity(0.4),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (categoryImages[index] != null)
-                              Image.asset(
-                                categoryImages[index]!,
-                                width: 14.w,
-                                height: 14.h,
-                              ),
-                            if (categoryImages[index] != null)
-                              SizedBox(width: 8.w),
-                            MdSnsText(
-                              categories[index],
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h4,
-                              color: AppColors.white,
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // ✅ Horizontal Tabs (Row)
+        Container(
+          height: 60,
+          color: Colors.grey[200],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: sections.map((section) {
+                final bool isActive = _activeSection == section['id'];
+                return GestureDetector(
+                  onTap: () => _scrollToSection(section['id']!),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isActive ? Colors.blue : Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: Text(
+                      section['title'] as String,
+                      style: TextStyle(
+                        color: isActive ? Colors.white : Colors.black,
+                        fontWeight: isActive
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              }).toList(),
             ),
           ),
+        ),
 
-          Expanded(
-            child: TabBarView(
-              controller: tabController,
-
-              physics: NeverScrollableScrollPhysics(),
-
-              children: [
-                /// Overview Tab Content
-                _overviewContent(),
-                _companyContent(),
-                _financialContent(),
-                _earningsContent(),
-                _analysisContent(),
-              ],
+        // ✅ Scrollable Content
+        Expanded(
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              children: sections.map((section) {
+                return section['id'] == "overview"
+                    ? _overviewContent(_keys[section['id']])
+                    : section['id'] == "company"
+                    ? _companyContent(_keys[section['id']])
+                    : section['id'] == "financial"
+                    ? _financialContent(_keys[section['id']])
+                    : section['id'] == "earnings"
+                    ? _earningsContent(_keys[section['id']])
+                    : section['id'] == "analytics"
+                    ? _analysisContent(_keys[section['id']])
+                    : Container(
+                        key: _keys[section['id']],
+                        height: 600,
+                        color: section['color'],
+                        alignment: Alignment.center,
+                        child: Text("data"),
+                      );
+              }).toList(),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
+
+    // DefaultTabController(
+    //   length:
+    //       categories.length, // <- overview categories ko nested TabBar banaya
+    //   child: Column(
+    //     children: [
+    //       /// 🔹 SEARCH BAR
+    //       // Padding(
+    //       //   padding: EdgeInsets.all(16),
+    //       //   child: SizedBox(
+    //       //     height: 55,
+    //       //     child: TextFormField(
+    //       //       controller: search,
+    //       //       style: TextStyle(color: Colors.white),
+    //       //       decoration: InputDecoration(
+    //       //         filled: true,
+    //       //         fillColor: AppColors.color091224,
+    //       //         hintText: 'Search here',
+    //       //         hintStyle: TextStyle(color: Color(0xFF8B8B97)),
+    //       //         contentPadding: EdgeInsets.symmetric(
+    //       //           horizontal: 20,
+    //       //           vertical: 10,
+    //       //         ),
+    //       //         border: OutlineInputBorder(
+    //       //           borderRadius: BorderRadius.circular(50.0),
+    //       //           borderSide: BorderSide.none,
+    //       //         ),
+    //       //         suffixIcon: InkWell(
+    //       //           onTap: () {
+    //       //             // debounceSearch(search.text);
+    //       //           },
+    //       //           child: Image.asset(
+    //       //             Assets.images.searchNormal.path,
+    //       //             scale: 5,
+    //       //           ),
+    //       //         ),
+    //       //       ),
+    //       //     ),
+    //       //   ),
+    //       // ),
+    //       Container(
+    //         margin: EdgeInsets.only(left: 10.w),
+    //         child: TabBar(
+    //           controller: tabController,
+    //           isScrollable: true,
+    //           indicatorSize: TabBarIndicatorSize.tab,
+    //           tabAlignment: TabAlignment.start,
+    //           indicator: BoxDecoration(
+    //             color: AppColors.color1B254B,
+    //             borderRadius: BorderRadius.circular(50),
+    //           ),
+    //           indicatorPadding: EdgeInsets.symmetric(
+    //             horizontal: 6,
+    //             vertical: 6,
+    //           ),
+    //           labelColor: Colors.white,
+    //           unselectedLabelColor: AppColors.colorB2B2B7,
+    //           dividerColor: Colors.transparent,
+    //           labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
+    //           onTap: (val) {
+    //             if (val == 1) {
+    //               secondIndexTap();
+    //             } else if (val == 3) {
+    //               fourthTap();
+    //             } else if (val == 0) {
+    //               firstIndexData();
+    //             } else if (val == 4) {
+    //               fifthTap();
+    //             } else if (val == 2) {
+    //               thirdTap(0);
+    //             }
+    //           },
+    //           tabs: List.generate(
+    //             categories.length,
+    //             (index) => Tab(
+    //               child: AnimatedBuilder(
+    //                 animation: tabController,
+    //                 builder: (context, _) {
+    //                   bool isSelected = tabController.index == index;
+
+    //                   return Container(
+    //                     padding: EdgeInsets.symmetric(
+    //                       horizontal: 12,
+    //                       vertical: 6,
+    //                     ),
+    //                     decoration: BoxDecoration(
+    //                       borderRadius: BorderRadius.circular(50),
+    //                       border: Border.all(
+    //                         color: isSelected
+    //                             ? Colors
+    //                                   .transparent // 👈 no border when selected
+    //                             : AppColors.colorB2B2B7.withOpacity(0.4),
+    //                         width: 1,
+    //                       ),
+    //                     ),
+    //                     child: Row(
+    //                       mainAxisAlignment: MainAxisAlignment.center,
+    //                       children: [
+    //                         if (categoryImages[index] != null)
+    //                           Image.asset(
+    //                             categoryImages[index]!,
+    //                             width: 14.w,
+    //                             height: 14.h,
+    //                           ),
+    //                         if (categoryImages[index] != null)
+    //                           SizedBox(width: 8.w),
+    //                         MdSnsText(
+    //                           categories[index],
+    //                           variant: TextVariant.h3,
+    //                           fontWeight: TextFontWeightVariant.h4,
+    //                           color: AppColors.white,
+    //                         ),
+    //                       ],
+    //                     ),
+    //                   );
+    //                 },
+    //               ),
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+
+    //       Expanded(
+    //         child: TabBarView(
+    //           controller: tabController,
+
+    //           physics: NeverScrollableScrollPhysics(),
+
+    //           children: [
+    //             /// Overview Tab Content
+    //             _overviewContent(),
+    //             _companyContent(),
+    //             _financialContent(),
+    //             _earningsContent(),
+    //             _analysisContent(),
+    //           ],
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
-  Widget _overviewContent() {
+  Widget _overviewContent(dynamic id) {
     List<String> questions = [
       "Provide a comprehensive company analysis of ${widget.chatRouting!.companyName}",
       "Technical analysis for ${widget.chatRouting!.companyName}",
@@ -2328,498 +2479,478 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     }
 
     return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          children: [
-            SizedBox(height: 14.h),
+      key: id,
+      child: Column(
+        children: [
+          SizedBox(height: 14.h),
 
-            Row(
-              children: [
-                // Image.asset(
-                //   Assets.images.frame1171275460.path,
-                //   height: 53.h,
-                //   width: 53.w,
-                // ),
-                SizedBox(width: 10),
-                Container(
-                  height: 26.h,
-                  width: 26.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: selectedStock!.type.toLowerCase() == "crypto"
-                        ? Image.network(
-                            getItemImage(
-                              ImageType.crypto,
-                              selectedStock!.symbol,
-                            ),
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return SvgPicture.network(
-                                "https://cdn-images.traderverse.io/crypto_dummy.svg",
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          )
-                        : SvgPicture.network(
-                            getItemImage(
-                              ImageType.stock,
-
-                              selectedStock!.symbol,
-                            ),
-                            fit: BoxFit.cover,
-                            placeholderBuilder: (context) => SizedBox(
-                              height: 26.h,
-                              width: 26.w,
-                              child: SvgPicture.network(
-                                "https://cdn-images.traderverse.io/stock_dummy.svg",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            errorBuilder: (context, error, stackTrace) {
-                              return SvgPicture.network(
-                                "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          ),
-                  ),
+          Row(
+            children: [
+              // Image.asset(
+              //   Assets.images.frame1171275460.path,
+              //   height: 53.h,
+              //   width: 53.w,
+              // ),
+              SizedBox(width: 10),
+              Container(
+                height: 26.h,
+                width: 26.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
                 ),
-                SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      child: Row(
-                        children: [
-                          ShowInfoPopup(
-                            chatRouting: widget.chatRouting!,
-                            question: questions[0],
-                            text: "Complete Company Analysis",
-                            child: MdSnsText(
-                              "#${selectedStock!.symbol}",
-                              variant: TextVariant.h3,
-                              fontWeight: TextFontWeightVariant.h1,
-                              color: AppColors.white,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: selectedStock!.type.toLowerCase() == "crypto"
+                      ? Image.network(
+                          getItemImage(ImageType.crypto, selectedStock!.symbol),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return SvgPicture.network(
+                              "https://cdn-images.traderverse.io/crypto_dummy.svg",
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        )
+                      : SvgPicture.network(
+                          getItemImage(ImageType.stock, selectedStock!.symbol),
+                          fit: BoxFit.cover,
+                          placeholderBuilder: (context) => SizedBox(
+                            height: 26.h,
+                            width: 26.w,
+                            child: SvgPicture.network(
+                              "https://cdn-images.traderverse.io/stock_dummy.svg",
+                              fit: BoxFit.cover,
                             ),
                           ),
-
-                          SizedBox(width: 6),
-
-                          Container(
-                            width: 5, // dot size
-                            height: 5,
-                            decoration: BoxDecoration(
-                              color: AppColors.colorB2B2B7,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-
-                          SizedBox(width: 6),
-                          SizedBox(
-                            width: MediaQuery.sizeOf(context).width / 1.7,
-                            child: MdSnsText(
-                              selectedStock!.companyName
-                                  .split("-")
-                                  .first
-                                  .trim(),
-                              color: AppColors.colorB2B2B7,
-                              variant: TextVariant.h4,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              fontWeight: TextFontWeightVariant.h4,
-                            ),
-                          ),
-                          // Icon(
-                          //   Icons.keyboard_arrow_down,
-                          //   color: AppColors.white,
-                          //   size: 20.sp,
-                          // ),
-                        ],
-                      ),
-                    ),
-                    Row(
+                          errorBuilder: (context, error, stackTrace) {
+                            return SvgPicture.network(
+                              "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        ),
+                ),
+              ),
+              SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    child: Row(
                       children: [
-                        MdSnsText(
-                          liveStock != null
-                              ? Filters.systemNumberConvention(
-                                  liveStock.price,
-                                  isPrice: true,
-                                  isAbs: false,
-                                )
-                              : Filters.systemNumberConvention(
-                                  selectedStock!.price,
-                                  isPrice: true,
-                                  isAbs: false,
-                                ),
-                          color: change.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.white,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
+                        ShowInfoPopup(
+                          chatRouting: widget.chatRouting!,
+                          question: questions[0],
+                          text: "Complete Company Analysis",
+                          child: MdSnsText(
+                            "#${selectedStock!.symbol}",
+                            variant: TextVariant.h3,
+                            fontWeight: TextFontWeightVariant.h1,
+                            color: AppColors.white,
+                          ),
                         ),
-                        const SizedBox(width: 6),
-                        Icon(
-                          change.toString().contains("-")
-                              ? Icons.arrow_drop_down
-                              : Icons.arrow_drop_up,
-                          color: change.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.color00FF55,
-                          size: 20,
+
+                        SizedBox(width: 6),
+
+                        Container(
+                          width: 5, // dot size
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: AppColors.colorB2B2B7,
+                            shape: BoxShape.circle,
+                          ),
                         ),
-                        MdSnsText(
-                          " ${change.toStringAsFixed(2).replaceAll("-", "")}%",
-                          color: change.toString().contains("-")
-                              ? AppColors.redFF3B3B
-                              : AppColors.color00FF55,
-                          variant: TextVariant.h4,
-                          fontWeight: TextFontWeightVariant.h4,
+
+                        SizedBox(width: 6),
+                        SizedBox(
+                          width: MediaQuery.sizeOf(context).width / 1.7,
+                          child: MdSnsText(
+                            selectedStock!.companyName.split("-").first.trim(),
+                            color: AppColors.colorB2B2B7,
+                            variant: TextVariant.h4,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            fontWeight: TextFontWeightVariant.h4,
+                          ),
                         ),
+                        // Icon(
+                        //   Icons.keyboard_arrow_down,
+                        //   color: AppColors.white,
+                        //   size: 20.sp,
+                        // ),
                       ],
                     ),
-                  ],
-                ),
-              ],
-            ),
-            AppSpacing.h10,
+                  ),
+                  Row(
+                    children: [
+                      MdSnsText(
+                        liveStock != null
+                            ? Filters.systemNumberConvention(
+                                liveStock.price,
+                                isPrice: true,
+                                isAbs: false,
+                              )
+                            : Filters.systemNumberConvention(
+                                selectedStock!.price,
+                                isPrice: true,
+                                isAbs: false,
+                              ),
+                        color: change.toString().contains("-")
+                            ? AppColors.redFF3B3B
+                            : AppColors.white,
+                        variant: TextVariant.h4,
+                        fontWeight: TextFontWeightVariant.h4,
+                      ),
+                      const SizedBox(width: 6),
+                      Icon(
+                        change.toString().contains("-")
+                            ? Icons.arrow_drop_down
+                            : Icons.arrow_drop_up,
+                        color: change.toString().contains("-")
+                            ? AppColors.redFF3B3B
+                            : AppColors.color00FF55,
+                        size: 20,
+                      ),
+                      MdSnsText(
+                        " ${change.toStringAsFixed(2).replaceAll("-", "")}%",
+                        color: change.toString().contains("-")
+                            ? AppColors.redFF3B3B
+                            : AppColors.color00FF55,
+                        variant: TextVariant.h4,
+                        fontWeight: TextFontWeightVariant.h4,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          AppSpacing.h10,
 
-            ishowLoder == true
-                ? SizedBox(
-                    height: 135.h,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return PriceCardShimmer();
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(width: 20.w);
-                      },
-                    ),
-                  )
-                : stockResponse != null
-                ? SizedBox(
-                    height: 135.h,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return index == 0
-                            ? PriceCardWidget(
-                                firstColor: AppColors.white,
-                                secondColor: AppColors.color0xFFFFB21D,
-                                firstHeading: "PREVIOUSLY CLOSE PRICE",
-                                secondHeading: "AFTER HOURS",
-                                previousPrice: stockResponse!.data.previousClose
-                                    .toString(),
-                                afterHoursPrice: stockResponse!.data.AfterHours
-                                    .toString(),
-                                percentage: "+1.48%",
-                              )
-                            : index == 1
-                            ? PriceCardWidget(
-                                secondColor: AppColors.white,
-                                firstColor: AppColors.color046297,
-                                firstHeading: "MARKET CAPITAILIZATION",
-                                secondHeading: "OUTSTANDING SHARES",
-                                previousPrice: stockResponse!
-                                    .data
-                                    .MarketCapitalization
-                                    .toString(),
-                                afterHoursPrice: stockResponse!
-                                    .data
-                                    .SharesOutstanding
-                                    .toString(),
-                                percentage: "+1.48%",
-                              )
-                            : index == 2
-                            ? PriceCardWidget(
-                                firstColor: AppColors.white,
-                                secondColor: AppColors.white,
-                                firstHeading: "TOTAL VOLUME",
-                                secondHeading: "AVERAGE VOLUME(3M)",
-                                previousPrice: stockResponse!.data.TotalVolume
-                                    .toString(),
-                                afterHoursPrice: stockResponse!
-                                    .data
-                                    .AverageVolume
-                                    .toString(),
-                                percentage: "+1.48%",
-                              )
-                            : index == 3
-                            ? PriceCardWidget(
-                                firstColor: AppColors.color00FF55,
-                                secondColor: AppColors.colorab75b8,
-                                firstHeading: "EXCHANGE",
-                                secondHeading: "MARKET CAPTILIZATION",
-                                previousPrice: stockResponse!.data.Exchange
-                                    .toString(),
-                                afterHoursPrice: stockResponse!
-                                    .data
-                                    .MarketCapClassification
-                                    .toString(),
-                                percentage: "+1.48%",
-                              )
-                            : PriceCardWidget(
-                                firstColor: AppColors.white,
-                                secondColor: AppColors.white,
-                                firstHeading: "SECTOR",
-                                secondHeading: "INDUSTRY",
-                                previousPrice: stockResponse!.data.Sector
-                                    .toString(),
-                                afterHoursPrice: stockResponse!.data.Industry
-                                    .toString(),
-                                percentage: "+1.48%",
-                              );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(width: 20.w);
-                      },
-                    ),
-                  )
-                : SizedBox(),
-            SizedBox(height: 20.h),
-
-            chartLoader == true
-                ? CustomCandleChartShimmer()
-                : overviewCandleChartModel != null
-                ? CustomCandleChart(
-                    // key: UniqueKey(),
-                    name: "OHLC/V Candlestick Chart",
-                    data: buildChartSpots(overviewCandleChartModel!),
-                    selectedItem: selectedCandleOverview ?? "D",
-                    onPressed: (val) async {
-                      await getOverviewCandleChart(
-                        widget.chatRouting!.symbol,
-                        val == 'H'
-                            ? IntervalEnum.hour
-                            : val == 'D'
-                            ? IntervalEnum.daily
-                            : val == 'W'
-                            ? IntervalEnum.weekly
-                            : val == 'M'
-                            ? IntervalEnum.monthly
-                            : IntervalEnum.daily,
-                      );
-                      if (!mounted) return;
-                      setState(() {
-                        selectedCandleOverview = val;
-                      });
+          ishowLoder == true
+              ? SizedBox(
+                  height: 135.h,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 5,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return PriceCardShimmer();
                     },
-                  )
-                : SizedBox(),
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(width: 20.w);
+                    },
+                  ),
+                )
+              : stockResponse != null
+              ? SizedBox(
+                  height: 135.h,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 5,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return index == 0
+                          ? PriceCardWidget(
+                              firstColor: AppColors.white,
+                              secondColor: AppColors.color0xFFFFB21D,
+                              firstHeading: "PREVIOUSLY CLOSE PRICE",
+                              secondHeading: "AFTER HOURS",
+                              previousPrice: stockResponse!.data.previousClose
+                                  .toString(),
+                              afterHoursPrice: stockResponse!.data.AfterHours
+                                  .toString(),
+                              percentage: "+1.48%",
+                            )
+                          : index == 1
+                          ? PriceCardWidget(
+                              secondColor: AppColors.white,
+                              firstColor: AppColors.color046297,
+                              firstHeading: "MARKET CAPITAILIZATION",
+                              secondHeading: "OUTSTANDING SHARES",
+                              previousPrice: stockResponse!
+                                  .data
+                                  .MarketCapitalization
+                                  .toString(),
+                              afterHoursPrice: stockResponse!
+                                  .data
+                                  .SharesOutstanding
+                                  .toString(),
+                              percentage: "+1.48%",
+                            )
+                          : index == 2
+                          ? PriceCardWidget(
+                              firstColor: AppColors.white,
+                              secondColor: AppColors.white,
+                              firstHeading: "TOTAL VOLUME",
+                              secondHeading: "AVERAGE VOLUME(3M)",
+                              previousPrice: stockResponse!.data.TotalVolume
+                                  .toString(),
+                              afterHoursPrice: stockResponse!.data.AverageVolume
+                                  .toString(),
+                              percentage: "+1.48%",
+                            )
+                          : index == 3
+                          ? PriceCardWidget(
+                              firstColor: AppColors.color00FF55,
+                              secondColor: AppColors.colorab75b8,
+                              firstHeading: "EXCHANGE",
+                              secondHeading: "MARKET CAPTILIZATION",
+                              previousPrice: stockResponse!.data.Exchange
+                                  .toString(),
+                              afterHoursPrice: stockResponse!
+                                  .data
+                                  .MarketCapClassification
+                                  .toString(),
+                              percentage: "+1.48%",
+                            )
+                          : PriceCardWidget(
+                              firstColor: AppColors.white,
+                              secondColor: AppColors.white,
+                              firstHeading: "SECTOR",
+                              secondHeading: "INDUSTRY",
+                              previousPrice: stockResponse!.data.Sector
+                                  .toString(),
+                              afterHoursPrice: stockResponse!.data.Industry
+                                  .toString(),
+                              percentage: "+1.48%",
+                            );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(width: 20.w);
+                    },
+                  ),
+                )
+              : SizedBox(),
+          SizedBox(height: 20.h),
 
-            // CustomCandleChartShimmer(),
-            SizedBox(height: 20.h),
+          chartLoader == true
+              ? CustomCandleChartShimmer()
+              : overviewCandleChartModel != null
+              ? CustomCandleChart(
+                  // key: UniqueKey(),
+                  name: "OHLC/V Candlestick Chart",
+                  data: buildChartSpots(overviewCandleChartModel!),
+                  selectedItem: selectedCandleOverview ?? "D",
+                  onPressed: (val) async {
+                    await getOverviewCandleChart(
+                      widget.chatRouting!.symbol,
+                      val == 'H'
+                          ? IntervalEnum.hour
+                          : val == 'D'
+                          ? IntervalEnum.daily
+                          : val == 'W'
+                          ? IntervalEnum.weekly
+                          : val == 'M'
+                          ? IntervalEnum.monthly
+                          : IntervalEnum.daily,
+                    );
+                    if (!mounted) return;
+                    setState(() {
+                      selectedCandleOverview = val;
+                    });
+                  },
+                )
+              : SizedBox(),
 
-            isshowpriceTargetMatricsDataLoder == true
-                ? PriceTargetWidget(
-                    data: null,
-                    chatRouting: widget.chatRouting!,
-                  )
-                : priceTargetMatrics != null &&
-                      priceTargetMatrics!.data.length > 0
-                ? PriceTargetWidget(
-                    data: priceTargetMatrics!.data,
-                    chatRouting: widget.chatRouting!,
-                  )
-                : SizedBox(),
+          // CustomCandleChartShimmer(),
+          SizedBox(height: 20.h),
 
-            SizedBox(height: 20.h),
+          isshowpriceTargetMatricsDataLoder == true
+              ? PriceTargetWidget(data: null, chatRouting: widget.chatRouting!)
+              : priceTargetMatrics != null &&
+                    priceTargetMatrics!.data.length > 0
+              ? PriceTargetWidget(
+                  data: priceTargetMatrics!.data,
+                  chatRouting: widget.chatRouting!,
+                )
+              : SizedBox(),
 
-            isshowshareStructureLoder == true
-                ? MetricsShimmer()
-                : sharesResponse != null &&
-                      sharesResponse!.data.PercentInsiders != null
-                ? ShareStructureCard(
-                    chatRouting: widget.chatRouting!,
+          SizedBox(height: 20.h),
 
-                    matrics: null,
-                    fundamentalData: null,
-                    shareData: sharesResponse!.data,
-                    heading: Headings.shareStructure,
-                  )
-                : SizedBox(),
-            SizedBox(height: pricePerformanceData != null ? 20.h : 0),
-            pricePerformanceData != null
-                ? PricePerformanceWidget(data: pricePerformanceData!)
-                : SizedBox(),
-            SizedBox(
-              height:
-                  fundamentalResponse != null &&
-                      fundamentalResponse!
-                          .data
-                          .fundamentals
-                          .annualIncome
-                          .isNotEmpty
-                  ? 20.h
-                  : 0,
-            ),
-            fundamentalResponse != null &&
+          isshowshareStructureLoder == true
+              ? MetricsShimmer()
+              : sharesResponse != null &&
+                    sharesResponse!.data.PercentInsiders != null
+              ? ShareStructureCard(
+                  chatRouting: widget.chatRouting!,
+
+                  matrics: null,
+                  fundamentalData: null,
+                  shareData: sharesResponse!.data,
+                  heading: Headings.shareStructure,
+                )
+              : SizedBox(),
+          SizedBox(height: pricePerformanceData != null ? 20.h : 0),
+          pricePerformanceData != null
+              ? PricePerformanceWidget(data: pricePerformanceData!)
+              : SizedBox(),
+          SizedBox(
+            height:
+                fundamentalResponse != null &&
                     fundamentalResponse!
                         .data
                         .fundamentals
                         .annualIncome
                         .isNotEmpty
-                ? ShareStructureCard(
-                    chatRouting: widget.chatRouting!,
-                    matrics: null,
-                    fundamentalData: fundamentalResponse!.data,
-                    shareData: null,
-                    heading: Headings.fundamental,
-                  )
-                : SizedBox(),
+                ? 20.h
+                : 0,
+          ),
+          fundamentalResponse != null &&
+                  fundamentalResponse!.data.fundamentals.annualIncome.isNotEmpty
+              ? ShareStructureCard(
+                  chatRouting: widget.chatRouting!,
+                  matrics: null,
+                  fundamentalData: fundamentalResponse!.data,
+                  shareData: null,
+                  heading: Headings.fundamental,
+                )
+              : SizedBox(),
 
-            SizedBox(
-              height:
-                  matricData != null &&
-                      matricData!.data != null &&
-                      matricData!.data!.isNotEmpty
-                  ? 20.h
-                  : 0,
-            ),
-
-            matricData != null &&
+          SizedBox(
+            height:
+                matricData != null &&
                     matricData!.data != null &&
                     matricData!.data!.isNotEmpty
-                ? ShareStructureCard(
-                    chatRouting: widget.chatRouting!,
+                ? 20.h
+                : 0,
+          ),
 
-                    matrics: matricData!.data,
-                    fundamentalData: null,
-                    shareData: null,
-                    heading: Headings.matrics,
-                  )
-                : SizedBox(),
+          matricData != null &&
+                  matricData!.data != null &&
+                  matricData!.data!.isNotEmpty
+              ? ShareStructureCard(
+                  chatRouting: widget.chatRouting!,
 
-            // SizedBox(height: 20.h),
-            // CustomLineChart(
-            //   title: "Price Target",
-            //   lineColor: Colors.green,
-            //   areaColor: Colors.greenAccent,
-            // ),
-            SizedBox(height: monthlyData != null ? 20.h : 0),
-            monthlyData != null
-                ? WeeklySeasonalityChart(
-                    data: monthlyData!,
-                    isWeekly: false,
-                    weeklyModel: WeeklyModel(),
-                  )
-                : SizedBox(),
-            SizedBox(height: 20.h),
-            weeklyData != null
-                ? WeeklySeasonalityChart(
-                    weeklyModel: weeklyData!,
-                    isWeekly: true,
-                    data: ProbabilityResponse(),
-                  )
-                : SizedBox(),
+                  matrics: matricData!.data,
+                  fundamentalData: null,
+                  shareData: null,
+                  heading: Headings.matrics,
+                )
+              : SizedBox(),
 
-            SizedBox(
-              height:
-                  priceComparisonModel != null &&
-                      priceComparisonModel!
-                              .data
-                              .data['${widget.chatRouting!.symbol}'] !=
-                          null &&
-                      priceComparisonModel!.data.data['SPY'] != null
-                  ? 20.h
-                  : 0,
-            ),
+          // SizedBox(height: 20.h),
+          // CustomLineChart(
+          //   title: "Price Target",
+          //   lineColor: Colors.green,
+          //   areaColor: Colors.greenAccent,
+          // ),
+          SizedBox(height: monthlyData != null ? 20.h : 0),
+          monthlyData != null
+              ? WeeklySeasonalityChart(
+                  data: monthlyData!,
+                  isWeekly: false,
+                  weeklyModel: WeeklyModel(),
+                )
+              : SizedBox(),
+          SizedBox(height: 20.h),
+          weeklyData != null
+              ? WeeklySeasonalityChart(
+                  weeklyModel: weeklyData!,
+                  isWeekly: true,
+                  data: ProbabilityResponse(),
+                )
+              : SizedBox(),
 
-            // SizedBox(height: 20.h),
-            // RevenueAnalysisChart(),
-            // SizedBox(height: 20.h),
-            // // // ---------- PERFORMANCE OVERVIEW ----------
-            // Container(
-            //   padding: const EdgeInsets.all(16),
-            //   decoration: BoxDecoration(
-            //     border: Border.all(color: AppColors.colorB3B3B3),
-            //     color: AppColors.primaryColor,
-            //     borderRadius: BorderRadius.circular(12),
-            //   ),
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           MdSnsText(
-            //             "Performance Overview",
-            //             color: AppColors.white,
-            //             variant: TextVariant.h3,
-            //             fontWeight: TextFontWeightVariant.h4,
-            //           ),
-            //           Row(
-            //             children: [
-            //               Image.asset(
-            //                 Assets.images.textalignJustifycenter.path,
-            //                 height: 14.h,
-            //                 width: 16.55.w,
-            //               ),
-            //               SizedBox(width: 10.w),
-            //               Image.asset(
-            //                 Assets.images.chart.path,
-            //                 height: 14.h,
-            //                 width: 14.w,
-            //               ),
-            //             ],
-            //           ),
-            //         ],
-            //       ),
-            //       SizedBox(height: 12.h),
-            //       PerformanceTable(),
-            //     ],
-            //   ),
-            // ),
-            // SizedBox(height: 20.h),
-
-            // SizedBox(height: 20.h),
-            priceComparisonModel != null &&
+          SizedBox(
+            height:
+                priceComparisonModel != null &&
                     priceComparisonModel!
                             .data
                             .data['${widget.chatRouting!.symbol}'] !=
                         null &&
                     priceComparisonModel!.data.data['SPY'] != null
-                ? PriceComparisonChart(
-                    priceComparisonModel: priceComparisonModel,
-                    symbol: widget.chatRouting!.symbol,
-                    twoCharts: true,
-                  )
-                : SizedBox(),
+                ? 20.h
+                : 0,
+          ),
 
-            SizedBox(
-              height:
-                  analyticsRespinseData != null &&
-                      analyticsRespinseData!.data.isNotEmpty
-                  ? 20.h
-                  : 0,
-            ),
+          // SizedBox(height: 20.h),
+          // RevenueAnalysisChart(),
+          // SizedBox(height: 20.h),
+          // // // ---------- PERFORMANCE OVERVIEW ----------
+          // Container(
+          //   padding: const EdgeInsets.all(16),
+          //   decoration: BoxDecoration(
+          //     border: Border.all(color: AppColors.colorB3B3B3),
+          //     color: AppColors.primaryColor,
+          //     borderRadius: BorderRadius.circular(12),
+          //   ),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           MdSnsText(
+          //             "Performance Overview",
+          //             color: AppColors.white,
+          //             variant: TextVariant.h3,
+          //             fontWeight: TextFontWeightVariant.h4,
+          //           ),
+          //           Row(
+          //             children: [
+          //               Image.asset(
+          //                 Assets.images.textalignJustifycenter.path,
+          //                 height: 14.h,
+          //                 width: 16.55.w,
+          //               ),
+          //               SizedBox(width: 10.w),
+          //               Image.asset(
+          //                 Assets.images.chart.path,
+          //                 height: 14.h,
+          //                 width: 14.w,
+          //               ),
+          //             ],
+          //           ),
+          //         ],
+          //       ),
+          //       SizedBox(height: 12.h),
+          //       PerformanceTable(),
+          //     ],
+          //   ),
+          // ),
+          // SizedBox(height: 20.h),
 
-            analyticsRespinseData != null &&
+          // SizedBox(height: 20.h),
+          priceComparisonModel != null &&
+                  priceComparisonModel!
+                          .data
+                          .data['${widget.chatRouting!.symbol}'] !=
+                      null &&
+                  priceComparisonModel!.data.data['SPY'] != null
+              ? PriceComparisonChart(
+                  priceComparisonModel: priceComparisonModel,
+                  symbol: widget.chatRouting!.symbol,
+                  twoCharts: true,
+                )
+              : SizedBox(),
+
+          SizedBox(
+            height:
+                analyticsRespinseData != null &&
                     analyticsRespinseData!.data.isNotEmpty
-                ? AnalyticsWidget(
-                    chatRouting: widget.chatRouting!,
+                ? 20.h
+                : 0,
+          ),
 
-                    data: analyticsRespinseData!.data,
-                  )
-                : SizedBox(),
-            SizedBox(height: 20.h),
-          ],
-        ),
+          analyticsRespinseData != null &&
+                  analyticsRespinseData!.data.isNotEmpty
+              ? AnalyticsWidget(
+                  chatRouting: widget.chatRouting!,
+
+                  data: analyticsRespinseData!.data,
+                )
+              : SizedBox(),
+          SizedBox(height: 20.h),
+        ],
       ),
     );
   }
 
-  Widget _companyContent() {
+  Widget _companyContent(dynamic id) {
     return SafeArea(
-      child: SingleChildScrollView(
+      key: id,
+      child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
@@ -3142,57 +3273,52 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     );
   }
 
-  Widget _financialContent() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+  Widget _financialContent(dynamic id) {
+    return SingleChildScrollView(
+      child: Container(
+        key: id,
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        color: Colors.amber,
 
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // SizedBox(height: 15),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              MdSnsText(
-                "Financial",
-                variant: TextVariant.h2,
-                fontWeight: TextFontWeightVariant.h1,
-
-                color: AppColors.fieldTextColor,
-              ),
-              SizedBox(width: 5),
-              Align(
-                alignment: Alignment.center,
-                child: Image.asset(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                MdSnsText(
+                  "Financial",
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h1,
+                  color: AppColors.fieldTextColor,
+                ),
+                SizedBox(width: 5),
+                Image.asset(
                   "assets/images/info-circle.png",
                   height: 14,
                   width: 14,
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 6),
+              ],
+            ),
 
-          MdSnsText(
-            "Last Updated: 01-19-2023 10:30:33 EST",
-            variant: TextVariant.h3,
-            fontWeight: TextFontWeightVariant.h4,
+            SizedBox(height: 6),
+            MdSnsText(
+              "Last Updated: 01-19-2023 10:30:33 EST",
+              variant: TextVariant.h3,
+              fontWeight: TextFontWeightVariant.h4,
+              color: AppColors.white,
+            ),
+            SizedBox(height: 15),
 
-            color: AppColors.white,
-          ),
-          SizedBox(height: 15),
+            DefaultTabController(
+              length: 4,
+              child: Builder(
+                builder: (context) {
+                  final TabController financeialTabController =
+                      DefaultTabController.of(context);
 
-          // SizedBox(height: 20),
-          DefaultTabController(
-            length: 4,
-            child: Builder(
-              builder: (context) {
-                final TabController financeialTabController =
-                    DefaultTabController.of(context);
-
-                return Expanded(
-                  child: Column(
+                  return Column(
                     children: [
+                      // ⬅️ TAB BAR
                       AnimatedBuilder(
                         animation: financeialTabController.animation!,
                         builder: (context, _) {
@@ -3202,16 +3328,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             indicatorSize: TabBarIndicatorSize.tab,
                             tabAlignment: TabAlignment.start,
                             indicatorAnimation: TabIndicatorAnimation.elastic,
-                            onTap: (val) {
-                              thirdTap(val);
-                            },
-
+                            dividerColor: Colors.transparent,
                             indicatorPadding: const EdgeInsets.all(4),
                             labelPadding: const EdgeInsets.symmetric(
                               horizontal: 4,
                             ),
-                            dividerColor: Colors.transparent,
-
                             indicator: BoxDecoration(
                               color: AppColors.color203063,
                               borderRadius: BorderRadius.circular(50),
@@ -3220,10 +3341,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                 width: 1,
                               ),
                             ),
-
                             tabs: List.generate(4, (index) {
                               final List<String> tabTitles = financialtabs;
-
                               final bool isSelected =
                                   financeialTabController.index == index ||
                                   (financeialTabController.indexIsChanging &&
@@ -3262,13 +3381,21 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         },
                       ),
 
-                      // ✅ TabBarView below
-                      Expanded(
+                      // ⬅️ TAB VIEW — scrollable inside main scroll
+                      SizedBox(
+                        height:
+                            MediaQuery.sizeOf(context).height *
+                            1.5, // enough space for full content
                         child: TabBarView(
-                          physics: NeverScrollableScrollPhysics(),
                           controller: financeialTabController,
+                          physics:
+                              NeverScrollableScrollPhysics(), // scroll parent handle karega
                           children: [
+                            // TAB 1
+
+                            // TAB 2
                             SingleChildScrollView(
+                              physics: NeverScrollableScrollPhysics(),
                               child: Column(
                                 children: [
                                   SizedBox(height: 15),
@@ -3519,6 +3646,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             ),
 
                             SingleChildScrollView(
+                              physics: NeverScrollableScrollPhysics(),
+
                               child: Column(
                                 children: [
                                   const SizedBox(height: 10),
@@ -3568,7 +3697,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                                 ],
                               ),
                             ),
-
                             SingleChildScrollView(
                               child: Column(
                                 children: [
@@ -3622,125 +3750,623 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         ),
                       ),
                     ],
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _earningsContent() {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 15),
-              earningChartModelLoader == true
-                  ? CashDebtShimmer()
-                  : earningChartModel != null &&
-                        earningChartModel!.data.isNotEmpty
-                  ? QuarterlyPerformanceChart(data: earningChartModel!.data)
-                  : SizedBox(),
-              // SizedBox(height: 20),
-              // QuarterlyPerformanceChartShimmer(),
-              SizedBox(height: 20),
-              earningReportShimmer == true
-                  ? TableShimmer(title: "Earnings")
-                  : earningReportsModel != null &&
-                        earningReportsModel!.data.isNotEmpty
-                  ? EarningsTable(data: earningReportsModel!.data)
-                  : SizedBox(),
-              SizedBox(height: 20),
-              companyDetailShimmer == true
-                  ? TableShimmer(title: "Earnings Trend")
-                  : companyDetailModel != null &&
-                        companyDetailModel!.data.fundamentalsEarningsTrend !=
-                            null
-                  ? EarningsTrend(
-                      title: "Earnings Trend",
-                      data: companyDetailModel!.data.fundamentalsEarningsTrend,
-                    )
-                  : SizedBox(),
-            ],
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _analysisContent() {
+  // Widget _financialContent(dynamic id) {
+  //   return Container(
+  //     color: Colors.amber,
+  //     height: MediaQuery.sizeOf(context).height,
+
+  //     key: id,
+  //     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         // SizedBox(height: 15),
+  //         Row(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           children: [
+  //             MdSnsText(
+  //               "Financial",
+  //               variant: TextVariant.h2,
+  //               fontWeight: TextFontWeightVariant.h1,
+
+  //               color: AppColors.fieldTextColor,
+  //             ),
+  //             SizedBox(width: 5),
+  //             Align(
+  //               alignment: Alignment.center,
+  //               child: Image.asset(
+  //                 "assets/images/info-circle.png",
+  //                 height: 14,
+  //                 width: 14,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 6),
+
+  //         MdSnsText(
+  //           "Last Updated: 01-19-2023 10:30:33 EST",
+  //           variant: TextVariant.h3,
+  //           fontWeight: TextFontWeightVariant.h4,
+
+  //           color: AppColors.white,
+  //         ),
+  //         SizedBox(height: 15),
+
+  //         // SizedBox(height: 20),
+  //         DefaultTabController(
+  //           length: 4,
+  //           child: Builder(
+  //             builder: (context) {
+  //               final TabController financeialTabController =
+  //                   DefaultTabController.of(context);
+
+  //               return Expanded(
+  //                 child: Column(
+  //                   children: [
+  //                     AnimatedBuilder(
+  //                       animation: financeialTabController.animation!,
+  //                       builder: (context, _) {
+  //                         return TabBar(
+  //                           controller: financeialTabController,
+  //                           isScrollable: true,
+  //                           indicatorSize: TabBarIndicatorSize.tab,
+  //                           tabAlignment: TabAlignment.start,
+  //                           indicatorAnimation: TabIndicatorAnimation.elastic,
+  //                           onTap: (val) {
+  //                             thirdTap(val);
+  //                           },
+
+  //                           indicatorPadding: const EdgeInsets.all(4),
+  //                           labelPadding: const EdgeInsets.symmetric(
+  //                             horizontal: 4,
+  //                           ),
+  //                           dividerColor: Colors.transparent,
+
+  //                           indicator: BoxDecoration(
+  //                             color: AppColors.color203063,
+  //                             borderRadius: BorderRadius.circular(50),
+  //                             border: Border.all(
+  //                               color: AppColors.color0x1AB3B3B3,
+  //                               width: 1,
+  //                             ),
+  //                           ),
+
+  //                           tabs: List.generate(4, (index) {
+  //                             final List<String> tabTitles = financialtabs;
+
+  //                             final bool isSelected =
+  //                                 financeialTabController.index == index ||
+  //                                 (financeialTabController.indexIsChanging &&
+  //                                     financeialTabController.previousIndex ==
+  //                                         index);
+
+  //                             return Tab(
+  //                               child: Container(
+  //                                 padding: const EdgeInsets.symmetric(
+  //                                   horizontal: 12,
+  //                                   vertical: 8,
+  //                                 ),
+  //                                 decoration: BoxDecoration(
+  //                                   borderRadius: BorderRadius.circular(50),
+  //                                   border: Border.all(
+  //                                     color: AppColors.color0x1AB3B3B3,
+  //                                     width: 1,
+  //                                   ),
+  //                                 ),
+  //                                 child: MdSnsText(
+  //                                   tabTitles[index],
+  //                                   color: isSelected
+  //                                       ? AppColors.white
+  //                                       : AppColors.color677FA4,
+  //                                   variant: isSelected
+  //                                       ? TextVariant.h2
+  //                                       : TextVariant.h3,
+  //                                   fontWeight: isSelected
+  //                                       ? TextFontWeightVariant.h1
+  //                                       : TextFontWeightVariant.h4,
+  //                                 ),
+  //                               ),
+  //                             );
+  //                           }),
+  //                         );
+  //                       },
+  //                     ),
+
+  //                     Expanded(
+  //                       child: TabBarView(
+  //                         physics: NeverScrollableScrollPhysics(),
+  //                         controller: financeialTabController,
+  //                         children: [
+  //                           SingleChildScrollView(
+  //                             physics: NeverScrollableScrollPhysics(),
+  //                             child: Column(
+  //                               children: [
+  //                                 SizedBox(height: 15),
+
+  //                                 financialLoader == true
+  //                                     ? CashDebtShimmer()
+  //                                     : financeChartsDataModel != null &&
+  //                                           financeChartsDataModel!
+  //                                                   .data
+  //                                                   .cashAndDebt
+  //                                                   .yearly !=
+  //                                               null &&
+  //                                           financeChartsDataModel!
+  //                                               .data
+  //                                               .cashAndDebt
+  //                                               .yearly!
+  //                                               .metrics
+  //                                               .isNotEmpty
+  //                                     ? CashdebtWidgets(
+  //                                         title: "Cash and Debt",
+  //                                         cash: "Cash",
+  //                                         debt: "Debt",
+  //                                         rawCash:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .cashAndDebt
+  //                                                 .yearly!
+  //                                                 .metrics['Cash'] ??
+  //                                             [],
+  //                                         rawDebt:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .cashAndDebt
+  //                                                 .yearly!
+  //                                                 .metrics['Debt'] ??
+  //                                             [],
+  //                                       )
+  //                                     : SizedBox(),
+  //                                 const SizedBox(height: 20),
+
+  //                                 financialLoader == true
+  //                                     ? CashDebtShimmer()
+  //                                     : financeChartsDataModel != null &&
+  //                                           financeChartsDataModel!
+  //                                                   .data
+  //                                                   .assetsAndStockHolders
+  //                                                   .yearly !=
+  //                                               null &&
+  //                                           financeChartsDataModel!
+  //                                               .data
+  //                                               .assetsAndStockHolders
+  //                                               .yearly!
+  //                                               .metrics
+  //                                               .isNotEmpty
+  //                                     ? CashdebtWidgets(
+  //                                         title: "Assets and Stockholders",
+  //                                         cash: "Total Assets",
+  //                                         debt: "Total StackHolder",
+  //                                         rawCash:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .assetsAndStockHolders
+  //                                                 .yearly!
+  //                                                 .metrics["Total Assets"] ??
+  //                                             [],
+  //                                         rawDebt:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .assetsAndStockHolders
+  //                                                 .yearly!
+  //                                                 .metrics["Total StockHolder"] ??
+  //                                             [],
+  //                                       )
+  //                                     : SizedBox(),
+  //                                 SizedBox(height: 20),
+  //                                 financialLoader == true
+  //                                     ? CashDebtShimmer()
+  //                                     : financeChartsDataModel != null &&
+  //                                           financeChartsDataModel!
+  //                                                   .data
+  //                                                   .outstandingSharesBuyback
+  //                                                   .yearly !=
+  //                                               null &&
+  //                                           financeChartsDataModel!
+  //                                               .data
+  //                                               .outstandingSharesBuyback
+  //                                               .yearly!
+  //                                               .metrics
+  //                                               .isNotEmpty
+  //                                     ? CashdebtWidgets(
+  //                                         title: "Outstanding Shares & Buyback",
+  //                                         cash: "Outstanding Shares",
+  //                                         debt: "Stock Buyback Percentage",
+  //                                         rawCash:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .outstandingSharesBuyback
+  //                                                 .yearly!
+  //                                                 .metrics["Outstanding Shares"] ??
+  //                                             [],
+  //                                         rawDebt:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .outstandingSharesBuyback
+  //                                                 .yearly!
+  //                                                 .metrics["Stock Buyback Percentage"] ??
+  //                                             [],
+  //                                       )
+  //                                     : SizedBox(),
+  //                                 // CashDebtShimmer(),
+  //                                 const SizedBox(height: 20),
+  //                                 financialLoader == true
+  //                                     ? CashDebtShimmer()
+  //                                     : financeChartsDataModel != null &&
+  //                                           financeChartsDataModel!
+  //                                                   .data
+  //                                                   .revenueAndIncome
+  //                                                   .yearly !=
+  //                                               null &&
+  //                                           financeChartsDataModel!
+  //                                               .data
+  //                                               .revenueAndIncome
+  //                                               .yearly!
+  //                                               .metrics
+  //                                               .isNotEmpty
+  //                                     ? CashdebtWidgets(
+  //                                         title: "Revenue and Income",
+  //                                         cash: "Revenue",
+  //                                         debt: "Income",
+  //                                         rawCash:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .revenueAndIncome
+  //                                                 .yearly!
+  //                                                 .metrics["Revenue"] ??
+  //                                             [],
+  //                                         rawDebt:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .revenueAndIncome
+  //                                                 .yearly!
+  //                                                 .metrics["Income"] ??
+  //                                             [],
+  //                                       )
+  //                                     : SizedBox(),
+  //                                 //  CashDebtShimmer(),
+  //                                 const SizedBox(height: 20),
+
+  //                                 financeChartsDataModel != null &&
+  //                                         financeChartsDataModel!
+  //                                                 .data
+  //                                                 .cashFlowData
+  //                                                 .yearly !=
+  //                                             null &&
+  //                                         financeChartsDataModel!
+  //                                             .data
+  //                                             .cashFlowData
+  //                                             .yearly!
+  //                                             .metrics
+  //                                             .isNotEmpty
+  //                                     ? OperatingCashFlow(
+  //                                         title: "Cash Flow Data",
+  //                                         rawCash:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .cashFlowData
+  //                                                 .yearly!
+  //                                                 .metrics["Operating Cash Flow"] ??
+  //                                             [],
+  //                                         rawDebt:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .cashFlowData
+  //                                                 .yearly!
+  //                                                 .metrics["Free Cash Flow"] ??
+  //                                             [],
+  //                                         rawAssets:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .cashFlowData
+  //                                                 .yearly!
+  //                                                 .metrics["Net Income"] ??
+  //                                             [],
+  //                                         rawEquity:
+  //                                             financeChartsDataModel!
+  //                                                 .data
+  //                                                 .cashFlowData
+  //                                                 .yearly!
+  //                                                 .metrics["Cash Flow Dividends"] ??
+  //                                             [],
+  //                                       )
+  //                                     : SizedBox(),
+  //                                 // CashDebtShimmer(),
+  //                                 const SizedBox(height: 0),
+  //                               ],
+  //                             ),
+  //                           ),
+
+  //                           SingleChildScrollView(
+  //                             physics: NeverScrollableScrollPhysics(),
+
+  //                             child: Column(
+  //                               children: [
+  //                                 const SizedBox(height: 10),
+  //                                 financialResponseLoader == true
+  //                                     ? CashDebtShimmer()
+  //                                     : financialResponse != null &&
+  //                                           financialResponse!
+  //                                                   .data
+  //                                                   .financialsIncomeStatement
+  //                                                   .chart
+  //                                                   .researchDevelopment !=
+  //                                               null
+  //                                     ? CustomLineChart(
+  //                                         lineColor: Colors.green,
+  //                                         areaColor: Colors.greenAccent,
+  //                                         title:
+  //                                             "Income Statement for ${selectedStock!.symbol}",
+  //                                         chartData: financialResponse!
+  //                                             .data
+  //                                             .financialsIncomeStatement
+  //                                             .chart
+  //                                             .researchDevelopment!,
+  //                                       )
+  //                                     : SizedBox(),
+  //                                 const SizedBox(height: 20),
+  //                                 financialResponseLoader == true
+  //                                     ? TableShimmer(title: "Income Statement")
+  //                                     : financialResponse != null &&
+  //                                           financialResponse!
+  //                                               .data
+  //                                               .financialsIncomeStatement
+  //                                               .data
+  //                                               .isNotEmpty
+  //                                     ? FinancialTable(
+  //                                         chart: financialResponse!
+  //                                             .data
+  //                                             .financialsIncomeStatement
+  //                                             .chart,
+  //                                         data: financialResponse!
+  //                                             .data
+  //                                             .financialsIncomeStatement
+  //                                             .data,
+  //                                         itemName: FinancialTableEnum
+  //                                             .incomeStatement,
+  //                                       )
+  //                                     : SizedBox(),
+  //                               ],
+  //                             ),
+  //                           ),
+
+  //                           SingleChildScrollView(
+  //                             physics: NeverScrollableScrollPhysics(),
+
+  //                             child: Column(
+  //                               children: [
+  //                                 const SizedBox(height: 10),
+  //                                 financialResponseLoader == true
+  //                                     ? CashDebtShimmer()
+  //                                     : financialResponse != null &&
+  //                                           financialResponse!
+  //                                                   .data
+  //                                                   .financialsBalanceSheet
+  //                                                   .chart
+  //                                                   .totalAssets !=
+  //                                               null
+  //                                     ? CustomLineChart(
+  //                                         lineColor: Colors.purpleAccent,
+  //                                         areaColor: Colors.purple,
+  //                                         title:
+  //                                             "Balance Sheet for ${selectedStock!.symbol}",
+  //                                         chartData: financialResponse!
+  //                                             .data
+  //                                             .financialsBalanceSheet
+  //                                             .chart
+  //                                             .totalAssets!,
+  //                                       )
+  //                                     : SizedBox(),
+  //                                 const SizedBox(height: 20),
+  //                                 financialResponseLoader == true
+  //                                     ? TableShimmer(title: "Balance Sheet")
+  //                                     : financialResponse != null &&
+  //                                           financialResponse!
+  //                                               .data
+  //                                               .financialsBalanceSheet
+  //                                               .data
+  //                                               .isNotEmpty
+  //                                     ? FinancialTable(
+  //                                         chart: financialResponse!
+  //                                             .data
+  //                                             .financialsBalanceSheet
+  //                                             .chart,
+  //                                         data: financialResponse!
+  //                                             .data
+  //                                             .financialsBalanceSheet
+  //                                             .data,
+  //                                         itemName:
+  //                                             FinancialTableEnum.balanceSheet,
+  //                                       )
+  //                                     : SizedBox(),
+  //                               ],
+  //                             ),
+  //                           ),
+
+  //                           SingleChildScrollView(
+  //                             physics: NeverScrollableScrollPhysics(),
+
+  //                             child:
+  //                              Column(
+  //                               children: [
+  //                                 const SizedBox(height: 10),
+  //                                 financialResponseLoader == true
+  //                                     ? CashDebtShimmer()
+  //                                     : financialResponse != null &&
+  //                                           financialResponse!
+  //                                                   .data
+  //                                                   .financialsCashFlow
+  //                                                   .chart
+  //                                                   .investments !=
+  //                                               null
+  //                                     ? CustomLineChart(
+  //                                         lineColor: Colors.purpleAccent,
+  //                                         areaColor: Colors.purple,
+  //                                         title:
+  //                                             "Cash Flow for ${selectedStock!.symbol}",
+  //                                         chartData: financialResponse!
+  //                                             .data
+  //                                             .financialsCashFlow
+  //                                             .chart
+  //                                             .investments!,
+  //                                       )
+  //                                     : SizedBox(),
+  //                                 const SizedBox(height: 20),
+  //                                 financialResponseLoader == true
+  //                                     ? TableShimmer(title: "Cash Flow ")
+  //                                     : financialResponse != null &&
+  //                                           financialResponse!
+  //                                               .data
+  //                                               .financialsCashFlow
+  //                                               .data
+  //                                               .isNotEmpty
+  //                                     ? FinancialTable(
+  //                                         chart: financialResponse!
+  //                                             .data
+  //                                             .financialsCashFlow
+  //                                             .chart,
+  //                                         data: financialResponse!
+  //                                             .data
+  //                                             .financialsCashFlow
+  //                                             .data,
+  //                                         itemName: FinancialTableEnum.cashFlow,
+  //                                       )
+  //                                     : SizedBox(),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               );
+  //             },
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  //   // );
+  // }
+
+  Widget _earningsContent(dynamic id) {
+    return SafeArea(
+      key: id,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 15),
+            earningChartModelLoader == true
+                ? CashDebtShimmer()
+                : earningChartModel != null &&
+                      earningChartModel!.data.isNotEmpty
+                ? QuarterlyPerformanceChart(data: earningChartModel!.data)
+                : SizedBox(),
+            // SizedBox(height: 20),
+            // QuarterlyPerformanceChartShimmer(),
+            SizedBox(height: 20),
+            earningReportShimmer == true
+                ? TableShimmer(title: "Earnings")
+                : earningReportsModel != null &&
+                      earningReportsModel!.data.isNotEmpty
+                ? EarningsTable(data: earningReportsModel!.data)
+                : SizedBox(),
+            SizedBox(height: 20),
+            companyDetailShimmer == true
+                ? TableShimmer(title: "Earnings Trend")
+                : companyDetailModel != null &&
+                      companyDetailModel!.data.fundamentalsEarningsTrend != null
+                ? EarningsTrend(
+                    title: "Earnings Trend",
+                    data: companyDetailModel!.data.fundamentalsEarningsTrend,
+                  )
+                : SizedBox(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _analysisContent(dynamic id) {
     DateTime fromDate;
     DateTime toDate;
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DateRangePickerWidget(
-            loading: chartLoader,
-            onShowPressed: (from, to) async {
-              fromDate = from!;
-              toDate = to!;
-              await getAnalysisData(
-                widget.chatRouting!.symbol,
-                IntervalEnum.daily,
-                now1: toDate,
-                startDate1: fromDate,
-              );
-            },
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DateRangePickerWidget(
+          loading: chartLoader,
+          onShowPressed: (from, to) async {
+            fromDate = from!;
+            toDate = to!;
+            await getAnalysisData(
+              widget.chatRouting!.symbol,
+              IntervalEnum.daily,
+              now1: toDate,
+              startDate1: fromDate,
+            );
+          },
+        ),
 
-          SizedBox(height: 20),
-          chartLoader == true
-              ? CashDebtShimmer()
-              : analysisDataModel != null &&
-                    analysisDataModel!.data != null &&
-                    analysisDataModel!.data!.chart != null
-              ? Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: CustomCandleChart(
-                    selectedItem: selectedItemCandleAnalysis ?? "H",
-                    key: UniqueKey(),
-                    name: "",
-                    data: analysisDataModel!.data!.chart!,
-                    onPressed: (val) async {
-                      await getAnalysisData(
-                        widget.chatRouting!.symbol,
-                        val == 'H'
-                            ? IntervalEnum.daily
-                            : val == 'D'
-                            ? IntervalEnum.daily
-                            : val == 'W'
-                            ? IntervalEnum.daily
-                            : IntervalEnum.monthly,
-                      );
-                    },
-                  ),
-                )
-              : CustomCandleChartShimmer(),
-          SizedBox(height: 20),
-          chartLoader == true
-              ? TableShimmer(title: "Earnings Trend")
-              : analysisDataModel != null &&
-                    analysisDataModel!.data != null &&
-                    analysisDataModel!.data!.eodData != null
-              ? Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: AnalysisTable(
-                    title: "Earnings Trend",
-                    eodData: analysisDataModel!.data!.eodData,
-                  ),
-                )
-              : SizedBox(),
-        ],
-      ),
+        SizedBox(height: 20),
+        chartLoader == true
+            ? CashDebtShimmer()
+            : analysisDataModel != null &&
+                  analysisDataModel!.data != null &&
+                  analysisDataModel!.data!.chart != null
+            ? Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: CustomCandleChart(
+                  selectedItem: selectedItemCandleAnalysis ?? "H",
+                  key: UniqueKey(),
+                  name: "",
+                  data: analysisDataModel!.data!.chart!,
+                  onPressed: (val) async {
+                    await getAnalysisData(
+                      widget.chatRouting!.symbol,
+                      val == 'H'
+                          ? IntervalEnum.daily
+                          : val == 'D'
+                          ? IntervalEnum.daily
+                          : val == 'W'
+                          ? IntervalEnum.daily
+                          : IntervalEnum.monthly,
+                    );
+                  },
+                ),
+              )
+            : CustomCandleChartShimmer(),
+        SizedBox(height: 20),
+        chartLoader == true
+            ? TableShimmer(title: "Earnings Trend")
+            : analysisDataModel != null &&
+                  analysisDataModel!.data != null &&
+                  analysisDataModel!.data!.eodData != null
+            ? Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: AnalysisTable(
+                  title: "Earnings Trend",
+                  eodData: analysisDataModel!.data!.eodData,
+                ),
+              )
+            : SizedBox(),
+      ],
     );
   }
 }
