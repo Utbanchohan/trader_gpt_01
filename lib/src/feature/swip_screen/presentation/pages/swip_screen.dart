@@ -276,6 +276,9 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
 
       body: PageView(
         controller: _pageController,
+        physics: pgeIndex == 0
+            ? NeverScrollableScrollPhysics() // swipe disable for page 0
+            : BouncingScrollPhysics(),
         onPageChanged: (index) {
           setState(() {
             pgeIndex = index;
