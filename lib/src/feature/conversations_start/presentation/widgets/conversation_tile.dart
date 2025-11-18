@@ -30,6 +30,17 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
     symbol: "\$",
     decimalDigits: 2,
   );
+  String getAgoText(DateTime date) {
+    final now = DateTime.now();
+    final diff = now.difference(date);
+
+    if (diff.inMinutes < 1) return "Just now";
+    if (diff.inMinutes < 60) return "${diff.inMinutes} mins ago";
+    if (diff.inHours < 24) return "${diff.inHours} hours ago";
+    // if (diff.inDays == 1) return "Yesterday";
+
+    return "${diff.inDays} days ago";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,21 +125,19 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               // ),
               SizedBox(height: 10),
               MdSnsText(
-                widget.stock.lastMessage != null
-                    ? DateFormat('hh:mm a').format(
-                        DateTime.fromMillisecondsSinceEpoch(
+                getAgoText(
+                  widget.stock.lastMessage != null
+                      ? DateTime.fromMillisecondsSinceEpoch(
                           widget
                               .stock
                               .lastMessage!
                               .createdAt
                               .millisecondsSinceEpoch,
-                        ),
-                      )
-                    : DateFormat('hh:mm a').format(
-                        DateTime.fromMillisecondsSinceEpoch(
+                        )
+                      : DateTime.fromMillisecondsSinceEpoch(
                           widget.stock.createdAt.millisecondsSinceEpoch,
                         ),
-                      ),
+                ),
                 variant: TextVariant.h4,
                 fontWeight: TextFontWeightVariant.h4,
                 color: AppColors.color677FA4,
