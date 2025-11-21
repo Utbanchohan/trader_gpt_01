@@ -135,7 +135,7 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
             fontWeight: TextFontWeightVariant.h3,
             color: AppColors.fieldTextColor,
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 30.h),
 
           SizedBox(
             height: 240.h,
@@ -154,18 +154,20 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 35, // ⬅️ zara bada kiya spacing ke liye
+                      reservedSize: 50, // ⬅️ more space for text (fix overlap)
                       interval: 100,
-                      getTitlesWidget: (value, meta) => Padding(
-                        padding: EdgeInsets.only(bottom: 6), // ⬅️ extra spacing
-                        child: MdSnsText(
-                          value.toInt().toString(),
-                          color: AppColors.white,
-                          variant: TextVariant.h5,
-                          height: 1.4, // ⬅️ line height (spacing)
-                          letterSpacing: 0.8, // ⬅️ little extra spacing
-                        ),
-                      ),
+
+                      getTitlesWidget: (value, meta) {
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: MdSnsText(
+                            value.toInt().toString(),
+                            color: AppColors.white,
+                            variant: TextVariant.h5,
+                            height: 1.6,
+                          ),
+                        );
+                      },
                     ),
                   ),
 
@@ -174,7 +176,7 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
                       showTitles: true,
                       interval: 50,
                       getTitlesWidget: (value, meta) => Padding(
-                        padding: EdgeInsets.only(top: 10),
+                        padding: EdgeInsets.only(top: 10, right: 10),
                         child: MdSnsText(
                           value.toInt().toString(),
                           color: AppColors.white,
