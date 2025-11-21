@@ -35,8 +35,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
     final diff = now.difference(date);
 
     if (diff.inMinutes < 1) return "Just now";
-    if (diff.inMinutes < 60) return "${diff.inMinutes} mins ago";
-    if (diff.inHours < 24) return "${diff.inHours} hours ago";
+    if (diff.inMinutes < 60) return "${diff.inMinutes} min ago";
+    if (diff.inHours < 24) return "${diff.inHours} hr ago";
     // if (diff.inDays == 1) return "Yesterday";
 
     return "${diff.inDays} days ago";
