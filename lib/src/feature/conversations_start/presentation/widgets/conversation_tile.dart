@@ -59,8 +59,9 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               : widget.stocks.pctChange.toStringAsFixed(2)
         : widget.stocks.pctChange.toStringAsFixed(2);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+      // margin: EdgeInsets.only(left: 20, right: 20),
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(12),
@@ -123,7 +124,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               //   height: 41.h,
               //   fit: BoxFit.cover,
               // ),
-              SizedBox(height: 10),
+              SizedBox(height: 8),
               MdSnsText(
                 getAgoText(
                   widget.stock.lastMessage != null
@@ -144,7 +145,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               ),
             ],
           ),
-          SizedBox(width: 12),
+          SizedBox(width: 20),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
