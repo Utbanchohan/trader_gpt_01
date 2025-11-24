@@ -11,6 +11,10 @@ import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/crypto_market_chart.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/analysis_content.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/company_content.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/earning_content.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/financial_tab.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/about_crypto/about_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/info_crypto/info_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/monthly_data_crypto/monthly_data_crypto.dart';
@@ -222,6 +226,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   void _scrollToSection(String id) {
     _activeSection = id;
     final key = _keys[id];
+    setState(() {
+      if (id == "financial") {
+        thirdTap(0);
+      } else if (id == "company") {
+        secondIndexTap();
+      } else if (id == "earnings") {
+        fourthTap();
+      } else if (id == "analytics") {
+        fifthTap();
+      }
+    });
     if (key?.currentContext != null) {
       Scrollable.ensureVisible(
         key!.currentContext!,
@@ -2266,13 +2281,76 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 return section['id'] == "overview"
                     ? _overviewContent(_keys[section['id']])
                     : section['id'] == "company"
-                    ? _companyContent(_keys[section['id']])
+                    ? CompanyContent(
+                        id: _keys[section['id']],
+                        companyLoader: companyLoader,
+                        companyModel: companyModel,
+                        earningdata: earningdata,
+                        shortVolumeModel: shortVolumeModel,
+                        companyDetailModel: companyDetailModel,
+                        esgScoreData: esgScoreData,
+                        securityShortVolume: securityShortVolume,
+                        insiderTransactionResponse: insiderTransactionResponse,
+                        securityOwnership: securityOwnership,
+                      )
+                    // _companyContent(_keys[section['id']])
                     : section['id'] == "financial"
-                    ? _financialContent(_keys[section['id']])
+                    ? FinancialTab(
+                        id: _keys[section['id']],
+                        financialLoader: financialLoader,
+                        financeChartsDataModel: financeChartsDataModel,
+                        financialResponseLoader: financialResponseLoader,
+                        financialResponse: financialResponse,
+                        symbol: selectedStock!.symbol,
+                        onPressed: (id) {
+                          if (id == "0") {
+                            thirdTap(0);
+                          } else {
+                            thirdTap(1);
+                          }
+                        },
+                      )
+                    // _financialContent(_keys[section['id']])
                     : section['id'] == "earnings"
-                    ? _earningsContent(_keys[section['id']])
+                    ? EarningContent(
+                        companyDetailShimmer: companyDetailShimmer,
+                        earningReportShimmer: earningReportShimmer,
+                        earningChartModelLoader: earningChartModelLoader,
+                        companyDetailModel: companyDetailModel,
+                        earningChartModel: earningChartModel,
+                        earningReportsModel: earningReportsModel,
+                        id: _keys[section['id']],
+                      )
+                    // _earningsContent(_keys[section['id']])
                     : section['id'] == "analytics"
-                    ? _analysisContent(_keys[section['id']])
+                    ? AnalysisContent(
+                        id: _keys[section['id']],
+                        chartLoader: chartLoader,
+                        analysisDataModel: analysisDataModel,
+                        onPressed: (toDate, fromDate) async {
+                          await getAnalysisData(
+                            widget.chatRouting!.symbol,
+                            IntervalEnum.daily,
+                            now1: toDate,
+                            startDate1: fromDate,
+                          );
+                        },
+                        onPressedAnalysis: (val) async {
+                          await getAnalysisData(
+                            widget.chatRouting!.symbol,
+                            val == 'H'
+                                ? IntervalEnum.daily
+                                : val == 'D'
+                                ? IntervalEnum.daily
+                                : val == 'W'
+                                ? IntervalEnum.daily
+                                : IntervalEnum.monthly,
+                          );
+                        },
+                        selectedItemCandleAnalysis:
+                            selectedItemCandleAnalysis ?? "H",
+                      )
+                    // _analysisContent(_keys[section['id']])
                     : Container(
                         key: _keys[section['id']],
                         height: 600,
@@ -3759,508 +3837,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       ),
     );
   }
-
-  // Widget _financialContent(dynamic id) {
-  //   return Container(
-  //     color: Colors.amber,
-  //     height: MediaQuery.sizeOf(context).height,
-
-  //     key: id,
-  //     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         // SizedBox(height: 15),
-  //         Row(
-  //           crossAxisAlignment: CrossAxisAlignment.center,
-  //           children: [
-  //             MdSnsText(
-  //               "Financial",
-  //               variant: TextVariant.h2,
-  //               fontWeight: TextFontWeightVariant.h1,
-
-  //               color: AppColors.fieldTextColor,
-  //             ),
-  //             SizedBox(width: 5),
-  //             Align(
-  //               alignment: Alignment.center,
-  //               child: Image.asset(
-  //                 "assets/images/info-circle.png",
-  //                 height: 14,
-  //                 width: 14,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         SizedBox(height: 6),
-
-  //         MdSnsText(
-  //           "Last Updated: 01-19-2023 10:30:33 EST",
-  //           variant: TextVariant.h3,
-  //           fontWeight: TextFontWeightVariant.h4,
-
-  //           color: AppColors.white,
-  //         ),
-  //         SizedBox(height: 15),
-
-  //         // SizedBox(height: 20),
-  //         DefaultTabController(
-  //           length: 4,
-  //           child: Builder(
-  //             builder: (context) {
-  //               final TabController financeialTabController =
-  //                   DefaultTabController.of(context);
-
-  //               return Expanded(
-  //                 child: Column(
-  //                   children: [
-  //                     AnimatedBuilder(
-  //                       animation: financeialTabController.animation!,
-  //                       builder: (context, _) {
-  //                         return TabBar(
-  //                           controller: financeialTabController,
-  //                           isScrollable: true,
-  //                           indicatorSize: TabBarIndicatorSize.tab,
-  //                           tabAlignment: TabAlignment.start,
-  //                           indicatorAnimation: TabIndicatorAnimation.elastic,
-  //                           onTap: (val) {
-  //                             thirdTap(val);
-  //                           },
-
-  //                           indicatorPadding: const EdgeInsets.all(4),
-  //                           labelPadding: const EdgeInsets.symmetric(
-  //                             horizontal: 4,
-  //                           ),
-  //                           dividerColor: Colors.transparent,
-
-  //                           indicator: BoxDecoration(
-  //                             color: AppColors.color203063,
-  //                             borderRadius: BorderRadius.circular(50),
-  //                             border: Border.all(
-  //                               color: AppColors.color0x1AB3B3B3,
-  //                               width: 1,
-  //                             ),
-  //                           ),
-
-  //                           tabs: List.generate(4, (index) {
-  //                             final List<String> tabTitles = financialtabs;
-
-  //                             final bool isSelected =
-  //                                 financeialTabController.index == index ||
-  //                                 (financeialTabController.indexIsChanging &&
-  //                                     financeialTabController.previousIndex ==
-  //                                         index);
-
-  //                             return Tab(
-  //                               child: Container(
-  //                                 padding: const EdgeInsets.symmetric(
-  //                                   horizontal: 12,
-  //                                   vertical: 8,
-  //                                 ),
-  //                                 decoration: BoxDecoration(
-  //                                   borderRadius: BorderRadius.circular(50),
-  //                                   border: Border.all(
-  //                                     color: AppColors.color0x1AB3B3B3,
-  //                                     width: 1,
-  //                                   ),
-  //                                 ),
-  //                                 child: MdSnsText(
-  //                                   tabTitles[index],
-  //                                   color: isSelected
-  //                                       ? AppColors.white
-  //                                       : AppColors.color677FA4,
-  //                                   variant: isSelected
-  //                                       ? TextVariant.h2
-  //                                       : TextVariant.h3,
-  //                                   fontWeight: isSelected
-  //                                       ? TextFontWeightVariant.h1
-  //                                       : TextFontWeightVariant.h4,
-  //                                 ),
-  //                               ),
-  //                             );
-  //                           }),
-  //                         );
-  //                       },
-  //                     ),
-
-  //                     Expanded(
-  //                       child: TabBarView(
-  //                         physics: NeverScrollableScrollPhysics(),
-  //                         controller: financeialTabController,
-  //                         children: [
-  //                           SingleChildScrollView(
-  //                             physics: NeverScrollableScrollPhysics(),
-  //                             child: Column(
-  //                               children: [
-  //                                 SizedBox(height: 15),
-
-  //                                 financialLoader == true
-  //                                     ? CashDebtShimmer()
-  //                                     : financeChartsDataModel != null &&
-  //                                           financeChartsDataModel!
-  //                                                   .data
-  //                                                   .cashAndDebt
-  //                                                   .yearly !=
-  //                                               null &&
-  //                                           financeChartsDataModel!
-  //                                               .data
-  //                                               .cashAndDebt
-  //                                               .yearly!
-  //                                               .metrics
-  //                                               .isNotEmpty
-  //                                     ? CashdebtWidgets(
-  //                                         title: "Cash and Debt",
-  //                                         cash: "Cash",
-  //                                         debt: "Debt",
-  //                                         rawCash:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .cashAndDebt
-  //                                                 .yearly!
-  //                                                 .metrics['Cash'] ??
-  //                                             [],
-  //                                         rawDebt:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .cashAndDebt
-  //                                                 .yearly!
-  //                                                 .metrics['Debt'] ??
-  //                                             [],
-  //                                       )
-  //                                     : SizedBox(),
-  //                                 const SizedBox(height: 20),
-
-  //                                 financialLoader == true
-  //                                     ? CashDebtShimmer()
-  //                                     : financeChartsDataModel != null &&
-  //                                           financeChartsDataModel!
-  //                                                   .data
-  //                                                   .assetsAndStockHolders
-  //                                                   .yearly !=
-  //                                               null &&
-  //                                           financeChartsDataModel!
-  //                                               .data
-  //                                               .assetsAndStockHolders
-  //                                               .yearly!
-  //                                               .metrics
-  //                                               .isNotEmpty
-  //                                     ? CashdebtWidgets(
-  //                                         title: "Assets and Stockholders",
-  //                                         cash: "Total Assets",
-  //                                         debt: "Total StackHolder",
-  //                                         rawCash:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .assetsAndStockHolders
-  //                                                 .yearly!
-  //                                                 .metrics["Total Assets"] ??
-  //                                             [],
-  //                                         rawDebt:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .assetsAndStockHolders
-  //                                                 .yearly!
-  //                                                 .metrics["Total StockHolder"] ??
-  //                                             [],
-  //                                       )
-  //                                     : SizedBox(),
-  //                                 SizedBox(height: 20),
-  //                                 financialLoader == true
-  //                                     ? CashDebtShimmer()
-  //                                     : financeChartsDataModel != null &&
-  //                                           financeChartsDataModel!
-  //                                                   .data
-  //                                                   .outstandingSharesBuyback
-  //                                                   .yearly !=
-  //                                               null &&
-  //                                           financeChartsDataModel!
-  //                                               .data
-  //                                               .outstandingSharesBuyback
-  //                                               .yearly!
-  //                                               .metrics
-  //                                               .isNotEmpty
-  //                                     ? CashdebtWidgets(
-  //                                         title: "Outstanding Shares & Buyback",
-  //                                         cash: "Outstanding Shares",
-  //                                         debt: "Stock Buyback Percentage",
-  //                                         rawCash:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .outstandingSharesBuyback
-  //                                                 .yearly!
-  //                                                 .metrics["Outstanding Shares"] ??
-  //                                             [],
-  //                                         rawDebt:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .outstandingSharesBuyback
-  //                                                 .yearly!
-  //                                                 .metrics["Stock Buyback Percentage"] ??
-  //                                             [],
-  //                                       )
-  //                                     : SizedBox(),
-  //                                 // CashDebtShimmer(),
-  //                                 const SizedBox(height: 20),
-  //                                 financialLoader == true
-  //                                     ? CashDebtShimmer()
-  //                                     : financeChartsDataModel != null &&
-  //                                           financeChartsDataModel!
-  //                                                   .data
-  //                                                   .revenueAndIncome
-  //                                                   .yearly !=
-  //                                               null &&
-  //                                           financeChartsDataModel!
-  //                                               .data
-  //                                               .revenueAndIncome
-  //                                               .yearly!
-  //                                               .metrics
-  //                                               .isNotEmpty
-  //                                     ? CashdebtWidgets(
-  //                                         title: "Revenue and Income",
-  //                                         cash: "Revenue",
-  //                                         debt: "Income",
-  //                                         rawCash:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .revenueAndIncome
-  //                                                 .yearly!
-  //                                                 .metrics["Revenue"] ??
-  //                                             [],
-  //                                         rawDebt:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .revenueAndIncome
-  //                                                 .yearly!
-  //                                                 .metrics["Income"] ??
-  //                                             [],
-  //                                       )
-  //                                     : SizedBox(),
-  //                                 //  CashDebtShimmer(),
-  //                                 const SizedBox(height: 20),
-
-  //                                 financeChartsDataModel != null &&
-  //                                         financeChartsDataModel!
-  //                                                 .data
-  //                                                 .cashFlowData
-  //                                                 .yearly !=
-  //                                             null &&
-  //                                         financeChartsDataModel!
-  //                                             .data
-  //                                             .cashFlowData
-  //                                             .yearly!
-  //                                             .metrics
-  //                                             .isNotEmpty
-  //                                     ? OperatingCashFlow(
-  //                                         title: "Cash Flow Data",
-  //                                         rawCash:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .cashFlowData
-  //                                                 .yearly!
-  //                                                 .metrics["Operating Cash Flow"] ??
-  //                                             [],
-  //                                         rawDebt:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .cashFlowData
-  //                                                 .yearly!
-  //                                                 .metrics["Free Cash Flow"] ??
-  //                                             [],
-  //                                         rawAssets:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .cashFlowData
-  //                                                 .yearly!
-  //                                                 .metrics["Net Income"] ??
-  //                                             [],
-  //                                         rawEquity:
-  //                                             financeChartsDataModel!
-  //                                                 .data
-  //                                                 .cashFlowData
-  //                                                 .yearly!
-  //                                                 .metrics["Cash Flow Dividends"] ??
-  //                                             [],
-  //                                       )
-  //                                     : SizedBox(),
-  //                                 // CashDebtShimmer(),
-  //                                 const SizedBox(height: 0),
-  //                               ],
-  //                             ),
-  //                           ),
-
-  //                           SingleChildScrollView(
-  //                             physics: NeverScrollableScrollPhysics(),
-
-  //                             child: Column(
-  //                               children: [
-  //                                 const SizedBox(height: 10),
-  //                                 financialResponseLoader == true
-  //                                     ? CashDebtShimmer()
-  //                                     : financialResponse != null &&
-  //                                           financialResponse!
-  //                                                   .data
-  //                                                   .financialsIncomeStatement
-  //                                                   .chart
-  //                                                   .researchDevelopment !=
-  //                                               null
-  //                                     ? CustomLineChart(
-  //                                         lineColor: Colors.green,
-  //                                         areaColor: Colors.greenAccent,
-  //                                         title:
-  //                                             "Income Statement for ${selectedStock!.symbol}",
-  //                                         chartData: financialResponse!
-  //                                             .data
-  //                                             .financialsIncomeStatement
-  //                                             .chart
-  //                                             .researchDevelopment!,
-  //                                       )
-  //                                     : SizedBox(),
-  //                                 const SizedBox(height: 20),
-  //                                 financialResponseLoader == true
-  //                                     ? TableShimmer(title: "Income Statement")
-  //                                     : financialResponse != null &&
-  //                                           financialResponse!
-  //                                               .data
-  //                                               .financialsIncomeStatement
-  //                                               .data
-  //                                               .isNotEmpty
-  //                                     ? FinancialTable(
-  //                                         chart: financialResponse!
-  //                                             .data
-  //                                             .financialsIncomeStatement
-  //                                             .chart,
-  //                                         data: financialResponse!
-  //                                             .data
-  //                                             .financialsIncomeStatement
-  //                                             .data,
-  //                                         itemName: FinancialTableEnum
-  //                                             .incomeStatement,
-  //                                       )
-  //                                     : SizedBox(),
-  //                               ],
-  //                             ),
-  //                           ),
-
-  //                           SingleChildScrollView(
-  //                             physics: NeverScrollableScrollPhysics(),
-
-  //                             child: Column(
-  //                               children: [
-  //                                 const SizedBox(height: 10),
-  //                                 financialResponseLoader == true
-  //                                     ? CashDebtShimmer()
-  //                                     : financialResponse != null &&
-  //                                           financialResponse!
-  //                                                   .data
-  //                                                   .financialsBalanceSheet
-  //                                                   .chart
-  //                                                   .totalAssets !=
-  //                                               null
-  //                                     ? CustomLineChart(
-  //                                         lineColor: Colors.purpleAccent,
-  //                                         areaColor: Colors.purple,
-  //                                         title:
-  //                                             "Balance Sheet for ${selectedStock!.symbol}",
-  //                                         chartData: financialResponse!
-  //                                             .data
-  //                                             .financialsBalanceSheet
-  //                                             .chart
-  //                                             .totalAssets!,
-  //                                       )
-  //                                     : SizedBox(),
-  //                                 const SizedBox(height: 20),
-  //                                 financialResponseLoader == true
-  //                                     ? TableShimmer(title: "Balance Sheet")
-  //                                     : financialResponse != null &&
-  //                                           financialResponse!
-  //                                               .data
-  //                                               .financialsBalanceSheet
-  //                                               .data
-  //                                               .isNotEmpty
-  //                                     ? FinancialTable(
-  //                                         chart: financialResponse!
-  //                                             .data
-  //                                             .financialsBalanceSheet
-  //                                             .chart,
-  //                                         data: financialResponse!
-  //                                             .data
-  //                                             .financialsBalanceSheet
-  //                                             .data,
-  //                                         itemName:
-  //                                             FinancialTableEnum.balanceSheet,
-  //                                       )
-  //                                     : SizedBox(),
-  //                               ],
-  //                             ),
-  //                           ),
-
-  //                           SingleChildScrollView(
-  //                             physics: NeverScrollableScrollPhysics(),
-
-  //                             child:
-  //                              Column(
-  //                               children: [
-  //                                 const SizedBox(height: 10),
-  //                                 financialResponseLoader == true
-  //                                     ? CashDebtShimmer()
-  //                                     : financialResponse != null &&
-  //                                           financialResponse!
-  //                                                   .data
-  //                                                   .financialsCashFlow
-  //                                                   .chart
-  //                                                   .investments !=
-  //                                               null
-  //                                     ? CustomLineChart(
-  //                                         lineColor: Colors.purpleAccent,
-  //                                         areaColor: Colors.purple,
-  //                                         title:
-  //                                             "Cash Flow for ${selectedStock!.symbol}",
-  //                                         chartData: financialResponse!
-  //                                             .data
-  //                                             .financialsCashFlow
-  //                                             .chart
-  //                                             .investments!,
-  //                                       )
-  //                                     : SizedBox(),
-  //                                 const SizedBox(height: 20),
-  //                                 financialResponseLoader == true
-  //                                     ? TableShimmer(title: "Cash Flow ")
-  //                                     : financialResponse != null &&
-  //                                           financialResponse!
-  //                                               .data
-  //                                               .financialsCashFlow
-  //                                               .data
-  //                                               .isNotEmpty
-  //                                     ? FinancialTable(
-  //                                         chart: financialResponse!
-  //                                             .data
-  //                                             .financialsCashFlow
-  //                                             .chart,
-  //                                         data: financialResponse!
-  //                                             .data
-  //                                             .financialsCashFlow
-  //                                             .data,
-  //                                         itemName: FinancialTableEnum.cashFlow,
-  //                                       )
-  //                                     : SizedBox(),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               );
-  //             },
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  //   // );
-  // }
 
   Widget _earningsContent(dynamic id) {
     return SafeArea(
