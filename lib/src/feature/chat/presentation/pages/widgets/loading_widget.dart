@@ -40,13 +40,13 @@ class LoadingWidgetMarkdown extends StatelessWidget {
             ),
           ),
 
-          SizedBox(width: 10.h),
-          MdSnsText(
-            "Skip",
-            color: AppColors.white,
-            variant: TextVariant.h3,
-            fontWeight: TextFontWeightVariant.h1,
-          ),
+          // SizedBox(width: 10.h),
+          // MdSnsText(
+          //   "Skip",
+          //   color: AppColors.white,
+          //   variant: TextVariant.h3,
+          //   fontWeight: TextFontWeightVariant.h1,
+          // ),
         ],
       ),
     );
