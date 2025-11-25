@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../gen/assets.gen.dart';
 import '../../../../../core/theme/app_colors.dart';
@@ -39,7 +40,7 @@ class LoadingWidgetMarkdown extends StatelessWidget {
             ),
           ),
 
-          SizedBox(width: 20),
+          SizedBox(width: 10.h),
           MdSnsText(
             "Skip",
             color: AppColors.white,

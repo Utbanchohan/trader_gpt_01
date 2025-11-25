@@ -169,6 +169,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /// Title text
               MdSnsText(
                 widget.updatesAskStream![0].definition,
                 color: AppColors.white,
@@ -177,6 +178,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
               ),
               SizedBox(height: 5.h),
 
+              /// Completed row
               Row(
                 children: [
                   Icon(
@@ -196,21 +198,25 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
 
               SizedBox(height: 10.h),
 
+              /// Scrollable List
               if (widget.updatesAskStream!.isNotEmpty &&
                   widget.updatesAskStream![0].childTasks!.isNotEmpty)
-                SizedBox(
-                  height: 100.h,
+                Expanded(
                   child: ListView.builder(
+                    padding: EdgeInsets.zero,
                     itemCount: widget.updatesAskStream![0].childTasks!.length,
                     itemBuilder: (context, index) {
-                      return MdSnsText(
-                        widget
-                            .updatesAskStream![0]
-                            .childTasks![index]
-                            .description,
-                        color: AppColors.color0xFF9EAAC0,
-                        variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 8.h),
+                        child: MdSnsText(
+                          widget
+                              .updatesAskStream![0]
+                              .childTasks![index]
+                              .description,
+                          color: AppColors.color0xFF9EAAC0,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
                       );
                     },
                   ),
