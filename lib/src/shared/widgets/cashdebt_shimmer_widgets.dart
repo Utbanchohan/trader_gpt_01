@@ -15,6 +15,7 @@ class CashDebtShimmer extends StatelessWidget {
       child: Container(
         height: 300,
         padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           border: Border.all(color: AppColors.color1AB3B3B3),
           color: AppColors.color091224,
@@ -28,16 +29,6 @@ class CashDebtShimmer extends StatelessWidget {
             SizedBox(height: 20.h),
 
             // 🔹 Chart shimmer box
-            Container(
-              height: 200.h,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppColors.color1B254B.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-
-            SizedBox(height: 16.h),
 
             // 🔹 Bottom legends shimmer (Cash / Debt)
             Row(

@@ -57,7 +57,7 @@ class _AnalysisContentState extends State<AnalysisContent> {
             ? Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: CustomCandleChart(
-                  selectedItem: widget.selectedItemCandleAnalysis ?? "H",
+                  selectedItem: widget.selectedItemCandleAnalysis,
                   key: UniqueKey(),
                   name: "",
                   data: widget.analysisDataModel!.data!.chart!,

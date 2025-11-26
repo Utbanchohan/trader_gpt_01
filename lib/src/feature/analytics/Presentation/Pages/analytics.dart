@@ -15,6 +15,7 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/company_content.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/earning_content.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/financial_tab.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/overview_content.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/about_crypto/about_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/info_crypto/info_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/monthly_data_crypto/monthly_data_crypto.dart';
@@ -113,6 +114,7 @@ import 'widgets/analytics_candle_stick_chart.dart';
 import 'widgets/operating_cash_flow.dart';
 import 'widgets/price_comparison_chart.dart';
 import 'dart:math' as math;
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
@@ -153,17 +155,21 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   FinanceDataResponse? financeChartsDataModel;
   List<OverviewCandleChartModel>? overviewCandleChartModel;
   PricePerformance? pricePerformanceData;
-  bool chartLoader = false;
-  bool ishowLoder = false;
-  bool isshowpriceTargetMatricsDataLoder = false;
-  bool isshowshareStructureLoder = false;
-  bool companyLoader = false;
-  bool financialLoader = false;
-  bool financialResponseLoader = false;
-  bool earningReportShimmer = false;
-  bool companyDetailShimmer = false;
-  bool earningChartModelLoader = false;
-  bool analysisDataModelLoader = false;
+  bool chartLoader = true;
+  bool ishowLoder = true;
+  bool isshowpriceTargetMatricsDataLoder = true;
+  bool isshowshareStructureLoder = true;
+  bool companyLoader = true;
+  bool financialLoader = true;
+  bool financialResponseLoader = true;
+  bool earningReportShimmer = true;
+  bool companyDetailShimmer = true;
+  bool earningChartModelLoader = true;
+  bool analysisDataModelLoader = true;
+
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
 
   //crypto Variable start
   List<OverviewCandleChartModel>? overviewCandleChartModelCrypto;
@@ -186,44 +192,39 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   String _activeSection = 'overview';
 
   final List<Map<String, dynamic>> sections = [
-    {'id': 'overview', 'title': 'Overview', 'color': Colors.red},
-    {'id': 'company', 'title': 'Company', 'color': Colors.green},
-    {'id': 'financial', 'title': 'Financial', 'color': Colors.blue},
-    {'id': 'earnings', 'title': 'Earnings', 'color': Colors.orange},
-    {'id': 'analytics', 'title': 'Analytics', 'color': Colors.orange},
+    {
+      'id': 'overview',
+      'title': 'Overview',
+      'color': Colors.red,
+      "image": Assets.images.categoryc1.path,
+    },
+    {
+      'id': 'company',
+      'title': 'Company',
+      'color': Colors.green,
+      "image": Assets.images.c2.path,
+    },
+    {
+      'id': 'financial',
+      'title': 'Financial',
+      'color': Colors.blue,
+      "image": Assets.images.diagramc3.path,
+    },
+    {
+      'id': 'earnings',
+      'title': 'Earnings',
+      'color': Colors.orange,
+      "image": Assets.images.directboxNotifc4.path,
+    },
+    {
+      'id': 'analytics',
+      'title': 'Analytics',
+      'color': Colors.orange,
+      "image": Assets.images.categoryc1.path,
+    },
   ];
 
-  void _onScroll() {
-    for (var section in sections) {
-      final key = _keys[section['id']]!;
-
-      final context = key.currentContext;
-      if (context != null) {
-        final box = context.findRenderObject() as RenderBox;
-        final offset = box.localToGlobal(Offset.zero).dy;
-
-        if (offset < 200 && offset > -400) {
-          if (_activeSection != section['id']) {
-            setState(() {
-              _activeSection = section['id'];
-              if (section['id'] == "financial") {
-                thirdTap(0);
-              } else if (section['id'] == "company") {
-                secondIndexTap();
-              } else if (section['id'] == "earnings") {
-                fourthTap();
-              } else if (section['id'] == "analytics") {
-                fifthTap();
-              }
-            });
-          }
-          break;
-        }
-      }
-    }
-  }
-
-  void _scrollToSection(String id) {
+  void _scrollToSection(String id, Map<String, dynamic> section) {
     _activeSection = id;
     final key = _keys[id];
     setState(() {
@@ -237,13 +238,19 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         fifthTap();
       }
     });
-    if (key?.currentContext != null) {
-      Scrollable.ensureVisible(
-        key!.currentContext!,
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.easeInOut,
-      );
-    }
+    final index = sections.indexOf(section);
+    itemScrollController.scrollTo(
+      index: index,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
+    );
+    // if (key?.currentContext != null) {
+    //   Scrollable.ensureVisible(
+    //     key!.currentContext!,
+    //     duration: const Duration(milliseconds: 100),
+    //     curve: Curves.easeInOut,
+    //   );
+    // }
   }
 
   @override
@@ -954,7 +961,35 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     for (var section in sections) {
       _keys[section['id']] = GlobalKey();
     }
-    _scrollController.addListener(_onScroll);
+    // _scrollController.addListener(_onScroll);
+
+    itemPositionsListener.itemPositions.addListener(() {
+      final positions = itemPositionsListener.itemPositions.value;
+
+      // Find first visible section
+      int? firstIndex = positions
+          .where((pos) => pos.itemTrailingEdge > 0)
+          .map((pos) => pos.index)
+          .fold(null, (a, b) => a == null ? b : (a < b ? a : b));
+
+      if (firstIndex != null) {
+        final id = sections[firstIndex]['id'];
+        if (id != _activeSection) {
+          setState(() {
+            _activeSection = id;
+            if (id == "financial") {
+              thirdTap(0);
+            } else if (id == "company") {
+              secondIndexTap();
+            } else if (id == "earnings") {
+              fourthTap();
+            } else if (id == "analytics") {
+              fifthTap();
+            }
+          });
+        }
+      }
+    });
 
     ///dummy scroller end
     ///
@@ -1423,7 +1458,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         debugPrint("Error in getOverviewCandleChartCrypto: $e\n$s");
       }
     }
-
+    final List<String?> categoryImages = [
+      Assets.images.categoryc1.path,
+      Assets.images.c2.path,
+      Assets.images.diagramc3.path,
+      Assets.images.directboxNotifc4.path,
+      Assets.images.categoryc1.path,
+    ];
     if (priceComparisonModel == null) {
       try {
         await priceComparison(
@@ -2233,37 +2274,55 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         // ✅ Horizontal Tabs (Row)
         Container(
           height: 60,
-          color: Colors.grey[200],
+          // color: Colors.grey[200],
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Row(
               children: sections.map((section) {
                 final bool isActive = _activeSection == section['id'];
+
                 return GestureDetector(
-                  onTap: () => _scrollToSection(section['id']!),
+                  onTap: () => _scrollToSection(section['id']!, section),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 10,
                     ),
                     margin: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 8,
+                      horizontal: 8,
+                      vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: isActive ? Colors.blue : Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Text(
-                      section['title'] as String,
-                      style: TextStyle(
-                        color: isActive ? Colors.white : Colors.black,
-                        fontWeight: isActive
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+                      color: isActive
+                          ? AppColors.bubbleColor
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(
+                        color: isActive
+                            ? Colors.transparent
+                            : AppColors.colorB2B2B7.withOpacity(0.4),
+                        width: 1,
                       ),
+                    ),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          section['image'] as String,
+                          width: 14,
+                          height: 14,
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          section['title'] as String,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: isActive
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -2274,1674 +2333,259 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
         // ✅ Scrollable Content
         Expanded(
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: sections.map((section) {
-                return section['id'] == "overview"
-                    ? _overviewContent(_keys[section['id']])
-                    : section['id'] == "company"
-                    ? CompanyContent(
-                        id: _keys[section['id']],
-                        companyLoader: companyLoader,
-                        companyModel: companyModel,
-                        earningdata: earningdata,
-                        shortVolumeModel: shortVolumeModel,
-                        companyDetailModel: companyDetailModel,
-                        esgScoreData: esgScoreData,
-                        securityShortVolume: securityShortVolume,
-                        insiderTransactionResponse: insiderTransactionResponse,
-                        securityOwnership: securityOwnership,
-                      )
-                    // _companyContent(_keys[section['id']])
-                    : section['id'] == "financial"
-                    ? FinancialTab(
-                        id: _keys[section['id']],
-                        financialLoader: financialLoader,
-                        financeChartsDataModel: financeChartsDataModel,
-                        financialResponseLoader: financialResponseLoader,
-                        financialResponse: financialResponse,
-                        symbol: selectedStock!.symbol,
-                        onPressed: (id) {
-                          if (id == "0") {
-                            thirdTap(0);
-                          } else {
-                            thirdTap(1);
-                          }
-                        },
-                      )
-                    // _financialContent(_keys[section['id']])
-                    : section['id'] == "earnings"
-                    ? EarningContent(
-                        companyDetailShimmer: companyDetailShimmer,
-                        earningReportShimmer: earningReportShimmer,
-                        earningChartModelLoader: earningChartModelLoader,
-                        companyDetailModel: companyDetailModel,
-                        earningChartModel: earningChartModel,
-                        earningReportsModel: earningReportsModel,
-                        id: _keys[section['id']],
-                      )
-                    // _earningsContent(_keys[section['id']])
-                    : section['id'] == "analytics"
-                    ? AnalysisContent(
-                        id: _keys[section['id']],
-                        chartLoader: chartLoader,
-                        analysisDataModel: analysisDataModel,
-                        onPressed: (toDate, fromDate) async {
-                          await getAnalysisData(
-                            widget.chatRouting!.symbol,
-                            IntervalEnum.daily,
-                            now1: toDate,
-                            startDate1: fromDate,
-                          );
-                        },
-                        onPressedAnalysis: (val) async {
-                          await getAnalysisData(
-                            widget.chatRouting!.symbol,
-                            val == 'H'
-                                ? IntervalEnum.daily
-                                : val == 'D'
-                                ? IntervalEnum.daily
-                                : val == 'W'
-                                ? IntervalEnum.daily
-                                : IntervalEnum.monthly,
-                          );
-                        },
-                        selectedItemCandleAnalysis:
-                            selectedItemCandleAnalysis ?? "H",
-                      )
-                    // _analysisContent(_keys[section['id']])
-                    : Container(
-                        key: _keys[section['id']],
-                        height: 600,
-                        color: section['color'],
-                        alignment: Alignment.center,
-                        child: Text("data"),
+          child: ScrollablePositionedList.builder(
+            itemCount: sections.length,
+            itemScrollController: itemScrollController,
+            itemPositionsListener: itemPositionsListener,
+            itemBuilder: (context, index) {
+              final id = sections[index]['id'];
+
+              switch (id) {
+                case "overview":
+                  return OverviewContent(
+                    chartLoader: chartLoader,
+                    id: UniqueKey(),
+                    //  _keys[id],
+                    chatRouting: widget.chatRouting!,
+                    selectedStock: selectedStock!,
+                    ishowLoder: ishowLoder,
+                    isshowpriceTargetMatricsDataLoder:
+                        isshowpriceTargetMatricsDataLoder,
+                    isshowshareStructureLoder: isshowshareStructureLoder,
+                    selectedCandleOverview: '',
+                    onPressedAnalysis: (String val) async {
+                      await getOverviewCandleChart(
+                        widget.chatRouting!.symbol,
+                        val == 'H'
+                            ? IntervalEnum.hour
+                            : val == 'D'
+                            ? IntervalEnum.daily
+                            : val == 'W'
+                            ? IntervalEnum.weekly
+                            : val == 'M'
+                            ? IntervalEnum.monthly
+                            : IntervalEnum.daily,
                       );
-              }).toList(),
-            ),
-          ),
-        ),
-      ],
-    );
-
-    // DefaultTabController(
-    //   length:
-    //       categories.length, // <- overview categories ko nested TabBar banaya
-    //   child: Column(
-    //     children: [
-    //       /// 🔹 SEARCH BAR
-    //       // Padding(
-    //       //   padding: EdgeInsets.all(16),
-    //       //   child: SizedBox(
-    //       //     height: 55,
-    //       //     child: TextFormField(
-    //       //       controller: search,
-    //       //       style: TextStyle(color: Colors.white),
-    //       //       decoration: InputDecoration(
-    //       //         filled: true,
-    //       //         fillColor: AppColors.color091224,
-    //       //         hintText: 'Search here',
-    //       //         hintStyle: TextStyle(color: Color(0xFF8B8B97)),
-    //       //         contentPadding: EdgeInsets.symmetric(
-    //       //           horizontal: 20,
-    //       //           vertical: 10,
-    //       //         ),
-    //       //         border: OutlineInputBorder(
-    //       //           borderRadius: BorderRadius.circular(50.0),
-    //       //           borderSide: BorderSide.none,
-    //       //         ),
-    //       //         suffixIcon: InkWell(
-    //       //           onTap: () {
-    //       //             // debounceSearch(search.text);
-    //       //           },
-    //       //           child: Image.asset(
-    //       //             Assets.images.searchNormal.path,
-    //       //             scale: 5,
-    //       //           ),
-    //       //         ),
-    //       //       ),
-    //       //     ),
-    //       //   ),
-    //       // ),
-    //       Container(
-    //         margin: EdgeInsets.only(left: 10.w),
-    //         child: TabBar(
-    //           controller: tabController,
-    //           isScrollable: true,
-    //           indicatorSize: TabBarIndicatorSize.tab,
-    //           tabAlignment: TabAlignment.start,
-    //           indicator: BoxDecoration(
-    //             color: AppColors.color1B254B,
-    //             borderRadius: BorderRadius.circular(50),
-    //           ),
-    //           indicatorPadding: EdgeInsets.symmetric(
-    //             horizontal: 6,
-    //             vertical: 6,
-    //           ),
-    //           labelColor: Colors.white,
-    //           unselectedLabelColor: AppColors.colorB2B2B7,
-    //           dividerColor: Colors.transparent,
-    //           labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
-    //           onTap: (val) {
-    //             if (val == 1) {
-    //               secondIndexTap();
-    //             } else if (val == 3) {
-    //               fourthTap();
-    //             } else if (val == 0) {
-    //               firstIndexData();
-    //             } else if (val == 4) {
-    //               fifthTap();
-    //             } else if (val == 2) {
-    //               thirdTap(0);
-    //             }
-    //           },
-    //           tabs: List.generate(
-    //             categories.length,
-    //             (index) => Tab(
-    //               child: AnimatedBuilder(
-    //                 animation: tabController,
-    //                 builder: (context, _) {
-    //                   bool isSelected = tabController.index == index;
-
-    //                   return Container(
-    //                     padding: EdgeInsets.symmetric(
-    //                       horizontal: 12,
-    //                       vertical: 6,
-    //                     ),
-    //                     decoration: BoxDecoration(
-    //                       borderRadius: BorderRadius.circular(50),
-    //                       border: Border.all(
-    //                         color: isSelected
-    //                             ? Colors
-    //                                   .transparent // 👈 no border when selected
-    //                             : AppColors.colorB2B2B7.withOpacity(0.4),
-    //                         width: 1,
-    //                       ),
-    //                     ),
-    //                     child: Row(
-    //                       mainAxisAlignment: MainAxisAlignment.center,
-    //                       children: [
-    //                         if (categoryImages[index] != null)
-    //                           Image.asset(
-    //                             categoryImages[index]!,
-    //                             width: 14.w,
-    //                             height: 14.h,
-    //                           ),
-    //                         if (categoryImages[index] != null)
-    //                           SizedBox(width: 8.w),
-    //                         MdSnsText(
-    //                           categories[index],
-    //                           variant: TextVariant.h3,
-    //                           fontWeight: TextFontWeightVariant.h4,
-    //                           color: AppColors.white,
-    //                         ),
-    //                       ],
-    //                     ),
-    //                   );
-    //                 },
-    //               ),
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-
-    //       Expanded(
-    //         child: TabBarView(
-    //           controller: tabController,
-
-    //           physics: NeverScrollableScrollPhysics(),
-
-    //           children: [
-    //             /// Overview Tab Content
-    //             _overviewContent(),
-    //             _companyContent(),
-    //             _financialContent(),
-    //             _earningsContent(),
-    //             _analysisContent(),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
-  }
-
-  Widget _overviewContent(dynamic id) {
-    List<String> questions = [
-      "Provide a comprehensive company analysis of ${widget.chatRouting!.companyName}",
-      "Technical analysis for ${widget.chatRouting!.companyName}",
-      "Analyze analyst sentiment for ${widget.chatRouting!.companyName}",
-      "Perform DCF valuation analysis for  ${widget.chatRouting!.companyName}",
-      "Perform DCF valuation analysis for ${widget.chatRouting!.companyName}",
-      "Analyze analyst sentiment for ${widget.chatRouting!.companyName}",
-    ];
-    List<String> popaplist = [
-      "Complete company analysis ${widget.chatRouting!.companyName}",
-      "Analyst sentiment ${widget.chatRouting!.companyName}",
-      "DCF valuation ${widget.chatRouting!.companyName}",
-      "Analyst sentiment ${widget.chatRouting!.companyName}",
-    ];
-    final stockManagerState = ref.watch(stocksManagerProvider);
-
-    final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
-    double change =
-        PriceUtils.getChangesPercentage(
-              liveStock != null ? liveStock.price : widget.chatRouting!.price,
-              widget.chatRouting!.previousClose,
-            ) !=
-            null
-        ? PriceUtils.getChangesPercentage(
-            liveStock != null ? liveStock.price : widget.chatRouting!.price,
-            widget.chatRouting!.previousClose,
-          )!
-        : widget.chatRouting!.changePercentage;
-    List<ChartData> buildChartSpots(
-      List<OverviewCandleChartModel> overviewCandle,
-    ) {
-      List<ChartData> chartDataList = [];
-
-      chartDataList = overviewCandle.map((item) {
-        return ChartData(
-          x: item.timestamp.toString(),
-          y: [
-            (item.open).toDouble(),
-            (item.high).toDouble(),
-            (item.low).toDouble(),
-            (item.close).toDouble(),
-          ],
-        );
-      }).toList();
-
-      return chartDataList;
-    }
-
-    return SafeArea(
-      key: id,
-      child: Column(
-        children: [
-          SizedBox(height: 14.h),
-
-          Row(
-            children: [
-              // Image.asset(
-              //   Assets.images.frame1171275460.path,
-              //   height: 53.h,
-              //   width: 53.w,
-              // ),
-              SizedBox(width: 10),
-              Container(
-                height: 26.h,
-                width: 26.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: selectedStock!.type.toLowerCase() == "crypto"
-                      ? Image.network(
-                          getItemImage(ImageType.crypto, selectedStock!.symbol),
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return SvgPicture.network(
-                              "https://cdn-images.traderverse.io/crypto_dummy.svg",
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        )
-                      : SvgPicture.network(
-                          getItemImage(ImageType.stock, selectedStock!.symbol),
-                          fit: BoxFit.cover,
-                          placeholderBuilder: (context) => SizedBox(
-                            height: 26.h,
-                            width: 26.w,
-                            child: SvgPicture.network(
-                              "https://cdn-images.traderverse.io/stock_dummy.svg",
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          errorBuilder: (context, error, stackTrace) {
-                            return SvgPicture.network(
-                              "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ),
-                ),
-              ),
-              SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    child: Row(
-                      children: [
-                        ShowInfoPopup(
-                          chatRouting: widget.chatRouting!,
-                          question: questions[0],
-                          text: "Complete Company Analysis",
-                          child: MdSnsText(
-                            "#${selectedStock!.symbol}",
-                            variant: TextVariant.h3,
-                            fontWeight: TextFontWeightVariant.h1,
-                            color: AppColors.white,
-                          ),
-                        ),
-
-                        SizedBox(width: 6),
-
-                        Container(
-                          width: 5, // dot size
-                          height: 5,
-                          decoration: BoxDecoration(
-                            color: AppColors.colorB2B2B7,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-
-                        SizedBox(width: 6),
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width / 1.7,
-                          child: MdSnsText(
-                            selectedStock!.companyName.split("-").first.trim(),
-                            color: AppColors.colorB2B2B7,
-                            variant: TextVariant.h4,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            fontWeight: TextFontWeightVariant.h4,
-                          ),
-                        ),
-                        // Icon(
-                        //   Icons.keyboard_arrow_down,
-                        //   color: AppColors.white,
-                        //   size: 20.sp,
-                        // ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      MdSnsText(
-                        liveStock != null
-                            ? Filters.systemNumberConvention(
-                                liveStock.price,
-                                isPrice: true,
-                                isAbs: false,
-                              )
-                            : Filters.systemNumberConvention(
-                                selectedStock!.price,
-                                isPrice: true,
-                                isAbs: false,
-                              ),
-                        color: change.toString().contains("-")
-                            ? AppColors.redFF3B3B
-                            : AppColors.white,
-                        variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
-                      ),
-                      const SizedBox(width: 6),
-                      Icon(
-                        change.toString().contains("-")
-                            ? Icons.arrow_drop_down
-                            : Icons.arrow_drop_up,
-                        color: change.toString().contains("-")
-                            ? AppColors.redFF3B3B
-                            : AppColors.color00FF55,
-                        size: 20,
-                      ),
-                      MdSnsText(
-                        " ${change.toStringAsFixed(2).replaceAll("-", "")}%",
-                        color: change.toString().contains("-")
-                            ? AppColors.redFF3B3B
-                            : AppColors.color00FF55,
-                        variant: TextVariant.h4,
-                        fontWeight: TextFontWeightVariant.h4,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-          AppSpacing.h10,
-
-          ishowLoder == true
-              ? SizedBox(
-                  height: 135.h,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 5,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return PriceCardShimmer();
                     },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(width: 20.w);
-                    },
-                  ),
-                )
-              : stockResponse != null
-              ? SizedBox(
-                  height: 135.h,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 5,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return index == 0
-                          ? PriceCardWidget(
-                              firstColor: AppColors.white,
-                              secondColor: AppColors.color0xFFFFB21D,
-                              firstHeading: "PREVIOUSLY CLOSE PRICE",
-                              secondHeading: "AFTER HOURS",
-                              previousPrice: stockResponse!.data.previousClose
-                                  .toString(),
-                              afterHoursPrice: stockResponse!.data.AfterHours
-                                  .toString(),
-                              percentage: "+1.48%",
-                            )
-                          : index == 1
-                          ? PriceCardWidget(
-                              secondColor: AppColors.white,
-                              firstColor: AppColors.color046297,
-                              firstHeading: "MARKET CAPITAILIZATION",
-                              secondHeading: "OUTSTANDING SHARES",
-                              previousPrice: stockResponse!
-                                  .data
-                                  .MarketCapitalization
-                                  .toString(),
-                              afterHoursPrice: stockResponse!
-                                  .data
-                                  .SharesOutstanding
-                                  .toString(),
-                              percentage: "+1.48%",
-                            )
-                          : index == 2
-                          ? PriceCardWidget(
-                              firstColor: AppColors.white,
-                              secondColor: AppColors.white,
-                              firstHeading: "TOTAL VOLUME",
-                              secondHeading: "AVERAGE VOLUME(3M)",
-                              previousPrice: stockResponse!.data.TotalVolume
-                                  .toString(),
-                              afterHoursPrice: stockResponse!.data.AverageVolume
-                                  .toString(),
-                              percentage: "+1.48%",
-                            )
-                          : index == 3
-                          ? PriceCardWidget(
-                              firstColor: AppColors.color00FF55,
-                              secondColor: AppColors.colorab75b8,
-                              firstHeading: "EXCHANGE",
-                              secondHeading: "MARKET CAPTILIZATION",
-                              previousPrice: stockResponse!.data.Exchange
-                                  .toString(),
-                              afterHoursPrice: stockResponse!
-                                  .data
-                                  .MarketCapClassification
-                                  .toString(),
-                              percentage: "+1.48%",
-                            )
-                          : PriceCardWidget(
-                              firstColor: AppColors.white,
-                              secondColor: AppColors.white,
-                              firstHeading: "SECTOR",
-                              secondHeading: "INDUSTRY",
-                              previousPrice: stockResponse!.data.Sector
-                                  .toString(),
-                              afterHoursPrice: stockResponse!.data.Industry
-                                  .toString(),
-                              percentage: "+1.48%",
-                            );
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(width: 20.w);
-                    },
-                  ),
-                )
-              : SizedBox(),
-          SizedBox(height: 20.h),
-
-          chartLoader == true
-              ? CustomCandleChartShimmer()
-              : overviewCandleChartModel != null
-              ? CustomCandleChart(
-                  // key: UniqueKey(),
-                  name: "OHLC/V Candlestick Chart",
-                  data: buildChartSpots(overviewCandleChartModel!),
-                  selectedItem: selectedCandleOverview ?? "D",
-                  onPressed: (val) async {
-                    await getOverviewCandleChart(
-                      widget.chatRouting!.symbol,
-                      val == 'H'
-                          ? IntervalEnum.hour
-                          : val == 'D'
-                          ? IntervalEnum.daily
-                          : val == 'W'
-                          ? IntervalEnum.weekly
-                          : val == 'M'
-                          ? IntervalEnum.monthly
-                          : IntervalEnum.daily,
-                    );
-                    if (!mounted) return;
-                    setState(() {
-                      selectedCandleOverview = val;
-                    });
-                  },
-                )
-              : SizedBox(),
-
-          // CustomCandleChartShimmer(),
-          SizedBox(height: 20.h),
-
-          isshowpriceTargetMatricsDataLoder == true
-              ? PriceTargetWidget(data: null, chatRouting: widget.chatRouting!)
-              : priceTargetMatrics != null &&
-                    priceTargetMatrics!.data.length > 0
-              ? PriceTargetWidget(
-                  data: priceTargetMatrics!.data,
-                  chatRouting: widget.chatRouting!,
-                )
-              : SizedBox(),
-
-          SizedBox(height: 20.h),
-
-          isshowshareStructureLoder == true
-              ? MetricsShimmer()
-              : sharesResponse != null &&
-                    sharesResponse!.data.PercentInsiders != null
-              ? ShareStructureCard(
-                  chatRouting: widget.chatRouting!,
-
-                  matrics: null,
-                  fundamentalData: null,
-                  shareData: sharesResponse!.data,
-                  heading: Headings.shareStructure,
-                )
-              : SizedBox(),
-          SizedBox(height: pricePerformanceData != null ? 20.h : 0),
-          pricePerformanceData != null
-              ? PricePerformanceWidget(data: pricePerformanceData!)
-              : SizedBox(),
-          SizedBox(
-            height:
-                fundamentalResponse != null &&
-                    fundamentalResponse!
-                        .data
-                        .fundamentals
-                        .annualIncome
-                        .isNotEmpty
-                ? 20.h
-                : 0,
-          ),
-          fundamentalResponse != null &&
-                  fundamentalResponse!.data.fundamentals.annualIncome.isNotEmpty
-              ? ShareStructureCard(
-                  chatRouting: widget.chatRouting!,
-                  matrics: null,
-                  fundamentalData: fundamentalResponse!.data,
-                  shareData: null,
-                  heading: Headings.fundamental,
-                )
-              : SizedBox(),
-
-          SizedBox(
-            height:
-                matricData != null &&
-                    matricData!.data != null &&
-                    matricData!.data!.isNotEmpty
-                ? 20.h
-                : 0,
-          ),
-
-          matricData != null &&
-                  matricData!.data != null &&
-                  matricData!.data!.isNotEmpty
-              ? ShareStructureCard(
-                  chatRouting: widget.chatRouting!,
-
-                  matrics: matricData!.data,
-                  fundamentalData: null,
-                  shareData: null,
-                  heading: Headings.matrics,
-                )
-              : SizedBox(),
-
-          // SizedBox(height: 20.h),
-          // CustomLineChart(
-          //   title: "Price Target",
-          //   lineColor: Colors.green,
-          //   areaColor: Colors.greenAccent,
-          // ),
-          SizedBox(height: monthlyData != null ? 20.h : 0),
-          monthlyData != null
-              ? WeeklySeasonalityChart(
-                  data: monthlyData!,
-                  isWeekly: false,
-                  weeklyModel: WeeklyModel(),
-                )
-              : SizedBox(),
-          SizedBox(height: 20.h),
-          weeklyData != null
-              ? WeeklySeasonalityChart(
-                  weeklyModel: weeklyData!,
-                  isWeekly: true,
-                  data: ProbabilityResponse(),
-                )
-              : SizedBox(),
-
-          SizedBox(
-            height:
-                priceComparisonModel != null &&
-                    priceComparisonModel!
-                            .data
-                            .data['${widget.chatRouting!.symbol}'] !=
-                        null &&
-                    priceComparisonModel!.data.data['SPY'] != null
-                ? 20.h
-                : 0,
-          ),
-
-          // SizedBox(height: 20.h),
-          // RevenueAnalysisChart(),
-          // SizedBox(height: 20.h),
-          // // // ---------- PERFORMANCE OVERVIEW ----------
-          // Container(
-          //   padding: const EdgeInsets.all(16),
-          //   decoration: BoxDecoration(
-          //     border: Border.all(color: AppColors.colorB3B3B3),
-          //     color: AppColors.primaryColor,
-          //     borderRadius: BorderRadius.circular(12),
-          //   ),
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: [
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           MdSnsText(
-          //             "Performance Overview",
-          //             color: AppColors.white,
-          //             variant: TextVariant.h3,
-          //             fontWeight: TextFontWeightVariant.h4,
-          //           ),
-          //           Row(
-          //             children: [
-          //               Image.asset(
-          //                 Assets.images.textalignJustifycenter.path,
-          //                 height: 14.h,
-          //                 width: 16.55.w,
-          //               ),
-          //               SizedBox(width: 10.w),
-          //               Image.asset(
-          //                 Assets.images.chart.path,
-          //                 height: 14.h,
-          //                 width: 14.w,
-          //               ),
-          //             ],
-          //           ),
-          //         ],
-          //       ),
-          //       SizedBox(height: 12.h),
-          //       PerformanceTable(),
-          //     ],
-          //   ),
-          // ),
-          // SizedBox(height: 20.h),
-
-          // SizedBox(height: 20.h),
-          priceComparisonModel != null &&
-                  priceComparisonModel!
-                          .data
-                          .data['${widget.chatRouting!.symbol}'] !=
-                      null &&
-                  priceComparisonModel!.data.data['SPY'] != null
-              ? PriceComparisonChart(
-                  priceComparisonModel: priceComparisonModel,
-                  symbol: widget.chatRouting!.symbol,
-                  twoCharts: true,
-                )
-              : SizedBox(),
-
-          SizedBox(
-            height:
-                analyticsRespinseData != null &&
-                    analyticsRespinseData!.data.isNotEmpty
-                ? 20.h
-                : 0,
-          ),
-
-          analyticsRespinseData != null &&
-                  analyticsRespinseData!.data.isNotEmpty
-              ? AnalyticsWidget(
-                  chatRouting: widget.chatRouting!,
-
-                  data: analyticsRespinseData!.data,
-                )
-              : SizedBox(),
-          SizedBox(height: 20.h),
-        ],
-      ),
-    );
-  }
-
-  Widget _companyContent(dynamic id) {
-    return SafeArea(
-      key: id,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          children: [
-            // SizedBox(height: 14.h),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MdSnsText(
-                  "Company Details",
-                  color: AppColors.fieldTextColor,
-                  variant: TextVariant.h3,
-                  fontWeight: TextFontWeightVariant.h1,
-                ),
-                SizedBox(height: 4.h),
-
-                companyLoader == true
-                    ? Column(
-                        children: [
-                          shimmerBox(
-                            height: 10,
-                            width: MediaQuery.sizeOf(context).width / 1.1,
-                          ),
-                          SizedBox(height: 6.h),
-                          shimmerBox(
-                            height: 10,
-                            width: MediaQuery.sizeOf(context).width / 1.1,
-                          ),
-                        ],
-                      )
-                    : companyModel != null &&
-                          companyModel!.general.Description != null
-                    ? ReadMoreText(
-                        companyModel!.general.Description!,
-
-                        trimLines: 2,
-                        trimMode: TrimMode.Line,
-                        trimCollapsedText: '\nShow More',
-                        trimExpandedText: '\nShow Less',
-
-                        moreStyle: GoogleFonts.plusJakartaSans(
-                          fontSize: 14,
-                          // wordSpacing: 0,
-                          // letterSpacing: 0,
-                          height: 1.8,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.secondaryColor,
-                        ),
-                        lessStyle: GoogleFonts.plusJakartaSans(
-                          fontSize: 14,
-                          // wordSpacing: 0,
-                          // letterSpacing: 0,
-                          height: 1.8,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.secondaryColor,
-                        ),
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.white,
-                        ),
-                      )
-                    : SizedBox(),
-
-                // SizedBox(height: 14.h),
-                // companyModel != null &&
-                //         companyModel!.general.Description != null
-                //     ? ReadMoreText(
-                //         companyModel!.general.Description!,
-                //         trimLines: 2,
-                //         trimMode: TrimMode.Line,
-                //         trimCollapsedText: 'Read More',
-                //         trimExpandedText: 'Read Less',
-                //         style: TextStyle(
-                //           fontSize: 14.sp,
-                //           fontWeight: FontWeight.w400,
-                //           color: AppColors.white,
-                //         ),
-                //       )
-                //     : SizedBox(),
-                SizedBox(height: 14.h),
-                companyLoader == true
-                    ? InfoBoxGrid(items: ["", "", "", ""])
-                    : companyModel != null &&
-                          companyModel!.general.Address != null
-                    ? InfoBoxGrid(
-                        items: [
-                          companyModel!.general.Address ?? "",
-                          companyModel!.general.Country ?? "",
-                          companyModel!.general.FullTimeEmployees.toString(),
-                          "${companyModel!.general.WebURL ?? 0}",
-                        ],
-                      )
-                    : SizedBox(),
-
-                SizedBox(height: 10.h),
-                MdSnsText(
-                  "Key Executives",
-                  color: AppColors.fieldTextColor,
-                  variant: TextVariant.h2,
-                  fontWeight: TextFontWeightVariant.h1,
-                ),
-
-                SizedBox(height: 10.h),
-                companyLoader == true
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            height: 180.h,
-                            width: MediaQuery.sizeOf(context).width / 1.1,
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 5,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ProfileCardShimmer();
-                              },
-                              separatorBuilder:
-                                  (BuildContext context, int index) {
-                                    return SizedBox(width: 10);
-                                  },
-                            ),
-                          ),
-                        ],
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          companyModel != null &&
-                                  companyModel!.general.Officers != null &&
-                                  companyModel!.general.Officers!.isNotEmpty
-                              ? SizedBox(
-                                  height: 180.h,
-                                  width: MediaQuery.sizeOf(context).width / 1.1,
-                                  child: ListView.separated(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount:
-                                        companyModel!.general.Officers!.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                          return ProfileCardWidget(
-                                            imagePath:
-                                                companyModel!
-                                                    .general
-                                                    .Officers![index]
-                                                    .Image ??
-                                                "",
-
-                                            designation:
-                                                companyModel!
-                                                    .general
-                                                    .Officers![index]
-                                                    .Title ??
-                                                "",
-                                            name:
-                                                companyModel!
-                                                    .general
-                                                    .Officers![index]
-                                                    .Name ??
-                                                "",
-                                          );
-                                        },
-                                    separatorBuilder:
-                                        (BuildContext context, int index) {
-                                          return SizedBox(width: 10);
-                                        },
-                                  ),
-                                )
-                              : SizedBox(),
-                        ],
-                      ),
-
-                // SizedBox(height: 14.h),
-                companyLoader == true
-                    ? CompanyDetailsCard(
-                        items: ["", "", "", "", "", "", "", "", ""],
-                      )
-                    : companyModel != null
-                    ? CompanyDetailsCard(
-                        items: [
-                          Filters.systemNumberConvention(
-                            companyModel!.general.SharesOutstanding ?? 0,
-                            isPrice: false,
-                            isAbs: false,
-                          ),
-
-                          Filters.systemNumberConvention(
-                            companyModel!.general.PercentInstitutions ?? 0,
-                            isPrice: false,
-                            alwaysShowTwoDecimal: true,
-                          ),
-
-                          Filters.systemNumberConvention(
-                            companyModel!.general.EBITDA,
-                            isPrice: false,
-                            isAbs: false,
-                          ),
-                          companyModel!.general.Exchange ?? "",
-                          companyModel!.general.Symbol ?? "",
-                          companyModel!.general.Sector ?? "",
-                          companyModel!.general.Industry ?? "",
-                          companyModel!.general.FiscalYearEnd ?? "",
-                          Filters.systemNumberConvention(
-                            companyModel!.general.MarketCapitalization ?? 0,
-                            isPrice: false,
-                            isAbs: false,
-                          ),
-                        ],
-                      )
-                    : SizedBox(),
-                SizedBox(height: 14.h),
-                earningdata != null
-                    ? Earnings(
-                        items: [
-                          earningdata!.reportedEps != null
-                              ? "\$" +
-                                    earningdata!.reportedEps!.reportedEps
-                                        .toString()
-                              : "N/A",
-
-                          earningdata!.reportedEps != null &&
-                                  earningdata!
-                                          .reportedEps!
-                                          .lastEarningsAnnouncement !=
-                                      null
-                              ? earningdata!
-                                    .reportedEps!
-                                    .lastEarningsAnnouncement
-                                    .toString()
-                              : "N/A",
-
-                          earningdata!.reportedEps != null
-                              ? "\$" +
-                                    compactFormatter.format(
-                                      earningdata!
-                                              .reportedEps!
-                                              .consensusEpsForecast ??
-                                          0,
-                                    )
-                              : "0",
-                          earningdata!.reportedEps != null
-                              ? earningdata!.reportedEps!.epsSurprise.toString()
-                              : "N/A",
-
-                          earningdata!.reportedEps != null
-                              ? "\$" +
-                                    compactFormatter.format(
-                                      earningdata!
-                                              .reportedRevenue!
-                                              .totalRevenue ??
-                                          0,
-                                    )
-                              : "0",
-                        ],
-                      )
-                    : EarningsShimmer(),
-                SizedBox(height: 14.h),
-                shortVolumeModel != null &&
-                        shortVolumeModel!.data!.Charts.length > 0
-                    ? ShortVolumeChart(data: shortVolumeModel!.data!.Charts)
-                    : SizedBox(),
-                SizedBox(height: 14.h),
-                companyDetailModel != null &&
-                        companyDetailModel!
-                                .data
-                                .fundamentalsOutstandingShares !=
-                            null &&
-                        companyDetailModel!
-                            .data
-                            .fundamentalsOutstandingShares!
-                            .isNotEmpty
-                    ? OutstandingSharesChart(
-                        fundamentalsOutstandingShares: companyDetailModel!
-                            .data
-                            .fundamentalsOutstandingShares,
-                      )
-                    : SizedBox(),
-                SizedBox(height: 14.h),
-                esgScoreData != null && esgScoreData!.data != null
-                    ? EsgScoreTable(data: esgScoreData!.data)
-                    : SizedBox(),
-                SizedBox(height: 14.h),
-                companyDetailModel != null &&
-                        companyDetailModel!.data.fundamentalsSplitsDividends !=
-                            null
-                    ? SplitDividend(
-                        fundamentalsSplitsDividends: companyDetailModel!
-                            .data
-                            .fundamentalsSplitsDividends,
-                      )
-                    : SizedBox(),
-                SizedBox(height: 14.h),
-                securityShortVolume != null && securityShortVolume!.data != null
-                    ? SecurityShortVolume(data: securityShortVolume!.data)
-                    : SizedBox(),
-                SizedBox(height: 14.h),
-                insiderTransactionResponse != null &&
-                        insiderTransactionResponse!.data.isNotEmpty
-                    ? InsiderTraderTable(data: insiderTransactionResponse!)
-                    : SizedBox(),
-                SizedBox(height: 14.h),
-                securityOwnership != null &&
-                        securityOwnership!.data != null &&
-                        securityOwnership!.data!.isNotEmpty
-                    ? SecurityOwnershipTable(data: securityOwnership!.data!)
-                    : SizedBox(),
-                SizedBox(height: 14.h),
-              ],
-            ),
-
-            SizedBox(height: 20.h),
-
-            // WeeklySeasonalityChart(),
-            // SizedBox(height: 20.h),
-            // ShareStructureCard(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _financialContent(dynamic id) {
-    return SingleChildScrollView(
-      child: Container(
-        key: id,
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        color: Colors.amber,
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                MdSnsText(
-                  "Financial",
-                  variant: TextVariant.h2,
-                  fontWeight: TextFontWeightVariant.h1,
-                  color: AppColors.fieldTextColor,
-                ),
-                SizedBox(width: 5),
-                Image.asset(
-                  "assets/images/info-circle.png",
-                  height: 14,
-                  width: 14,
-                ),
-              ],
-            ),
-
-            SizedBox(height: 6),
-            MdSnsText(
-              "Last Updated: 01-19-2023 10:30:33 EST",
-              variant: TextVariant.h3,
-              fontWeight: TextFontWeightVariant.h4,
-              color: AppColors.white,
-            ),
-            SizedBox(height: 15),
-
-            DefaultTabController(
-              length: 4,
-              child: Builder(
-                builder: (context) {
-                  final TabController financeialTabController =
-                      DefaultTabController.of(context);
-
-                  return Column(
-                    children: [
-                      // ⬅️ TAB BAR
-                      AnimatedBuilder(
-                        animation: financeialTabController.animation!,
-                        builder: (context, _) {
-                          return TabBar(
-                            controller: financeialTabController,
-                            isScrollable: true,
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            tabAlignment: TabAlignment.start,
-                            indicatorAnimation: TabIndicatorAnimation.elastic,
-                            dividerColor: Colors.transparent,
-                            indicatorPadding: const EdgeInsets.all(4),
-                            labelPadding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                            ),
-                            indicator: BoxDecoration(
-                              color: AppColors.color203063,
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: AppColors.color0x1AB3B3B3,
-                                width: 1,
-                              ),
-                            ),
-                            tabs: List.generate(4, (index) {
-                              final List<String> tabTitles = financialtabs;
-                              final bool isSelected =
-                                  financeialTabController.index == index ||
-                                  (financeialTabController.indexIsChanging &&
-                                      financeialTabController.previousIndex ==
-                                          index);
-
-                              return Tab(
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    border: Border.all(
-                                      color: AppColors.color0x1AB3B3B3,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: MdSnsText(
-                                    tabTitles[index],
-                                    color: isSelected
-                                        ? AppColors.white
-                                        : AppColors.color677FA4,
-                                    variant: isSelected
-                                        ? TextVariant.h2
-                                        : TextVariant.h3,
-                                    fontWeight: isSelected
-                                        ? TextFontWeightVariant.h1
-                                        : TextFontWeightVariant.h4,
-                                  ),
-                                ),
-                              );
-                            }),
-                          );
-                        },
-                      ),
-
-                      // ⬅️ TAB VIEW — scrollable inside main scroll
-                      SizedBox(
-                        height:
-                            MediaQuery.sizeOf(context).height *
-                            1.5, // enough space for full content
-                        child: TabBarView(
-                          controller: financeialTabController,
-                          physics:
-                              NeverScrollableScrollPhysics(), // scroll parent handle karega
-                          children: [
-                            // TAB 1
-
-                            // TAB 2
-                            SingleChildScrollView(
-                              physics: NeverScrollableScrollPhysics(),
-                              child: Column(
-                                children: [
-                                  SizedBox(height: 15),
-
-                                  financialLoader == true
-                                      ? CashDebtShimmer()
-                                      : financeChartsDataModel != null &&
-                                            financeChartsDataModel!
-                                                    .data
-                                                    .cashAndDebt
-                                                    .yearly !=
-                                                null &&
-                                            financeChartsDataModel!
-                                                .data
-                                                .cashAndDebt
-                                                .yearly!
-                                                .metrics
-                                                .isNotEmpty
-                                      ? CashdebtWidgets(
-                                          title: "Cash and Debt",
-                                          cash: "Cash",
-                                          debt: "Debt",
-                                          rawCash:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .cashAndDebt
-                                                  .yearly!
-                                                  .metrics['Cash'] ??
-                                              [],
-                                          rawDebt:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .cashAndDebt
-                                                  .yearly!
-                                                  .metrics['Debt'] ??
-                                              [],
-                                        )
-                                      : SizedBox(),
-                                  const SizedBox(height: 20),
-
-                                  financialLoader == true
-                                      ? CashDebtShimmer()
-                                      : financeChartsDataModel != null &&
-                                            financeChartsDataModel!
-                                                    .data
-                                                    .assetsAndStockHolders
-                                                    .yearly !=
-                                                null &&
-                                            financeChartsDataModel!
-                                                .data
-                                                .assetsAndStockHolders
-                                                .yearly!
-                                                .metrics
-                                                .isNotEmpty
-                                      ? CashdebtWidgets(
-                                          title: "Assets and Stockholders",
-                                          cash: "Total Assets",
-                                          debt: "Total StackHolder",
-                                          rawCash:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .assetsAndStockHolders
-                                                  .yearly!
-                                                  .metrics["Total Assets"] ??
-                                              [],
-                                          rawDebt:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .assetsAndStockHolders
-                                                  .yearly!
-                                                  .metrics["Total StockHolder"] ??
-                                              [],
-                                        )
-                                      : SizedBox(),
-                                  SizedBox(height: 20),
-                                  financialLoader == true
-                                      ? CashDebtShimmer()
-                                      : financeChartsDataModel != null &&
-                                            financeChartsDataModel!
-                                                    .data
-                                                    .outstandingSharesBuyback
-                                                    .yearly !=
-                                                null &&
-                                            financeChartsDataModel!
-                                                .data
-                                                .outstandingSharesBuyback
-                                                .yearly!
-                                                .metrics
-                                                .isNotEmpty
-                                      ? CashdebtWidgets(
-                                          title: "Outstanding Shares & Buyback",
-                                          cash: "Outstanding Shares",
-                                          debt: "Stock Buyback Percentage",
-                                          rawCash:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .outstandingSharesBuyback
-                                                  .yearly!
-                                                  .metrics["Outstanding Shares"] ??
-                                              [],
-                                          rawDebt:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .outstandingSharesBuyback
-                                                  .yearly!
-                                                  .metrics["Stock Buyback Percentage"] ??
-                                              [],
-                                        )
-                                      : SizedBox(),
-                                  // CashDebtShimmer(),
-                                  const SizedBox(height: 20),
-                                  financialLoader == true
-                                      ? CashDebtShimmer()
-                                      : financeChartsDataModel != null &&
-                                            financeChartsDataModel!
-                                                    .data
-                                                    .revenueAndIncome
-                                                    .yearly !=
-                                                null &&
-                                            financeChartsDataModel!
-                                                .data
-                                                .revenueAndIncome
-                                                .yearly!
-                                                .metrics
-                                                .isNotEmpty
-                                      ? CashdebtWidgets(
-                                          title: "Revenue and Income",
-                                          cash: "Revenue",
-                                          debt: "Income",
-                                          rawCash:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .revenueAndIncome
-                                                  .yearly!
-                                                  .metrics["Revenue"] ??
-                                              [],
-                                          rawDebt:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .revenueAndIncome
-                                                  .yearly!
-                                                  .metrics["Income"] ??
-                                              [],
-                                        )
-                                      : SizedBox(),
-                                  //  CashDebtShimmer(),
-                                  const SizedBox(height: 20),
-
-                                  financeChartsDataModel != null &&
-                                          financeChartsDataModel!
-                                                  .data
-                                                  .cashFlowData
-                                                  .yearly !=
-                                              null &&
-                                          financeChartsDataModel!
-                                              .data
-                                              .cashFlowData
-                                              .yearly!
-                                              .metrics
-                                              .isNotEmpty
-                                      ? OperatingCashFlow(
-                                          title: "Cash Flow Data",
-                                          rawCash:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .cashFlowData
-                                                  .yearly!
-                                                  .metrics["Operating Cash Flow"] ??
-                                              [],
-                                          rawDebt:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .cashFlowData
-                                                  .yearly!
-                                                  .metrics["Free Cash Flow"] ??
-                                              [],
-                                          rawAssets:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .cashFlowData
-                                                  .yearly!
-                                                  .metrics["Net Income"] ??
-                                              [],
-                                          rawEquity:
-                                              financeChartsDataModel!
-                                                  .data
-                                                  .cashFlowData
-                                                  .yearly!
-                                                  .metrics["Cash Flow Dividends"] ??
-                                              [],
-                                        )
-                                      : SizedBox(),
-                                  // CashDebtShimmer(),
-                                  const SizedBox(height: 0),
-                                ],
-                              ),
-                            ),
-
-                            SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: 10),
-                                  financialResponseLoader == true
-                                      ? CashDebtShimmer()
-                                      : financialResponse != null &&
-                                            financialResponse!
-                                                    .data
-                                                    .financialsIncomeStatement
-                                                    .chart
-                                                    .researchDevelopment !=
-                                                null
-                                      ? CustomLineChart(
-                                          lineColor: Colors.green,
-                                          areaColor: Colors.greenAccent,
-                                          title:
-                                              "Income Statement for ${selectedStock!.symbol}",
-                                          chartData: financialResponse!
-                                              .data
-                                              .financialsIncomeStatement
-                                              .chart
-                                              .researchDevelopment!,
-                                        )
-                                      : SizedBox(),
-                                  const SizedBox(height: 20),
-                                  financialResponseLoader == true
-                                      ? TableShimmer(title: "Income Statement")
-                                      : financialResponse != null &&
-                                            financialResponse!
-                                                .data
-                                                .financialsIncomeStatement
-                                                .data
-                                                .isNotEmpty
-                                      ? FinancialTable(
-                                          chart: financialResponse!
-                                              .data
-                                              .financialsIncomeStatement
-                                              .chart,
-                                          data: financialResponse!
-                                              .data
-                                              .financialsIncomeStatement
-                                              .data,
-                                          itemName: FinancialTableEnum
-                                              .incomeStatement,
-                                        )
-                                      : SizedBox(),
-                                ],
-                              ),
-                            ),
-
-                            SingleChildScrollView(
-                              physics: NeverScrollableScrollPhysics(),
-
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: 10),
-                                  financialResponseLoader == true
-                                      ? CashDebtShimmer()
-                                      : financialResponse != null &&
-                                            financialResponse!
-                                                    .data
-                                                    .financialsBalanceSheet
-                                                    .chart
-                                                    .totalAssets !=
-                                                null
-                                      ? CustomLineChart(
-                                          lineColor: Colors.purpleAccent,
-                                          areaColor: Colors.purple,
-                                          title:
-                                              "Balance Sheet for ${selectedStock!.symbol}",
-                                          chartData: financialResponse!
-                                              .data
-                                              .financialsBalanceSheet
-                                              .chart
-                                              .totalAssets!,
-                                        )
-                                      : SizedBox(),
-                                  const SizedBox(height: 20),
-                                  financialResponseLoader == true
-                                      ? TableShimmer(title: "Balance Sheet")
-                                      : financialResponse != null &&
-                                            financialResponse!
-                                                .data
-                                                .financialsBalanceSheet
-                                                .data
-                                                .isNotEmpty
-                                      ? FinancialTable(
-                                          chart: financialResponse!
-                                              .data
-                                              .financialsBalanceSheet
-                                              .chart,
-                                          data: financialResponse!
-                                              .data
-                                              .financialsBalanceSheet
-                                              .data,
-                                          itemName:
-                                              FinancialTableEnum.balanceSheet,
-                                        )
-                                      : SizedBox(),
-                                ],
-                              ),
-                            ),
-                            SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: 10),
-                                  financialResponseLoader == true
-                                      ? CashDebtShimmer()
-                                      : financialResponse != null &&
-                                            financialResponse!
-                                                    .data
-                                                    .financialsCashFlow
-                                                    .chart
-                                                    .investments !=
-                                                null
-                                      ? CustomLineChart(
-                                          lineColor: Colors.purpleAccent,
-                                          areaColor: Colors.purple,
-                                          title:
-                                              "Cash Flow for ${selectedStock!.symbol}",
-                                          chartData: financialResponse!
-                                              .data
-                                              .financialsCashFlow
-                                              .chart
-                                              .investments!,
-                                        )
-                                      : SizedBox(),
-                                  const SizedBox(height: 20),
-                                  financialResponseLoader == true
-                                      ? TableShimmer(title: "Cash Flow ")
-                                      : financialResponse != null &&
-                                            financialResponse!
-                                                .data
-                                                .financialsCashFlow
-                                                .data
-                                                .isNotEmpty
-                                      ? FinancialTable(
-                                          chart: financialResponse!
-                                              .data
-                                              .financialsCashFlow
-                                              .chart,
-                                          data: financialResponse!
-                                              .data
-                                              .financialsCashFlow
-                                              .data,
-                                          itemName: FinancialTableEnum.cashFlow,
-                                        )
-                                      : SizedBox(),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    fundamentalResponse: fundamentalResponse,
+                    priceComparisonModel: priceComparisonModel,
+                    analyticsRespinseData: analyticsRespinseData,
+                    monthlyData: monthlyData,
+                    weeklyData: weeklyData,
+                    matricData: matricData,
+                    stockResponse: stockResponse,
+                    overviewCandleChartModel: overviewCandleChartModel,
+                    pricePerformanceData: pricePerformanceData,
+                    sharesResponse: sharesResponse,
+                    priceTargetMatrics: priceTargetMatrics,
                   );
-                },
-              ),
-            ),
-          ],
+
+                case "company":
+                  return CompanyContent(
+                    id: UniqueKey(),
+                    //  _keys[id],
+                    companyLoader: companyLoader,
+                    companyModel: companyModel,
+                    earningdata: earningdata,
+                    shortVolumeModel: shortVolumeModel,
+                    companyDetailModel: companyDetailModel,
+                    esgScoreData: esgScoreData,
+                    securityShortVolume: securityShortVolume,
+                    insiderTransactionResponse: insiderTransactionResponse,
+                    securityOwnership: securityOwnership,
+                  );
+
+                case "financial":
+                  return FinancialTab(
+                    id: UniqueKey(),
+                    // _keys[id],
+                    financialLoader: financialLoader,
+                    financeChartsDataModel: financeChartsDataModel,
+                    financialResponseLoader: financialResponseLoader,
+                    financialResponse: financialResponse,
+                    symbol: selectedStock!.symbol,
+                    onPressed: (id) {
+                      if (id == "0") {
+                        thirdTap(0);
+                      } else {
+                        thirdTap(1);
+                      }
+                    },
+                  );
+
+                case "earnings":
+                  return EarningContent(
+                    companyDetailShimmer: companyDetailShimmer,
+                    earningReportShimmer: earningReportShimmer,
+                    earningChartModelLoader: earningChartModelLoader,
+                    companyDetailModel: companyDetailModel,
+                    earningChartModel: earningChartModel,
+                    earningReportsModel: earningReportsModel,
+                    id: UniqueKey(),
+                    //  _keys[id],
+                  );
+
+                case "analytics":
+                  return AnalysisContent(
+                    id: UniqueKey(),
+                    // _keys[id],
+                    chartLoader: chartLoader,
+                    analysisDataModel: analysisDataModel,
+                    onPressed: (toDate, fromDate) async {
+                      await getAnalysisData(
+                        widget.chatRouting!.symbol,
+                        IntervalEnum.daily,
+                        now1: toDate,
+                        startDate1: fromDate,
+                      );
+                    },
+                    onPressedAnalysis: (val) async {
+                      await getAnalysisData(
+                        widget.chatRouting!.symbol,
+                        val == 'H'
+                            ? IntervalEnum.daily
+                            : val == 'D'
+                            ? IntervalEnum.daily
+                            : val == 'W'
+                            ? IntervalEnum.daily
+                            : IntervalEnum.monthly,
+                      );
+                    },
+                    selectedItemCandleAnalysis:
+                        selectedItemCandleAnalysis ?? "H",
+                  );
+
+                default:
+                  return Container(height: 600, color: Colors.grey);
+              }
+            },
+          ),
         ),
-      ),
-    );
-  }
-
-  Widget _earningsContent(dynamic id) {
-    return SafeArea(
-      key: id,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 15),
-            earningChartModelLoader == true
-                ? CashDebtShimmer()
-                : earningChartModel != null &&
-                      earningChartModel!.data.isNotEmpty
-                ? QuarterlyPerformanceChart(data: earningChartModel!.data)
-                : SizedBox(),
-            // SizedBox(height: 20),
-            // QuarterlyPerformanceChartShimmer(),
-            SizedBox(height: 20),
-            earningReportShimmer == true
-                ? TableShimmer(title: "Earnings")
-                : earningReportsModel != null &&
-                      earningReportsModel!.data.isNotEmpty
-                ? EarningsTable(data: earningReportsModel!.data)
-                : SizedBox(),
-            SizedBox(height: 20),
-            companyDetailShimmer == true
-                ? TableShimmer(title: "Earnings Trend")
-                : companyDetailModel != null &&
-                      companyDetailModel!.data.fundamentalsEarningsTrend != null
-                ? EarningsTrend(
-                    title: "Earnings Trend",
-                    data: companyDetailModel!.data.fundamentalsEarningsTrend,
-                  )
-                : SizedBox(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _analysisContent(dynamic id) {
-    DateTime fromDate;
-    DateTime toDate;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        DateRangePickerWidget(
-          loading: chartLoader,
-          onShowPressed: (from, to) async {
-            fromDate = from!;
-            toDate = to!;
-            await getAnalysisData(
-              widget.chatRouting!.symbol,
-              IntervalEnum.daily,
-              now1: toDate,
-              startDate1: fromDate,
-            );
-          },
-        ),
-
-        SizedBox(height: 20),
-        chartLoader == true
-            ? CashDebtShimmer()
-            : analysisDataModel != null &&
-                  analysisDataModel!.data != null &&
-                  analysisDataModel!.data!.chart != null
-            ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: CustomCandleChart(
-                  selectedItem: selectedItemCandleAnalysis ?? "H",
-                  key: UniqueKey(),
-                  name: "",
-                  data: analysisDataModel!.data!.chart!,
-                  onPressed: (val) async {
-                    await getAnalysisData(
-                      widget.chatRouting!.symbol,
-                      val == 'H'
-                          ? IntervalEnum.daily
-                          : val == 'D'
-                          ? IntervalEnum.daily
-                          : val == 'W'
-                          ? IntervalEnum.daily
-                          : IntervalEnum.monthly,
-                    );
-                  },
-                ),
-              )
-            : CustomCandleChartShimmer(),
-        SizedBox(height: 20),
-        chartLoader == true
-            ? TableShimmer(title: "Earnings Trend")
-            : analysisDataModel != null &&
-                  analysisDataModel!.data != null &&
-                  analysisDataModel!.data!.eodData != null
-            ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: AnalysisTable(
-                  title: "Earnings Trend",
-                  eodData: analysisDataModel!.data!.eodData,
-                ),
-              )
-            : SizedBox(),
+        // Expanded(
+        //   child: SingleChildScrollView(
+        //     controller: _scrollController,
+        //     child: Column(
+        //       children: sections.map((section) {
+        //         return section['id'] == "overview"
+        //             ? OverviewContent(
+        //                 chartLoader: chartLoader,
+        //                 id: _keys[section['id']],
+        //                 chatRouting: widget.chatRouting!,
+        //                 selectedStock: selectedStock!,
+        //                 ishowLoder: ishowLoder,
+        //                 isshowpriceTargetMatricsDataLoder:
+        //                     isshowpriceTargetMatricsDataLoder,
+        //                 isshowshareStructureLoder: isshowshareStructureLoder,
+        //                 selectedCandleOverview: '',
+        //                 onPressedAnalysis: (String val) async {
+        //                   await getOverviewCandleChart(
+        //                     widget.chatRouting!.symbol,
+        //                     val == 'H'
+        //                         ? IntervalEnum.hour
+        //                         : val == 'D'
+        //                         ? IntervalEnum.daily
+        //                         : val == 'W'
+        //                         ? IntervalEnum.weekly
+        //                         : val == 'M'
+        //                         ? IntervalEnum.monthly
+        //                         : IntervalEnum.daily,
+        //                   );
+        //                 },
+        //                 fundamentalResponse: fundamentalResponse,
+        //                 priceComparisonModel: priceComparisonModel,
+        //                 analyticsRespinseData: analyticsRespinseData,
+        //                 monthlyData: monthlyData,
+        //                 weeklyData: weeklyData,
+        //                 matricData: matricData,
+        //                 stockResponse: stockResponse,
+        //                 overviewCandleChartModel: overviewCandleChartModel,
+        //                 pricePerformanceData: pricePerformanceData,
+        //                 sharesResponse: sharesResponse,
+        //                 priceTargetMatrics: priceTargetMatrics,
+        //               )
+        //             //  _overviewContent(_keys[section['id']])
+        //             : section['id'] == "company"
+        //             ? CompanyContent(
+        //                 id: _keys[section['id']],
+        //                 companyLoader: companyLoader,
+        //                 companyModel: companyModel,
+        //                 earningdata: earningdata,
+        //                 shortVolumeModel: shortVolumeModel,
+        //                 companyDetailModel: companyDetailModel,
+        //                 esgScoreData: esgScoreData,
+        //                 securityShortVolume: securityShortVolume,
+        //                 insiderTransactionResponse: insiderTransactionResponse,
+        //                 securityOwnership: securityOwnership,
+        //               )
+        //             // _companyContent(_keys[section['id']])
+        //             : section['id'] == "financial"
+        //             ? FinancialTab(
+        //                 id: _keys[section['id']],
+        //                 financialLoader: financialLoader,
+        //                 financeChartsDataModel: financeChartsDataModel,
+        //                 financialResponseLoader: financialResponseLoader,
+        //                 financialResponse: financialResponse,
+        //                 symbol: selectedStock!.symbol,
+        //                 onPressed: (id) {
+        //                   if (id == "0") {
+        //                     thirdTap(0);
+        //                   } else {
+        //                     thirdTap(1);
+        //                   }
+        //                 },
+        //               )
+        //             // _financialContent(_keys[section['id']])
+        //             : section['id'] == "earnings"
+        //             ? EarningContent(
+        //                 companyDetailShimmer: companyDetailShimmer,
+        //                 earningReportShimmer: earningReportShimmer,
+        //                 earningChartModelLoader: earningChartModelLoader,
+        //                 companyDetailModel: companyDetailModel,
+        //                 earningChartModel: earningChartModel,
+        //                 earningReportsModel: earningReportsModel,
+        //                 id: _keys[section['id']],
+        //               )
+        //             // _earningsContent(_keys[section['id']])
+        //             : section['id'] == "analytics"
+        //             ? AnalysisContent(
+        //                 id: _keys[section['id']],
+        //                 chartLoader: chartLoader,
+        //                 analysisDataModel: analysisDataModel,
+        //                 onPressed: (toDate, fromDate) async {
+        //                   await getAnalysisData(
+        //                     widget.chatRouting!.symbol,
+        //                     IntervalEnum.daily,
+        //                     now1: toDate,
+        //                     startDate1: fromDate,
+        //                   );
+        //                 },
+        //                 onPressedAnalysis: (val) async {
+        //                   await getAnalysisData(
+        //                     widget.chatRouting!.symbol,
+        //                     val == 'H'
+        //                         ? IntervalEnum.daily
+        //                         : val == 'D'
+        //                         ? IntervalEnum.daily
+        //                         : val == 'W'
+        //                         ? IntervalEnum.daily
+        //                         : IntervalEnum.monthly,
+        //                   );
+        //                 },
+        //                 selectedItemCandleAnalysis:
+        //                     selectedItemCandleAnalysis ?? "H",
+        //               )
+        //             // _analysisContent(_keys[section['id']])
+        //             : Container(
+        //                 key: _keys[section['id']],
+        //                 height: 600,
+        //                 color: section['color'],
+        //                 alignment: Alignment.center,
+        //                 child: Text("data"),
+        //               );
+        //       }).toList(),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
