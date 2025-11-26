@@ -5,6 +5,7 @@ import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/esg_score_model/esg_score_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/insider_transaction/insider_transaction_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/security_short/short_security_model.dart';
+import 'package:trader_gpt/src/shared/widgets/table_shimmer.dart';
 
 import '../../../../../../core/theme/app_colors.dart';
 import '../../../../../../shared/chart/share_structure_widget.dart';
@@ -33,6 +34,12 @@ import '../../../../domain/model/short_volume/short_volume_model.dart';
 class CompanyContent extends StatefulWidget {
   final dynamic id;
   final bool companyLoader;
+  final bool shortVolumeLoader;
+  final bool insiderTraderLoader;
+  final bool eSGScoresloader;
+  final bool earningLoader;
+  final bool securityOwnershipLoader;
+  final bool outstandingSharesLoader;
   final CompanyData? companyModel;
   final EarningsData? earningdata;
   final ShortVolumeModel? shortVolumeModel;
@@ -45,7 +52,13 @@ class CompanyContent extends StatefulWidget {
   const CompanyContent({
     super.key,
     required this.id,
+    required this.outstandingSharesLoader,
     required this.companyLoader,
+    required this.shortVolumeLoader,
+    required this.insiderTraderLoader,
+    required this.securityOwnershipLoader,
+    required this.eSGScoresloader,
+    required this.earningLoader,
     this.companyModel,
     this.earningdata,
     this.shortVolumeModel,
@@ -81,7 +94,7 @@ class _CompanyContentState extends State<CompanyContent> {
                 ),
                 SizedBox(height: 4.h),
 
-                widget.companyLoader == true
+                widget.companyLoader == false
                     ? Column(
                         children: [
                           shimmerBox(
@@ -146,7 +159,7 @@ class _CompanyContentState extends State<CompanyContent> {
                 //       )
                 //     : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.companyLoader == true
+                widget.companyLoader == false
                     ? InfoBoxGrid(items: ["", "", "", ""])
                     : widget.companyModel != null &&
                           widget.companyModel!.general.Address != null
@@ -170,7 +183,7 @@ class _CompanyContentState extends State<CompanyContent> {
                 ),
 
                 SizedBox(height: 10.h),
-                widget.companyLoader == true
+                widget.companyLoader == false
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -292,7 +305,10 @@ class _CompanyContentState extends State<CompanyContent> {
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.earningdata != null
+
+                widget.earningLoader == true
+                    ? Earnings(items: ["", "", "", "", ""])
+                    : widget.earningdata != null
                     ? Earnings(
                         items: [
                           widget.earningdata!.reportedEps != null
@@ -341,26 +357,31 @@ class _CompanyContentState extends State<CompanyContent> {
                               : "0",
                         ],
                       )
-                    : EarningsShimmer(),
+                    : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.shortVolumeModel != null &&
-                        widget.shortVolumeModel!.data!.Charts.length > 0
+                widget.shortVolumeLoader == true
+                    ? shimmerBox(height: 300, radius: 16)
+                    : widget.shortVolumeModel != null &&
+                          widget.shortVolumeModel!.data!.Charts.length > 0
                     ? ShortVolumeChart(
                         data: widget.shortVolumeModel!.data!.Charts,
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.companyDetailModel != null &&
-                        widget
-                                .companyDetailModel!
-                                .data
-                                .fundamentalsOutstandingShares !=
-                            null &&
-                        widget
-                            .companyDetailModel!
-                            .data
-                            .fundamentalsOutstandingShares!
-                            .isNotEmpty
+
+                widget.outstandingSharesLoader == true
+                    ? shimmerBox(height: 300, radius: 16)
+                    : widget.companyDetailModel != null &&
+                          widget
+                                  .companyDetailModel!
+                                  .data
+                                  .fundamentalsOutstandingShares !=
+                              null &&
+                          widget
+                              .companyDetailModel!
+                              .data
+                              .fundamentalsOutstandingShares!
+                              .isNotEmpty
                     ? OutstandingSharesChart(
                         fundamentalsOutstandingShares: widget
                             .companyDetailModel!
@@ -369,16 +390,23 @@ class _CompanyContentState extends State<CompanyContent> {
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.esgScoreData != null && widget.esgScoreData!.data != null
+
+                widget.outstandingSharesLoader == true
+                    ? TableShimmer(title: "ESG Scores")
+                    : widget.esgScoreData != null &&
+                          widget.esgScoreData!.data != null
                     ? EsgScoreTable(data: widget.esgScoreData!.data)
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.companyDetailModel != null &&
-                        widget
-                                .companyDetailModel!
-                                .data
-                                .fundamentalsSplitsDividends !=
-                            null
+
+                widget.eSGScoresloader == true
+                    ? TableShimmer(title: "Split Dividend")
+                    : widget.companyDetailModel != null &&
+                          widget
+                                  .companyDetailModel!
+                                  .data
+                                  .fundamentalsSplitsDividends !=
+                              null
                     ? SplitDividend(
                         fundamentalsSplitsDividends: widget
                             .companyDetailModel!
@@ -387,23 +415,31 @@ class _CompanyContentState extends State<CompanyContent> {
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.securityShortVolume != null &&
-                        widget.securityShortVolume!.data != null
+
+                widget.outstandingSharesLoader == true
+                    ? TableShimmer(title: "Security Short Volume")
+                    : widget.securityShortVolume != null &&
+                          widget.securityShortVolume!.data != null
                     ? SecurityShortVolume(
                         data: widget.securityShortVolume!.data,
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.insiderTransactionResponse != null &&
-                        widget.insiderTransactionResponse!.data.isNotEmpty
+
+                widget.insiderTraderLoader == true
+                    ? TableShimmer(title: "Insider Trader")
+                    : widget.insiderTransactionResponse != null &&
+                          widget.insiderTransactionResponse!.data.isNotEmpty
                     ? InsiderTraderTable(
                         data: widget.insiderTransactionResponse!,
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.securityOwnership != null &&
-                        widget.securityOwnership!.data != null &&
-                        widget.securityOwnership!.data!.isNotEmpty
+                widget.securityOwnershipLoader == true
+                    ? TableShimmer(title: "Security Ownership")
+                    : widget.securityOwnership != null &&
+                          widget.securityOwnership!.data != null &&
+                          widget.securityOwnership!.data!.isNotEmpty
                     ? SecurityOwnershipTable(
                         data: widget.securityOwnership!.data!,
                       )

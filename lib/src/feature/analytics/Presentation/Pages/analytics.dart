@@ -166,6 +166,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   bool analyticsRespinseloader = true;
   bool weeklyDataloader = true;
   bool companyLoader = true;
+  bool earningLoader = true;
+
   bool financialLoader = true;
   bool financialResponseLoader = true;
   bool earningReportShimmer = true;
@@ -173,7 +175,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   bool pricePerformanceLoader = true;
   bool earningChartModelLoader = true;
   bool analysisDataModelLoader = true;
-
+  bool insiderTraderLoader = true;
+  bool eSGScoresloader = true;
+  bool shortVolumeLoader = true;
+  bool securityOwnershiploader = true;
+  bool securityShortVolumeLoader = true;
   final ItemScrollController itemScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
@@ -388,47 +394,89 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   getEarningData(SymbolDto symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .earningsData(symbol);
-    if (res != null) {
-      earningdata = res.data;
+    try {
+      earningLoader = true;
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .earningsData(symbol);
+      earningLoader = false;
+      if (res != null) {
+        earningdata = res.data;
+      }
+    } catch (e) {
+      setState(() {
+        earningLoader = false;
+      });
     }
   }
 
   esgScore(String symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .esgScore(symbol);
-    if (res != null) {
-      esgScoreData = res;
+    try {
+      eSGScoresloader = true;
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .esgScore(symbol);
+      eSGScoresloader = false;
+      if (res != null) {
+        esgScoreData = res;
+      }
+    } catch (e) {
+      setState(() {
+        eSGScoresloader = false;
+      });
     }
   }
 
   insiderTrades(SymbolDto symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .insiderTrades(symbol);
-    if (res != null) {
-      insiderTransactionResponse = res;
+    try {
+      insiderTraderLoader = true;
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .insiderTrades(symbol);
+      insiderTraderLoader = false;
+      if (res != null) {
+        insiderTransactionResponse = res;
+      }
+    } catch (e) {
+      setState(() {
+        insiderTraderLoader = false;
+        securityShortVolumeLoader;
+      });
     }
   }
 
   getSecurityShortVolumeData(SymbolDto symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .securityShortVolume(symbol);
-    if (res != null) {
-      securityShortVolume = res;
+    try {
+      securityShortVolumeLoader = true;
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .securityShortVolume(symbol);
+      securityShortVolumeLoader = false;
+      if (res != null) {
+        securityShortVolume = res;
+      }
+    } catch (e) {
+      setState(() {
+        companyLoader = false;
+        securityShortVolumeLoader;
+      });
     }
   }
 
   getShortOwnership(SymbolDto symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .shortOwnership(symbol);
-    if (res != null) {
-      securityOwnership = res;
+    try {
+      securityOwnershiploader = true;
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .shortOwnership(symbol);
+      securityOwnershiploader = false;
+      if (res != null) {
+        securityOwnership = res;
+      }
+    } catch (e) {
+      setState(() {
+        securityOwnershiploader = false;
+      });
     }
   }
 
@@ -744,10 +792,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (shortVolumeModel == null) {
       try {
+        shortVolumeLoader = true;
         getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
         if (!mounted) return;
+        shortVolumeLoader = false;
         setState(() {});
       } catch (e, s) {
+        shortVolumeLoader = false;
         debugPrint("Error in getShortVolumeData: $e\n$s");
       }
     }
@@ -2344,12 +2395,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   onTap: () => _scrollToSection(section['id']!, section),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
+                      horizontal: 14,
+                      vertical: 8,
                     ),
                     margin: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 6,
+                      horizontal: 6,
+                      vertical: 4,
                     ),
                     decoration: BoxDecoration(
                       color: isActive
@@ -2450,14 +2501,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     id: UniqueKey(),
                     //  _keys[id],
                     companyLoader: companyLoader,
+                    earningLoader: earningLoader,
                     companyModel: companyModel,
+                    outstandingSharesLoader: companyDetailShimmer,
                     earningdata: earningdata,
                     shortVolumeModel: shortVolumeModel,
                     companyDetailModel: companyDetailModel,
+                    shortVolumeLoader: shortVolumeLoader,
                     esgScoreData: esgScoreData,
                     securityShortVolume: securityShortVolume,
                     insiderTransactionResponse: insiderTransactionResponse,
                     securityOwnership: securityOwnership,
+                    insiderTraderLoader: insiderTraderLoader,
+                    securityOwnershipLoader: securityOwnershiploader,
+                    eSGScoresloader: eSGScoresloader,
                   );
 
                 case "financial":
