@@ -15,6 +15,7 @@ import 'package:trader_gpt/src/feature/analytics/domain/model/monthly_model/mont
 import 'package:trader_gpt/src/feature/analytics/domain/model/overview_candle_chart_model/overview_candle_chart_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/overview_model/overview_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/weekly_model/weekly_model.dart';
+import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/widget/shimmer_widget.dart';
 import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
 import 'package:trader_gpt/src/shared/socket/providers/stocks_price.dart';
@@ -29,6 +30,7 @@ import 'package:trader_gpt/utils/constant.dart';
 import '../../../../../../shared/extensions/number_formatter_extension.dart';
 import '../../../../../../shared/socket/model/stock_model.dart/stock_model.dart';
 import '../../../../../../shared/widgets/price_card_widgets.dart';
+import '../../../../../../shared/widgets/table_shimmer.dart';
 import '../../../../../chat/domain/model/chat_stock_model.dart';
 import '../../../../domain/model/fundamental_model/fundamental_model.dart';
 import '../../../../domain/model/matrics_data_model/matrics_data_model.dart';
@@ -41,7 +43,6 @@ class OverviewContent extends ConsumerStatefulWidget {
   final dynamic id;
   final ChatRouting chatRouting;
   final Stock selectedStock;
-  final bool chartLoader;
   final FundamentalResponse? fundamentalResponse;
   final PriceComparisonModel? priceComparisonModel;
   final AnalystRatingResponse? analyticsRespinseData;
@@ -53,10 +54,21 @@ class OverviewContent extends ConsumerStatefulWidget {
   final PricePerformance? pricePerformanceData;
   final SharesResponse? sharesResponse;
   final PriceTargetMatrics? priceTargetMatrics;
-  final bool ishowLoder;
-  final bool isshowpriceTargetMatricsDataLoder;
-  final bool isshowshareStructureLoder;
   String? selectedCandleOverview;
+  final bool ishowLoder;
+  final bool chartLoader;
+  final bool isshowpriceTargetMatricsDataLoder;
+  final bool pricePerformanceLoader;
+  final bool isshowshareStructureLoder;
+  final bool monthlyDataloader;
+  final bool analyticsRespinseloader;
+
+  final bool weeklyDataloader;
+  final bool priceComparisonloader;
+
+  final bool fundamentalResponseLoder;
+  final bool matricDataloader;
+
   final void Function(String interval) onPressedAnalysis;
 
   OverviewContent({
@@ -70,6 +82,13 @@ class OverviewContent extends ConsumerStatefulWidget {
     required this.isshowshareStructureLoder,
     required this.selectedCandleOverview,
     required this.onPressedAnalysis,
+    required this.pricePerformanceLoader,
+    required this.fundamentalResponseLoder,
+    required this.matricDataloader,
+    required this.monthlyDataloader,
+    required this.weeklyDataloader,
+    required this.priceComparisonloader,
+    required this.analyticsRespinseloader,
     this.fundamentalResponse,
     this.priceComparisonModel,
     this.analyticsRespinseData,
@@ -450,7 +469,13 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
             SizedBox(height: 20.h),
 
             widget.isshowshareStructureLoder == true
-                ? MetricsShimmer()
+                ? ShareStructureCard(
+                    chatRouting: widget.chatRouting!,
+                    matrics: null,
+                    fundamentalData: null,
+                    shareData: null,
+                    heading: Headings.loading,
+                  )
                 : widget.sharesResponse != null &&
                       widget.sharesResponse!.data.PercentInsiders != null
                 ? ShareStructureCard(
@@ -463,7 +488,10 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                   )
                 : SizedBox(),
             SizedBox(height: widget.pricePerformanceData != null ? 20.h : 0),
-            widget.pricePerformanceData != null
+            //doneee
+            widget.pricePerformanceLoader == true
+                ? TableShimmer(title: "Price Performance")
+                : widget.pricePerformanceData != null
                 ? PricePerformanceWidget(data: widget.pricePerformanceData!)
                 : SizedBox(),
             SizedBox(
@@ -478,13 +506,22 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                   ? 20.h
                   : 0,
             ),
-            widget.fundamentalResponse != null &&
-                    widget
-                        .fundamentalResponse!
-                        .data
-                        .fundamentals
-                        .annualIncome
-                        .isNotEmpty
+
+            widget.fundamentalResponseLoder == true
+                ? ShareStructureCard(
+                    chatRouting: widget.chatRouting!,
+                    matrics: null,
+                    fundamentalData: null,
+                    shareData: null,
+                    heading: Headings.loading,
+                  )
+                : widget.fundamentalResponse != null &&
+                      widget
+                          .fundamentalResponse!
+                          .data
+                          .fundamentals
+                          .annualIncome
+                          .isNotEmpty
                 ? ShareStructureCard(
                     chatRouting: widget.chatRouting!,
                     matrics: null,
@@ -503,9 +540,17 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                   : 0,
             ),
 
-            widget.matricData != null &&
-                    widget.matricData!.data != null &&
-                    widget.matricData!.data!.isNotEmpty
+            widget.matricDataloader == true
+                ? ShareStructureCard(
+                    chatRouting: widget.chatRouting!,
+                    matrics: null,
+                    fundamentalData: null,
+                    shareData: null,
+                    heading: Headings.loading,
+                  )
+                : widget.matricData != null &&
+                      widget.matricData!.data != null &&
+                      widget.matricData!.data!.isNotEmpty
                 ? ShareStructureCard(
                     chatRouting: widget.chatRouting!,
 
@@ -523,7 +568,10 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
             //   areaColor: Colors.greenAccent,
             // ),
             SizedBox(height: widget.monthlyData != null ? 20.h : 0),
-            widget.monthlyData != null
+
+            widget.monthlyDataloader == true
+                ? shimmerBox(height: 400, radius: 16)
+                : widget.monthlyData != null
                 ? WeeklySeasonalityChart(
                     data: widget.monthlyData!,
                     isWeekly: false,
@@ -531,7 +579,10 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                   )
                 : SizedBox(),
             SizedBox(height: 20.h),
-            widget.weeklyData != null
+
+            widget.weeklyDataloader == true
+                ? shimmerBox(height: 400, radius: 16)
+                : widget.weeklyData != null
                 ? WeeklySeasonalityChart(
                     weeklyModel: widget.weeklyData!,
                     isWeekly: true,
@@ -600,12 +651,14 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
             // SizedBox(height: 20.h),
 
             // SizedBox(height: 20.h),
-            widget.priceComparisonModel != null &&
-                    widget.priceComparisonModel!.data.data[widget
-                            .chatRouting
-                            .symbol] !=
-                        null &&
-                    widget.priceComparisonModel!.data.data['SPY'] != null
+            widget.priceComparisonloader == true
+                ? shimmerBox(height: 300, radius: 16)
+                : widget.priceComparisonModel != null &&
+                      widget.priceComparisonModel!.data.data[widget
+                              .chatRouting
+                              .symbol] !=
+                          null &&
+                      widget.priceComparisonModel!.data.data['SPY'] != null
                 ? PriceComparisonChart(
                     priceComparisonModel: widget.priceComparisonModel,
                     symbol: widget.chatRouting.symbol,
@@ -620,9 +673,10 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                   ? 20.h
                   : 0,
             ),
-
-            widget.analyticsRespinseData != null &&
-                    widget.analyticsRespinseData!.data.isNotEmpty
+            widget.analyticsRespinseloader == true
+                ? shimmerBox(height: 170, radius: 16)
+                : widget.analyticsRespinseData != null &&
+                      widget.analyticsRespinseData!.data.isNotEmpty
                 ? AnalyticsWidget(
                     chatRouting: widget.chatRouting,
                     data: widget.analyticsRespinseData!.data,

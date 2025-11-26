@@ -159,11 +159,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   bool ishowLoder = true;
   bool isshowpriceTargetMatricsDataLoder = true;
   bool isshowshareStructureLoder = true;
+  bool fundamentalResponseLoder = true;
+  bool matricDataloader = true;
+  bool monthlyDataloader = true;
+  bool priceComparisonloader = true;
+  bool analyticsRespinseloader = true;
+  bool weeklyDataloader = true;
   bool companyLoader = true;
   bool financialLoader = true;
   bool financialResponseLoader = true;
   bool earningReportShimmer = true;
   bool companyDetailShimmer = true;
+  bool pricePerformanceLoader = true;
   bool earningChartModelLoader = true;
   bool analysisDataModelLoader = true;
 
@@ -340,13 +347,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   pricePerformance(SymbolDto symbol) async {
     try {
+      pricePerformanceLoader = true;
       var res = await ref
           .read(analyticsProviderProvider.notifier)
           .pricePerformance(symbol);
       if (res != null) {
         pricePerformanceData = res;
+        pricePerformanceLoader = false;
       }
     } catch (e) {
+      pricePerformanceLoader = false;
       print(e);
     }
   }
@@ -462,29 +472,52 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   getMatricsData(SymbolDto symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .matricsData(symbol);
-    if (res != null) {
-      matricData = res;
+    try {
+      matricDataloader = true;
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .matricsData(symbol);
+
+      if (res != null) {
+        matricData = res;
+
+        matricDataloader = false;
+      }
+    } catch (e) {
+      print(e);
+      matricDataloader = false;
     }
   }
 
   fundamental(SymbolDto symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .fundamentalData(symbol);
-    if (res != null) {
-      fundamentalResponse = res;
+    try {
+      fundamentalResponseLoder = true;
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .fundamentalData(symbol);
+      if (res != null) {
+        fundamentalResponse = res;
+        fundamentalResponseLoder = false;
+      }
+    } catch (e) {
+      print(e);
+      fundamentalResponseLoder = false;
     }
   }
 
   shares(SymbolDto symbol) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .shareStats(symbol);
-    if (res != null) {
-      sharesResponse = res;
+    try {
+      isshowshareStructureLoder = true;
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .shareStats(symbol);
+      if (res != null) {
+        sharesResponse = res;
+        isshowshareStructureLoder = false;
+      }
+    } catch (e) {
+      print(e);
+      isshowshareStructureLoder = false;
     }
   }
 
@@ -500,11 +533,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   priceComparison(PriceComparisonDto priceComparisonDto) async {
-    var res = await ref
-        .read(analyticsProviderProvider.notifier)
-        .priceComparison(priceComparisonDto);
-    if (res != null) {
-      priceComparisonModel = res;
+    try {
+      priceComparisonloader = true;
+      var res = await ref
+          .read(analyticsProviderProvider.notifier)
+          .priceComparison(priceComparisonDto);
+      priceComparisonloader = false;
+      if (res != null) {
+        priceComparisonModel = res;
+      }
+    } catch (e) {
+      print(e);
+      priceComparisonloader = false;
     }
   }
 
@@ -823,10 +863,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     if (analyticsRespinseData == null) {
       try {
+        analyticsRespinseloader = true;
         await analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+        analyticsRespinseloader = false;
         if (!mounted) return;
         setState(() {});
       } catch (e, s) {
+        analyticsRespinseloader = false;
         debugPrint("Error in analyticsData: $e\n$s");
       }
     }
@@ -1170,17 +1213,32 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   }
 
   getWeeklyData(symbol) async {
-    weeklyData = await ref
-        .read(weeklyDataProvider.notifier)
-        .getWeeklyData(symbol);
+    try {
+      weeklyDataloader = true;
+      weeklyData = await ref
+          .read(weeklyDataProvider.notifier)
+          .getWeeklyData(symbol);
+      weeklyDataloader = false;
+    } catch (e) {
+      print(e);
+      weeklyDataloader = false;
+    }
   }
 
   getMonthlyData(symbol) async {
-    monthlyData = await ref
-        .read(monthlyDataProvider.notifier)
-        .getMonthlyData(symbol);
-    if (!mounted) return;
-    setState(() {});
+    try {
+      monthlyDataloader = true;
+      monthlyData = await ref
+          .read(monthlyDataProvider.notifier)
+          .getMonthlyData(symbol);
+
+      if (!mounted) return;
+      monthlyDataloader = false;
+      setState(() {});
+    } catch (e) {
+      print(e);
+      monthlyDataloader = false;
+    }
   }
 
   //crypto apis start
@@ -2348,10 +2406,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     //  _keys[id],
                     chatRouting: widget.chatRouting!,
                     selectedStock: selectedStock!,
+                    pricePerformanceLoader: pricePerformanceLoader,
                     ishowLoder: ishowLoder,
                     isshowpriceTargetMatricsDataLoder:
                         isshowpriceTargetMatricsDataLoder,
+                    weeklyDataloader: weeklyDataloader,
                     isshowshareStructureLoder: isshowshareStructureLoder,
+                    matricDataloader: matricDataloader,
+                    monthlyDataloader: monthlyDataloader,
+                    analyticsRespinseloader: analyticsRespinseloader,
+                    priceComparisonloader: priceComparisonloader,
+                    fundamentalResponseLoder: fundamentalResponseLoder,
                     selectedCandleOverview: '',
                     onPressedAnalysis: (String val) async {
                       await getOverviewCandleChart(
