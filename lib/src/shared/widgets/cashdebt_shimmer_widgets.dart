@@ -15,7 +15,6 @@ class CashDebtShimmer extends StatelessWidget {
       child: Container(
         height: 300,
         padding: const EdgeInsets.all(16),
-        margin: EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           border: Border.all(color: AppColors.color1AB3B3B3),
           color: AppColors.color091224,

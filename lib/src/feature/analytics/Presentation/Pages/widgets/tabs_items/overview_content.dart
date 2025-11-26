@@ -567,7 +567,7 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
             //   lineColor: Colors.green,
             //   areaColor: Colors.greenAccent,
             // ),
-            SizedBox(height: widget.monthlyData != null ? 20.h : 0),
+            SizedBox(height: 20.h),
 
             widget.monthlyDataloader == true
                 ? shimmerBox(height: 400, radius: 16)
@@ -590,18 +590,7 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                   )
                 : SizedBox(),
 
-            SizedBox(
-              height:
-                  widget.priceComparisonModel != null &&
-                      widget
-                              .priceComparisonModel!
-                              .data
-                              .data['${widget.chatRouting!.symbol}'] !=
-                          null &&
-                      widget.priceComparisonModel!.data.data['SPY'] != null
-                  ? 20.h
-                  : 0,
-            ),
+            SizedBox(height: 20.h),
 
             // SizedBox(height: 20.h),
             // RevenueAnalysisChart(),
@@ -666,13 +655,7 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                   )
                 : SizedBox(),
 
-            SizedBox(
-              height:
-                  widget.analyticsRespinseData != null &&
-                      widget.analyticsRespinseData!.data.isNotEmpty
-                  ? 20.h
-                  : 0,
-            ),
+            SizedBox(height: 20.h),
             widget.analyticsRespinseloader == true
                 ? shimmerBox(height: 170, radius: 16)
                 : widget.analyticsRespinseData != null &&
