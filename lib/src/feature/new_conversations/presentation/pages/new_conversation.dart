@@ -691,13 +691,15 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
                 size: 20,
               ),
               MdSnsText(
-                Filters.systemNumberConvention(
-                      widget.change,
-                      isPrice: false,
-                      isAbs: false,
-                      alwaysShowTwoDecimal: true,
-                    ).replaceAll('%', '') +
-                    "%",
+                widget.change.isNotEmpty
+                    ? Filters.systemNumberConvention(
+                            widget.change,
+                            isPrice: false,
+                            isAbs: false,
+                            alwaysShowTwoDecimal: true,
+                          ).replaceAll('%', '') +
+                          "%"
+                    : "0.0%",
 
                 color: widget.change.toString().contains("-")
                     ? AppColors.redFF3B3B
