@@ -20,7 +20,6 @@ import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
 import 'package:trader_gpt/src/shared/socket/providers/stocks_price.dart';
 import 'package:trader_gpt/src/shared/widgets/CustomCandleChartShimmer%20.dart';
-import 'package:trader_gpt/src/shared/widgets/matrics_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/pricePerformance_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/price_card_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/showinfopopap.dart';
@@ -334,7 +333,7 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: 5,
-                      physics: const BouncingScrollPhysics(),
+                      // physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         return index == 0
                             ? PriceCardWidget(

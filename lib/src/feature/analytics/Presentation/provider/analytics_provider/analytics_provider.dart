@@ -1,11 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/company_detail/company_detail_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/esg_score_model/esg_score_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/matrics_data_model/matrics_data_model.dart';
-import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';
 import '../../../../../core/local/repository/local_storage_repository.dart';
 import '../../../../../shared/custom_message.dart';
 import '../../../../../shared/states/app_loading_state.dart';

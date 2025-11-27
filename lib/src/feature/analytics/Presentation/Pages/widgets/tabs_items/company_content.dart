@@ -12,7 +12,6 @@ import '../../../../../../shared/chart/share_structure_widget.dart';
 import '../../../../../../shared/extensions/number_formatter_extension.dart';
 import '../../../../../../shared/widgets/InfoBox_widgets.dart';
 import '../../../../../../shared/widgets/company_detail.widgets.dart';
-import '../../../../../../shared/widgets/earning_shimmer.dart';
 import '../../../../../../shared/widgets/earning_wigdets.dart';
 import '../../../../../../shared/widgets/esg_score_table.dart';
 import '../../../../../../shared/widgets/insiderTrader_widgets.dart';

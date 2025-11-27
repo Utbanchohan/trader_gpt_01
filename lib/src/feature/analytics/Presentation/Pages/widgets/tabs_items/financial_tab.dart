@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/operating_cash_flow.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/financial_tab_widgets.dart/financial_tab_income_statement.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/financial_tab_widgets.dart/financial_tab_summary.dart';
-
 import '../../../../../../core/theme/app_colors.dart';
-import '../../../../../../shared/chart/lin_chart.dart';
-import '../../../../../../shared/widgets/cashdebt_shimmer_widgets.dart';
-import '../../../../../../shared/widgets/cashdebt_widgets.dart';
-import '../../../../../../shared/widgets/financialtable_widgets.dart';
-import '../../../../../../shared/widgets/table_shimmer.dart';
 import '../../../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../../domain/model/financial_chart_data/financial_chart_data_model.dart';
 import '../../../../domain/model/financial_data_model/financial_data_model.dart';

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
@@ -22,57 +21,23 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/provider/monthly_d
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data_crypto/weekly_data_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/highlights_widgets.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/price_performance_model/price_performance_model.dart';
-import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/widget/shimmer_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/AnalysisTableShimmer.dart';
-import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analysis_table.dart';
-import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analytics_widget.dart'
-    show AnalyticsWidget;
-import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/date_picker_widgets.dart';
-import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/earning_chart.dart';
-import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/company_detail/company_detail_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/chart/lin_chart.dart';
-import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/CustomCandleChartShimmer%20.dart';
-import 'package:trader_gpt/src/shared/widgets/EarningsTrend_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/InfoBox_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/cashdebt_shimmer_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/cashdebt_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/company_detail.widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/earning_shimmer.dart';
-import 'package:trader_gpt/src/shared/widgets/earning_wigdets.dart'
-    hide CompanyDetailsCard;
-import 'package:trader_gpt/src/shared/widgets/earningsTable_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/financialtable_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/insiderTrader_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/matrics_shimmer.dart';
-import 'package:trader_gpt/src/shared/widgets/outstanding_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/pricePerformance_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/price_card_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/profileCard_widgets.dart';
-import 'package:trader_gpt/src/shared/widgets/profile_card_shimmer.dart';
-import 'package:trader_gpt/src/shared/widgets/showinfopopap.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-import 'package:trader_gpt/utils/constant.dart';
 
 import '../../../../core/extensions/price_calculation.dart';
 import '../../../../core/extensions/symbol_image.dart';
 import '../../../../shared/extensions/number_formatter_extension.dart';
 import '../../../../shared/socket/providers/stocks_price.dart';
-import '../../../../shared/widgets/esg_score_table.dart';
-import '../../../../shared/widgets/price_card_shimmer.dart'
-    hide ProfileCardShimmer;
-import '../../../../shared/widgets/security_short_widgets.dart';
-import '../../../../shared/widgets/securityownership_widgets.dart';
-import '../../../../shared/widgets/shortvalue.widgets.dart';
-import '../../../../shared/widgets/split_dividend.dart';
-import '../../../../shared/widgets/table_shimmer.dart';
 import '../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../data/dto/financial_dto/financial_dto.dart';
 import '../../data/dto/highlight_dto/highlight_dto_crypto.dart';
@@ -111,9 +76,7 @@ import '../provider/monthly_data/monthly_data.dart';
 import '../provider/overview_candle_chart/overview_candle_chart.dart';
 import '../provider/overview_candle_chart_crypto/overview_candle_chart_crypto.dart';
 import 'widgets/analytics_candle_stick_chart.dart';
-import 'widgets/operating_cash_flow.dart';
 import 'widgets/price_comparison_chart.dart';
-import 'dart:math' as math;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
@@ -180,9 +143,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   bool shortVolumeLoader = true;
   bool securityOwnershiploader = true;
   bool securityShortVolumeLoader = true;
+  bool analysisDataLoader = true;
   final ItemScrollController itemScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
+  final ScrollOffsetController scrollOffsetController =
+      ScrollOffsetController();
+  final ScrollOffsetListener scrollOffsetListener =
+      ScrollOffsetListener.create();
 
   //crypto Variable start
   List<OverviewCandleChartModel>? overviewCandleChartModelCrypto;
@@ -237,9 +205,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     },
   ];
 
-  void _scrollToSection(String id, Map<String, dynamic> section) {
+  void _scrollToSection(String id, Map<String, dynamic> section) async {
     _activeSection = id;
     final key = _keys[id];
+    final index = sections.indexOf(section);
+    await WidgetsBinding.instance.endOfFrame;
+    await itemScrollController.scrollTo(
+      index: index,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
+    );
     setState(() {
       if (id == "financial") {
         thirdTap(0);
@@ -251,19 +226,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         fifthTap();
       }
     });
-    final index = sections.indexOf(section);
-    itemScrollController.scrollTo(
-      index: index,
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeInOut,
-    );
-    // if (key?.currentContext != null) {
-    //   Scrollable.ensureVisible(
-    //     key!.currentContext!,
-    //     duration: const Duration(milliseconds: 100),
-    //     curve: Curves.easeInOut,
-    //   );
-    // }
   }
 
   @override
@@ -718,7 +680,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     );
     if (!mounted) return;
     setState(() {
-      chartLoader = true;
+      analysisDataLoader = true;
     });
     var res = await ref
         .read(analyticsProviderProvider.notifier)
@@ -727,12 +689,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       analysisDataModel = res;
       if (!mounted) return;
       setState(() {
-        chartLoader = false;
+        analysisDataLoader = false;
       });
     } else {
       if (!mounted) return;
       setState(() {
-        chartLoader = false;
+        analysisDataLoader = false;
       });
     }
   }
@@ -2444,6 +2406,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         Expanded(
           child: ScrollablePositionedList.builder(
             itemCount: sections.length,
+            scrollOffsetController: scrollOffsetController,
+            scrollOffsetListener: scrollOffsetListener,
             itemScrollController: itemScrollController,
             itemPositionsListener: itemPositionsListener,
             itemBuilder: (context, index) {
@@ -2453,8 +2417,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 case "overview":
                   return OverviewContent(
                     chartLoader: chartLoader,
-                    id: UniqueKey(),
-                    //  _keys[id],
+                    id: _keys[id],
                     chatRouting: widget.chatRouting!,
                     selectedStock: selectedStock!,
                     pricePerformanceLoader: pricePerformanceLoader,
@@ -2498,8 +2461,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
                 case "company":
                   return CompanyContent(
-                    id: UniqueKey(),
-                    //  _keys[id],
+                    id: _keys[id],
                     companyLoader: companyLoader,
                     earningLoader: earningLoader,
                     companyModel: companyModel,
@@ -2519,8 +2481,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
                 case "financial":
                   return FinancialTab(
-                    id: UniqueKey(),
-                    // _keys[id],
+                    id: _keys[id],
                     financialLoader: financialLoader,
                     financeChartsDataModel: financeChartsDataModel,
                     financialResponseLoader: financialResponseLoader,
@@ -2543,15 +2504,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     companyDetailModel: companyDetailModel,
                     earningChartModel: earningChartModel,
                     earningReportsModel: earningReportsModel,
-                    id: UniqueKey(),
-                    //  _keys[id],
+                    id: _keys[id],
                   );
 
                 case "analytics":
                   return AnalysisContent(
-                    id: UniqueKey(),
-                    // _keys[id],
-                    chartLoader: chartLoader,
+                    id: _keys[id],
+                    chartLoader: analysisDataLoader,
                     analysisDataModel: analysisDataModel,
                     onPressed: (toDate, fromDate) async {
                       await getAnalysisData(
@@ -2583,131 +2542,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             },
           ),
         ),
-        // Expanded(
-        //   child: SingleChildScrollView(
-        //     controller: _scrollController,
-        //     child: Column(
-        //       children: sections.map((section) {
-        //         return section['id'] == "overview"
-        //             ? OverviewContent(
-        //                 chartLoader: chartLoader,
-        //                 id: _keys[section['id']],
-        //                 chatRouting: widget.chatRouting!,
-        //                 selectedStock: selectedStock!,
-        //                 ishowLoder: ishowLoder,
-        //                 isshowpriceTargetMatricsDataLoder:
-        //                     isshowpriceTargetMatricsDataLoder,
-        //                 isshowshareStructureLoder: isshowshareStructureLoder,
-        //                 selectedCandleOverview: '',
-        //                 onPressedAnalysis: (String val) async {
-        //                   await getOverviewCandleChart(
-        //                     widget.chatRouting!.symbol,
-        //                     val == 'H'
-        //                         ? IntervalEnum.hour
-        //                         : val == 'D'
-        //                         ? IntervalEnum.daily
-        //                         : val == 'W'
-        //                         ? IntervalEnum.weekly
-        //                         : val == 'M'
-        //                         ? IntervalEnum.monthly
-        //                         : IntervalEnum.daily,
-        //                   );
-        //                 },
-        //                 fundamentalResponse: fundamentalResponse,
-        //                 priceComparisonModel: priceComparisonModel,
-        //                 analyticsRespinseData: analyticsRespinseData,
-        //                 monthlyData: monthlyData,
-        //                 weeklyData: weeklyData,
-        //                 matricData: matricData,
-        //                 stockResponse: stockResponse,
-        //                 overviewCandleChartModel: overviewCandleChartModel,
-        //                 pricePerformanceData: pricePerformanceData,
-        //                 sharesResponse: sharesResponse,
-        //                 priceTargetMatrics: priceTargetMatrics,
-        //               )
-        //             //  _overviewContent(_keys[section['id']])
-        //             : section['id'] == "company"
-        //             ? CompanyContent(
-        //                 id: _keys[section['id']],
-        //                 companyLoader: companyLoader,
-        //                 companyModel: companyModel,
-        //                 earningdata: earningdata,
-        //                 shortVolumeModel: shortVolumeModel,
-        //                 companyDetailModel: companyDetailModel,
-        //                 esgScoreData: esgScoreData,
-        //                 securityShortVolume: securityShortVolume,
-        //                 insiderTransactionResponse: insiderTransactionResponse,
-        //                 securityOwnership: securityOwnership,
-        //               )
-        //             // _companyContent(_keys[section['id']])
-        //             : section['id'] == "financial"
-        //             ? FinancialTab(
-        //                 id: _keys[section['id']],
-        //                 financialLoader: financialLoader,
-        //                 financeChartsDataModel: financeChartsDataModel,
-        //                 financialResponseLoader: financialResponseLoader,
-        //                 financialResponse: financialResponse,
-        //                 symbol: selectedStock!.symbol,
-        //                 onPressed: (id) {
-        //                   if (id == "0") {
-        //                     thirdTap(0);
-        //                   } else {
-        //                     thirdTap(1);
-        //                   }
-        //                 },
-        //               )
-        //             // _financialContent(_keys[section['id']])
-        //             : section['id'] == "earnings"
-        //             ? EarningContent(
-        //                 companyDetailShimmer: companyDetailShimmer,
-        //                 earningReportShimmer: earningReportShimmer,
-        //                 earningChartModelLoader: earningChartModelLoader,
-        //                 companyDetailModel: companyDetailModel,
-        //                 earningChartModel: earningChartModel,
-        //                 earningReportsModel: earningReportsModel,
-        //                 id: _keys[section['id']],
-        //               )
-        //             // _earningsContent(_keys[section['id']])
-        //             : section['id'] == "analytics"
-        //             ? AnalysisContent(
-        //                 id: _keys[section['id']],
-        //                 chartLoader: chartLoader,
-        //                 analysisDataModel: analysisDataModel,
-        //                 onPressed: (toDate, fromDate) async {
-        //                   await getAnalysisData(
-        //                     widget.chatRouting!.symbol,
-        //                     IntervalEnum.daily,
-        //                     now1: toDate,
-        //                     startDate1: fromDate,
-        //                   );
-        //                 },
-        //                 onPressedAnalysis: (val) async {
-        //                   await getAnalysisData(
-        //                     widget.chatRouting!.symbol,
-        //                     val == 'H'
-        //                         ? IntervalEnum.daily
-        //                         : val == 'D'
-        //                         ? IntervalEnum.daily
-        //                         : val == 'W'
-        //                         ? IntervalEnum.daily
-        //                         : IntervalEnum.monthly,
-        //                   );
-        //                 },
-        //                 selectedItemCandleAnalysis:
-        //                     selectedItemCandleAnalysis ?? "H",
-        //               )
-        //             // _analysisContent(_keys[section['id']])
-        //             : Container(
-        //                 key: _keys[section['id']],
-        //                 height: 600,
-        //                 color: section['color'],
-        //                 alignment: Alignment.center,
-        //                 child: Text("data"),
-        //               );
-        //       }).toList(),
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }
