@@ -690,7 +690,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     SizedBox(height: 20),
-
                                     ChatMarkdownWidget(
                                       updatesAskStream: updatesAskQuestions,
                                       message: text.toString(),
@@ -707,7 +706,10 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                     ),
                                   ],
                                 )
-                              : SizedBox();
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [LoadingWidgetMarkdown()],
+                                );
                         },
                         loading: () => Row(
                           mainAxisAlignment: MainAxisAlignment.start,
