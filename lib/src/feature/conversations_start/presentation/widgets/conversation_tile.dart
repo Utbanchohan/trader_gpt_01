@@ -70,7 +70,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding:  EdgeInsets.only(right: 15.w),
+            padding:  EdgeInsets.only(right: 10.w),
             child: Column(
               children: [
                 Container(
