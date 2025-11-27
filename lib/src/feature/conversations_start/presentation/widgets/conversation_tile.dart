@@ -48,16 +48,17 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
     final liveStock = stockManagerState[widget.stock.stockId];
     String change = liveStock != null && liveStock.stockId.isNotEmpty
         ? PriceUtils.getChangesPercentage(
-                    liveStock.price,
-                    liveStock.previousClose,
-                  ) !=
-                  null
+                        liveStock.price,
+                        liveStock.previousClose,
+                      ) !=
+                      null &&
+                  liveStock.price != liveStock.previousClose
               ? PriceUtils.getChangesPercentage(
-                  widget.stocks.price,
-                  widget.stocks.previousClose,
+                  liveStock.price,
+                  liveStock.previousClose,
                 )!.toStringAsFixed(2)
-              : widget.stocks.pctChange.toStringAsFixed(2)
-        : widget.stocks.pctChange.toStringAsFixed(2);
+              : widget.stocks.pct_change
+        : widget.stocks.pct_change;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       margin: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
@@ -225,7 +226,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                           change,
                           isPrice: false,
                           isAbs: false,
-                        ) +
+                        ).replaceAll('%', '') +
                         "%",
                     color: change.contains("-")
                         ? AppColors.redFF3B3B
