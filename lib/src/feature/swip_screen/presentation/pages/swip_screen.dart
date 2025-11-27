@@ -274,29 +274,37 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
         ],
       ),
 
-      body: PageView(
+      body: PageView.builder(
         controller: _pageController,
+        itemCount: 3,
         physics: pgeIndex == 0
-            ? NeverScrollableScrollPhysics() // swipe disable for page 0
-            : BouncingScrollPhysics(),
+            ? const NeverScrollableScrollPhysics()
+            : const BouncingScrollPhysics(),
         onPageChanged: (index) {
           setState(() {
             pgeIndex = index;
           });
         },
-        children: [
-          ConversationStart(),
-          // convo != null && convo.isNotEmpty && stocks.isNotEmpty
-          //     ?
-          ChatConversation(
-            chatRouting: widget.chatRouting,
-            initialMessage: widget.question,
-          ),
-          // :
-          // ChatPage(chatRouting: widget.chatRouting),
-          if (convo != null && convo.isNotEmpty && stocks.isNotEmpty)
-            AnalyticsScreen(chatRouting: widget.chatRouting),
-        ],
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return ConversationStart();
+          }
+
+          if (index == 1) {
+            return ChatConversation(
+              chatRouting: widget.chatRouting,
+              initialMessage: widget.question,
+            );
+          }
+
+          if (index == 2) {
+            if (convo != null && convo.isNotEmpty && stocks.isNotEmpty) {
+              return AnalyticsScreen(chatRouting: widget.chatRouting);
+            }
+          }
+
+          return const SizedBox(); // fallback
+        },
       ),
     );
   }

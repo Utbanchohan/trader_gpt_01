@@ -457,7 +457,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       companyName: convo[index].companyName,
                                       price: stocks[stockIndex].price,
                                       changePercentage:
-                                          stocks[stockIndex].pctChange,
+                                          double.tryParse(
+                                            stocks[stockIndex].pct_change
+                                                .replaceAll("%", ""),
+                                          ) ??
+                                          0,
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
                                       stockid: convo[index].stockId,
@@ -581,7 +585,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       companyName: convo[index].companyName,
                                       price: stocks[stockIndex].price,
                                       changePercentage:
-                                          stocks[stockIndex].pctChange,
+                                          double.tryParse(
+                                            stocks[stockIndex].pct_change
+                                                .replaceAll("%", ""),
+                                          ) ??
+                                          0,
                                       trendChart:
                                           stocks[stockIndex]
                                                   .fiveDayTrend
@@ -718,7 +726,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       price: stocks[stockIndex].price,
                                       type: stock.type,
                                       changePercentage:
-                                          stocks[stockIndex].pctChange,
+                                          double.tryParse(
+                                            stocks[stockIndex].pct_change
+                                                .replaceAll("%", ""),
+                                          ) ??
+                                          0,
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
                                       stockid: stock.stockId,
@@ -843,7 +855,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       price: stocks[stockIndex].price,
                                       type: stock.type,
                                       changePercentage:
-                                          stocks[stockIndex].pctChange,
+                                          double.tryParse(
+                                            stocks[stockIndex].pct_change
+                                                .replaceAll("%", ""),
+                                          ) ??
+                                          0,
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
                                       stockid: stock.stockId,
@@ -966,7 +982,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       price: stocks[stockIndex].price,
                                       type: stock.type,
                                       changePercentage:
-                                          stocks[stockIndex].pctChange,
+                                          double.tryParse(
+                                            stocks[stockIndex].pct_change
+                                                .replaceAll("%", ""),
+                                          ) ??
+                                          0,
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
                                       stockid: stock.stockId,

@@ -120,16 +120,19 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
     final stockManagerState = ref.watch(stocksManagerProvider);
 
     final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
-    double change =
-        PriceUtils.getChangesPercentage(
-              liveStock != null ? liveStock.price : widget.chatRouting!.price,
-              widget.chatRouting!.previousClose,
-            ) !=
-            null
+    double change = liveStock != null
         ? PriceUtils.getChangesPercentage(
-            liveStock != null ? liveStock.price : widget.chatRouting!.price,
-            widget.chatRouting!.previousClose,
-          )!
+                        liveStock.price,
+
+                        liveStock.previousClose,
+                      ) !=
+                      null &&
+                  liveStock.price != liveStock.previousClose
+              ? PriceUtils.getChangesPercentage(
+                  liveStock.price,
+                  liveStock.previousClose,
+                )!
+              : widget.chatRouting!.changePercentage
         : widget.chatRouting!.changePercentage;
     List<ChartData> buildChartSpots(
       List<OverviewCandleChartModel> overviewCandle,
