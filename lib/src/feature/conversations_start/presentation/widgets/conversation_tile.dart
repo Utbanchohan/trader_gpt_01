@@ -83,19 +83,25 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: widget.stock.type.toLowerCase() == "crypto"
-                      ? Image(
-                          height: 41,
-                          width: 42,
-                          image: NetworkImage(
-                            getItemImage(ImageType.crypto, widget.stock.symbol),
+                      ? Container(
+                          color: AppColors.redFF3B3B,
+                          child: Image(
+                            height: 41,
+                            width: 42,
+                            image: NetworkImage(
+                              getItemImage(
+                                ImageType.crypto,
+                                widget.stock.symbol,
+                              ),
+                            ),
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return SvgPicture.network(
+                                "https://cdn-images.traderverse.io/crypto_dummy.svg",
+                                fit: BoxFit.cover,
+                              );
+                            },
                           ),
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return SvgPicture.network(
-                              "https://cdn-images.traderverse.io/crypto_dummy.svg",
-                              fit: BoxFit.cover,
-                            );
-                          },
                         )
                       : SvgPicture.network(
                           getItemImage(ImageType.stock, widget.stock.symbol),
@@ -125,27 +131,31 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               //   fit: BoxFit.cover,
               // ),
               SizedBox(height: 8),
-              MdSnsText(
-                getAgoText(
-                  widget.stock.lastMessage != null
-                      ? DateTime.fromMillisecondsSinceEpoch(
-                          widget
-                              .stock
-                              .lastMessage!
-                              .createdAt
-                              .millisecondsSinceEpoch,
-                        )
-                      : DateTime.fromMillisecondsSinceEpoch(
-                          widget.stock.createdAt.millisecondsSinceEpoch,
-                        ),
+              Container(
+                width: 60.w,
+                alignment: Alignment.center,
+                child: MdSnsText(
+                  getAgoText(
+                    widget.stock.lastMessage != null
+                        ? DateTime.fromMillisecondsSinceEpoch(
+                            widget
+                                .stock
+                                .lastMessage!
+                                .createdAt
+                                .millisecondsSinceEpoch,
+                          )
+                        : DateTime.fromMillisecondsSinceEpoch(
+                            widget.stock.createdAt.millisecondsSinceEpoch,
+                          ),
+                  ),
+                  variant: TextVariant.h4,
+                  fontWeight: TextFontWeightVariant.h4,
+                  color: AppColors.color677FA4,
                 ),
-                variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h4,
-                color: AppColors.color677FA4,
               ),
             ],
           ),
-          SizedBox(width: 20),
+          SizedBox(width: 15.w),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
