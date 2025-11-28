@@ -522,6 +522,8 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
+              maxIncluded: false,
+              minIncluded: false,
               reservedSize: 40,
               showTitles: true,
               interval: calculateInterval(
@@ -698,8 +700,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               sideTitles: SideTitles(
                 reservedSize: 40,
                 showTitles: true,
-                interval: (categories.length / 3)
-                    .floorToDouble(), // 👈 show only 10 titles
+                interval: (categories.length / 3).floorToDouble(),
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
                   if (index >= 0 && index < categories.length) {
