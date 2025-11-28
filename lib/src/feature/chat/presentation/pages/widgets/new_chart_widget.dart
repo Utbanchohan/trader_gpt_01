@@ -674,6 +674,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 maxIncluded: false,
+                minIncluded: false,
                 showTitles: true,
                 reservedSize: 50,
                 interval: safeInterval,
@@ -705,10 +706,13 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                     return Column(
                       children: [
                         SizedBox(height: 5),
-                        MdSnsText(
-                          formatDateMMYYY(categories[index]),
-                          variant: TextVariant.h4,
-                          color: axisColor,
+                        Container(
+                          margin: EdgeInsets.only(right: 15.w),
+                          child: MdSnsText(
+                            formatDateMMYYY(categories[index]),
+                            variant: TextVariant.h4,
+                            color: axisColor,
+                          ),
                         ),
                       ],
                     );
