@@ -577,37 +577,38 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
             "chart": [],
             "updates": "",
           });
-
-    asyncStream.whenData((data) {
-      followupQuestions = data["followUp"].isNotEmpty
-          ? (data["followUp"] as List<String>?) ?? []
-          : [];
-      if (data["updates"].isNotEmpty) {
-        for (var data in data["updates"]) {
-          updatesAskQuestions.add(AnalysisTask.fromJson(data));
+    if (startStream) {
+      asyncStream.whenData((data) {
+        followupQuestions = data["followUp"].isNotEmpty
+            ? (data["followUp"] as List<String>?) ?? []
+            : [];
+        if (data["updates"].isNotEmpty) {
+          for (var data in data["updates"]) {
+            updatesAskQuestions.add(AnalysisTask.fromJson(data));
+          }
         }
-      }
 
-      if (followupQuestions.isNotEmpty) {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          if (!dialogOpen) {
-            final chartText = data["chart"] ?? [];
-            oldDisplays = chartText.map<String>((e) => e.toString()).toList();
-            oldResponse = data["buffer"];
-            showDialogue(questions, followupQuestions, message, 1);
-            changeDialogueStatus();
-          }
-        });
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          if (!dialogOpen) {
-            final chartText = data["chart"] ?? [];
-            oldDisplays = chartText.map<String>((e) => e.toString()).toList();
-            oldResponse = data["buffer"];
-          }
-        });
-      }
-    });
+        if (followupQuestions.isNotEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            if (!dialogOpen) {
+              final chartText = data["chart"] ?? [];
+              oldDisplays = chartText.map<String>((e) => e.toString()).toList();
+              oldResponse = data["buffer"];
+              showDialogue(questions, followupQuestions, message, 1);
+              changeDialogueStatus();
+            }
+          });
+        } else {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            if (!dialogOpen) {
+              final chartText = data["chart"] ?? [];
+              oldDisplays = chartText.map<String>((e) => e.toString()).toList();
+              oldResponse = data["buffer"];
+            }
+          });
+        }
+      });
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -678,45 +679,53 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                           return SizedBox(height: 20);
                         },
                       ),
-                      asyncStream.when(
-                        data: (line) {
-                          final text = line["buffer"] ?? "";
-                          final chartText = line["chart"] ?? [];
-                          List<String> chartStrings = chartText
-                              .map<String>((e) => e.toString())
-                              .toList();
-                          return text.isNotEmpty
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    SizedBox(height: 20),
-                                    ChatMarkdownWidget(
-                                      updatesAskStream: updatesAskQuestions,
-                                      message: text.toString(),
-                                      name:
-                                          widget.chatRouting?.symbol ?? "TDGPT",
-                                      image: widget.chatRouting?.image ?? "",
-                                      type: "ai",
-                                      symbolType:
-                                          widget.chatRouting?.type ?? "",
-                                      display: chartStrings,
-                                      messageId: "",
-                                      runId: "",
-                                      isStreaming: true,
-                                    ),
-                                  ],
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [LoadingWidgetMarkdown()],
-                                );
-                        },
-                        loading: () => Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [LoadingWidgetMarkdown()],
-                        ),
-                        error: (err, _) => Text("Error: $err"),
-                      ),
+
+                      startStream
+                          ? asyncStream.when(
+                              data: (line) {
+                                final text = line["buffer"] ?? "";
+                                final chartText = line["chart"] ?? [];
+                                List<String> chartStrings = chartText
+                                    .map<String>((e) => e.toString())
+                                    .toList();
+                                return text.isNotEmpty
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          SizedBox(height: 20),
+                                          ChatMarkdownWidget(
+                                            updatesAskStream:
+                                                updatesAskQuestions,
+                                            message: text.toString(),
+                                            name:
+                                                widget.chatRouting?.symbol ??
+                                                "TDGPT",
+                                            image:
+                                                widget.chatRouting?.image ?? "",
+                                            type: "ai",
+                                            symbolType:
+                                                widget.chatRouting?.type ?? "",
+                                            display: chartStrings,
+                                            messageId: "",
+                                            runId: "",
+                                            isStreaming: true,
+                                          ),
+                                        ],
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [LoadingWidgetMarkdown()],
+                                      );
+                              },
+                              loading: () => Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [LoadingWidgetMarkdown()],
+                              ),
+                              error: (err, _) => Text("Error: $err"),
+                            )
+                          : SizedBox(),
                     ],
                   )
                 : WelcomeWidget(
