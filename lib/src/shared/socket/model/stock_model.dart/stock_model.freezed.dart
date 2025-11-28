@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Stock {
 
-@JsonKey(name: "_id") String get id; String get stockId; String get symbol; String get exchange; String get exchangeshortname; String get source; String get type; String get companyName; bool get isActivelyTrading; bool get isAdr; bool get isEtf; bool get isFund; String get isin; double get marketCap; double get price; double get previousClose; double get pctChange; String get key; List<FiveDayTrend> get fiveDayTrend; bool get isPositive;
+@JsonKey(name: "_id") String get id; String get stockId; String get symbol; String get exchange; String get exchangeshortname; String get source; String get type; String get companyName; bool get isActivelyTrading; bool get isAdr; bool get isEtf; bool get isFund; String get isin; double get marketCap; double get price; double get previousClose; double get pctChange; String get pct_change; String get key; List<FiveDayTrend> get fiveDayTrend; bool get isPositive;
 /// Create a copy of Stock
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $StockCopyWith<Stock> get copyWith => _$StockCopyWithImpl<Stock>(this as Stock, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Stock&&(identical(other.id, id) || other.id == id)&&(identical(other.stockId, stockId) || other.stockId == stockId)&&(identical(other.symbol, symbol) || other.symbol == symbol)&&(identical(other.exchange, exchange) || other.exchange == exchange)&&(identical(other.exchangeshortname, exchangeshortname) || other.exchangeshortname == exchangeshortname)&&(identical(other.source, source) || other.source == source)&&(identical(other.type, type) || other.type == type)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.isActivelyTrading, isActivelyTrading) || other.isActivelyTrading == isActivelyTrading)&&(identical(other.isAdr, isAdr) || other.isAdr == isAdr)&&(identical(other.isEtf, isEtf) || other.isEtf == isEtf)&&(identical(other.isFund, isFund) || other.isFund == isFund)&&(identical(other.isin, isin) || other.isin == isin)&&(identical(other.marketCap, marketCap) || other.marketCap == marketCap)&&(identical(other.price, price) || other.price == price)&&(identical(other.previousClose, previousClose) || other.previousClose == previousClose)&&(identical(other.pctChange, pctChange) || other.pctChange == pctChange)&&(identical(other.key, key) || other.key == key)&&const DeepCollectionEquality().equals(other.fiveDayTrend, fiveDayTrend)&&(identical(other.isPositive, isPositive) || other.isPositive == isPositive));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Stock&&(identical(other.id, id) || other.id == id)&&(identical(other.stockId, stockId) || other.stockId == stockId)&&(identical(other.symbol, symbol) || other.symbol == symbol)&&(identical(other.exchange, exchange) || other.exchange == exchange)&&(identical(other.exchangeshortname, exchangeshortname) || other.exchangeshortname == exchangeshortname)&&(identical(other.source, source) || other.source == source)&&(identical(other.type, type) || other.type == type)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.isActivelyTrading, isActivelyTrading) || other.isActivelyTrading == isActivelyTrading)&&(identical(other.isAdr, isAdr) || other.isAdr == isAdr)&&(identical(other.isEtf, isEtf) || other.isEtf == isEtf)&&(identical(other.isFund, isFund) || other.isFund == isFund)&&(identical(other.isin, isin) || other.isin == isin)&&(identical(other.marketCap, marketCap) || other.marketCap == marketCap)&&(identical(other.price, price) || other.price == price)&&(identical(other.previousClose, previousClose) || other.previousClose == previousClose)&&(identical(other.pctChange, pctChange) || other.pctChange == pctChange)&&(identical(other.pct_change, pct_change) || other.pct_change == pct_change)&&(identical(other.key, key) || other.key == key)&&const DeepCollectionEquality().equals(other.fiveDayTrend, fiveDayTrend)&&(identical(other.isPositive, isPositive) || other.isPositive == isPositive));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,stockId,symbol,exchange,exchangeshortname,source,type,companyName,isActivelyTrading,isAdr,isEtf,isFund,isin,marketCap,price,previousClose,pctChange,key,const DeepCollectionEquality().hash(fiveDayTrend),isPositive]);
+int get hashCode => Object.hashAll([runtimeType,id,stockId,symbol,exchange,exchangeshortname,source,type,companyName,isActivelyTrading,isAdr,isEtf,isFund,isin,marketCap,price,previousClose,pctChange,pct_change,key,const DeepCollectionEquality().hash(fiveDayTrend),isPositive]);
 
 @override
 String toString() {
-  return 'Stock(id: $id, stockId: $stockId, symbol: $symbol, exchange: $exchange, exchangeshortname: $exchangeshortname, source: $source, type: $type, companyName: $companyName, isActivelyTrading: $isActivelyTrading, isAdr: $isAdr, isEtf: $isEtf, isFund: $isFund, isin: $isin, marketCap: $marketCap, price: $price, previousClose: $previousClose, pctChange: $pctChange, key: $key, fiveDayTrend: $fiveDayTrend, isPositive: $isPositive)';
+  return 'Stock(id: $id, stockId: $stockId, symbol: $symbol, exchange: $exchange, exchangeshortname: $exchangeshortname, source: $source, type: $type, companyName: $companyName, isActivelyTrading: $isActivelyTrading, isAdr: $isAdr, isEtf: $isEtf, isFund: $isFund, isin: $isin, marketCap: $marketCap, price: $price, previousClose: $previousClose, pctChange: $pctChange, pct_change: $pct_change, key: $key, fiveDayTrend: $fiveDayTrend, isPositive: $isPositive)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $StockCopyWith<$Res>  {
   factory $StockCopyWith(Stock value, $Res Function(Stock) _then) = _$StockCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "_id") String id, String stockId, String symbol, String exchange, String exchangeshortname, String source, String type, String companyName, bool isActivelyTrading, bool isAdr, bool isEtf, bool isFund, String isin, double marketCap, double price, double previousClose, double pctChange, String key, List<FiveDayTrend> fiveDayTrend, bool isPositive
+@JsonKey(name: "_id") String id, String stockId, String symbol, String exchange, String exchangeshortname, String source, String type, String companyName, bool isActivelyTrading, bool isAdr, bool isEtf, bool isFund, String isin, double marketCap, double price, double previousClose, double pctChange, String pct_change, String key, List<FiveDayTrend> fiveDayTrend, bool isPositive
 });
 
 
@@ -65,7 +65,7 @@ class _$StockCopyWithImpl<$Res>
 
 /// Create a copy of Stock
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? stockId = null,Object? symbol = null,Object? exchange = null,Object? exchangeshortname = null,Object? source = null,Object? type = null,Object? companyName = null,Object? isActivelyTrading = null,Object? isAdr = null,Object? isEtf = null,Object? isFund = null,Object? isin = null,Object? marketCap = null,Object? price = null,Object? previousClose = null,Object? pctChange = null,Object? key = null,Object? fiveDayTrend = null,Object? isPositive = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? stockId = null,Object? symbol = null,Object? exchange = null,Object? exchangeshortname = null,Object? source = null,Object? type = null,Object? companyName = null,Object? isActivelyTrading = null,Object? isAdr = null,Object? isEtf = null,Object? isFund = null,Object? isin = null,Object? marketCap = null,Object? price = null,Object? previousClose = null,Object? pctChange = null,Object? pct_change = null,Object? key = null,Object? fiveDayTrend = null,Object? isPositive = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,stockId: null == stockId ? _self.stockId : stockId // ignore: cast_nullable_to_non_nullable
@@ -84,7 +84,8 @@ as String,marketCap: null == marketCap ? _self.marketCap : marketCap // ignore: 
 as double,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as double,previousClose: null == previousClose ? _self.previousClose : previousClose // ignore: cast_nullable_to_non_nullable
 as double,pctChange: null == pctChange ? _self.pctChange : pctChange // ignore: cast_nullable_to_non_nullable
-as double,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
+as double,pct_change: null == pct_change ? _self.pct_change : pct_change // ignore: cast_nullable_to_non_nullable
+as String,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String,fiveDayTrend: null == fiveDayTrend ? _self.fiveDayTrend : fiveDayTrend // ignore: cast_nullable_to_non_nullable
 as List<FiveDayTrend>,isPositive: null == isPositive ? _self.isPositive : isPositive // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -172,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "_id")  String id,  String stockId,  String symbol,  String exchange,  String exchangeshortname,  String source,  String type,  String companyName,  bool isActivelyTrading,  bool isAdr,  bool isEtf,  bool isFund,  String isin,  double marketCap,  double price,  double previousClose,  double pctChange,  String key,  List<FiveDayTrend> fiveDayTrend,  bool isPositive)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "_id")  String id,  String stockId,  String symbol,  String exchange,  String exchangeshortname,  String source,  String type,  String companyName,  bool isActivelyTrading,  bool isAdr,  bool isEtf,  bool isFund,  String isin,  double marketCap,  double price,  double previousClose,  double pctChange,  String pct_change,  String key,  List<FiveDayTrend> fiveDayTrend,  bool isPositive)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Stock() when $default != null:
-return $default(_that.id,_that.stockId,_that.symbol,_that.exchange,_that.exchangeshortname,_that.source,_that.type,_that.companyName,_that.isActivelyTrading,_that.isAdr,_that.isEtf,_that.isFund,_that.isin,_that.marketCap,_that.price,_that.previousClose,_that.pctChange,_that.key,_that.fiveDayTrend,_that.isPositive);case _:
+return $default(_that.id,_that.stockId,_that.symbol,_that.exchange,_that.exchangeshortname,_that.source,_that.type,_that.companyName,_that.isActivelyTrading,_that.isAdr,_that.isEtf,_that.isFund,_that.isin,_that.marketCap,_that.price,_that.previousClose,_that.pctChange,_that.pct_change,_that.key,_that.fiveDayTrend,_that.isPositive);case _:
   return orElse();
 
 }
@@ -193,10 +194,10 @@ return $default(_that.id,_that.stockId,_that.symbol,_that.exchange,_that.exchang
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "_id")  String id,  String stockId,  String symbol,  String exchange,  String exchangeshortname,  String source,  String type,  String companyName,  bool isActivelyTrading,  bool isAdr,  bool isEtf,  bool isFund,  String isin,  double marketCap,  double price,  double previousClose,  double pctChange,  String key,  List<FiveDayTrend> fiveDayTrend,  bool isPositive)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "_id")  String id,  String stockId,  String symbol,  String exchange,  String exchangeshortname,  String source,  String type,  String companyName,  bool isActivelyTrading,  bool isAdr,  bool isEtf,  bool isFund,  String isin,  double marketCap,  double price,  double previousClose,  double pctChange,  String pct_change,  String key,  List<FiveDayTrend> fiveDayTrend,  bool isPositive)  $default,) {final _that = this;
 switch (_that) {
 case _Stock():
-return $default(_that.id,_that.stockId,_that.symbol,_that.exchange,_that.exchangeshortname,_that.source,_that.type,_that.companyName,_that.isActivelyTrading,_that.isAdr,_that.isEtf,_that.isFund,_that.isin,_that.marketCap,_that.price,_that.previousClose,_that.pctChange,_that.key,_that.fiveDayTrend,_that.isPositive);case _:
+return $default(_that.id,_that.stockId,_that.symbol,_that.exchange,_that.exchangeshortname,_that.source,_that.type,_that.companyName,_that.isActivelyTrading,_that.isAdr,_that.isEtf,_that.isFund,_that.isin,_that.marketCap,_that.price,_that.previousClose,_that.pctChange,_that.pct_change,_that.key,_that.fiveDayTrend,_that.isPositive);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -213,10 +214,10 @@ return $default(_that.id,_that.stockId,_that.symbol,_that.exchange,_that.exchang
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "_id")  String id,  String stockId,  String symbol,  String exchange,  String exchangeshortname,  String source,  String type,  String companyName,  bool isActivelyTrading,  bool isAdr,  bool isEtf,  bool isFund,  String isin,  double marketCap,  double price,  double previousClose,  double pctChange,  String key,  List<FiveDayTrend> fiveDayTrend,  bool isPositive)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "_id")  String id,  String stockId,  String symbol,  String exchange,  String exchangeshortname,  String source,  String type,  String companyName,  bool isActivelyTrading,  bool isAdr,  bool isEtf,  bool isFund,  String isin,  double marketCap,  double price,  double previousClose,  double pctChange,  String pct_change,  String key,  List<FiveDayTrend> fiveDayTrend,  bool isPositive)?  $default,) {final _that = this;
 switch (_that) {
 case _Stock() when $default != null:
-return $default(_that.id,_that.stockId,_that.symbol,_that.exchange,_that.exchangeshortname,_that.source,_that.type,_that.companyName,_that.isActivelyTrading,_that.isAdr,_that.isEtf,_that.isFund,_that.isin,_that.marketCap,_that.price,_that.previousClose,_that.pctChange,_that.key,_that.fiveDayTrend,_that.isPositive);case _:
+return $default(_that.id,_that.stockId,_that.symbol,_that.exchange,_that.exchangeshortname,_that.source,_that.type,_that.companyName,_that.isActivelyTrading,_that.isAdr,_that.isEtf,_that.isFund,_that.isin,_that.marketCap,_that.price,_that.previousClose,_that.pctChange,_that.pct_change,_that.key,_that.fiveDayTrend,_that.isPositive);case _:
   return null;
 
 }
@@ -228,7 +229,7 @@ return $default(_that.id,_that.stockId,_that.symbol,_that.exchange,_that.exchang
 @JsonSerializable()
 
 class _Stock implements Stock {
-  const _Stock({@JsonKey(name: "_id") this.id = '', this.stockId = '', this.symbol = '', this.exchange = '', this.exchangeshortname = '', this.source = '', this.type = '', this.companyName = '', this.isActivelyTrading = false, this.isAdr = false, this.isEtf = false, this.isFund = false, this.isin = '', this.marketCap = 0, this.price = 0, this.previousClose = 0, this.pctChange = 0, this.key = '', final  List<FiveDayTrend> fiveDayTrend = const [], this.isPositive = true}): _fiveDayTrend = fiveDayTrend;
+  const _Stock({@JsonKey(name: "_id") this.id = '', this.stockId = '', this.symbol = '', this.exchange = '', this.exchangeshortname = '', this.source = '', this.type = '', this.companyName = '', this.isActivelyTrading = false, this.isAdr = false, this.isEtf = false, this.isFund = false, this.isin = '', this.marketCap = 0, this.price = 0, this.previousClose = 0, this.pctChange = 0, this.pct_change = '', this.key = '', final  List<FiveDayTrend> fiveDayTrend = const [], this.isPositive = true}): _fiveDayTrend = fiveDayTrend;
   factory _Stock.fromJson(Map<String, dynamic> json) => _$StockFromJson(json);
 
 @override@JsonKey(name: "_id") final  String id;
@@ -248,6 +249,7 @@ class _Stock implements Stock {
 @override@JsonKey() final  double price;
 @override@JsonKey() final  double previousClose;
 @override@JsonKey() final  double pctChange;
+@override@JsonKey() final  String pct_change;
 @override@JsonKey() final  String key;
  final  List<FiveDayTrend> _fiveDayTrend;
 @override@JsonKey() List<FiveDayTrend> get fiveDayTrend {
@@ -271,16 +273,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Stock&&(identical(other.id, id) || other.id == id)&&(identical(other.stockId, stockId) || other.stockId == stockId)&&(identical(other.symbol, symbol) || other.symbol == symbol)&&(identical(other.exchange, exchange) || other.exchange == exchange)&&(identical(other.exchangeshortname, exchangeshortname) || other.exchangeshortname == exchangeshortname)&&(identical(other.source, source) || other.source == source)&&(identical(other.type, type) || other.type == type)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.isActivelyTrading, isActivelyTrading) || other.isActivelyTrading == isActivelyTrading)&&(identical(other.isAdr, isAdr) || other.isAdr == isAdr)&&(identical(other.isEtf, isEtf) || other.isEtf == isEtf)&&(identical(other.isFund, isFund) || other.isFund == isFund)&&(identical(other.isin, isin) || other.isin == isin)&&(identical(other.marketCap, marketCap) || other.marketCap == marketCap)&&(identical(other.price, price) || other.price == price)&&(identical(other.previousClose, previousClose) || other.previousClose == previousClose)&&(identical(other.pctChange, pctChange) || other.pctChange == pctChange)&&(identical(other.key, key) || other.key == key)&&const DeepCollectionEquality().equals(other._fiveDayTrend, _fiveDayTrend)&&(identical(other.isPositive, isPositive) || other.isPositive == isPositive));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Stock&&(identical(other.id, id) || other.id == id)&&(identical(other.stockId, stockId) || other.stockId == stockId)&&(identical(other.symbol, symbol) || other.symbol == symbol)&&(identical(other.exchange, exchange) || other.exchange == exchange)&&(identical(other.exchangeshortname, exchangeshortname) || other.exchangeshortname == exchangeshortname)&&(identical(other.source, source) || other.source == source)&&(identical(other.type, type) || other.type == type)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.isActivelyTrading, isActivelyTrading) || other.isActivelyTrading == isActivelyTrading)&&(identical(other.isAdr, isAdr) || other.isAdr == isAdr)&&(identical(other.isEtf, isEtf) || other.isEtf == isEtf)&&(identical(other.isFund, isFund) || other.isFund == isFund)&&(identical(other.isin, isin) || other.isin == isin)&&(identical(other.marketCap, marketCap) || other.marketCap == marketCap)&&(identical(other.price, price) || other.price == price)&&(identical(other.previousClose, previousClose) || other.previousClose == previousClose)&&(identical(other.pctChange, pctChange) || other.pctChange == pctChange)&&(identical(other.pct_change, pct_change) || other.pct_change == pct_change)&&(identical(other.key, key) || other.key == key)&&const DeepCollectionEquality().equals(other._fiveDayTrend, _fiveDayTrend)&&(identical(other.isPositive, isPositive) || other.isPositive == isPositive));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,stockId,symbol,exchange,exchangeshortname,source,type,companyName,isActivelyTrading,isAdr,isEtf,isFund,isin,marketCap,price,previousClose,pctChange,key,const DeepCollectionEquality().hash(_fiveDayTrend),isPositive]);
+int get hashCode => Object.hashAll([runtimeType,id,stockId,symbol,exchange,exchangeshortname,source,type,companyName,isActivelyTrading,isAdr,isEtf,isFund,isin,marketCap,price,previousClose,pctChange,pct_change,key,const DeepCollectionEquality().hash(_fiveDayTrend),isPositive]);
 
 @override
 String toString() {
-  return 'Stock(id: $id, stockId: $stockId, symbol: $symbol, exchange: $exchange, exchangeshortname: $exchangeshortname, source: $source, type: $type, companyName: $companyName, isActivelyTrading: $isActivelyTrading, isAdr: $isAdr, isEtf: $isEtf, isFund: $isFund, isin: $isin, marketCap: $marketCap, price: $price, previousClose: $previousClose, pctChange: $pctChange, key: $key, fiveDayTrend: $fiveDayTrend, isPositive: $isPositive)';
+  return 'Stock(id: $id, stockId: $stockId, symbol: $symbol, exchange: $exchange, exchangeshortname: $exchangeshortname, source: $source, type: $type, companyName: $companyName, isActivelyTrading: $isActivelyTrading, isAdr: $isAdr, isEtf: $isEtf, isFund: $isFund, isin: $isin, marketCap: $marketCap, price: $price, previousClose: $previousClose, pctChange: $pctChange, pct_change: $pct_change, key: $key, fiveDayTrend: $fiveDayTrend, isPositive: $isPositive)';
 }
 
 
@@ -291,7 +293,7 @@ abstract mixin class _$StockCopyWith<$Res> implements $StockCopyWith<$Res> {
   factory _$StockCopyWith(_Stock value, $Res Function(_Stock) _then) = __$StockCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "_id") String id, String stockId, String symbol, String exchange, String exchangeshortname, String source, String type, String companyName, bool isActivelyTrading, bool isAdr, bool isEtf, bool isFund, String isin, double marketCap, double price, double previousClose, double pctChange, String key, List<FiveDayTrend> fiveDayTrend, bool isPositive
+@JsonKey(name: "_id") String id, String stockId, String symbol, String exchange, String exchangeshortname, String source, String type, String companyName, bool isActivelyTrading, bool isAdr, bool isEtf, bool isFund, String isin, double marketCap, double price, double previousClose, double pctChange, String pct_change, String key, List<FiveDayTrend> fiveDayTrend, bool isPositive
 });
 
 
@@ -308,7 +310,7 @@ class __$StockCopyWithImpl<$Res>
 
 /// Create a copy of Stock
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? stockId = null,Object? symbol = null,Object? exchange = null,Object? exchangeshortname = null,Object? source = null,Object? type = null,Object? companyName = null,Object? isActivelyTrading = null,Object? isAdr = null,Object? isEtf = null,Object? isFund = null,Object? isin = null,Object? marketCap = null,Object? price = null,Object? previousClose = null,Object? pctChange = null,Object? key = null,Object? fiveDayTrend = null,Object? isPositive = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? stockId = null,Object? symbol = null,Object? exchange = null,Object? exchangeshortname = null,Object? source = null,Object? type = null,Object? companyName = null,Object? isActivelyTrading = null,Object? isAdr = null,Object? isEtf = null,Object? isFund = null,Object? isin = null,Object? marketCap = null,Object? price = null,Object? previousClose = null,Object? pctChange = null,Object? pct_change = null,Object? key = null,Object? fiveDayTrend = null,Object? isPositive = null,}) {
   return _then(_Stock(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,stockId: null == stockId ? _self.stockId : stockId // ignore: cast_nullable_to_non_nullable
@@ -327,7 +329,8 @@ as String,marketCap: null == marketCap ? _self.marketCap : marketCap // ignore: 
 as double,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as double,previousClose: null == previousClose ? _self.previousClose : previousClose // ignore: cast_nullable_to_non_nullable
 as double,pctChange: null == pctChange ? _self.pctChange : pctChange // ignore: cast_nullable_to_non_nullable
-as double,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
+as double,pct_change: null == pct_change ? _self.pct_change : pct_change // ignore: cast_nullable_to_non_nullable
+as String,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String,fiveDayTrend: null == fiveDayTrend ? _self._fiveDayTrend : fiveDayTrend // ignore: cast_nullable_to_non_nullable
 as List<FiveDayTrend>,isPositive: null == isPositive ? _self.isPositive : isPositive // ignore: cast_nullable_to_non_nullable
 as bool,

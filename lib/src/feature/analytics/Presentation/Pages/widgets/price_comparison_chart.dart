@@ -135,7 +135,7 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
             fontWeight: TextFontWeightVariant.h3,
             color: AppColors.fieldTextColor,
           ),
-          SizedBox(height: 30.h),
+          SizedBox(height: 10.h),
 
           SizedBox(
             height: 240.h,
@@ -153,6 +153,9 @@ class _PriceComparisonChartState extends State<PriceComparisonChart> {
                   show: true,
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
+                      minIncluded: false,
+
+                      maxIncluded: false,
                       showTitles: true,
                       reservedSize: 50, // ⬅️ more space for text (fix overlap)
                       interval: 100,
