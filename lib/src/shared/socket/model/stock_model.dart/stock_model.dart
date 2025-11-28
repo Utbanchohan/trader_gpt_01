@@ -67,6 +67,7 @@ abstract class Stock with _$Stock {
     @Default(0) double price,
     @Default(0) double previousClose,
     @Default(0) double pctChange,
+    @Default('') String pct_change,
     @Default('') String key,
     @Default([]) List<FiveDayTrend> fiveDayTrend,
     @Default(true) bool isPositive,

@@ -2239,8 +2239,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                           borderRadius: BorderRadius.circular(50),
                           border: Border.all(
                             color: isSelected
-                                ? Colors
-                                      .transparent // 👈 no border when selected
+                                ? Colors.transparent
                                 : AppColors.colorB2B2B7.withOpacity(0.4),
                             width: 1,
                           ),

@@ -319,7 +319,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               ),
               SizedBox(width: 4),
               MdSnsText(
-                "Start New Conversation",
+                "Start New ",
                 color: AppColors.color9EAAC0,
                 variant: TextVariant.h1,
                 fontWeight: TextFontWeightVariant.h2,
@@ -444,7 +444,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                             symbol: stock.symbol,
                             company: stock.companyName,
                             price: stock.price,
-                            change: stock.pctChange,
+                            change: stock.pct_change,
                             image: stock.type,
                             trendchart:
                                 stock.fiveDayTrend.isNotEmpty &&
@@ -485,7 +485,7 @@ class BuildStockCard extends ConsumerStatefulWidget {
   final String symbol;
   final String company;
   double price;
-  double change;
+  String change;
   final String image;
   FiveDayTrend trendchart;
   String stockId;
@@ -545,10 +545,16 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
 
     widget.change = liveStock != null
         ? PriceUtils.getChangesPercentage(
-                liveStock.price,
-                liveStock.previousClose,
-              ) ??
-              widget.change
+                        liveStock.price,
+                        liveStock.previousClose,
+                      ) !=
+                      null &&
+                  liveStock.price != liveStock.previousClose
+              ? PriceUtils.getChangesPercentage(
+                  liveStock.price,
+                  liveStock.previousClose,
+                ).toString()
+              : widget.change
         : widget.change;
 
     return Container(
@@ -687,7 +693,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
                       isPrice: false,
                       isAbs: false,
                       alwaysShowTwoDecimal: true,
-                    ) +
+                    ).replaceAll('%', '') +
                     "%",
 
                 color: widget.change.toString().contains("-")
@@ -721,7 +727,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
               fillGradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: widget.change < 0
+                colors: widget.change.toString().contains('-')
                     ? [
                         AppColors.redFF3B3B.withOpacity(0.5),
                         AppColors.redFF3B3B.withOpacity(0.2),
