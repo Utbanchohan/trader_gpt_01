@@ -68,6 +68,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   bool isWorkFlow = false;
   bool isWorkLimit = false;
+  final FocusNode messageFocus = FocusNode();
 
   bool isWorkSymbol = false;
   int chatPage = 1;
@@ -79,7 +80,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   void initState() {
     message.text = widget.initialMessage;
     getChatsId();
-
+    getUser();
     selectedStock = _mapChatRoutingToStock(widget.chatRouting);
     if (selectedStock!.symbol.isNotEmpty) {
       getRandomQuestions(selectedStock!.symbol);
@@ -456,107 +457,127 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
     );
   }
 
-  void _sendMessage(WidgetRef ref) async {
-    String userid = ref.watch(localDataProvider).getUserId;
+  void _sendMessage(WidgetRef ref) {
+    final userid = ref.watch(localDataProvider).getUserId;
     final text = message.text.trim();
-    if (text.isNotEmpty) {
-      var res = await ref
-          .read(chatProviderProvider.notifier)
-          .sendMessage(
-            ChatMessageDto(chatId: chadId!, message: text, type: "user"),
-          );
-      if (res != null) {
-        body = StreamDto(
-          task: message.text,
-          symbol: selectedStock != null ? selectedStock!.symbol : "TDGPT",
-          symbolName: selectedStock != null
-              ? selectedStock!.companyName
-              : "TraderGPT",
-          report: report ?? false,
-          isWebResearch: webMode ?? false,
-          deepSearch: deepAnalysis ?? false,
-          chatId: chadId!,
-          replyId: "68c1d2c86d162417bca6fc8e",
-          workflowObject: isWorkFlow
-              ? WorkflowObject(
-                  isStock: selectedWorkFlow!.isStock ?? false,
-                  name: selectedWorkFlow!.name,
-                  displayName: selectedWorkFlow!.displayName,
-                  description: selectedWorkFlow!.description,
-                  query: selectedWorkFlow!.query,
-                  companyName: selectedStock != null
-                      ? selectedStock!.companyName
-                      : "TraderGPT",
-                  parameters:
-                      selectedWorkFlow!.parameters != null &&
-                          selectedWorkFlow!.parameters!.isNotEmpty
-                      ? [
-                          WorkflowParameter(
-                            name: selectedWorkFlow!.parameters![0].name,
-                            required:
-                                selectedWorkFlow!.parameters![0].isRequired,
-                            description:
-                                selectedWorkFlow!.parameters![0].description!,
-                            value: selectedStock != null
-                                ? selectedStock!.symbol
-                                : "TDGPT",
-                            disabled: true,
-                          ),
-                        ]
-                      : [],
-                  label: "/${selectedWorkFlow!.displayName}",
-                )
-              : null,
-          analysisRequired: false,
-          isWorkflow: isWorkFlow,
-        ).toJson();
 
-        setState(() {
-          if (oldResponse != null) {
-            chats.add(
-              ChatMessageModel(
-                id: "temp",
-                chatId: chadId!,
-                message: oldResponse!,
-                displayable: Displayable(Display: oldDisplays),
-                type: "ai",
-                userId: userid,
-                createdAt: DateTime.now(),
-                updatedAt: DateTime.now(),
-              ),
-            );
-          }
+    if (text.isEmpty || chadId == null) return;
+
+    final sendText = text;
+    message.clear(); // Clear input immediately to avoid UI lag
+
+    // --- Add user & AI messages immediately (without awaiting API) ---
+    if (mounted) {
+      setState(() {
+        if (oldResponse != null) {
           chats.add(
             ChatMessageModel(
-              id: "temp",
+              id: DateTime.now().microsecondsSinceEpoch.toString(),
               chatId: chadId!,
-              message: text,
-              type: "user",
+              message: oldResponse!,
+              type: "ai",
               userId: userid,
+              displayable: Displayable(Display: oldDisplays),
               createdAt: DateTime.now(),
               updatedAt: DateTime.now(),
             ),
           );
+        }
 
-          startStream = true;
-          isWorkFlow = false;
-          isWorkSymbol = false;
-          isWorkLimit = false;
-          setState(() {});
-        });
-        scrollToBottom();
-      }
+        chats.add(
+          ChatMessageModel(
+            id: DateTime.now().microsecondsSinceEpoch.toString(),
+            chatId: chadId!,
+            message: sendText,
+            type: "user",
+            userId: userid,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+        );
 
-      message.clear();
+        startStream = true;
+        isWorkFlow = false;
+        isWorkSymbol = false;
+        isWorkLimit = false;
+      });
     }
+
+    // --- Scroll instantly without blocking UI ---
+    WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
+
+    // --- Build WorkflowObject safely ---
+    WorkflowObject? workflowObj;
+    if (isWorkFlow && selectedWorkFlow != null) {
+      workflowObj = WorkflowObject(
+        isStock: selectedWorkFlow!.isStock ?? false,
+        name: selectedWorkFlow!.name,
+        displayName: selectedWorkFlow!.displayName,
+        description: selectedWorkFlow!.description ?? "",
+        query: selectedWorkFlow!.query ?? "",
+        companyName: selectedStock?.companyName ?? "TraderGPT",
+        parameters:
+            (selectedWorkFlow!.parameters != null &&
+                selectedWorkFlow!.parameters!.isNotEmpty)
+            ? [
+                WorkflowParameter(
+                  name: selectedWorkFlow!.parameters![0].name,
+                  required: selectedWorkFlow!.parameters![0].isRequired,
+                  description:
+                      selectedWorkFlow!.parameters![0].description ?? "",
+                  value: selectedStock?.symbol ?? "TDGPT",
+                  disabled: true,
+                ),
+              ]
+            : [],
+        label: "/${selectedWorkFlow!.displayName}",
+      );
+    }
+
+    // --- Prepare body ---
+    body = StreamDto(
+      task: sendText,
+      symbol: selectedStock?.symbol ?? "TDGPT",
+      symbolName: selectedStock?.companyName ?? "TraderGPT",
+      report: report ?? false,
+      isWebResearch: webMode ?? false,
+      deepSearch: deepAnalysis ?? false,
+      chatId: chadId!,
+      replyId: "68c1d2c86d162417bca6fc8e",
+      workflowObject: workflowObj,
+      analysisRequired: false,
+      isWorkflow: isWorkFlow,
+    ).toJson();
+
+    // --- Send message in background asynchronously ---
+    ref
+        .read(chatProviderProvider.notifier)
+        .sendMessage(
+          ChatMessageDto(chatId: chadId!, message: sendText, type: "user"),
+        )
+        .catchError((e) => debugPrint("SendMessage Error: $e"));
+
+    // --- Keyboard focus smoothly ---
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (mounted) {
+        FocusScope.of(
+          context,
+        ).requestFocus(FocusNode()); // Close first to reset
+        Future.delayed(const Duration(milliseconds: 50), () {
+          FocusScope.of(context).requestFocus(
+            FocusNode(),
+          ); // Optional: add your TextField FocusNode here
+        });
+      }
+    });
   }
 
   getUser() async {
-    dynamic userData = await ref.watch(localDataProvider).getUser();
+    dynamic userData = await ref.read(localDataProvider).getUser();
     if (userData != null) {
-      // setState(() {
-      user = User.fromJson(userData);
-      // });
+      setState(() {
+        user = User.fromJson(userData);
+      });
     }
   }
 
@@ -568,7 +589,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   @override
   Widget build(BuildContext context) {
-    getUser();
     final asyncStream = startStream
         ? ref.watch(sseProvider(body))
         : const AsyncValue.data({
@@ -577,38 +597,38 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
             "chart": [],
             "updates": "",
           });
-    if (startStream) {
-      asyncStream.whenData((data) {
-        followupQuestions = data["followUp"].isNotEmpty
-            ? (data["followUp"] as List<String>?) ?? []
-            : [];
-        if (data["updates"].isNotEmpty) {
-          for (var data in data["updates"]) {
-            updatesAskQuestions.add(AnalysisTask.fromJson(data));
-          }
-        }
+    // if (startStream) {
+    //   asyncStream.whenData((data) {
+    //     followupQuestions = data["followUp"].isNotEmpty
+    //         ? (data["followUp"] as List<String>?) ?? []
+    //         : [];
+    //     if (data["updates"].isNotEmpty) {
+    //       for (var data in data["updates"]) {
+    //         updatesAskQuestions.add(AnalysisTask.fromJson(data));
+    //       }
+    //     }
 
-        if (followupQuestions.isNotEmpty) {
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            if (!dialogOpen) {
-              final chartText = data["chart"] ?? [];
-              oldDisplays = chartText.map<String>((e) => e.toString()).toList();
-              oldResponse = data["buffer"];
-              showDialogue(questions, followupQuestions, message, 1);
-              changeDialogueStatus();
-            }
-          });
-        } else {
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            if (!dialogOpen) {
-              final chartText = data["chart"] ?? [];
-              oldDisplays = chartText.map<String>((e) => e.toString()).toList();
-              oldResponse = data["buffer"];
-            }
-          });
-        }
-      });
-    }
+    //     if (followupQuestions.isNotEmpty) {
+    //       WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //         if (!dialogOpen) {
+    //           final chartText = data["chart"] ?? [];
+    //           oldDisplays = chartText.map<String>((e) => e.toString()).toList();
+    //           oldResponse = data["buffer"];
+    //           showDialogue(questions, followupQuestions, message, 1);
+    //           changeDialogueStatus();
+    //         }
+    //       });
+    //     } else {
+    //       WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //         if (!dialogOpen) {
+    //           final chartText = data["chart"] ?? [];
+    //           oldDisplays = chartText.map<String>((e) => e.toString()).toList();
+    //           oldResponse = data["buffer"];
+    //         }
+    //       });
+    //     }
+    //   });
+    // }
     return Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
@@ -651,95 +671,117 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
       backgroundColor: AppColors.primaryColor,
       // appBar: ConversationChatAppBar(chatRouting: widget.chatRouting),
-      body: SingleChildScrollView(
-        controller: sc,
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            boolLoadMoreLoader
-                ? LoadingWidget(height: 20, width: 20, color: AppColors.white)
-                : SizedBox(),
-            chats.isNotEmpty
-                ? Column(
-                    children: [
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: chats.length,
-                        itemBuilder: (_, index) {
-                          return ChatMessagesView(
-                            chats: chats[index],
-                            chatRouting: widget.chatRouting,
-                            user: user,
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.all(16),
+              controller: sc,
+              reverse: false,
+              children: [
+                boolLoadMoreLoader
+                    ? Center(
+                        child: Transform.scale(
+                          scale: 0.5, // ← Adjust size (0.5 = 50%)
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.white,
+                            strokeWidth: 2,
+                            strokeCap: StrokeCap.round,
+                          ),
+                        ),
+                      )
+                    : SizedBox(),
+                chats.isNotEmpty
+                    ? Column(
+                        children: [
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: chats.length,
+                            itemBuilder: (_, index) {
+                              return ChatMessagesView(
+                                chats: chats[index],
+                                chatRouting: widget.chatRouting,
+                                user: user,
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                                  return SizedBox(height: 20);
+                                },
+                          ),
+                          startStream
+                              ? asyncStream.when(
+                                  data: (line) {
+                                    final text = line["buffer"] ?? "";
+                                    final chartText = line["chart"] ?? [];
+                                    oldDisplays = chartText
+                                        .map<String>((e) => e.toString())
+                                        .toList();
+                                    oldResponse = line["buffer"];
+                                    List<String> chartStrings = chartText
+                                        .map<String>((e) => e.toString())
+                                        .toList();
+                                    return text.isNotEmpty
+                                        ? Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              SizedBox(height: 20),
+                                              ChatMarkdownWidget(
+                                                updatesAskStream:
+                                                    updatesAskQuestions,
+                                                message: text.toString(),
+                                                name:
+                                                    widget
+                                                        .chatRouting
+                                                        ?.symbol ??
+                                                    "TDGPT",
+                                                image:
+                                                    widget.chatRouting?.image ??
+                                                    "",
+                                                type: "ai",
+                                                symbolType:
+                                                    widget.chatRouting?.type ??
+                                                    "",
+                                                display: chartStrings,
+                                                messageId: "",
+                                                runId: "",
+                                                isStreaming: true,
+                                              ),
+                                            ],
+                                          )
+                                        : Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [LoadingWidgetMarkdown()],
+                                          );
+                                  },
+                                  loading: () => Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [LoadingWidgetMarkdown()],
+                                  ),
+                                  error: (err, _) => Text("Error: $err"),
+                                )
+                              : SizedBox(),
+                        ],
+                      )
+                    : WelcomeWidget(
+                        showCompanyBox:
+                            widget.chatRouting != null &&
+                            widget.chatRouting!.companyName.isNotEmpty,
+                        questions: questions,
+                        onQuestionTap: (selectedQuestion) {
+                          message.text = selectedQuestion;
+                          message.selection = TextSelection.fromPosition(
+                            TextPosition(offset: message.text.length),
                           );
                         },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return SizedBox(height: 20);
-                        },
                       ),
-                      startStream
-                          ? asyncStream.when(
-                              data: (line) {
-                                final text = line["buffer"] ?? "";
-                                final chartText = line["chart"] ?? [];
-                                List<String> chartStrings = chartText
-                                    .map<String>((e) => e.toString())
-                                    .toList();
-                                return text.isNotEmpty
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          SizedBox(height: 20),
-                                          ChatMarkdownWidget(
-                                            updatesAskStream:
-                                                updatesAskQuestions,
-                                            message: text.toString(),
-                                            name:
-                                                widget.chatRouting?.symbol ??
-                                                "TDGPT",
-                                            image:
-                                                widget.chatRouting?.image ?? "",
-                                            type: "ai",
-                                            symbolType:
-                                                widget.chatRouting?.type ?? "",
-                                            display: chartStrings,
-                                            messageId: "",
-                                            runId: "",
-                                            isStreaming: true,
-                                          ),
-                                        ],
-                                      )
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [LoadingWidgetMarkdown()],
-                                      );
-                              },
-                              loading: () => Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [LoadingWidgetMarkdown()],
-                              ),
-                              error: (err, _) => Text("Error: $err"),
-                            )
-                          : SizedBox(),
-                    ],
-                  )
-                : WelcomeWidget(
-                    showCompanyBox:
-                        widget.chatRouting != null &&
-                        widget.chatRouting!.companyName.isNotEmpty,
-                    questions: questions,
-                    onQuestionTap: (selectedQuestion) {
-                      message.text = selectedQuestion;
-                      message.selection = TextSelection.fromPosition(
-                        TextPosition(offset: message.text.length),
-                      );
-                    },
-                  ),
-          ],
-        ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -999,7 +999,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                         ),
                                         child: IconButton(
                                           padding: EdgeInsets.zero,
-                                          icon: const Icon(
+                                          icon: Icon(
                                             Icons.arrow_upward_rounded,
                                             color: AppColors.white,
                                             size: 15,

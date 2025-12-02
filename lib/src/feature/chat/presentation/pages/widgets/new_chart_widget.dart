@@ -573,7 +573,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     );
   }
 
-  /// Build line chart
   Widget _buildLineChart({bool isArea = false}) {
     final categories = _getCategories();
     final data = widget.chartData.data;
@@ -781,7 +780,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     // );
   }
 
-  /// Get color for series index
   Color _getColorForIndex(int index) {
     final colors = [
       AppColors.secondaryColor,
@@ -858,7 +856,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
   }
 }
 
-/// Example usage widget
 class ChartExample extends StatelessWidget {
   final List<double> data;
   final List<String> xAxis;

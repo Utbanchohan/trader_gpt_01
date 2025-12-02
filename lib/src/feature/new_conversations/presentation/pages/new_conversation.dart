@@ -322,7 +322,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               ),
               SizedBox(width: 4),
               MdSnsText(
-                "Start New ",
+                "Start New Conversation",
                 color: AppColors.color9EAAC0,
                 variant: TextVariant.h1,
                 fontWeight: TextFontWeightVariant.h2,
