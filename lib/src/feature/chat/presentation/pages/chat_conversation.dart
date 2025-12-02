@@ -457,16 +457,18 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
     );
   }
 
-  void _sendMessage(WidgetRef ref) {
+  void _sendMessage(WidgetRef ref) async {
     final userid = ref.watch(localDataProvider).getUserId;
     final text = message.text.trim();
 
     if (text.isEmpty || chadId == null) return;
 
-    final sendText = text;
-    message.clear(); // Clear input immediately to avoid UI lag
+    FocusScope.of(context).requestFocus(messageFocus);
 
-    // --- Add user & AI messages immediately (without awaiting API) ---
+    final sendText = text;
+    message.clear();
+
+    // --- Add messages to UI immediately ---
     if (mounted) {
       setState(() {
         if (oldResponse != null) {
@@ -503,18 +505,21 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
       });
     }
 
-    // --- Scroll instantly without blocking UI ---
-    WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
+    // --- Scroll safely ---
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollToBottom();
+      messageFocus.requestFocus(); // keyboard stay open
+    });
 
-    // --- Build WorkflowObject safely ---
+    // --- Prepare WorkflowObject safely ---
     WorkflowObject? workflowObj;
     if (isWorkFlow && selectedWorkFlow != null) {
       workflowObj = WorkflowObject(
         isStock: selectedWorkFlow!.isStock ?? false,
         name: selectedWorkFlow!.name,
         displayName: selectedWorkFlow!.displayName,
-        description: selectedWorkFlow!.description ?? "",
-        query: selectedWorkFlow!.query ?? "",
+        description: selectedWorkFlow!.description,
+        query: selectedWorkFlow!.query,
         companyName: selectedStock?.companyName ?? "TraderGPT",
         parameters:
             (selectedWorkFlow!.parameters != null &&
@@ -549,26 +554,21 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
       isWorkflow: isWorkFlow,
     ).toJson();
 
-    // --- Send message in background asynchronously ---
-    ref
-        .read(chatProviderProvider.notifier)
-        .sendMessage(
-          ChatMessageDto(chatId: chadId!, message: sendText, type: "user"),
-        )
-        .catchError((e) => debugPrint("SendMessage Error: $e"));
+    // --- Send message safely ---
+    try {
+      await ref
+          .read(chatProviderProvider.notifier)
+          .sendMessage(
+            ChatMessageDto(chatId: chadId!, message: sendText, type: "user"),
+          );
+    } catch (e) {
+      debugPrint("SendMessage Error: $e");
+    }
 
-    // --- Keyboard focus smoothly ---
-    Future.delayed(const Duration(milliseconds: 50), () {
-      if (mounted) {
-        FocusScope.of(
-          context,
-        ).requestFocus(FocusNode()); // Close first to reset
-        Future.delayed(const Duration(milliseconds: 50), () {
-          FocusScope.of(context).requestFocus(
-            FocusNode(),
-          ); // Optional: add your TextField FocusNode here
-        });
-      }
+    // 🔥 Extra smooth keyboard focus after delay
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) messageFocus.requestFocus();
+      scrollToBottom();
     });
   }
 
