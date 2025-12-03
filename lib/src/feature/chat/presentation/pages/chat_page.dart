@@ -533,16 +533,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     final userid = ref.watch(localDataProvider).getUserId;
     final text = message.text.trim();
 
-    // Safety check
     if (text.isEmpty || chadId == null) return;
 
     final sendText = text;
-    message.clear(); // clear input immediately
+    message.clear();
 
-    // 🔥 Keyboard instantly open
     if (mounted) FocusScope.of(context).requestFocus(messageFocus);
-
-    // --- Add user & AI messages to UI immediately (without waiting for API)
     if (mounted) {
       setState(() {
         if (oldResponse != null) {
@@ -579,10 +575,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       });
     }
 
-    // --- Smooth scroll after UI update ---
     WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
 
-    // --- Prepare WorkflowObject ---
     WorkflowObject? workflowObj;
     if (isWorkFlow && selectedWorkFlow != null) {
       workflowObj = WorkflowObject(
@@ -610,7 +604,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       );
     }
 
-    // --- Prepare body ---
     body = StreamDto(
       task: sendText,
       symbol: selectedStock?.symbol ?? "TDGPT",
@@ -625,7 +618,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       isWorkflow: isWorkFlow,
     ).toJson();
 
-    // --- Send message to API in async (no UI freeze) ---
     ref
         .read(chatProviderProvider.notifier)
         .sendMessage(
@@ -633,7 +625,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         )
         .catchError((e) => debugPrint("SendMessage Error: $e"));
 
-    // 🔥 Extra smooth keyboard focus after a tiny delay
     Future.delayed(const Duration(milliseconds: 50), () {
       if (mounted) {
         messageFocus.requestFocus();

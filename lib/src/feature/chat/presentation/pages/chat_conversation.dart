@@ -153,48 +153,47 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   }
 
   Future<void> _handleWorkflowSelection(int index) async {
-    setState(() => isWorkFlow = true);
-    setState(() => isWorkLimit = false);
-
     final workflow = workflows[index];
     final params = workflow.parameters ?? [];
 
     if (params.isNotEmpty && params.first.name == "symbol") {
       setState(() {
+        isWorkFlow = true;
         isWorkSymbol = true;
         isWorkLimit = false;
       });
 
-      String message = workflow.query.replaceAll(
+      String messageText = workflow.query.replaceAll(
         "{symbol}",
         selectedStock!.symbol,
       );
-      _setMessage(message);
+      _setMessage(messageText);
       _closeDialogs();
-
       selectedWorkFlow = workflow;
     } else if (params.isNotEmpty && params.first.name == "limit") {
       setState(() {
+        isWorkFlow = true;
         isWorkLimit = true;
         isWorkSymbol = false;
       });
-      String message = workflow.query.replaceAll(
+      String messageText = workflow.query.replaceAll(
         "{symbol}",
         selectedStock!.symbol,
       );
-      _setMessage(message);
+      _setMessage(messageText);
       selectedWorkFlow = workflow;
       _closeDialogs();
     } else {
       setState(() {
+        isWorkFlow = true;
         isWorkSymbol = false;
         isWorkLimit = false;
       });
-      String message = workflow.query.replaceAll(
+      String messageText = workflow.query.replaceAll(
         "{symbol}",
         selectedStock!.symbol,
       );
-      _setMessage(message);
+      _setMessage(messageText);
       selectedWorkFlow = workflow;
       _closeDialogs();
     }
@@ -256,6 +255,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                 color: AppColors.color9EAAC0,
                                 variant: TextVariant.h4,
                                 fontWeight: TextFontWeightVariant.h4,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
@@ -306,10 +306,11 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     MdSnsText(
-                      "/${workflows[index].displayName}",
+                      "/" + workflows[index].displayName,
                       color: AppColors.white,
                       variant: TextVariant.h2,
                       fontWeight: TextFontWeightVariant.h4,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
                     MdSnsText(
@@ -359,8 +360,12 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (sc.hasClients) {
-        sc.jumpTo(sc.position.maxScrollExtent); // 👈 instantly jump to bottom
+      if (sc.hasClients && mounted) {
+        try {
+          sc.jumpTo(sc.position.maxScrollExtent);
+        } catch (e) {
+          debugPrint("Scroll error: $e");
+        }
       }
     });
   }
@@ -463,12 +468,10 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
     if (text.isEmpty || chadId == null) return;
 
-    FocusScope.of(context).requestFocus(messageFocus);
-
     final sendText = text;
     message.clear();
 
-    // --- Add messages to UI immediately ---
+    if (mounted) FocusScope.of(context).requestFocus(messageFocus);
     if (mounted) {
       setState(() {
         if (oldResponse != null) {
@@ -505,21 +508,16 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
       });
     }
 
-    // --- Scroll safely ---
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollToBottom();
-      messageFocus.requestFocus(); // keyboard stay open
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
 
-    // --- Prepare WorkflowObject safely ---
     WorkflowObject? workflowObj;
     if (isWorkFlow && selectedWorkFlow != null) {
       workflowObj = WorkflowObject(
         isStock: selectedWorkFlow!.isStock ?? false,
         name: selectedWorkFlow!.name,
         displayName: selectedWorkFlow!.displayName,
-        description: selectedWorkFlow!.description,
-        query: selectedWorkFlow!.query,
+        description: selectedWorkFlow!.description ?? "",
+        query: selectedWorkFlow!.query ?? "",
         companyName: selectedStock?.companyName ?? "TraderGPT",
         parameters:
             (selectedWorkFlow!.parameters != null &&
@@ -539,7 +537,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
       );
     }
 
-    // --- Prepare body ---
     body = StreamDto(
       task: sendText,
       symbol: selectedStock?.symbol ?? "TDGPT",
@@ -554,21 +551,18 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
       isWorkflow: isWorkFlow,
     ).toJson();
 
-    // --- Send message safely ---
-    try {
-      await ref
-          .read(chatProviderProvider.notifier)
-          .sendMessage(
-            ChatMessageDto(chatId: chadId!, message: sendText, type: "user"),
-          );
-    } catch (e) {
-      debugPrint("SendMessage Error: $e");
-    }
+    ref
+        .read(chatProviderProvider.notifier)
+        .sendMessage(
+          ChatMessageDto(chatId: chadId!, message: sendText, type: "user"),
+        )
+        .catchError((e) => debugPrint("SendMessage Error: $e"));
 
-    // 🔥 Extra smooth keyboard focus after delay
-    Future.delayed(const Duration(milliseconds: 100), () {
-      if (mounted) messageFocus.requestFocus();
-      scrollToBottom();
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (mounted) {
+        messageFocus.requestFocus();
+        scrollToBottom();
+      }
     });
   }
 
@@ -597,174 +591,46 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
             "chart": [],
             "updates": "",
           });
-    // if (startStream) {
-    //   asyncStream.whenData((data) {
-    //     followupQuestions = data["followUp"].isNotEmpty
-    //         ? (data["followUp"] as List<String>?) ?? []
-    //         : [];
-    //     if (data["updates"].isNotEmpty) {
-    //       for (var data in data["updates"]) {
-    //         updatesAskQuestions.add(AnalysisTask.fromJson(data));
-    //       }
-    //     }
-
-    //     if (followupQuestions.isNotEmpty) {
-    //       WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //         if (!dialogOpen) {
-    //           final chartText = data["chart"] ?? [];
-    //           oldDisplays = chartText.map<String>((e) => e.toString()).toList();
-    //           oldResponse = data["buffer"];
-    //           showDialogue(questions, followupQuestions, message, 1);
-    //           changeDialogueStatus();
-    //         }
-    //       });
-    //     } else {
-    //       WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //         if (!dialogOpen) {
-    //           final chartText = data["chart"] ?? [];
-    //           oldDisplays = chartText.map<String>((e) => e.toString()).toList();
-    //           oldResponse = data["buffer"];
-    //         }
-    //       });
-    //     }
-    //   });
-    // }
     return Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
-      bottomNavigationBar: SafeArea(
-        bottom: true,
-        child: ChatBottomBar(
-          messageController: message,
-
-          limitController: limit,
-          textScrollController: _textScrollController,
-          isWorkFlow: isWorkFlow,
-          isWorkSymbol: isWorkSymbol,
-          selectedStock: selectedStock,
-          isWorkLimit: isWorkLimit,
-          webMode: webMode ?? false,
-          report: report ?? false,
-          deepAnalysis: deepAnalysis ?? false,
-          onSend: () => _sendMessage(ref),
-          onPrefixTap: () async {
-            if (widget.chatRouting == null ||
-                widget.chatRouting!.companyName.isEmpty) {
-              selectedStock = await showDialogue(questions, [], message, 0);
-            } else {
-              showDialogue(questions, [], message, 0);
-            }
-          },
-          onDeleteWorkflow: () {
-            isWorkSymbol = false;
-            isWorkFlow = false;
-            isWorkLimit = false;
-            message.clear();
-            setState(() {});
-          },
-          onSlashDetected: (ctx) => questionDialog(ctx),
-          onWebModeChanged: (val) => setState(() => webMode = val),
-          onReportChanged: (val) => setState(() => report = val),
-          onDeepAnalysisChanged: (val) => setState(() => deepAnalysis = val),
-        ),
-      ),
-
       backgroundColor: AppColors.primaryColor,
-      // appBar: ConversationChatAppBar(chatRouting: widget.chatRouting),
       body: Column(
         children: [
           Expanded(
             child: ListView(
-              padding: EdgeInsets.all(16),
               controller: sc,
-              reverse: false,
+              padding: EdgeInsets.all(16),
               children: [
-                boolLoadMoreLoader
-                    ? Center(
-                        child: Transform.scale(
-                          scale: 0.5, // ← Adjust size (0.5 = 50%)
-                          child: CircularProgressIndicator(
-                            backgroundColor: Colors.white,
-                            strokeWidth: 2,
-                            strokeCap: StrokeCap.round,
-                          ),
+                if (boolLoadMoreLoader)
+                  SizedBox(
+                    child: Center(
+                      child: Transform.scale(
+                        scale: 0.5,
+                        child: const CircularProgressIndicator(
+                          backgroundColor: Colors.white,
+                          strokeWidth: 2,
+                          strokeCap: StrokeCap.round,
                         ),
-                      )
-                    : SizedBox(),
+                      ),
+                    ),
+                  ),
+                SizedBox(height: 10),
                 chats.isNotEmpty
-                    ? Column(
-                        children: [
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: chats.length,
-                            itemBuilder: (_, index) {
-                              return ChatMessagesView(
-                                chats: chats[index],
-                                chatRouting: widget.chatRouting,
-                                user: user,
-                              );
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                                  return SizedBox(height: 20);
-                                },
-                          ),
-                          startStream
-                              ? asyncStream.when(
-                                  data: (line) {
-                                    final text = line["buffer"] ?? "";
-                                    final chartText = line["chart"] ?? [];
-                                    oldDisplays = chartText
-                                        .map<String>((e) => e.toString())
-                                        .toList();
-                                    oldResponse = line["buffer"];
-                                    List<String> chartStrings = chartText
-                                        .map<String>((e) => e.toString())
-                                        .toList();
-                                    return text.isNotEmpty
-                                        ? Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              SizedBox(height: 20),
-                                              ChatMarkdownWidget(
-                                                updatesAskStream:
-                                                    updatesAskQuestions,
-                                                message: text.toString(),
-                                                name:
-                                                    widget
-                                                        .chatRouting
-                                                        ?.symbol ??
-                                                    "TDGPT",
-                                                image:
-                                                    widget.chatRouting?.image ??
-                                                    "",
-                                                type: "ai",
-                                                symbolType:
-                                                    widget.chatRouting?.type ??
-                                                    "",
-                                                display: chartStrings,
-                                                messageId: "",
-                                                runId: "",
-                                                isStreaming: true,
-                                              ),
-                                            ],
-                                          )
-                                        : Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [LoadingWidgetMarkdown()],
-                                          );
-                                  },
-                                  loading: () => Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [LoadingWidgetMarkdown()],
-                                  ),
-                                  error: (err, _) => Text("Error: $err"),
-                                )
-                              : SizedBox(),
-                        ],
+                    ? ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: chats.length,
+                        itemBuilder: (context, index) {
+                          return RepaintBoundary(
+                            child: ChatMessagesView(
+                              chats: chats[index],
+                              chatRouting: widget.chatRouting,
+                              user: user,
+                            ),
+                          );
+                        },
+                        separatorBuilder: (_, __) => SizedBox(height: 20),
                       )
                     : WelcomeWidget(
                         showCompanyBox:
@@ -778,7 +644,84 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                           );
                         },
                       ),
+                if (startStream)
+                  asyncStream.when(
+                    data: (line) {
+                      final text = line["buffer"] ?? "";
+                      final chartText = line["chart"] ?? [];
+                      final display = chartText
+                          .map<String>((e) => e.toString())
+                          .toList();
+                      oldDisplays = display;
+                      oldResponse = line["buffer"];
+                      return text.isNotEmpty
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                SizedBox(height: 10),
+                                ChatMarkdownWidget(
+                                  updatesAskStream: updatesAskQuestions,
+                                  message: text,
+                                  name: widget.chatRouting?.symbol ?? "TDGPT",
+                                  image: widget.chatRouting?.image ?? "",
+                                  symbolType: widget.chatRouting?.type ?? "",
+                                  type: "ai",
+                                  display: display,
+                                  messageId: "",
+                                  runId: "",
+                                  isStreaming: true,
+                                ),
+                              ],
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(top: 20),
+                              child: LoadingWidgetMarkdown(),
+                            );
+                    },
+                    loading: () => Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: LoadingWidgetMarkdown(),
+                    ),
+                    error: (err, _) => Text("Error: $err"),
+                  ),
               ],
+            ),
+          ),
+
+          SafeArea(
+            bottom: true,
+            child: ChatBottomBar(
+              messageController: message,
+              limitController: limit,
+              textScrollController: _textScrollController,
+              isWorkFlow: isWorkFlow,
+              isWorkSymbol: isWorkSymbol,
+              selectedStock: selectedStock,
+              isWorkLimit: isWorkLimit,
+              webMode: webMode ?? false,
+              report: report ?? false,
+              deepAnalysis: deepAnalysis ?? false,
+              onSend: () => _sendMessage(ref),
+              onPrefixTap: () async {
+                if (widget.chatRouting == null ||
+                    widget.chatRouting!.companyName.isEmpty) {
+                  selectedStock = await showDialogue(questions, [], message, 0);
+                } else {
+                  showDialogue(questions, [], message, 0);
+                }
+              },
+              onDeleteWorkflow: () {
+                isWorkSymbol = false;
+                isWorkFlow = false;
+                isWorkLimit = false;
+                message.clear();
+                setState(() {});
+              },
+              onSlashDetected: (ctx) => questionDialog(ctx),
+              onWebModeChanged: (val) => setState(() => webMode = val),
+              onReportChanged: (val) => setState(() => report = val),
+              onDeepAnalysisChanged: (val) =>
+                  setState(() => deepAnalysis = val),
             ),
           ),
         ],
