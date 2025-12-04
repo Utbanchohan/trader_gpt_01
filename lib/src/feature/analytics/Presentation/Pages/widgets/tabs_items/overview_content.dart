@@ -9,6 +9,10 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/anal
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/analytics_widget.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_comparison_chart.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/price_target_widget.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
+import 'package:trader_gpt/src/feature/analytics/data/dto/analysis_dto/analysis_dto.dart';
+import 'package:trader_gpt/src/feature/analytics/data/dto/overview_dto/overview_dto.dart';
+import 'package:trader_gpt/src/feature/analytics/data/dto/price_comparison_dto/price_comparison_dto.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/analysis_data/analysis_data_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/analytics_model/analytics_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/monthly_model/monthly_model.dart';
@@ -37,68 +41,18 @@ import '../../../../domain/model/price_comparison_model/price_comparison_model.d
 import '../../../../domain/model/price_performance_model/price_performance_model.dart';
 import '../../../../domain/model/price_target_matrics_model/price_target_matrics_model.dart';
 import '../../../../domain/model/share_stats/share_stats.dart';
+import '../../../provider/monthly_data/monthly_data.dart';
+import '../../../provider/overview_candle_chart/overview_candle_chart.dart';
+import '../../../provider/weekly_data/weekly_data.dart';
 
 class OverviewContent extends ConsumerStatefulWidget {
-  final dynamic id;
   final ChatRouting chatRouting;
   final Stock selectedStock;
-  final FundamentalResponse? fundamentalResponse;
-  final PriceComparisonModel? priceComparisonModel;
-  final AnalystRatingResponse? analyticsRespinseData;
-  final WeeklyModel? weeklyData;
-  final ProbabilityResponse? monthlyData;
-  final MatricsResponse? matricData;
-  final StockResponse? stockResponse;
-  final List<OverviewCandleChartModel>? overviewCandleChartModel;
-  final PricePerformance? pricePerformanceData;
-  final SharesResponse? sharesResponse;
-  final PriceTargetMatrics? priceTargetMatrics;
-  String? selectedCandleOverview;
-  final bool ishowLoder;
-  final bool chartLoader;
-  final bool isshowpriceTargetMatricsDataLoder;
-  final bool pricePerformanceLoader;
-  final bool isshowshareStructureLoder;
-  final bool monthlyDataloader;
-  final bool analyticsRespinseloader;
 
-  final bool weeklyDataloader;
-  final bool priceComparisonloader;
-
-  final bool fundamentalResponseLoder;
-  final bool matricDataloader;
-
-  final void Function(String interval) onPressedAnalysis;
-
-  OverviewContent({
+  const OverviewContent({
     super.key,
-    required this.id,
     required this.chatRouting,
     required this.selectedStock,
-    required this.chartLoader,
-    required this.ishowLoder,
-    required this.isshowpriceTargetMatricsDataLoder,
-    required this.isshowshareStructureLoder,
-    required this.selectedCandleOverview,
-    required this.onPressedAnalysis,
-    required this.pricePerformanceLoader,
-    required this.fundamentalResponseLoder,
-    required this.matricDataloader,
-    required this.monthlyDataloader,
-    required this.weeklyDataloader,
-    required this.priceComparisonloader,
-    required this.analyticsRespinseloader,
-    this.fundamentalResponse,
-    this.priceComparisonModel,
-    this.analyticsRespinseData,
-    this.monthlyData,
-    this.weeklyData,
-    this.matricData,
-    this.stockResponse,
-    this.overviewCandleChartModel,
-    this.pricePerformanceData,
-    this.sharesResponse,
-    this.priceTargetMatrics,
   });
 
   @override
@@ -106,8 +60,547 @@ class OverviewContent extends ConsumerStatefulWidget {
 }
 
 class _OverviewContentState extends ConsumerState<OverviewContent> {
+  FundamentalResponse? fundamentalResponse;
+  PriceComparisonModel? priceComparisonModel;
+  AnalystRatingResponse? analyticsRespinseData;
+  WeeklyModel? weeklyData;
+  ProbabilityResponse? monthlyData;
+  MatricsResponse? matricData;
+  StockResponse? stockResponse;
+  List<OverviewCandleChartModel>? overviewCandleChartModel;
+  PricePerformance? pricePerformanceData;
+  SharesResponse? sharesResponse;
+  PriceTargetMatrics? priceTargetMatrics;
+  String selectedCandleOverview = "D";
+  bool ishowLoder = true;
+  bool chartLoader = true;
+  bool isshowpriceTargetMatricsDataLoder = true;
+  bool pricePerformanceLoader = true;
+  bool isshowshareStructureLoder = true;
+  bool monthlyDataloader = true;
+  bool analyticsRespinseloader = true;
+
+  bool weeklyDataloader = true;
+  bool priceComparisonloader = true;
+
+  bool fundamentalResponseLoder = true;
+  bool matricDataloader = true;
+
+  getOverview(SymbolDto symbol) async {
+    try {
+      ishowLoder = true;
+      var res = ref.watch(getOverviewProvider(symbol.symbol));
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              ishowLoder = false;
+
+              stockResponse = StockResponse(data: value);
+            }
+          }
+        case AsyncError(:final error):
+          ishowLoder = false;
+        case AsyncLoading():
+          ishowLoder = true;
+      }
+    } catch (e) {
+      print(e);
+      ishowLoder = false;
+    }
+  }
+
+  pricePerformance(SymbolDto symbol) async {
+    try {
+      pricePerformanceLoader = true;
+      var res = ref.watch(pricePerformanceProvider(symbol));
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              pricePerformanceLoader = false;
+              pricePerformanceData = value;
+            }
+          }
+        case AsyncError(:final error):
+          pricePerformanceLoader = false;
+        case AsyncLoading():
+          pricePerformanceLoader = true;
+      }
+    } catch (e) {
+      pricePerformanceLoader = false;
+      print(e);
+    }
+  }
+
+  analyticsData(SymbolDto symbol) async {
+    analyticsRespinseloader = true;
+    var res = ref.watch(analyticsDataProvider(symbol));
+    switch (res) {
+      case AsyncData(:final value):
+        {
+          if (value != null) {
+            analyticsRespinseloader = false;
+
+            analyticsRespinseData = value;
+          }
+        }
+      case AsyncError(:final error):
+        analyticsRespinseloader = false;
+      case AsyncLoading():
+        analyticsRespinseloader = true;
+    }
+  }
+
+  getMatricsData(SymbolDto symbol) async {
+    try {
+      matricDataloader = true;
+      var res = ref.watch(matricsDataProvider(symbol.symbol));
+
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              matricDataloader = false;
+
+              matricData = value;
+            }
+          }
+        case AsyncError(:final error):
+          matricDataloader = false;
+        case AsyncLoading():
+          matricDataloader = true;
+      }
+    } catch (e) {
+      print(e);
+      matricDataloader = false;
+    }
+  }
+
+  fundamental(SymbolDto symbol) async {
+    try {
+      fundamentalResponseLoder = true;
+      var res = await ref.watch(fundamentalDataProvider(symbol));
+
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              fundamentalResponseLoder = false;
+
+              fundamentalResponse = value;
+            }
+          }
+        case AsyncError(:final error):
+          fundamentalResponseLoder = false;
+        case AsyncLoading():
+          fundamentalResponseLoder = true;
+      }
+    } catch (e) {
+      print(e);
+      fundamentalResponseLoder = false;
+    }
+  }
+
+  shares(SymbolDto symbol) async {
+    try {
+      isshowshareStructureLoder = true;
+      var res = ref.watch(shareStatsProvider(symbol));
+
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              sharesResponse = value;
+              isshowshareStructureLoder = false;
+            }
+          }
+        case AsyncError(:final error):
+          isshowshareStructureLoder = false;
+        case AsyncLoading():
+          isshowshareStructureLoder = true;
+      }
+    } catch (e) {
+      print(e);
+      isshowshareStructureLoder = false;
+    }
+  }
+
+  priceTargetMatricsData(SymbolDto symbol) async {
+    isshowpriceTargetMatricsDataLoder = true;
+    var res = ref.watch(priceTargetMatricsProvider(symbol));
+    switch (res) {
+      case AsyncData(:final value):
+        {
+          if (value != null) {
+            isshowpriceTargetMatricsDataLoder = false;
+            priceTargetMatrics = PriceTargetMatrics(
+              data: value.whereType<PriceTargetData>().toList(),
+            );
+          }
+        }
+      case AsyncError(:final error):
+        isshowpriceTargetMatricsDataLoder = false;
+      case AsyncLoading():
+        isshowpriceTargetMatricsDataLoder = true;
+    }
+  }
+
+  priceComparison(PriceComparisonDto priceComparisonDto) async {
+    try {
+      priceComparisonloader = true;
+      var res = ref.watch(priceComparisonProvider(priceComparisonDto));
+      priceComparisonloader = false;
+
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              priceComparisonloader = false;
+              priceComparisonModel = value;
+            }
+          }
+        case AsyncError(:final error):
+          priceComparisonloader = false;
+        case AsyncLoading():
+          priceComparisonloader = true;
+      }
+    } catch (e) {
+      print(e);
+      priceComparisonloader = false;
+    }
+  }
+
+  getOverviewCandleChart(symbol, IntervalEnum interval) async {
+    // try {
+    //   setState(() {
+    //     chartLoader = true;
+    //   });
+    //   await chartService.fetchChartData(
+    //     cryptoApi: chatRouting!.type == "crypto" ? true : false,
+    //     internalApi: chatRouting!.type == "crypto" ? false : true,
+    //     selectedSymbol: chatRouting!.symbol,
+    //     interval: interval.value,
+    //     onSuccess: (data) async {
+    //       overviewCandleChartModel = [];
+    //       for (var item in data) {
+    //         try {
+    //           overviewCandleChartModel!.add(
+    //             OverviewCandleChartModel(
+    //               symbol: chatRouting!.symbol,
+    //               open: item['open'],
+    //               high: item['high'],
+    //               low: item['low'],
+    //               close: item['close'],
+    //               volume: item['volume'],
+    //               timestamp: DateTime.tryParse(item['date']) ?? DateTime.now(),
+    //             ),
+    //           );
+    //         } catch (e) {
+    //           setState(() {
+    //             chartLoader = false;
+    //           });
+    //         }
+    //       }
+    //       setState(() {
+    //         chartLoader = false;
+    //       });
+    //       print("✅ Chart data loaded: ${data.length} items");
+    //     },
+    //     onError: (err) {
+    //       setState(() {
+    //         chartLoader = false;
+    //       });
+    //       print("❌ Error loading chart data: $err");
+    //     },
+    //   );
+    // } catch (e) {
+    //   setState(() {
+    //     chartLoader = false;
+    //   });
+    //   print("Error in getOverviewCandleChart: $e");
+    // }
+    final now = DateTime.now().toUtc();
+
+    // Subtract 2 years for startDate
+    var startDate;
+    final endDateString = now.toIso8601String();
+    var startDateString;
+    if (!mounted) return;
+
+    chartLoader = true;
+
+    try {
+      double intervalMs = 0;
+      if (interval.value == "minute") {
+        intervalMs = 60 * 1000;
+      } else if (interval.value == "hour") {
+        intervalMs = 60 * 60 * 1000;
+        startDate = DateTime.utc(
+          now.year,
+          now.month - 2,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+          now.millisecond,
+        );
+        startDateString = startDate.toIso8601String();
+      } else if (interval.value == "daily") {
+        startDate = DateTime.utc(
+          now.year - 2,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+          now.millisecond,
+        );
+        startDateString = startDate.toIso8601String();
+        intervalMs = 24 * 60 * 60 * 1000;
+      } else if (interval.value == "weekly") {
+        startDate = DateTime.utc(
+          now.year - 3,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+          now.millisecond,
+        );
+        startDateString = startDate.toIso8601String();
+        intervalMs = 7 * 24 * 60 * 60 * 1000;
+      } else if (interval.value == "monthly") {
+        startDate = DateTime.utc(
+          now.year - 10,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+          now.millisecond,
+        );
+        startDateString = startDate.toIso8601String();
+        intervalMs = 30 * 24 * 60 * 60 * 1000;
+      }
+
+      double dummyIntervals =
+          (now.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch) /
+          intervalMs;
+
+      var dataPoint = intervalMs > 0 ? (dummyIntervals + 1).floor() : 1;
+      var res = ref.watch(
+        getOverviewCandleChartProvider(
+          symbol + "_NASDAQ",
+          interval.value,
+          startDateString,
+          endDateString,
+          "1",
+          dataPoint.toString(),
+        ),
+      );
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              chartLoader = false;
+              overviewCandleChartModel = [];
+              overviewCandleChartModel!.addAll(value.data);
+            }
+          }
+        case AsyncError(:final error):
+          chartLoader = false;
+        case AsyncLoading():
+          chartLoader = true;
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      chartLoader = false;
+    }
+  }
+
+  getWeeklyData(symbol) async {
+    try {
+      weeklyDataloader = true;
+      var res = ref.watch(getWeeklyDataProvider(symbol));
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              weeklyDataloader = false;
+              weeklyData = value;
+            }
+          }
+        case AsyncError(:final error):
+          weeklyDataloader = false;
+        case AsyncLoading():
+          weeklyDataloader = true;
+      }
+    } catch (e) {
+      print(e);
+      weeklyDataloader = false;
+    }
+  }
+
+  getMonthlyData(symbol) async {
+    try {
+      monthlyDataloader = true;
+      var res = ref.watch(getMonthlyDataProvider(symbol));
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              monthlyDataloader = false;
+              monthlyData = value;
+            }
+          }
+        case AsyncError(:final error):
+          monthlyDataloader = false;
+        case AsyncLoading():
+          monthlyDataloader = true;
+      }
+    } catch (e) {
+      print(e);
+      monthlyDataloader = false;
+    }
+  }
+
+  firstIndexData() async {
+    if (stockResponse == null) {
+      try {
+        getOverview(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        debugPrint("Error in getOverview: $e\n$s");
+      }
+    }
+    if (overviewCandleChartModel == null) {
+      try {
+        getOverviewCandleChart(widget.chatRouting!.symbol, IntervalEnum.daily);
+      } catch (e, s) {
+        debugPrint("Error in getOverviewCandleChart: $e\n$s");
+      }
+    }
+    if (priceTargetMatrics == null) {
+      try {
+        priceTargetMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        debugPrint("Error in priceTargetMatricsData: $e\n$s");
+      }
+    }
+
+    if (matricData == null) {
+      try {
+        getMatricsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        debugPrint("Error in getMatricsData: $e\n$s");
+      }
+    }
+    if (pricePerformanceData == null) {
+      try {
+        pricePerformance(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        debugPrint("Error in pricePerformance: $e\n$s");
+      }
+    }
+
+    if (analyticsRespinseData == null) {
+      try {
+        analyticsData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        analyticsRespinseloader = false;
+        debugPrint("Error in analyticsData: $e\n$s");
+      }
+    }
+
+    if (priceComparisonModel == null) {
+      try {
+        priceComparison(
+          PriceComparisonDto(
+            daysBack: 365,
+            symbol1: widget.chatRouting!.symbol,
+            symbol2: "SPY",
+          ),
+        );
+      } catch (e, s) {
+        debugPrint("Error in priceComparison: $e\n$s");
+      }
+    }
+
+    if (fundamentalResponse == null) {
+      try {
+        fundamental(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        debugPrint("Error in fundamental: $e\n$s");
+      }
+    }
+
+    if (sharesResponse == null) {
+      try {
+        shares(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        debugPrint("Error in shares: $e\n$s");
+      }
+    }
+
+    if (weeklyData == null) {
+      try {
+        getWeeklyData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getWeeklyData: $e\n$s");
+      }
+    }
+
+    if (monthlyData == null) {
+      try {
+        await getMonthlyData(widget.chatRouting!.symbol);
+        if (!mounted) return;
+        setState(() {});
+      } catch (e, s) {
+        debugPrint("Error in getMonthlyData: $e\n$s");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // firstIndexData();
+    var res = ref.watch(getOverviewProvider(widget.chatRouting!.symbol));
+    switch (res) {
+      case AsyncData(:final value):
+        {
+          if (value != null) {
+            ishowLoder = false;
+
+            stockResponse = StockResponse(data: value);
+          }
+        }
+      case AsyncError(:final error):
+        ishowLoder = false;
+      case AsyncLoading():
+        ishowLoder = true;
+    }
+
+    var res1 = ref.watch(
+      priceTargetMatricsProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+    );
+    switch (res1) {
+      case AsyncData(:final value):
+        {
+          if (value != null) {
+            isshowpriceTargetMatricsDataLoder = false;
+            priceTargetMatrics = PriceTargetMatrics(
+              data: value.whereType<PriceTargetData>().toList(),
+            );
+          }
+        }
+      case AsyncError(:final error):
+        isshowpriceTargetMatricsDataLoder = false;
+      case AsyncLoading():
+        isshowpriceTargetMatricsDataLoder = true;
+    }
     List<String> questions = [
       "Provide a comprehensive company analysis of ${widget.chatRouting.companyName}",
       "Technical analysis for ${widget.chatRouting.companyName}",
@@ -133,7 +626,7 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                   liveStock.previousClose,
                 )!
               : widget.chatRouting!.changePercentage
-        : widget.chatRouting!.changePercentage;
+        : widget.chatRouting.changePercentage;
     List<ChartData> buildChartSpots(
       List<OverviewCandleChartModel> overviewCandle,
     ) {
@@ -158,7 +651,6 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
 
       child: SafeArea(
-        key: widget.id,
         child: Column(
           children: [
             SizedBox(height: 14.h),
@@ -224,7 +716,7 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                       child: Row(
                         children: [
                           ShowInfoPopup(
-                            chatRouting: widget.chatRouting!,
+                            chatRouting: widget.chatRouting,
                             question: questions[0],
                             text: "Complete Company Analysis",
                             child: MdSnsText(
@@ -315,7 +807,7 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
             ),
             AppSpacing.h10,
 
-            widget.ishowLoder == true
+            ishowLoder == true
                 ? SizedBox(
                     height: 135.h,
                     child: ListView.separated(
@@ -330,7 +822,7 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                       },
                     ),
                   )
-                : widget.stockResponse != null
+                : stockResponse != null
                 ? SizedBox(
                     height: 135.h,
                     child: ListView.separated(
@@ -344,15 +836,9 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                                 secondColor: AppColors.color0xFFFFB21D,
                                 firstHeading: "PREVIOUSLY CLOSE PRICE",
                                 secondHeading: "AFTER HOURS",
-                                previousPrice: widget
-                                    .stockResponse!
-                                    .data
-                                    .previousClose
+                                previousPrice: stockResponse!.data.previousClose
                                     .toString(),
-                                afterHoursPrice: widget
-                                    .stockResponse!
-                                    .data
-                                    .AfterHours
+                                afterHoursPrice: stockResponse!.data.AfterHours
                                     .toString(),
                                 percentage: "+1.48%",
                               )
@@ -362,13 +848,11 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                                 firstColor: AppColors.color046297,
                                 firstHeading: "MARKET CAPITAILIZATION",
                                 secondHeading: "OUTSTANDING SHARES",
-                                previousPrice: widget
-                                    .stockResponse!
+                                previousPrice: stockResponse!
                                     .data
                                     .MarketCapitalization
                                     .toString(),
-                                afterHoursPrice: widget
-                                    .stockResponse!
+                                afterHoursPrice: stockResponse!
                                     .data
                                     .SharesOutstanding
                                     .toString(),
@@ -380,13 +864,9 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                                 secondColor: AppColors.white,
                                 firstHeading: "TOTAL VOLUME",
                                 secondHeading: "AVERAGE VOLUME(3M)",
-                                previousPrice: widget
-                                    .stockResponse!
-                                    .data
-                                    .TotalVolume
+                                previousPrice: stockResponse!.data.TotalVolume
                                     .toString(),
-                                afterHoursPrice: widget
-                                    .stockResponse!
+                                afterHoursPrice: stockResponse!
                                     .data
                                     .AverageVolume
                                     .toString(),
@@ -398,13 +878,9 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                                 secondColor: AppColors.colorab75b8,
                                 firstHeading: "EXCHANGE",
                                 secondHeading: "MARKET CAPTILIZATION",
-                                previousPrice: widget
-                                    .stockResponse!
-                                    .data
-                                    .Exchange
+                                previousPrice: stockResponse!.data.Exchange
                                     .toString(),
-                                afterHoursPrice: widget
-                                    .stockResponse!
+                                afterHoursPrice: stockResponse!
                                     .data
                                     .MarketCapClassification
                                     .toString(),
@@ -415,12 +891,9 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                                 secondColor: AppColors.white,
                                 firstHeading: "SECTOR",
                                 secondHeading: "INDUSTRY",
-                                previousPrice: widget.stockResponse!.data.Sector
+                                previousPrice: stockResponse!.data.Sector
                                     .toString(),
-                                afterHoursPrice: widget
-                                    .stockResponse!
-                                    .data
-                                    .Industry
+                                afterHoursPrice: stockResponse!.data.Industry
                                     .toString(),
                                 percentage: "+1.48%",
                               );
@@ -433,20 +906,30 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                 : SizedBox(),
             SizedBox(height: 20.h),
 
-            widget.chartLoader == true
-                ? CustomCandleChartShimmer()
-                : widget.overviewCandleChartModel != null
+            chartLoader == true
+                ? SizedBox(height: 300.h, child: CustomCandleChartShimmer())
+                : overviewCandleChartModel != null
                 ? CustomCandleChart(
                     // key: UniqueKey(),
                     name: "OHLC/V Candlestick Chart",
-                    data: buildChartSpots(widget.overviewCandleChartModel!),
-                    selectedItem: widget.selectedCandleOverview ?? "D",
-                    onPressed: (val) async {
-                      widget.onPressedAnalysis(val);
-
+                    data: buildChartSpots(overviewCandleChartModel!),
+                    selectedItem: selectedCandleOverview ?? "D",
+                    onPressed: (val) {
+                      getOverviewCandleChart(
+                        widget.chatRouting!.symbol,
+                        val == 'H'
+                            ? IntervalEnum.hour
+                            : val == 'D'
+                            ? IntervalEnum.daily
+                            : val == 'W'
+                            ? IntervalEnum.weekly
+                            : val == 'M'
+                            ? IntervalEnum.monthly
+                            : IntervalEnum.daily,
+                      );
                       if (!mounted) return;
                       setState(() {
-                        widget.selectedCandleOverview = val;
+                        selectedCandleOverview = val;
                       });
                     },
                   )
@@ -455,108 +938,86 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
             // CustomCandleChartShimmer(),
             SizedBox(height: 20.h),
 
-            widget.isshowpriceTargetMatricsDataLoder == true
+            isshowpriceTargetMatricsDataLoder == true
+                ? PriceTargetWidget(data: null, chatRouting: widget.chatRouting)
+                : priceTargetMatrics != null &&
+                      priceTargetMatrics!.data.length > 0
                 ? PriceTargetWidget(
-                    data: null,
-                    chatRouting: widget.chatRouting!,
-                  )
-                : widget.priceTargetMatrics != null &&
-                      widget.priceTargetMatrics!.data.length > 0
-                ? PriceTargetWidget(
-                    data: widget.priceTargetMatrics!.data,
-                    chatRouting: widget.chatRouting!,
+                    data: priceTargetMatrics!.data,
+                    chatRouting: widget.chatRouting,
                   )
                 : SizedBox(),
 
             SizedBox(height: 20.h),
 
-            widget.isshowshareStructureLoder == true
+            isshowshareStructureLoder == true
                 ? ShareStructureCard(
-                    chatRouting: widget.chatRouting!,
+                    chatRouting: widget.chatRouting,
                     matrics: null,
                     fundamentalData: null,
                     shareData: null,
                     heading: Headings.loading,
                   )
-                : widget.sharesResponse != null &&
-                      widget.sharesResponse!.data.PercentInsiders != null
+                : sharesResponse != null &&
+                      sharesResponse!.data.PercentInsiders != null
                 ? ShareStructureCard(
-                    chatRouting: widget.chatRouting!,
+                    chatRouting: widget.chatRouting,
 
                     matrics: null,
                     fundamentalData: null,
-                    shareData: widget.sharesResponse!.data,
+                    shareData: sharesResponse!.data,
                     heading: Headings.shareStructure,
                   )
                 : SizedBox(),
-            SizedBox(height: widget.pricePerformanceData != null ? 20.h : 0),
+            SizedBox(height: pricePerformanceData != null ? 20.h : 0),
             //doneee
-            widget.pricePerformanceLoader == true
+            pricePerformanceLoader == true
                 ? TableShimmer(title: "Price Performance")
-                : widget.pricePerformanceData != null
-                ? PricePerformanceWidget(data: widget.pricePerformanceData!)
+                : pricePerformanceData != null
+                ? PricePerformanceWidget(data: pricePerformanceData!)
                 : SizedBox(),
-            SizedBox(
-              height:
-                  widget.fundamentalResponse != null &&
-                      widget
-                          .fundamentalResponse!
-                          .data
-                          .fundamentals
-                          .annualIncome
-                          .isNotEmpty
-                  ? 20.h
-                  : 0,
-            ),
+            SizedBox(height: 20.h),
 
-            widget.fundamentalResponseLoder == true
+            fundamentalResponseLoder == true
                 ? ShareStructureCard(
-                    chatRouting: widget.chatRouting!,
+                    chatRouting: widget.chatRouting,
                     matrics: null,
                     fundamentalData: null,
                     shareData: null,
                     heading: Headings.loading,
                   )
-                : widget.fundamentalResponse != null &&
-                      widget
-                          .fundamentalResponse!
+                : fundamentalResponse != null &&
+                      fundamentalResponse!
                           .data
                           .fundamentals
                           .annualIncome
                           .isNotEmpty
                 ? ShareStructureCard(
-                    chatRouting: widget.chatRouting!,
+                    chatRouting: widget.chatRouting,
                     matrics: null,
-                    fundamentalData: widget.fundamentalResponse!.data,
+                    fundamentalData: fundamentalResponse!.data,
                     shareData: null,
                     heading: Headings.fundamental,
                   )
                 : SizedBox(),
 
-            SizedBox(
-              height:
-                  widget.matricData != null &&
-                      widget.matricData!.data != null &&
-                      widget.matricData!.data!.isNotEmpty
-                  ? 20.h
-                  : 0,
-            ),
+            SizedBox(height: 20.h),
 
-            widget.matricDataloader == true
+            matricDataloader == true
                 ? ShareStructureCard(
-                    chatRouting: widget.chatRouting!,
+                    chatRouting: widget.chatRouting,
                     matrics: null,
                     fundamentalData: null,
                     shareData: null,
                     heading: Headings.loading,
                   )
-                : widget.matricData != null &&
-                      widget.matricData!.data != null &&
-                      widget.matricData!.data!.isNotEmpty
+                : matricData != null &&
+                      matricData!.data != null &&
+                      matricData!.data!.isNotEmpty
                 ? ShareStructureCard(
-                    chatRouting: widget.chatRouting!,
+                    chatRouting: widget.chatRouting,
 
-                    matrics: widget.matricData!.data,
+                    matrics: matricData!.data,
                     fundamentalData: null,
                     shareData: null,
                     heading: Headings.matrics,
@@ -571,22 +1032,22 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
             // ),
             SizedBox(height: 20.h),
 
-            widget.monthlyDataloader == true
+            monthlyDataloader == true
                 ? shimmerBox(height: 400, radius: 16)
-                : widget.monthlyData != null
+                : monthlyData != null
                 ? WeeklySeasonalityChart(
-                    data: widget.monthlyData!,
+                    data: monthlyData!,
                     isWeekly: false,
                     weeklyModel: WeeklyModel(),
                   )
                 : SizedBox(),
             SizedBox(height: 20.h),
 
-            widget.weeklyDataloader == true
+            weeklyDataloader == true
                 ? shimmerBox(height: 400, radius: 16)
-                : widget.weeklyData != null
+                : weeklyData != null
                 ? WeeklySeasonalityChart(
-                    weeklyModel: widget.weeklyData!,
+                    weeklyModel: weeklyData!,
                     isWeekly: true,
                     data: ProbabilityResponse(),
                   )
@@ -642,29 +1103,29 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
             // SizedBox(height: 20.h),
 
             // SizedBox(height: 20.h),
-            widget.priceComparisonloader == true
+            priceComparisonloader == true
                 ? shimmerBox(height: 300, radius: 16)
-                : widget.priceComparisonModel != null &&
-                      widget.priceComparisonModel!.data.data[widget
+                : priceComparisonModel != null &&
+                      priceComparisonModel!.data.data[widget
                               .chatRouting
                               .symbol] !=
                           null &&
-                      widget.priceComparisonModel!.data.data['SPY'] != null
+                      priceComparisonModel!.data.data['SPY'] != null
                 ? PriceComparisonChart(
-                    priceComparisonModel: widget.priceComparisonModel,
+                    priceComparisonModel: priceComparisonModel,
                     symbol: widget.chatRouting.symbol,
                     twoCharts: true,
                   )
                 : SizedBox(),
 
             SizedBox(height: 20.h),
-            widget.analyticsRespinseloader == true
+            analyticsRespinseloader == true
                 ? shimmerBox(height: 170, radius: 16)
-                : widget.analyticsRespinseData != null &&
-                      widget.analyticsRespinseData!.data.isNotEmpty
+                : analyticsRespinseData != null &&
+                      analyticsRespinseData!.data.isNotEmpty
                 ? AnalyticsWidget(
                     chatRouting: widget.chatRouting,
-                    data: widget.analyticsRespinseData!.data,
+                    data: analyticsRespinseData!.data,
                   )
                 : SizedBox(),
             SizedBox(height: 20.h),

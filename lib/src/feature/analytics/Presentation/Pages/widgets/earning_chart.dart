@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
+import 'dart:math' as math;
 
 import '../../../domain/model/earning_chart_model/earning_chart_model.dart';
 
@@ -27,6 +28,32 @@ class QuarterlyPerformanceChart extends StatelessWidget {
       );
     }).toList();
 
+    // compute dynamic Y bounds so points always fit within the chart area
+    double rawMinY = double.infinity;
+    double rawMaxY = double.negativeInfinity;
+    for (var d in chartData) {
+      rawMinY = math.min(rawMinY, math.min(d.actual, d.estimate));
+      rawMaxY = math.max(rawMaxY, math.max(d.actual, d.estimate));
+    }
+    if (rawMinY == double.infinity || rawMaxY == double.negativeInfinity) {
+      rawMinY = 0.0;
+      rawMaxY = 1.0;
+    }
+    final paddingY = (rawMaxY - rawMinY) * 0.15;
+    final minYVal = (rawMinY - paddingY).clamp(0.0, double.infinity);
+    final maxYVal = rawMaxY + paddingY;
+
+    // compute a small set of Y ticks (4 ticks) to avoid overlapping labels
+    final int tickCount = 4;
+    final List<double> yTicks = [];
+    if (maxYVal - minYVal <= 0) {
+      yTicks.addAll([minYVal]);
+    } else {
+      for (int i = 0; i <= tickCount; i++) {
+        yTicks.add(minYVal + (maxYVal - minYVal) * (i / tickCount));
+      }
+    }
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.color0x0x1AB3B3B3),
@@ -34,7 +61,7 @@ class QuarterlyPerformanceChart extends StatelessWidget {
       ),
       child: Container(
         height: 260,
-        // 👇 Yahan top padding add kar di (20 pixels)
+        // pad top so dots don't overlap the border
         padding: const EdgeInsets.only(top: 20, left: 8, right: 8, bottom: 10),
 
         child: LineChart(
@@ -52,51 +79,73 @@ class QuarterlyPerformanceChart extends StatelessWidget {
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  reservedSize: 35,
-                  interval: 0.05,
+                  // keep a compact reserved size but render only a few ticks
+                  reservedSize: 40,
+                  interval: (maxYVal - minYVal) / 4,
                   getTitlesWidget: (value, meta) {
-                    return MdSnsText(
-                      '\$${value.toStringAsFixed(1)}',
-                      color: AppColors.color0xB3FFFFFF,
-                      variant: TextVariant.h5,
-                      textAlign: TextAlign.right,
-                    );
+                    // only display labels for our computed ticks to avoid overlap
+                    final tolerance = (maxYVal - minYVal) / 40;
+                    for (final tick in yTicks) {
+                      if ((value - tick).abs() <= tolerance) {
+                        return SizedBox(
+                          width: 40,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: MdSnsText(
+                              '\$${tick.toStringAsFixed(2)}',
+                              color: AppColors.color0xB3FFFFFF,
+                              variant: TextVariant.h5,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                    return Container();
                   },
                 ),
               ),
               bottomTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  reservedSize: 45,
+                  reservedSize: 60,
                   interval: 1,
                   getTitlesWidget: (value, meta) {
                     final dataIndex = value.toInt();
                     if (dataIndex >= 0 && dataIndex < chartData.length) {
                       final parts = chartData[dataIndex].quarter.split('\n');
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 10),
-                          Container(
-                            margin: const EdgeInsets.only(right: 25),
-                            child: MdSnsText(
-                              parts[0].toString().split("-")[1],
+                      final leftPart = parts.isNotEmpty
+                          ? (parts[0].contains('-')
+                                ? parts[0].split('-').last
+                                : parts[0])
+                          : '';
+                      final rightPart = parts.length > 1
+                          ? parts[1].capitalize()
+                          : '';
+                      return SizedBox(
+                        width: 60,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 10),
+                            MdSnsText(
+                              leftPart,
                               color: AppColors.color0xB3FFFFFF,
                               variant: TextVariant.h8,
+                              textAlign: TextAlign.center,
                             ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(right: 25),
-                            child: MdSnsText(
-                              parts[1].capitalize(),
+                            MdSnsText(
+                              rightPart,
                               color: chartData[dataIndex].isBeat
                                   ? const Color(0xFF4EEB9E)
                                   : AppColors.color0xFFCD3438,
                               variant: TextVariant.h8,
                               fontWeight: TextFontWeightVariant.h2,
+                              textAlign: TextAlign.center,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     }
                     return Container();
@@ -169,8 +218,8 @@ class QuarterlyPerformanceChart extends StatelessWidget {
             ],
             minX: -0.5,
             maxX: chartData.length - 0.5,
-            minY: 0.60,
-            maxY: 0.80,
+            minY: minYVal,
+            maxY: maxYVal,
             lineTouchData: const LineTouchData(enabled: false),
           ),
         ),

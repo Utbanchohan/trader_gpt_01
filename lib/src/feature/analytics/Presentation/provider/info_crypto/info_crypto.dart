@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/repositroy/overview_repository.dart';
 
@@ -12,10 +13,11 @@ class InfoCrypto extends _$InfoCrypto {
   Future<InfoCryptoResponse> build() async {
     return state.value!;
   }
+}
 
-  Future<InfoCryptoResponse> infoCryptoData(ticker) async {
-    final res = await ref.read(overviewRepository).infoCrypto(ticker);
+@riverpod
+Future<InfoCryptoResponse> infoCryptoData(Ref ref, String ticker) async {
+  final res = await ref.read(overviewRepository).infoCrypto(ticker);
 
-    return res;
-  }
+  return res;
 }

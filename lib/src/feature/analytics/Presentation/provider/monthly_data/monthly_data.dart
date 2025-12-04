@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/repositroy/overview_repository.dart';
 
@@ -11,10 +12,10 @@ class MonthlyData extends _$MonthlyData {
   Future<ProbabilityResponse> build() async {
     return state.value!;
   }
+}
 
-  Future<ProbabilityResponse> getMonthlyData(ticker) async {
-    final res = await ref.read(overviewRepositoryele).monthlyData(ticker);
-
-    return res;
-  }
+@riverpod
+Future<ProbabilityResponse> getMonthlyData(Ref ref, String ticker) async {
+  final res = await ref.read(overviewRepositoryele).monthlyData(ticker);
+  return res;
 }

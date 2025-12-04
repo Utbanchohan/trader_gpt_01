@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/model/about_crypto/about_crypto_model.dart';
@@ -12,10 +13,11 @@ class AboutCrypto extends _$AboutCrypto {
   Future<ProbabilityResponse> build() async {
     return state.value!;
   }
+}
 
-  Future<AboutCryptoModel> aboutCrypto(symbol) async {
-    final res = await ref.read(overviewRepository).aboutCrypto(symbol);
+@riverpod
+Future<AboutCryptoModel> getAboutCrypto(Ref ref, String symbol) async {
+  final res = await ref.read(overviewRepository).aboutCrypto(symbol);
 
-    return res;
-  }
+  return res;
 }

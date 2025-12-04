@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/esg_score_model/esg_score_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/insider_transaction/insider_transaction_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/security_short/short_security_model.dart';
+import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/widgets/table_shimmer.dart';
 
 import '../../../../../../core/theme/app_colors.dart';
@@ -24,59 +26,309 @@ import '../../../../../../shared/widgets/shortvalue.widgets.dart';
 import '../../../../../../shared/widgets/split_dividend.dart';
 import '../../../../../../shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../../../new_conversations/presentation/pages/widget/shimmer_widget.dart';
+import '../../../../data/dto/overview_dto/overview_dto.dart';
 import '../../../../domain/model/company_detail/company_detail_model.dart';
 import '../../../../domain/model/compnay_model/company_model.dart';
 import '../../../../domain/model/earnings_model/earnings_model.dart';
 import '../../../../domain/model/security_ownership_model/security_ownership_model.dart';
 import '../../../../domain/model/short_volume/short_volume_model.dart';
+import '../../../provider/analytics_provider/analytics_provider.dart';
 
-class CompanyContent extends StatefulWidget {
-  final dynamic id;
-  final bool companyLoader;
-  final bool shortVolumeLoader;
-  final bool insiderTraderLoader;
-  final bool eSGScoresloader;
-  final bool earningLoader;
-  final bool securityOwnershipLoader;
-  final bool outstandingSharesLoader;
-  final CompanyData? companyModel;
-  final EarningsData? earningdata;
-  final ShortVolumeModel? shortVolumeModel;
-  final CompanyDetailModel? companyDetailModel;
-  final EsgScoreModel? esgScoreData;
-  final ShortSecurityResponse? securityShortVolume;
-  final InsiderTransactionResponse? insiderTransactionResponse;
-  final SecurityOwnershipResponse? securityOwnership;
-
-  const CompanyContent({
-    super.key,
-    required this.id,
-    required this.outstandingSharesLoader,
-    required this.companyLoader,
-    required this.shortVolumeLoader,
-    required this.insiderTraderLoader,
-    required this.securityOwnershipLoader,
-    required this.eSGScoresloader,
-    required this.earningLoader,
-    this.companyModel,
-    this.earningdata,
-    this.shortVolumeModel,
-    this.companyDetailModel,
-    this.esgScoreData,
-    this.securityShortVolume,
-    this.insiderTransactionResponse,
-    this.securityOwnership,
-  });
+class CompanyContent extends ConsumerStatefulWidget {
+  final ChatRouting? chatRouting;
+  const CompanyContent({super.key, this.chatRouting});
 
   @override
-  State<CompanyContent> createState() => _CompanyContentState();
+  ConsumerState<CompanyContent> createState() => _CompanyContentState();
 }
 
-class _CompanyContentState extends State<CompanyContent> {
+class _CompanyContentState extends ConsumerState<CompanyContent> {
+  bool companyLoader = true;
+  bool shortVolumeLoader = true;
+  bool insiderTraderLoader = true;
+  bool eSGScoresloader = true;
+  bool earningLoader = true;
+  bool securityOwnershipLoader = true;
+  bool outstandingSharesLoader = true;
+  bool securityShortVolumeLoader = true;
+  bool companyDetailShimmer = true;
+  CompanyData? companyModel;
+  EarningsData? earningdata;
+  ShortVolumeModel? shortVolumeModel;
+  CompanyDetailModel? companyDetailModel;
+  EsgScoreModel? esgScoreData;
+  ShortSecurityResponse? securityShortVolume;
+  InsiderTransactionResponse? insiderTransactionResponse;
+  SecurityOwnershipResponse? securityOwnership;
+  Future<void> secondIndexTap() async {
+    if (companyModel == null) {
+      try {
+        getcompanyData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        debugPrint("Error in getcompanyData: $e\n$s");
+      }
+    }
+
+    if (insiderTransactionResponse == null) {
+      try {
+        insiderTrades(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        debugPrint("Error in insiderTrades: $e\n$s");
+      }
+    }
+
+    if (shortVolumeModel == null) {
+      try {
+        getShortVolumeData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        shortVolumeLoader = false;
+        debugPrint("Error in getShortVolumeData: $e\n$s");
+      }
+    }
+
+    if (securityOwnership == null) {
+      try {
+        getShortOwnership(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        debugPrint("Error in getShortOwnership: $e\n$s");
+      }
+    }
+
+    if (securityShortVolume == null) {
+      try {
+        getSecurityShortVolumeData(
+          SymbolDto(symbol: widget.chatRouting!.symbol),
+        );
+      } catch (e, s) {
+        debugPrint("Error in getSecurityShortVolumeData: $e\n$s");
+      }
+    }
+
+    if (esgScoreData == null) {
+      try {
+        esgScore(widget.chatRouting!.symbol);
+      } catch (e, s) {
+        debugPrint("Error in esgScore: $e\n$s");
+      }
+    }
+
+    if (earningdata == null) {
+      try {
+        getEarningData(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        debugPrint("Error in getEarningData: $e\n$s");
+      }
+    }
+
+    if (companyDetailModel == null) {
+      try {
+        getCompanyDetail(SymbolDto(symbol: widget.chatRouting!.symbol));
+      } catch (e, s) {
+        debugPrint("Error in getCompanyDetail: $e\n$s");
+      }
+    }
+
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  getCompanyDetail(SymbolDto symbol) {
+    try {
+      companyDetailShimmer = true;
+
+      var res = ref.watch(companyDetailProvider(symbol));
+
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              companyDetailShimmer = false;
+              companyDetailModel = value;
+            }
+          }
+        case AsyncError(:final error):
+          companyDetailShimmer = false;
+        case AsyncLoading():
+          companyDetailShimmer = false;
+      }
+    } catch (e) {
+      setState(() {
+        companyDetailShimmer = false;
+      });
+      print(e);
+    }
+  }
+
+  getEarningData(SymbolDto symbol) {
+    try {
+      earningLoader = true;
+      var res = ref.watch(earningsDataProvider(symbol));
+
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              earningLoader = false;
+              earningdata = value.data;
+            }
+          }
+        case AsyncError(:final error):
+          earningLoader = false;
+        case AsyncLoading():
+          earningLoader = false;
+      }
+    } catch (e) {
+      setState(() {
+        earningLoader = false;
+      });
+    }
+  }
+
+  esgScore(String symbol) {
+    try {
+      eSGScoresloader = true;
+      var res = ref.watch(esgScoreProvider(symbol));
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              eSGScoresloader = false;
+              esgScoreData = value;
+            }
+          }
+        case AsyncError(:final error):
+          eSGScoresloader = false;
+        case AsyncLoading():
+          eSGScoresloader = false;
+      }
+    } catch (e) {
+      setState(() {
+        eSGScoresloader = false;
+      });
+    }
+  }
+
+  insiderTrades(SymbolDto symbol) async {
+    try {
+      insiderTraderLoader = true;
+      var res = ref.watch(insiderTradesProvider(symbol));
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              insiderTraderLoader = false;
+              insiderTransactionResponse = value;
+            }
+          }
+        case AsyncError(:final error):
+          insiderTraderLoader = false;
+        case AsyncLoading():
+          insiderTraderLoader = false;
+      }
+    } catch (e) {
+      setState(() {
+        insiderTraderLoader = false;
+      });
+    }
+  }
+
+  getSecurityShortVolumeData(SymbolDto symbol) {
+    try {
+      securityShortVolumeLoader = true;
+      var res = ref.watch(securityShortVolumeProvider(symbol));
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              securityShortVolumeLoader = false;
+              securityShortVolume = value;
+            }
+          }
+        case AsyncError(:final error):
+          securityShortVolumeLoader = false;
+        case AsyncLoading():
+          securityShortVolumeLoader = false;
+      }
+    } catch (e) {
+      setState(() {
+        securityShortVolumeLoader = false;
+      });
+    }
+  }
+
+  getShortOwnership(SymbolDto symbol) async {
+    try {
+      securityOwnershipLoader = true;
+      var res = ref.watch(shortOwnershipProvider(symbol));
+
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              securityOwnershipLoader = false;
+              securityOwnership = value;
+            }
+          }
+        case AsyncError(:final error):
+          securityOwnershipLoader = false;
+        case AsyncLoading():
+          securityOwnershipLoader = false;
+      }
+    } catch (e) {
+      setState(() {
+        securityOwnershipLoader = false;
+      });
+    }
+  }
+
+  getShortVolumeData(SymbolDto symbol) async {
+    shortVolumeLoader = true;
+    var res = ref.watch(ShortVolumeDataProvider(symbol));
+    switch (res) {
+      case AsyncData(:final value):
+        {
+          if (value != null) {
+            shortVolumeLoader = false;
+
+            shortVolumeModel = value;
+          }
+        }
+      case AsyncError(:final error):
+        shortVolumeLoader = false;
+      case AsyncLoading():
+        shortVolumeLoader = false;
+    }
+  }
+
+  getcompanyData(SymbolDto symbol) async {
+    try {
+      companyLoader = true;
+      var res = ref.watch(companyDataProvider(symbol));
+      switch (res) {
+        case AsyncData(:final value):
+          {
+            if (value != null) {
+              companyLoader = false;
+
+              companyModel = value.data;
+            }
+          }
+        case AsyncError(:final error):
+          companyLoader = false;
+        case AsyncLoading():
+          companyLoader = false;
+      }
+    } catch (e) {
+      setState(() {
+        companyLoader = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    secondIndexTap();
     return SafeArea(
-      key: widget.id,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
@@ -93,7 +345,7 @@ class _CompanyContentState extends State<CompanyContent> {
                 ),
                 SizedBox(height: 4.h),
 
-                widget.companyLoader == false
+                companyLoader == false
                     ? Column(
                         children: [
                           shimmerBox(
@@ -107,10 +359,10 @@ class _CompanyContentState extends State<CompanyContent> {
                           ),
                         ],
                       )
-                    : widget.companyModel != null &&
-                          widget.companyModel!.general.Description != null
+                    : companyModel != null &&
+                          companyModel!.general.Description != null
                     ? ReadMoreText(
-                        widget.companyModel!.general.Description!,
+                        companyModel!.general.Description!,
 
                         trimLines: 2,
                         trimMode: TrimMode.Line,
@@ -158,17 +410,16 @@ class _CompanyContentState extends State<CompanyContent> {
                 //       )
                 //     : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.companyLoader == false
+                companyLoader == false
                     ? InfoBoxGrid(items: ["", "", "", ""])
-                    : widget.companyModel != null &&
-                          widget.companyModel!.general.Address != null
+                    : companyModel != null &&
+                          companyModel!.general.Address != null
                     ? InfoBoxGrid(
                         items: [
-                          widget.companyModel!.general.Address ?? "",
-                          widget.companyModel!.general.Country ?? "",
-                          widget.companyModel!.general.FullTimeEmployees
-                              .toString(),
-                          "${widget.companyModel!.general.WebURL ?? 0}",
+                          companyModel!.general.Address ?? "",
+                          companyModel!.general.Country ?? "",
+                          companyModel!.general.FullTimeEmployees.toString(),
+                          "${companyModel!.general.WebURL ?? 0}",
                         ],
                       )
                     : SizedBox(),
@@ -182,7 +433,7 @@ class _CompanyContentState extends State<CompanyContent> {
                 ),
 
                 SizedBox(height: 10.h),
-                widget.companyLoader == false
+                companyLoader == false
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -207,46 +458,35 @@ class _CompanyContentState extends State<CompanyContent> {
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          widget.companyModel != null &&
-                                  widget.companyModel!.general.Officers !=
-                                      null &&
-                                  widget
-                                      .companyModel!
-                                      .general
-                                      .Officers!
-                                      .isNotEmpty
+                          companyModel != null &&
+                                  companyModel!.general.Officers != null &&
+                                  companyModel!.general.Officers!.isNotEmpty
                               ? SizedBox(
                                   height: 180.h,
                                   width: MediaQuery.sizeOf(context).width / 1.1,
                                   child: ListView.separated(
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: widget
-                                        .companyModel!
-                                        .general
-                                        .Officers!
-                                        .length,
+                                    itemCount:
+                                        companyModel!.general.Officers!.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                           return ProfileCardWidget(
                                             imagePath:
-                                                widget
-                                                    .companyModel!
+                                                companyModel!
                                                     .general
                                                     .Officers![index]
                                                     .Image ??
                                                 "",
 
                                             designation:
-                                                widget
-                                                    .companyModel!
+                                                companyModel!
                                                     .general
                                                     .Officers![index]
                                                     .Title ??
                                                 "",
                                             name:
-                                                widget
-                                                    .companyModel!
+                                                companyModel!
                                                     .general
                                                     .Officers![index]
                                                     .Name ??
@@ -264,39 +504,37 @@ class _CompanyContentState extends State<CompanyContent> {
                       ),
 
                 // SizedBox(height: 14.h),
-                widget.companyLoader == true
+                companyLoader == true
                     ? CompanyDetailsCard(
                         items: ["", "", "", "", "", "", "", "", ""],
                       )
-                    : widget.companyModel != null
+                    : companyModel != null
                     ? CompanyDetailsCard(
                         items: [
                           Filters.systemNumberConvention(
-                            widget.companyModel!.general.SharesOutstanding ?? 0,
+                            companyModel!.general.SharesOutstanding ?? 0,
                             isPrice: false,
                             isAbs: false,
                           ),
 
                           Filters.systemNumberConvention(
-                            widget.companyModel!.general.PercentInstitutions ??
-                                0,
+                            companyModel!.general.PercentInstitutions ?? 0,
                             isPrice: false,
                             alwaysShowTwoDecimal: true,
                           ),
 
                           Filters.systemNumberConvention(
-                            widget.companyModel!.general.EBITDA,
+                            companyModel!.general.EBITDA,
                             isPrice: false,
                             isAbs: false,
                           ),
-                          widget.companyModel!.general.Exchange ?? "",
-                          widget.companyModel!.general.Symbol ?? "",
-                          widget.companyModel!.general.Sector ?? "",
-                          widget.companyModel!.general.Industry ?? "",
-                          widget.companyModel!.general.FiscalYearEnd ?? "",
+                          companyModel!.general.Exchange ?? "",
+                          companyModel!.general.Symbol ?? "",
+                          companyModel!.general.Sector ?? "",
+                          companyModel!.general.Industry ?? "",
+                          companyModel!.general.FiscalYearEnd ?? "",
                           Filters.systemNumberConvention(
-                            widget.companyModel!.general.MarketCapitalization ??
-                                0,
+                            companyModel!.general.MarketCapitalization ?? 0,
                             isPrice: false,
                             isAbs: false,
                           ),
@@ -305,50 +543,45 @@ class _CompanyContentState extends State<CompanyContent> {
                     : SizedBox(),
                 SizedBox(height: 14.h),
 
-                widget.earningLoader == true
+                earningLoader == true
                     ? Earnings(items: ["", "", "", "", ""])
-                    : widget.earningdata != null
+                    : earningdata != null
                     ? Earnings(
                         items: [
-                          widget.earningdata!.reportedEps != null
+                          earningdata!.reportedEps != null
                               ? "\$" +
-                                    widget.earningdata!.reportedEps!.reportedEps
+                                    earningdata!.reportedEps!.reportedEps
                                         .toString()
                               : "N/A",
 
-                          widget.earningdata!.reportedEps != null &&
-                                  widget
-                                          .earningdata!
+                          earningdata!.reportedEps != null &&
+                                  earningdata!
                                           .reportedEps!
                                           .lastEarningsAnnouncement !=
                                       null
-                              ? widget
-                                    .earningdata!
+                              ? earningdata!
                                     .reportedEps!
                                     .lastEarningsAnnouncement
                                     .toString()
                               : "N/A",
 
-                          widget.earningdata!.reportedEps != null
+                          earningdata!.reportedEps != null
                               ? "\$" +
                                     compactFormatter.format(
-                                      widget
-                                              .earningdata!
+                                      earningdata!
                                               .reportedEps!
                                               .consensusEpsForecast ??
                                           0,
                                     )
                               : "0",
-                          widget.earningdata!.reportedEps != null
-                              ? widget.earningdata!.reportedEps!.epsSurprise
-                                    .toString()
+                          earningdata!.reportedEps != null
+                              ? earningdata!.reportedEps!.epsSurprise.toString()
                               : "N/A",
 
-                          widget.earningdata!.reportedEps != null
+                          earningdata!.reportedEps != null
                               ? "\$" +
                                     compactFormatter.format(
-                                      widget
-                                              .earningdata!
+                                      earningdata!
                                               .reportedRevenue!
                                               .totalRevenue ??
                                           0,
@@ -358,90 +591,76 @@ class _CompanyContentState extends State<CompanyContent> {
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.shortVolumeLoader == true
+                shortVolumeLoader == true
                     ? shimmerBox(height: 300, radius: 16)
-                    : widget.shortVolumeModel != null &&
-                          widget.shortVolumeModel!.data!.Charts.length > 0
-                    ? ShortVolumeChart(
-                        data: widget.shortVolumeModel!.data!.Charts,
-                      )
+                    : shortVolumeModel != null &&
+                          shortVolumeModel!.data!.Charts.length > 0
+                    ? ShortVolumeChart(data: shortVolumeModel!.data!.Charts)
                     : SizedBox(),
                 SizedBox(height: 14.h),
 
-                widget.outstandingSharesLoader == true
+                outstandingSharesLoader == true
                     ? shimmerBox(height: 300, radius: 16)
-                    : widget.companyDetailModel != null &&
-                          widget
-                                  .companyDetailModel!
+                    : companyDetailModel != null &&
+                          companyDetailModel!
                                   .data
                                   .fundamentalsOutstandingShares !=
                               null &&
-                          widget
-                              .companyDetailModel!
+                          companyDetailModel!
                               .data
                               .fundamentalsOutstandingShares!
                               .isNotEmpty
                     ? OutstandingSharesChart(
-                        fundamentalsOutstandingShares: widget
-                            .companyDetailModel!
+                        fundamentalsOutstandingShares: companyDetailModel!
                             .data
                             .fundamentalsOutstandingShares,
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
 
-                widget.outstandingSharesLoader == true
+                outstandingSharesLoader == true
                     ? TableShimmer(title: "ESG Scores")
-                    : widget.esgScoreData != null &&
-                          widget.esgScoreData!.data != null
-                    ? EsgScoreTable(data: widget.esgScoreData!.data)
+                    : esgScoreData != null && esgScoreData!.data != null
+                    ? EsgScoreTable(data: esgScoreData!.data)
                     : SizedBox(),
                 SizedBox(height: 14.h),
 
-                widget.eSGScoresloader == true
+                eSGScoresloader == true
                     ? TableShimmer(title: "Split Dividend")
-                    : widget.companyDetailModel != null &&
-                          widget
-                                  .companyDetailModel!
+                    : companyDetailModel != null &&
+                          companyDetailModel!
                                   .data
                                   .fundamentalsSplitsDividends !=
                               null
                     ? SplitDividend(
-                        fundamentalsSplitsDividends: widget
-                            .companyDetailModel!
+                        fundamentalsSplitsDividends: companyDetailModel!
                             .data
                             .fundamentalsSplitsDividends,
                       )
                     : SizedBox(),
                 SizedBox(height: 14.h),
 
-                widget.outstandingSharesLoader == true
+                securityShortVolumeLoader == true
                     ? TableShimmer(title: "Security Short Volume")
-                    : widget.securityShortVolume != null &&
-                          widget.securityShortVolume!.data != null
-                    ? SecurityShortVolume(
-                        data: widget.securityShortVolume!.data,
-                      )
+                    : securityShortVolume != null &&
+                          securityShortVolume!.data != null
+                    ? SecurityShortVolume(data: securityShortVolume!.data)
                     : SizedBox(),
                 SizedBox(height: 14.h),
 
-                widget.insiderTraderLoader == true
+                insiderTraderLoader == true
                     ? TableShimmer(title: "Insider Trader")
-                    : widget.insiderTransactionResponse != null &&
-                          widget.insiderTransactionResponse!.data.isNotEmpty
-                    ? InsiderTraderTable(
-                        data: widget.insiderTransactionResponse!,
-                      )
+                    : insiderTransactionResponse != null &&
+                          insiderTransactionResponse!.data.isNotEmpty
+                    ? InsiderTraderTable(data: insiderTransactionResponse!)
                     : SizedBox(),
                 SizedBox(height: 14.h),
-                widget.securityOwnershipLoader == true
+                securityOwnershipLoader == true
                     ? TableShimmer(title: "Security Ownership")
-                    : widget.securityOwnership != null &&
-                          widget.securityOwnership!.data != null &&
-                          widget.securityOwnership!.data!.isNotEmpty
-                    ? SecurityOwnershipTable(
-                        data: widget.securityOwnership!.data!,
-                      )
+                    : securityOwnership != null &&
+                          securityOwnership!.data != null &&
+                          securityOwnership!.data!.isNotEmpty
+                    ? SecurityOwnershipTable(data: securityOwnership!.data!)
                     : SizedBox(),
                 SizedBox(height: 14.h),
               ],
