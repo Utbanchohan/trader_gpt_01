@@ -43,6 +43,7 @@ class CompanyContent extends ConsumerStatefulWidget {
 }
 
 class _CompanyContentState extends ConsumerState<CompanyContent> {
+  //raza: Wrong way to use provider/ Watch provider inside the build
   bool companyLoader = true;
   bool shortVolumeLoader = true;
   bool insiderTraderLoader = true;
@@ -671,6 +672,400 @@ class _CompanyContentState extends ConsumerState<CompanyContent> {
             // WeeklySeasonalityChart(),
             // SizedBox(height: 20.h),
             // ShareStructureCard(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// CompanyContentV1 - Properly refactored with correct Riverpod usage
+// ============================================================================
+
+class CompanyContentV1 extends ConsumerStatefulWidget {
+  final ChatRouting? chatRouting;
+  const CompanyContentV1({super.key, this.chatRouting});
+
+  @override
+  ConsumerState<CompanyContentV1> createState() => _CompanyContentV1State();
+}
+
+class _CompanyContentV1State extends ConsumerState<CompanyContentV1> {
+  @override
+  Widget build(BuildContext context) {
+    // Watch all providers in build method
+    final companyState = ref.watch(
+      companyDataProvider(SymbolDto(symbol: widget.chatRouting?.symbol ?? '')),
+    );
+    final earningsState = ref.watch(
+      earningsDataProvider(SymbolDto(symbol: widget.chatRouting?.symbol ?? '')),
+    );
+    final esgScoreState = ref.watch(
+      esgScoreProvider(widget.chatRouting?.symbol ?? ''),
+    );
+    final insiderTradesState = ref.watch(
+      insiderTradesProvider(
+        SymbolDto(symbol: widget.chatRouting?.symbol ?? ''),
+      ),
+    );
+    final securityShortVolumeState = ref.watch(
+      securityShortVolumeProvider(
+        SymbolDto(symbol: widget.chatRouting?.symbol ?? ''),
+      ),
+    );
+    final shortOwnershipState = ref.watch(
+      shortOwnershipProvider(
+        SymbolDto(symbol: widget.chatRouting?.symbol ?? ''),
+      ),
+    );
+    final shortVolumeState = ref.watch(
+      shortVolumeDataProvider(
+        SymbolDto(symbol: widget.chatRouting?.symbol ?? ''),
+      ),
+    );
+    final companyDetailState = ref.watch(
+      companyDetailProvider(
+        SymbolDto(symbol: widget.chatRouting?.symbol ?? ''),
+      ),
+    );
+
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MdSnsText(
+                  "Company Details",
+                  color: AppColors.fieldTextColor,
+                  variant: TextVariant.h3,
+                  fontWeight: TextFontWeightVariant.h1,
+                ),
+                SizedBox(height: 4.h),
+
+                // Company Description
+                switch (companyState) {
+                  AsyncData(:final value)
+                      when value != null &&
+                          value.data.general.Description != null =>
+                    ReadMoreText(
+                      value.data.general.Description!,
+                      trimLines: 2,
+                      trimMode: TrimMode.Line,
+                      trimCollapsedText: '\nShow More',
+                      trimExpandedText: '\nShow Less',
+                      moreStyle: GoogleFonts.plusJakartaSans(
+                        fontSize: 14,
+                        height: 1.8,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.secondaryColor,
+                      ),
+                      lessStyle: GoogleFonts.plusJakartaSans(
+                        fontSize: 14,
+                        height: 1.8,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.secondaryColor,
+                      ),
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  AsyncLoading() => Column(
+                    children: [
+                      shimmerBox(
+                        height: 10,
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                      ),
+                      SizedBox(height: 6.h),
+                      shimmerBox(
+                        height: 10,
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                      ),
+                    ],
+                  ),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+                SizedBox(height: 14.h),
+
+                // Info Box Grid
+                switch (companyState) {
+                  AsyncData(:final value)
+                      when value != null &&
+                          value.data.general.Address != null =>
+                    InfoBoxGrid(
+                      items: [
+                        value.data.general.Address ?? "",
+                        value.data.general.Country ?? "",
+                        value.data.general.FullTimeEmployees.toString(),
+                        "${value.data.general.WebURL ?? 0}",
+                      ],
+                    ),
+                  AsyncLoading() => InfoBoxGrid(items: ["", "", "", ""]),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+
+                SizedBox(height: 10.h),
+                MdSnsText(
+                  "Key Executives",
+                  color: AppColors.fieldTextColor,
+                  variant: TextVariant.h2,
+                  fontWeight: TextFontWeightVariant.h1,
+                ),
+                SizedBox(height: 10.h),
+
+                // Key Executives
+                switch (companyState) {
+                  AsyncData(:final value)
+                      when value != null &&
+                          value.data.general.Officers != null &&
+                          value.data.general.Officers!.isNotEmpty =>
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          height: 180.h,
+                          width: MediaQuery.sizeOf(context).width / 1.1,
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: value.data.general.Officers!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return ProfileCardWidget(
+                                imagePath:
+                                    value.data.general.Officers![index].Image ??
+                                    "",
+                                designation:
+                                    value.data.general.Officers![index].Title ??
+                                    "",
+                                name:
+                                    value.data.general.Officers![index].Name ??
+                                    "",
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                                  return SizedBox(width: 10);
+                                },
+                          ),
+                        ),
+                      ],
+                    ),
+                  AsyncLoading() => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        height: 180.h,
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 5,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ProfileCardShimmer();
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(width: 10);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+
+                // Company Details Card
+                switch (companyState) {
+                  AsyncData(:final value) when value != null =>
+                    CompanyDetailsCard(
+                      items: [
+                        Filters.systemNumberConvention(
+                          value.data.general.SharesOutstanding ?? 0,
+                          isPrice: false,
+                          isAbs: false,
+                        ),
+                        Filters.systemNumberConvention(
+                          value.data.general.PercentInstitutions ?? 0,
+                          isPrice: false,
+                          alwaysShowTwoDecimal: true,
+                        ),
+                        Filters.systemNumberConvention(
+                          value.data.general.EBITDA,
+                          isPrice: false,
+                          isAbs: false,
+                        ),
+                        value.data.general.Exchange ?? "",
+                        value.data.general.Symbol ?? "",
+                        value.data.general.Sector ?? "",
+                        value.data.general.Industry ?? "",
+                        value.data.general.FiscalYearEnd ?? "",
+                        Filters.systemNumberConvention(
+                          value.data.general.MarketCapitalization ?? 0,
+                          isPrice: false,
+                          isAbs: false,
+                        ),
+                      ],
+                    ),
+                  AsyncLoading() => CompanyDetailsCard(
+                    items: ["", "", "", "", "", "", "", "", ""],
+                  ),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+                SizedBox(height: 14.h),
+
+                // Earnings
+                switch (earningsState) {
+                  AsyncData(:final value)
+                      when value != null && value.data != null =>
+                    Earnings(
+                      items: [
+                        value.data!.reportedEps != null
+                            ? "\$" +
+                                  value.data!.reportedEps!.reportedEps
+                                      .toString()
+                            : "N/A",
+                        value.data!.reportedEps != null &&
+                                value
+                                        .data!
+                                        .reportedEps!
+                                        .lastEarningsAnnouncement !=
+                                    null
+                            ? value.data!.reportedEps!.lastEarningsAnnouncement
+                                  .toString()
+                            : "N/A",
+                        value.data!.reportedEps != null
+                            ? "\$" +
+                                  compactFormatter.format(
+                                    value
+                                            .data!
+                                            .reportedEps!
+                                            .consensusEpsForecast ??
+                                        0,
+                                  )
+                            : "0",
+                        value.data!.reportedEps != null
+                            ? value.data!.reportedEps!.epsSurprise.toString()
+                            : "N/A",
+                        value.data!.reportedEps != null
+                            ? "\$" +
+                                  compactFormatter.format(
+                                    value.data!.reportedRevenue!.totalRevenue ??
+                                        0,
+                                  )
+                            : "0",
+                      ],
+                    ),
+                  AsyncLoading() => Earnings(items: ["", "", "", "", ""]),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+                SizedBox(height: 14.h),
+
+                // Short Volume Chart
+                switch (shortVolumeState) {
+                  AsyncData(:final value)
+                      when value != null &&
+                          value.data != null &&
+                          value.data!.Charts.isNotEmpty =>
+                    ShortVolumeChart(data: value.data!.Charts),
+                  AsyncLoading() => shimmerBox(height: 300, radius: 16),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+                SizedBox(height: 14.h),
+
+                // Outstanding Shares Chart
+                switch (companyDetailState) {
+                  AsyncData(:final value)
+                      when value != null &&
+                          value.data.fundamentalsOutstandingShares != null &&
+                          value
+                              .data
+                              .fundamentalsOutstandingShares!
+                              .isNotEmpty =>
+                    OutstandingSharesChart(
+                      fundamentalsOutstandingShares:
+                          value.data.fundamentalsOutstandingShares,
+                    ),
+                  AsyncLoading() => shimmerBox(height: 300, radius: 16),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+                SizedBox(height: 14.h),
+
+                // ESG Scores
+                switch (esgScoreState) {
+                  AsyncData(:final value)
+                      when value != null && value.data != null =>
+                    EsgScoreTable(data: value.data),
+                  AsyncLoading() => TableShimmer(title: "ESG Scores"),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+                SizedBox(height: 14.h),
+
+                // Split Dividend
+                switch (companyDetailState) {
+                  AsyncData(:final value)
+                      when value != null &&
+                          value.data.fundamentalsSplitsDividends != null =>
+                    SplitDividend(
+                      fundamentalsSplitsDividends:
+                          value.data.fundamentalsSplitsDividends,
+                    ),
+                  AsyncLoading() => TableShimmer(title: "Split Dividend"),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+                SizedBox(height: 14.h),
+
+                // Security Short Volume
+                switch (securityShortVolumeState) {
+                  AsyncData(:final value)
+                      when value != null && value.data != null =>
+                    SecurityShortVolume(data: value.data),
+                  AsyncLoading() => TableShimmer(
+                    title: "Security Short Volume",
+                  ),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+                SizedBox(height: 14.h),
+
+                // Insider Trader
+                switch (insiderTradesState) {
+                  AsyncData(:final value)
+                      when value != null && value.data.isNotEmpty =>
+                    InsiderTraderTable(data: value),
+                  AsyncLoading() => TableShimmer(title: "Insider Trader"),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+                SizedBox(height: 14.h),
+
+                // Security Ownership
+                switch (shortOwnershipState) {
+                  AsyncData(:final value)
+                      when value != null &&
+                          value.data != null &&
+                          value.data!.isNotEmpty =>
+                    SecurityOwnershipTable(data: value.data!),
+                  AsyncLoading() => TableShimmer(title: "Security Ownership"),
+                  AsyncError() => SizedBox(),
+                  _ => SizedBox(),
+                },
+                SizedBox(height: 14.h),
+              ],
+            ),
+            SizedBox(height: 20.h),
           ],
         ),
       ),

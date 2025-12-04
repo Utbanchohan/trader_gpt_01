@@ -23,6 +23,7 @@ class EarningContent extends ConsumerStatefulWidget {
 }
 
 class _EarningContentState extends ConsumerState<EarningContent> {
+  //raza: Wrong way to use provider/ Watch provider inside the build
   bool companyDetailShimmer = true;
   bool earningChartModelLoader = true;
   bool earningReportShimmer = true;
@@ -214,6 +215,106 @@ class _EarningContentState extends ConsumerState<EarningContent> {
                   data: companyDetailModel!.data.fundamentalsEarningsTrend,
                 )
               : SizedBox(height: 140),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// EarningContentV1 - Properly refactored with correct Riverpod usage
+// ============================================================================
+
+class EarningContentV1 extends ConsumerStatefulWidget {
+  final ChatRouting chatRouting;
+  const EarningContentV1({super.key, required this.chatRouting});
+
+  @override
+  ConsumerState<EarningContentV1> createState() => _EarningContentV1State();
+}
+
+class _EarningContentV1State extends ConsumerState<EarningContentV1> {
+  // Helper method to calculate date range (2 years back)
+  ChartRequestDto _buildChartRequestDto(String symbol) {
+    final now = DateTime.now().toUtc();
+    final startDate = DateTime.utc(
+      now.year - 2,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute,
+      now.second,
+      now.millisecond,
+    );
+    final endDateString = now.toIso8601String();
+    final startDateString = startDate.toIso8601String();
+
+    return ChartRequestDto(
+      symbol: symbol,
+      interval: IntervalEnum.quarterly.value,
+      startDate: startDateString,
+      endDate: endDateString,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Calculate date range for chart requests
+    final chartRequestDto = _buildChartRequestDto(widget.chatRouting.symbol);
+
+    // Watch all providers in build method
+    final earningChartState = ref.watch(
+      earningChartDataProvider(chartRequestDto),
+    );
+    final earningReportState = ref.watch(
+      earningReportDataProvider(chartRequestDto),
+    );
+    final companyDetailState = ref.watch(
+      companyDetailProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+    );
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 15),
+
+          // Earning Chart
+          switch (earningChartState) {
+            AsyncData(:final value)
+                when value != null && value.data.isNotEmpty =>
+              QuarterlyPerformanceChart(data: value.data),
+            AsyncLoading() => CashDebtShimmer(),
+            AsyncError() => SizedBox(height: 260),
+            _ => SizedBox(height: 260),
+          },
+          SizedBox(height: 20),
+
+          // Earnings Table
+          switch (earningReportState) {
+            AsyncData(:final value)
+                when value != null && value.data.isNotEmpty =>
+              EarningsTable(data: value.data),
+            AsyncLoading() => TableShimmer(title: "Earnings"),
+            AsyncError() => SizedBox(height: 200),
+            _ => SizedBox(height: 200),
+          },
+          SizedBox(height: 20),
+
+          // Earnings Trend
+          switch (companyDetailState) {
+            AsyncData(:final value)
+                when value != null &&
+                    value.data.fundamentalsEarningsTrend != null =>
+              EarningsTrend(
+                title: "Earnings Trend",
+                data: value.data.fundamentalsEarningsTrend,
+              ),
+            AsyncLoading() => TableShimmer(title: "Earnings Trend"),
+            AsyncError() => SizedBox(height: 140),
+            _ => SizedBox(height: 140),
+          },
         ],
       ),
     );

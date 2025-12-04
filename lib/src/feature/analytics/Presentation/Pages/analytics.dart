@@ -57,6 +57,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   final GlobalKey _scrollableKey = GlobalKey();
   final Map<String, GlobalKey> _keys = {};
   final Map<String, GlobalKey> _chipKeys = {};
+  //raza: use current index of tab , while scrolling change index and it should change selected tab to tabbar as well
   String _activeSection = 'overview';
   Timer? _scrollDebounce;
   bool _programmaticScroll = false;
@@ -189,6 +190,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     //   });
   }
 
+  //raza: remove irrelevant code
   void _onScroll() {
     // debounce frequent scroll events to avoid expensive layout queries
     try {
@@ -369,6 +371,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
     ///dummy scroller
     _scrollController = ScrollController();
+    //raza: instead of using map with id to save Global key , create section model and use everything there
+    //no need to use double maping
     for (var section in sections) {
       _keys[section['id']] = GlobalKey();
       _chipKeys[section['id']] = GlobalKey();
@@ -389,7 +393,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         // firstIndexData();
       }
     }
-
+    //raza: use getter if this is not changing on runtime
     selectedStock =
         widget.chatRouting != null && widget.chatRouting!.companyName.isNotEmpty
         ? Stock(
@@ -514,7 +518,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         chatRouting: widget.chatRouting!,
                         selectedStock: selectedStock!,
                       )
-                    : _buildAnalyticsTab(),
+                    :
+                      //raza: create statefull page for analytics tab and do the everythign there
+                      _buildAnalyticsTab(),
 
                 // History tab placeholder
                 // Column(
@@ -540,6 +546,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   /// Analytics Tab Content
   Widget _buildAnalyticsTab() {
+    //raza: if its only using in app bar no need to use variable
     final double chipRowHeight = 60;
 
     return CustomScrollView(
@@ -566,34 +573,36 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               case "overview":
                 return Container(
                   key: _keys[id],
-                  child: OverviewContent(
-                    chatRouting: widget.chatRouting!,
-                    selectedStock: selectedStock!,
-                  ),
+                  child:
+                      // OverviewContent(
+                      OverviewContentV1(
+                        chatRouting: widget.chatRouting!,
+                        selectedStock: selectedStock!,
+                      ),
                 );
 
               case "company":
                 return Container(
                   key: _keys[id],
-                  child: CompanyContent(chatRouting: widget.chatRouting!),
+                  child: CompanyContentV1(chatRouting: widget.chatRouting!),
                 );
 
               case "financial":
                 return Container(
                   key: _keys[id],
-                  child: FinancialTab(symbol: selectedStock!.symbol),
+                  child: FinancialTabV1(symbol: selectedStock!.symbol),
                 );
 
               case "earnings":
                 return Container(
                   key: _keys[id],
-                  child: EarningContent(chatRouting: widget.chatRouting!),
+                  child: EarningContentV1(chatRouting: widget.chatRouting!),
                 );
 
               case "analytics":
                 return Container(
                   key: _keys[id],
-                  child: AnalysisContent(chatRouting: widget.chatRouting!),
+                  child: AnalysisContentV1(chatRouting: widget.chatRouting!),
                 );
 
               default:
@@ -611,6 +620,7 @@ class _ChipsHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double _maxExtent;
   final List<Map<String, dynamic>> sections;
   final Map<String, GlobalKey> chipKeys;
+  //raza: wrong parm type , why its function
   final String Function() activeSectionIdGetter;
   final void Function(String id, Map<String, dynamic> section) onTap;
 
@@ -636,6 +646,7 @@ class _ChipsHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
+    //raza: wrong way to use
     final activeId = activeSectionIdGetter();
     return Container(
       color: Colors.transparent,
@@ -649,6 +660,7 @@ class _ChipsHeaderDelegate extends SliverPersistentHeaderDelegate {
             final id = section['id'] as String;
             final bool isActive = activeId == id;
             return GestureDetector(
+              //raza: why return id , section already have this is
               onTap: () => onTap(id, section),
               child: Container(
                 key: chipKeys[id],

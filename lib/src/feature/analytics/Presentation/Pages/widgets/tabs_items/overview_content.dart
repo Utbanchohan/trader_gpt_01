@@ -60,6 +60,7 @@ class OverviewContent extends ConsumerStatefulWidget {
 }
 
 class _OverviewContentState extends ConsumerState<OverviewContent> {
+  //raza: Wrong way to use provider/ Watch provider inside the build
   FundamentalResponse? fundamentalResponse;
   PriceComparisonModel? priceComparisonModel;
   AnalystRatingResponse? analyticsRespinseData;
@@ -1128,6 +1129,662 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                     data: analyticsRespinseData!.data,
                   )
                 : SizedBox(),
+            SizedBox(height: 20.h),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// OverviewContentV1 - Properly refactored with correct Riverpod usage
+// ============================================================================
+
+class OverviewContentV1 extends ConsumerStatefulWidget {
+  final ChatRouting chatRouting;
+  final Stock selectedStock;
+
+  const OverviewContentV1({
+    super.key,
+    required this.chatRouting,
+    required this.selectedStock,
+  });
+
+  @override
+  ConsumerState<OverviewContentV1> createState() => _OverviewContentV1State();
+}
+
+class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
+  String selectedCandleOverview = "D";
+
+  // Helper method to calculate chart date range based on interval
+  Map<String, String> _calculateChartDateRange(IntervalEnum interval) {
+    final now = DateTime.now().toUtc();
+    DateTime startDate;
+    final endDateString = now.toIso8601String();
+
+    switch (interval.value) {
+      case "hour":
+        startDate = DateTime.utc(
+          now.year,
+          now.month - 2,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+          now.millisecond,
+        );
+        break;
+      case "daily":
+        startDate = DateTime.utc(
+          now.year - 2,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+          now.millisecond,
+        );
+        break;
+      case "weekly":
+        startDate = DateTime.utc(
+          now.year - 3,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+          now.millisecond,
+        );
+        break;
+      case "monthly":
+        startDate = DateTime.utc(
+          now.year - 10,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+          now.millisecond,
+        );
+        break;
+      default:
+        startDate = DateTime.utc(
+          now.year - 2,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+          now.millisecond,
+        );
+    }
+
+    double intervalMs = 0;
+    if (interval.value == "minute") {
+      intervalMs = 60 * 1000;
+    } else if (interval.value == "hour") {
+      intervalMs = 60 * 60 * 1000;
+    } else if (interval.value == "daily") {
+      intervalMs = 24 * 60 * 60 * 1000;
+    } else if (interval.value == "weekly") {
+      intervalMs = 7 * 24 * 60 * 60 * 1000;
+    } else if (interval.value == "monthly") {
+      intervalMs = 30 * 24 * 60 * 60 * 1000;
+    }
+
+    double dummyIntervals =
+        (now.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch) /
+        intervalMs;
+    var dataPoint = intervalMs > 0 ? (dummyIntervals + 1).floor() : 1;
+
+    return {
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDateString,
+      'dataPoint': dataPoint.toString(),
+    };
+  }
+
+  List<ChartData> _buildChartSpots(
+    List<OverviewCandleChartModel> overviewCandle,
+  ) {
+    return overviewCandle.map((item) {
+      return ChartData(
+        x: item.timestamp.toString(),
+        y: [
+          (item.open).toDouble(),
+          (item.high).toDouble(),
+          (item.low).toDouble(),
+          (item.close).toDouble(),
+        ],
+      );
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Watch all providers in build method
+    final overviewState = ref.watch(
+      getOverviewProvider(widget.chatRouting.symbol),
+    );
+    final priceTargetState = ref.watch(
+      priceTargetMatricsProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+    );
+    final pricePerformanceState = ref.watch(
+      pricePerformanceProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+    );
+    final analyticsState = ref.watch(
+      analyticsDataProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+    );
+    final matricsState = ref.watch(
+      matricsDataProvider(widget.chatRouting.symbol),
+    );
+    final fundamentalState = ref.watch(
+      fundamentalDataProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+    );
+    final sharesState = ref.watch(
+      shareStatsProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+    );
+    final priceComparisonState = ref.watch(
+      priceComparisonProvider(
+        PriceComparisonDto(
+          daysBack: 365,
+          symbol1: widget.chatRouting.symbol,
+          symbol2: "SPY",
+        ),
+      ),
+    );
+    final weeklyState = ref.watch(
+      getWeeklyDataProvider(widget.chatRouting.symbol),
+    );
+    final monthlyState = ref.watch(
+      getMonthlyDataProvider(widget.chatRouting.symbol),
+    );
+
+    // Calculate chart date range based on selected interval
+    final interval = selectedCandleOverview == 'H'
+        ? IntervalEnum.hour
+        : selectedCandleOverview == 'D'
+        ? IntervalEnum.daily
+        : selectedCandleOverview == 'W'
+        ? IntervalEnum.weekly
+        : selectedCandleOverview == 'M'
+        ? IntervalEnum.monthly
+        : IntervalEnum.daily;
+
+    final chartDateRange = _calculateChartDateRange(interval);
+    final chartState = ref.watch(
+      getOverviewCandleChartProvider(
+        widget.chatRouting.symbol + "_NASDAQ",
+        interval.value,
+        chartDateRange['startDate']!,
+        chartDateRange['endDate']!,
+        "1",
+        chartDateRange['dataPoint']!,
+      ),
+    );
+
+    // Watch stock manager for live prices
+    final stockManagerState = ref.watch(stocksManagerProvider);
+    final liveStock = stockManagerState[widget.chatRouting.stockid ?? ''];
+
+    // Calculate price change
+    double change = liveStock != null
+        ? PriceUtils.getChangesPercentage(
+                        liveStock.price,
+                        liveStock.previousClose,
+                      ) !=
+                      null &&
+                  liveStock.price != liveStock.previousClose
+              ? PriceUtils.getChangesPercentage(
+                  liveStock.price,
+                  liveStock.previousClose,
+                )!
+              : widget.chatRouting.changePercentage
+        : widget.chatRouting.changePercentage;
+
+    List<String> questions = [
+      "Provide a comprehensive company analysis of ${widget.chatRouting.companyName}",
+      "Technical analysis for ${widget.chatRouting.companyName}",
+      "Analyze analyst sentiment for ${widget.chatRouting.companyName}",
+      "Perform DCF valuation analysis for  ${widget.chatRouting.companyName}",
+      "Perform DCF valuation analysis for ${widget.chatRouting.companyName}",
+      "Analyze analyst sentiment for ${widget.chatRouting.companyName}",
+    ];
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 14.h),
+
+            // Header Row
+            Row(
+              children: [
+                SizedBox(width: 10),
+                Container(
+                  height: 26.h,
+                  width: 26.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: widget.selectedStock.type.toLowerCase() == "crypto"
+                        ? Image.network(
+                            getItemImage(
+                              ImageType.crypto,
+                              widget.selectedStock.symbol,
+                            ),
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return SvgPicture.network(
+                                "https://cdn-images.traderverse.io/crypto_dummy.svg",
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          )
+                        : SvgPicture.network(
+                            getItemImage(
+                              ImageType.stock,
+                              widget.selectedStock.symbol,
+                            ),
+                            fit: BoxFit.cover,
+                            placeholderBuilder: (context) => SizedBox(
+                              height: 26.h,
+                              width: 26.w,
+                              child: SvgPicture.network(
+                                "https://cdn-images.traderverse.io/stock_dummy.svg",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            errorBuilder: (context, error, stackTrace) {
+                              return SvgPicture.network(
+                                "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      child: Row(
+                        children: [
+                          ShowInfoPopup(
+                            chatRouting: widget.chatRouting,
+                            question: questions[0],
+                            text: "Complete Company Analysis",
+                            child: MdSnsText(
+                              "#${widget.selectedStock.symbol}",
+                              variant: TextVariant.h3,
+                              fontWeight: TextFontWeightVariant.h1,
+                              color: AppColors.white,
+                            ),
+                          ),
+                          SizedBox(width: 6),
+                          Container(
+                            width: 5,
+                            height: 5,
+                            decoration: BoxDecoration(
+                              color: AppColors.colorB2B2B7,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          SizedBox(width: 6),
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width / 1.7,
+                            child: MdSnsText(
+                              widget.selectedStock.companyName
+                                  .split("-")
+                                  .first
+                                  .trim(),
+                              color: AppColors.colorB2B2B7,
+                              variant: TextVariant.h4,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: TextFontWeightVariant.h4,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        MdSnsText(
+                          liveStock != null
+                              ? Filters.systemNumberConvention(
+                                  liveStock.price,
+                                  isPrice: true,
+                                  isAbs: false,
+                                )
+                              : Filters.systemNumberConvention(
+                                  widget.selectedStock.price,
+                                  isPrice: true,
+                                  isAbs: false,
+                                ),
+                          color: change.toString().contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.white,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          change.toString().contains("-")
+                              ? Icons.arrow_drop_down
+                              : Icons.arrow_drop_up,
+                          color: change.toString().contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          size: 20,
+                        ),
+                        MdSnsText(
+                          " ${change.toStringAsFixed(2).replaceAll("-", "")}%",
+                          color: change.toString().contains("-")
+                              ? AppColors.redFF3B3B
+                              : AppColors.color00FF55,
+                          variant: TextVariant.h4,
+                          fontWeight: TextFontWeightVariant.h4,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            AppSpacing.h10,
+
+            // Overview Data Cards
+            switch (overviewState) {
+              AsyncData(:final value) when value != null => SizedBox(
+                height: 135.h,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    final stockResponse = StockResponse(data: value);
+                    return index == 0
+                        ? PriceCardWidget(
+                            firstColor: AppColors.white,
+                            secondColor: AppColors.color0xFFFFB21D,
+                            firstHeading: "PREVIOUSLY CLOSE PRICE",
+                            secondHeading: "AFTER HOURS",
+                            previousPrice: stockResponse.data.previousClose
+                                .toString(),
+                            afterHoursPrice: stockResponse.data.AfterHours
+                                .toString(),
+                            percentage: "+1.48%",
+                          )
+                        : index == 1
+                        ? PriceCardWidget(
+                            secondColor: AppColors.white,
+                            firstColor: AppColors.color046297,
+                            firstHeading: "MARKET CAPITAILIZATION",
+                            secondHeading: "OUTSTANDING SHARES",
+                            previousPrice: stockResponse
+                                .data
+                                .MarketCapitalization
+                                .toString(),
+                            afterHoursPrice: stockResponse
+                                .data
+                                .SharesOutstanding
+                                .toString(),
+                            percentage: "+1.48%",
+                          )
+                        : index == 2
+                        ? PriceCardWidget(
+                            firstColor: AppColors.white,
+                            secondColor: AppColors.white,
+                            firstHeading: "TOTAL VOLUME",
+                            secondHeading: "AVERAGE VOLUME(3M)",
+                            previousPrice: stockResponse.data.TotalVolume
+                                .toString(),
+                            afterHoursPrice: stockResponse.data.AverageVolume
+                                .toString(),
+                            percentage: "+1.48%",
+                          )
+                        : index == 3
+                        ? PriceCardWidget(
+                            firstColor: AppColors.color00FF55,
+                            secondColor: AppColors.colorab75b8,
+                            firstHeading: "EXCHANGE",
+                            secondHeading: "MARKET CAPTILIZATION",
+                            previousPrice: stockResponse.data.Exchange
+                                .toString(),
+                            afterHoursPrice: stockResponse
+                                .data
+                                .MarketCapClassification
+                                .toString(),
+                            percentage: "+1.48%",
+                          )
+                        : PriceCardWidget(
+                            firstColor: AppColors.white,
+                            secondColor: AppColors.white,
+                            firstHeading: "SECTOR",
+                            secondHeading: "INDUSTRY",
+                            previousPrice: stockResponse.data.Sector.toString(),
+                            afterHoursPrice: stockResponse.data.Industry
+                                .toString(),
+                            percentage: "+1.48%",
+                          );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(width: 20.w);
+                  },
+                ),
+              ),
+              AsyncLoading() => SizedBox(
+                height: 135.h,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return PriceCardShimmer();
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(width: 20.w);
+                  },
+                ),
+              ),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+            SizedBox(height: 20.h),
+
+            // Candle Chart
+            switch (chartState) {
+              AsyncData(:final value)
+                  when value != null && value.data.isNotEmpty =>
+                CustomCandleChart(
+                  name: "OHLC/V Candlestick Chart",
+                  data: _buildChartSpots(value.data),
+                  selectedItem: selectedCandleOverview,
+                  onPressed: (val) {
+                    if (!mounted) return;
+                    setState(() {
+                      selectedCandleOverview = val;
+                    });
+                  },
+                ),
+              AsyncLoading() => SizedBox(
+                height: 300.h,
+                child: CustomCandleChartShimmer(),
+              ),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+            SizedBox(height: 20.h),
+
+            // Price Target Metrics
+            switch (priceTargetState) {
+              AsyncData(:final value) when value != null && value.isNotEmpty =>
+                PriceTargetWidget(
+                  data: value.whereType<PriceTargetData>().toList(),
+                  chatRouting: widget.chatRouting,
+                ),
+              AsyncLoading() => PriceTargetWidget(
+                data: null,
+                chatRouting: widget.chatRouting,
+              ),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+            SizedBox(height: 20.h),
+
+            // Share Structure
+            switch (sharesState) {
+              AsyncData(:final value)
+                  when value != null && value.data.PercentInsiders != null =>
+                ShareStructureCard(
+                  chatRouting: widget.chatRouting,
+                  matrics: null,
+                  fundamentalData: null,
+                  shareData: value.data,
+                  heading: Headings.shareStructure,
+                ),
+              AsyncLoading() => ShareStructureCard(
+                chatRouting: widget.chatRouting,
+                matrics: null,
+                fundamentalData: null,
+                shareData: null,
+                heading: Headings.loading,
+              ),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+
+            // Price Performance
+            switch (pricePerformanceState) {
+              AsyncData(:final value) when value != null => Column(
+                children: [
+                  SizedBox(height: 20.h),
+                  PricePerformanceWidget(data: value),
+                ],
+              ),
+              AsyncLoading() => Column(
+                children: [
+                  SizedBox(height: 20.h),
+                  TableShimmer(title: "Price Performance"),
+                ],
+              ),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+            SizedBox(height: 20.h),
+
+            // Fundamental Data
+            switch (fundamentalState) {
+              AsyncData(:final value)
+                  when value != null &&
+                      value.data.fundamentals.annualIncome.isNotEmpty =>
+                ShareStructureCard(
+                  chatRouting: widget.chatRouting,
+                  matrics: null,
+                  fundamentalData: value.data,
+                  shareData: null,
+                  heading: Headings.fundamental,
+                ),
+              AsyncLoading() => ShareStructureCard(
+                chatRouting: widget.chatRouting,
+                matrics: null,
+                fundamentalData: null,
+                shareData: null,
+                heading: Headings.loading,
+              ),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+            SizedBox(height: 20.h),
+
+            // Metrics Data
+            switch (matricsState) {
+              AsyncData(:final value)
+                  when value != null &&
+                      value.data != null &&
+                      value.data!.isNotEmpty =>
+                ShareStructureCard(
+                  chatRouting: widget.chatRouting,
+                  matrics: value.data,
+                  fundamentalData: null,
+                  shareData: null,
+                  heading: Headings.matrics,
+                ),
+              AsyncLoading() => ShareStructureCard(
+                chatRouting: widget.chatRouting,
+                matrics: null,
+                fundamentalData: null,
+                shareData: null,
+                heading: Headings.loading,
+              ),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+            SizedBox(height: 20.h),
+
+            // Monthly Data
+            switch (monthlyState) {
+              AsyncData(:final value) when value != null =>
+                WeeklySeasonalityChart(
+                  data: value,
+                  isWeekly: false,
+                  weeklyModel: WeeklyModel(),
+                ),
+              AsyncLoading() => shimmerBox(height: 400, radius: 16),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+            SizedBox(height: 20.h),
+
+            // Weekly Data
+            switch (weeklyState) {
+              AsyncData(:final value) when value != null =>
+                WeeklySeasonalityChart(
+                  weeklyModel: value,
+                  isWeekly: true,
+                  data: ProbabilityResponse(),
+                ),
+              AsyncLoading() => shimmerBox(height: 400, radius: 16),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+            SizedBox(height: 20.h),
+
+            // Price Comparison
+            switch (priceComparisonState) {
+              AsyncData(:final value)
+                  when value != null &&
+                      value.data.data[widget.chatRouting.symbol] != null &&
+                      value.data.data['SPY'] != null =>
+                PriceComparisonChart(
+                  priceComparisonModel: value,
+                  symbol: widget.chatRouting.symbol,
+                  twoCharts: true,
+                ),
+              AsyncLoading() => shimmerBox(height: 300, radius: 16),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+            SizedBox(height: 20.h),
+
+            // Analytics Data
+            switch (analyticsState) {
+              AsyncData(:final value)
+                  when value != null && value.data.isNotEmpty =>
+                AnalyticsWidget(
+                  chatRouting: widget.chatRouting,
+                  data: value.data,
+                ),
+              AsyncLoading() => shimmerBox(height: 170, radius: 16),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
             SizedBox(height: 20.h),
           ],
         ),

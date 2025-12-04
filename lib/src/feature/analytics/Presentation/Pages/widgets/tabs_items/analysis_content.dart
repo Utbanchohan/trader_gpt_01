@@ -22,6 +22,7 @@ class AnalysisContent extends ConsumerStatefulWidget {
 }
 
 class _AnalysisContentState extends ConsumerState<AnalysisContent> {
+  //raza: Wrong way to use provider/ Watch provider inside the build
   bool chartLoader = true;
   AnalysisDataModel? analysisDataModel;
   String? selectedItemCandleAnalysis;
@@ -149,6 +150,132 @@ class _AnalysisContentState extends ConsumerState<AnalysisContent> {
                 ),
               )
             : SizedBox(),
+      ],
+    );
+  }
+}
+
+// ============================================================================
+// AnalysisContentV1 - Properly refactored with correct Riverpod usage
+// ============================================================================
+
+class AnalysisContentV1 extends ConsumerStatefulWidget {
+  final ChatRouting chatRouting;
+
+  const AnalysisContentV1({super.key, required this.chatRouting});
+
+  @override
+  ConsumerState<AnalysisContentV1> createState() => _AnalysisContentV1State();
+}
+
+class _AnalysisContentV1State extends ConsumerState<AnalysisContentV1> {
+  String? selectedItemCandleAnalysis;
+  DateTime? fromDate;
+  DateTime? toDate;
+  IntervalEnum selectedInterval = IntervalEnum.daily;
+
+  // Helper method to build ChartRequestDto
+  ChartRequestDto _buildChartRequestDto(IntervalEnum interval) {
+    final now = toDate != null ? toDate!.toUtc() : DateTime.now().toUtc();
+    final startDate = fromDate != null
+        ? fromDate!.toUtc()
+        : DateTime.utc(
+            now.year - 10,
+            now.month,
+            now.day,
+            now.hour,
+            now.minute,
+            now.second,
+            now.millisecond,
+          );
+    final endDateString = now.toIso8601String();
+    final startDateString = startDate.toIso8601String();
+
+    return ChartRequestDto(
+      symbol: widget.chatRouting.symbol,
+      interval: interval.value,
+      startDate: startDateString,
+      endDate: endDateString,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Build ChartRequestDto based on current state
+    final chartRequestDto = _buildChartRequestDto(selectedInterval);
+
+    // Watch provider in build method
+    final analysisState = ref.watch(analysisDataProvider(chartRequestDto));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DateRangePickerWidget(
+          loading: switch (analysisState) {
+            AsyncLoading() => true,
+            _ => false,
+          },
+          onShowPressed: (from, to) {
+            if (!mounted) return;
+            setState(() {
+              fromDate = from;
+              toDate = to;
+            });
+          },
+        ),
+        SizedBox(height: 20),
+
+        // Candle Chart
+        switch (analysisState) {
+          AsyncData(:final value)
+              when value != null &&
+                  value.data != null &&
+                  value.data!.chart != null =>
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: CustomCandleChart(
+                selectedItem: selectedItemCandleAnalysis ?? "H",
+                key: UniqueKey(),
+                name: "",
+                data: value.data!.chart!,
+                onPressed: (val) {
+                  if (!mounted) return;
+                  setState(() {
+                    selectedItemCandleAnalysis = val;
+                    selectedInterval = val == 'H'
+                        ? IntervalEnum.daily
+                        : val == 'D'
+                        ? IntervalEnum.daily
+                        : val == 'W'
+                        ? IntervalEnum.daily
+                        : IntervalEnum.monthly;
+                  });
+                },
+              ),
+            ),
+          AsyncLoading() => CustomCandleChartShimmer(),
+          AsyncError() => CustomCandleChartShimmer(),
+          _ => CustomCandleChartShimmer(),
+        },
+        SizedBox(height: 20),
+
+        // Analysis Table
+        switch (analysisState) {
+          AsyncData(:final value)
+              when value != null &&
+                  value.data != null &&
+                  value.data!.eodData != null =>
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: AnalysisTable(
+                title: "Earnings Trend",
+                eodData: value.data!.eodData,
+              ),
+            ),
+          AsyncLoading() => TableShimmer(title: "Earnings Trend"),
+          AsyncError() => SizedBox(),
+          _ => SizedBox(),
+        },
       ],
     );
   }
