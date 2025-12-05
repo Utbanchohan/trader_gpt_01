@@ -616,34 +616,35 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                     ),
                   ),
                 SizedBox(height: 10),
-                chats.isNotEmpty
-                    ? ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: chats.length,
-                        itemBuilder: (context, index) {
-                          return RepaintBoundary(
-                            child: ChatMessagesView(
-                              chats: chats[index],
-                              chatRouting: widget.chatRouting,
-                              user: user,
-                            ),
-                          );
-                        },
-                        separatorBuilder: (_, __) => SizedBox(height: 20),
-                      )
-                    : WelcomeWidget(
-                        showCompanyBox:
-                            widget.chatRouting != null &&
-                            widget.chatRouting!.companyName.isNotEmpty,
-                        questions: questions,
-                        onQuestionTap: (selectedQuestion) {
-                          message.text = selectedQuestion;
-                          message.selection = TextSelection.fromPosition(
-                            TextPosition(offset: message.text.length),
-                          );
-                        },
+                // chats.isNotEmpty
+                //     ?
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: chats.length,
+                  itemBuilder: (context, index) {
+                    return RepaintBoundary(
+                      child: ChatMessagesView(
+                        chats: chats[index],
+                        chatRouting: widget.chatRouting,
+                        user: user,
                       ),
+                    );
+                  },
+                  separatorBuilder: (_, __) => SizedBox(height: 20),
+                ),
+                // : WelcomeWidget(
+                //     showCompanyBox:
+                //         widget.chatRouting != null &&
+                //         widget.chatRouting!.companyName.isNotEmpty,
+                //     questions: questions,
+                //     onQuestionTap: (selectedQuestion) {
+                //       message.text = selectedQuestion;
+                //       message.selection = TextSelection.fromPosition(
+                //         TextPosition(offset: message.text.length),
+                //       );
+                //     },
+                //   ),
                 if (startStream)
                   asyncStream.when(
                     data: (line) {
