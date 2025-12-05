@@ -77,7 +77,6 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
     });
   }
 
-  /// FIX: build() se getUser hata diya
   Future<void> loadUser() async {
     final userData = await ref.read(localDataProvider).getUser();
     if (userData != null) {
