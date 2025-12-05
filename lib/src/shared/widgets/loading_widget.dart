@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class LoadingWidget extends StatelessWidget {
@@ -7,15 +5,19 @@ class LoadingWidget extends StatelessWidget {
   final double height;
   final Color? color;
 
-const  LoadingWidget({super.key, this.height = 40, this
-      .width = 40,this.color});
+  const LoadingWidget({
+    super.key,
+    this.height = 40,
+    this.width = 40,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width ,
-      height: height ,
-      child: CircularProgressIndicator.adaptive(
+      width: width,
+      height: height,
+      child: CircularProgressIndicator(
         backgroundColor: color,
         strokeCap: StrokeCap.round,
         strokeWidth: 2,

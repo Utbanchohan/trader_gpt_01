@@ -522,6 +522,8 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
+              maxIncluded: false,
+              minIncluded: false,
               reservedSize: 40,
               showTitles: true,
               interval: calculateInterval(
@@ -571,7 +573,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     );
   }
 
-  /// Build line chart
   Widget _buildLineChart({bool isArea = false}) {
     final categories = _getCategories();
     final data = widget.chartData.data;
@@ -674,6 +675,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 maxIncluded: false,
+                minIncluded: false,
                 showTitles: true,
                 reservedSize: 50,
                 interval: safeInterval,
@@ -697,18 +699,20 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               sideTitles: SideTitles(
                 reservedSize: 40,
                 showTitles: true,
-                interval: (categories.length / 3)
-                    .floorToDouble(), // 👈 show only 10 titles
+                interval: (categories.length / 3).floorToDouble(),
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
                   if (index >= 0 && index < categories.length) {
                     return Column(
                       children: [
                         SizedBox(height: 5),
-                        MdSnsText(
-                          formatDateMMYYY(categories[index]),
-                          variant: TextVariant.h4,
-                          color: axisColor,
+                        Container(
+                          margin: EdgeInsets.only(right: 15.w),
+                          child: MdSnsText(
+                            formatDateMMYYY(categories[index]),
+                            variant: TextVariant.h4,
+                            color: axisColor,
+                          ),
                         ),
                       ],
                     );
@@ -776,7 +780,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     // );
   }
 
-  /// Get color for series index
   Color _getColorForIndex(int index) {
     final colors = [
       AppColors.secondaryColor,
@@ -853,7 +856,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
   }
 }
 
-/// Example usage widget
 class ChartExample extends StatelessWidget {
   final List<double> data;
   final List<String> xAxis;

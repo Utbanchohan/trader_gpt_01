@@ -47,19 +47,44 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
   int pgeIndex = 0;
   User? userModel;
 
+  late final ConversationStart _startScreen;
+  late final ChatConversation _chatScreen;
+  late final AnalyticsScreen _analyticsScreen;
+
   @override
   void initState() {
     super.initState();
+
     getChats();
     getStocks();
+    loadUser(); // FIX: build se nikal diya
+
     bool isFirstTime = ref.read(localDataProvider).getIsFirstTime();
-    int pageIndex = isFirstTime ? 0 : widget.initialIndex;
-    pgeIndex = pageIndex;
-    _pageController = PageController(initialPage: pageIndex);
+    pgeIndex = isFirstTime ? 0 : widget.initialIndex;
+
+    _pageController = PageController(initialPage: pgeIndex);
+
+    /// cache screens (NO MORE REBUILD LAG)
+    _startScreen = ConversationStart();
+    _chatScreen = ChatConversation(
+      chatRouting: widget.chatRouting,
+      initialMessage: widget.question,
+    );
+    _analyticsScreen = AnalyticsScreen(chatRouting: widget.chatRouting);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       openSheet(isFirstTime);
     });
+  }
+
+  /// FIX: build() se getUser hata diya
+  Future<void> loadUser() async {
+    final userData = await ref.read(localDataProvider).getUser();
+    if (userData != null) {
+      setState(() {
+        userModel = User.fromJson(userData);
+      });
+    }
   }
 
   getChats() async {
@@ -273,39 +298,52 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
           ),
         ],
       ),
-
-      body: PageView.builder(
+      body: PageView(
         controller: _pageController,
-        itemCount: 3,
         physics: pgeIndex == 0
             ? const NeverScrollableScrollPhysics()
             : const BouncingScrollPhysics(),
+
         onPageChanged: (index) {
-          setState(() {
-            pgeIndex = index;
-          });
+          setState(() => pgeIndex = index);
         },
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return ConversationStart();
-          }
 
-          if (index == 1) {
-            return ChatConversation(
-              chatRouting: widget.chatRouting,
-              initialMessage: widget.question,
-            );
-          }
-
-          if (index == 2) {
-            if (convo != null && convo.isNotEmpty && stocks.isNotEmpty) {
-              return AnalyticsScreen(chatRouting: widget.chatRouting);
-            }
-          }
-
-          return const SizedBox(); // fallback
-        },
+        children: [
+          _startScreen,
+          _chatScreen,
+          if (convo.isNotEmpty && stocks.isNotEmpty) _analyticsScreen,
+        ],
       ),
+
+      // body: PageView.builder(
+      //   controller: _pageController,
+      //   physics: pgeIndex == 0
+      //       ? const NeverScrollableScrollPhysics()
+      //       : const BouncingScrollPhysics(),
+
+      //   itemCount: (convo != null && convo.isNotEmpty && stocks.isNotEmpty)
+      //       ? 3
+      //       : 2,
+
+      //   onPageChanged: (index) {
+      //     setState(() {
+      //       pgeIndex = index;
+      //     });
+      //   },
+
+      //   itemBuilder: (context, index) {
+      //     if (index == 0) {
+      //       return ConversationStart();
+      //     } else if (index == 1) {
+      //       return ChatConversation(
+      //         chatRouting: widget.chatRouting,
+      //         initialMessage: widget.question,
+      //       );
+      //     } else {
+      //       return AnalyticsScreen(chatRouting: widget.chatRouting);
+      //     }
+      //   },
+      // ),
     );
   }
 }
