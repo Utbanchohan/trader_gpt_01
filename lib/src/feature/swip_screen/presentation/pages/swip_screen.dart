@@ -304,6 +304,7 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
             : const BouncingScrollPhysics(),
 
         onPageChanged: (index) {
+          FocusScope.of(context).unfocus();
           setState(() => pgeIndex = index);
         },
 

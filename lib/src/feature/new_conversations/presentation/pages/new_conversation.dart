@@ -636,7 +636,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 40,
+                    width: 49,
                     child: MdSnsText(
                       widget.symbol,
                       color: Colors.white,

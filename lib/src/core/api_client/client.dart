@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint, Uint8List;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trader_gpt/src/feature/aurh_provider/auth_provider.dart';
 import 'package:trader_gpt/src/shared/flavours.dart';
 import '../../shared/custom_message.dart';
 import '../../shared/socket/providers/stocks_price.dart';
@@ -51,7 +52,7 @@ final marketDataClient = Provider.family<Dio, String>((ref, baseUrl) {
       ),
     )
     ..interceptors.addAll([
-      AuthorizationInterceptor(ref),
+      AuthorizationInterceptorMarket(ref),
       if (kDebugMode)
         PrettyDioLogger(
           requestBody: kDebugMode,
@@ -76,7 +77,7 @@ final marketDataClientNew = Provider.family<Dio, String>((ref, baseUrl) {
       ),
     )
     ..interceptors.addAll([
-      AuthorizationInterceptor(ref),
+      AuthorizationInterceptorMarketNew(ref),
       if (kDebugMode)
         PrettyDioLogger(
           requestBody: kDebugMode,
