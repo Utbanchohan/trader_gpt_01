@@ -16,7 +16,6 @@ import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.
 import '../../domain/model/stock_price_model/stock_price_model.dart';
 import '../provider/chart_data.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'dart:async';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
@@ -29,15 +28,8 @@ class AnalyticsScreen extends ConsumerStatefulWidget {
 
 class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     with TickerProviderStateMixin {
-  late TabController tabController;
-  late TabController financeialTabController;
   StockPriceModel? stockPrices;
-
   bool analysisDataModelLoader = true;
-
-  final ItemScrollController itemScrollController = ItemScrollController();
-  final ItemPositionsListener itemPositionsListener =
-      ItemPositionsListener.create();
   final ScrollOffsetController scrollOffsetController =
       ScrollOffsetController();
   final ScrollOffsetListener scrollOffsetListener =
@@ -51,22 +43,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   ///dummy list scroller
   late ScrollController _scrollController;
-  // Key for the main scrollable (CustomScrollView). Used to obtain
-  // the RenderBox / context of the scrollable when computing
-  // programmatic scroll offsets to sections.
   final GlobalKey _scrollableKey = GlobalKey();
   final Map<String, GlobalKey> _keys = {};
   final Map<String, GlobalKey> _chipKeys = {};
-  //raza: use current index of tab , while scrolling change index and it should change selected tab to tabbar as well
   String _activeSection = 'overview';
-  Timer? _scrollDebounce;
-  bool _programmaticScroll = false;
-  // prevent repeated API calls while scrolling
-  final Map<String, bool> _sectionLoadInProgress = {};
-  final Map<String, DateTime?> _sectionLastTriggered = {};
-  // Height of the chips row (pinned SliverPersistentHeader). Keep in sync
-  // with the value used in the build method (`chipRowHeight`).
-  final double _chipRowHeight = 60.0;
 
   final List<Map<String, dynamic>> sections = [
     {
@@ -101,109 +81,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     },
   ];
 
-  void _scrollToSection(String id, Map<String, dynamic> section) async {
-    final key = _keys[id];
-    if (key?.currentContext == null) return;
-
-    final box = key!.currentContext!.findRenderObject() as RenderBox;
-
-    final pos = box
-        .localToGlobal(Offset.zero, ancestor: context.findRenderObject())
-        .dy;
-
-    const headerHeight = 60;
-
-    // Scroll so that section appears EXACTLY under the pinned chips
-    await _scrollController.animateTo(
-      _scrollController.offset + pos - headerHeight - 10,
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeInOut,
-    );
-
-    _triggerSectionLoad(id);
-    setState(() => _activeSection = id);
-    //   _activeSection = id;
-    //   // mark that we're performing a programmatic scroll so listeners don't override
-    //   _programmaticScroll = true;
-    //   final ctx = _keys[id]?.currentContext;
-    //   if (ctx != null) {
-    //     try {
-    //       final renderObject = ctx.findRenderObject();
-    //       if (renderObject != null) {
-    //         final viewport = RenderAbstractViewport.of(renderObject);
-    //         if (viewport != null && _scrollController.hasClients) {
-    //           // Compute the offset to reveal this child within the viewport.
-    //           final revealed = viewport.getOffsetToReveal(
-    //             renderObject as RenderObject,
-    //             0.0,
-    //           );
-    //           double targetOffset = revealed.offset;
-
-    //           // Adjust so section sits just below the pinned chips header
-    //           // (do not subtract MediaQuery.top here; revealed.offset is
-    //           // already in scroll coordinate space)
-    //           targetOffset = targetOffset - _chipRowHeight;
-
-    //           final double maxScroll = _scrollController.position.maxScrollExtent;
-    //           final double clamped = targetOffset.clamp(0.0, maxScroll);
-
-    //           await _scrollController.animateTo(
-    //             clamped,
-    //             duration: const Duration(milliseconds: 300),
-    //             curve: Curves.easeInOut,
-    //           );
-
-    //           WidgetsBinding.instance.addPostFrameCallback((_) {
-    //             _scrollActiveChipIntoView(id);
-    //           });
-    //           return;
-    //         }
-    //       }
-    //     } catch (e) {
-    //       // fall through to fallback
-    //     }
-
-    //     // fallback to framework helper
-    //     try {
-    //       await Scrollable.ensureVisible(
-    //         ctx,
-    //         duration: const Duration(milliseconds: 250),
-    //         curve: Curves.easeInOut,
-    //         alignment: 0,
-    //       );
-    //       WidgetsBinding.instance.addPostFrameCallback((_) {
-    //         _scrollActiveChipIntoView(id);
-    //       });
-    //     } catch (e) {
-    //       // ignore
-    //     }
-    //   }
-    //   // update UI and trigger loader (debounced)
-    //   setState(() {});
-    //   _triggerSectionLoad(id);
-    //   // allow scroll-driven detection after animation & settle period complete
-    //   // use a longer delay to ensure layout is fully settled before re-enabling listener
-    //   Future.delayed(const Duration(milliseconds: 500), () {
-    //     if (mounted) {
-    //       _programmaticScroll = false;
-    //     }
-    //   });
-  }
-
-  //raza: remove irrelevant code
-  void _onScroll() {
-    // debounce frequent scroll events to avoid expensive layout queries
-    try {
-      _scrollDebounce?.cancel();
-      _scrollDebounce = Timer(
-        const Duration(milliseconds: 120),
-        _processScroll,
-      );
-    } catch (e) {
-      // ignore
-    }
-  }
-
   void _handleScroll() {
     double scrollPos = _scrollController.offset;
 
@@ -232,96 +109,38 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     }
   }
 
-  void _processScroll() {
-    try {
-      if (_programmaticScroll)
-        return; // skip processing while programmatic scroll in progress
-      if (!mounted) return;
-      // use an anchor at 25% from top (more centered view) to reduce
-      // aggressive section flipping when near boundaries
-      final double anchorY = MediaQuery.of(context).size.height * 0.25;
-
-      String? chosenId;
-
-      // find section whose center is closest to anchorY
-      double closestDistance = double.infinity;
-      for (var s in sections) {
-        final key = _keys[s['id']];
-        if (key == null) continue;
-        final ctx = key.currentContext;
-        if (ctx == null) continue;
-        final render = ctx.findRenderObject();
-        if (render == null || render is! RenderBox) continue;
-        final RenderBox box = render;
-        final top = box.localToGlobal(Offset.zero).dy;
-        final center = top + (box.size.height / 2);
-        final distance = (center - anchorY).abs();
-
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          chosenId = s['id'];
-        }
-      }
-
-      if (chosenId != null && chosenId != _activeSection) {
-        final newId = chosenId;
-        setState(() {
-          _activeSection = newId;
-        });
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _scrollActiveChipIntoView(newId);
-        });
-        _triggerSectionLoad(newId);
-      }
-    } catch (e) {
-      // ignore errors during layout phases
-    }
-  }
-
   void _scrollActiveChipIntoView(String id) {
-    try {
-      final ctx = _chipKeys[id]?.currentContext;
-      if (ctx != null) {
-        Scrollable.ensureVisible(
-          ctx,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeInOut,
-          alignment: 0.5,
-        );
-      }
-    } catch (e) {
-      // ignore errors if layout not ready
-    }
-  }
+    final keyContext = _keys[id]?.currentContext;
+    if (keyContext == null) return;
 
-  Future<void> _triggerSectionLoad(String id) async {
-    try {
-      final now = DateTime.now();
-      final last = _sectionLastTriggered[id];
-      // throttle repeated triggers within 800ms
-      if (last != null && now.difference(last) < Duration(milliseconds: 800)) {
-        return;
-      }
-      if (_sectionLoadInProgress[id] == true) return;
+    final box = keyContext.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(
+      Offset.zero,
+      ancestor: context.findRenderObject(),
+    );
 
-      _sectionLoadInProgress[id] = true;
-      _sectionLastTriggered[id] = now;
+    // Subtract chip header height (60)
+    final scrollOffset = offset.dy + _scrollController.offset - 60;
 
-      if (id == "financial") {
-      } else if (id == "company") {
-        // await secondIndexTap();
-      } else if (id == "earnings") {
-        // await fourthTap();
-      } else if (id == "analytics") {
-        // await fifthTap();
-      } else if (id == "overview") {
-        // await firstIndexData();
-      }
-    } catch (e) {
-      // ignore
-    } finally {
-      _sectionLoadInProgress[id] = false;
-    }
+    _scrollController.animateTo(
+      scrollOffset,
+      duration: Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
+
+    // try {
+    //   final ctx = _chipKeys[id]?.currentContext;
+    //   if (ctx != null) {
+    //     Scrollable.ensureVisible(
+    //       ctx,
+    //       duration: const Duration(milliseconds: 250),
+    //       curve: Curves.easeInOut,
+    //       alignment: 0.5,
+    //     );
+    //   }
+    // } catch (e) {
+    //   // ignore errors if layout not ready
+    // }
   }
 
   @override
@@ -378,14 +197,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
       _chipKeys[section['id']] = GlobalKey();
     }
     _scrollController.addListener(_handleScroll);
-
-    // page controller removed - using a single vertical scroll
-
-    ///dummy scroller end
-    ///
-    ///
-    tabController = TabController(length: 5, vsync: this);
-
     if (widget.chatRouting != null) {
       if (widget.chatRouting!.type.toLowerCase() == "crypto") {
         // cryptoApis();
@@ -521,21 +332,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     :
                       //raza: create statefull page for analytics tab and do the everythign there
                       _buildAnalyticsTab(),
-
-                // History tab placeholder
-                // Column(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Center(
-                //       child: MdSnsText(
-                //         "History Content Here",
-                //         color: AppColors.white,
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // ],
-                // ),
               ),
             ],
           ),
@@ -562,7 +358,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             sections: sections,
             activeSectionIdGetter: () => _activeSection,
             chipKeys: _chipKeys,
-            onTap: (id, section) => _scrollToSection(id, section),
+            onTap: (id, section) => _scrollActiveChipIntoView(id),
           ),
         ),
 
@@ -606,7 +402,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 );
 
               default:
-                return Container(height: 600, color: Colors.grey);
+                return Container(height: 600, color: Colors.red);
             }
           }, childCount: sections.length),
         ),
@@ -649,7 +445,7 @@ class _ChipsHeaderDelegate extends SliverPersistentHeaderDelegate {
     //raza: wrong way to use
     final activeId = activeSectionIdGetter();
     return Container(
-      color: Colors.transparent,
+      color: Colors.red,
       padding: const EdgeInsets.only(top: 8, bottom: 8),
       alignment: Alignment.centerLeft,
       child: SingleChildScrollView(
