@@ -170,32 +170,43 @@ class AnalysisContentV1 extends ConsumerStatefulWidget {
 
 class _AnalysisContentV1State extends ConsumerState<AnalysisContentV1> {
   String? selectedItemCandleAnalysis;
-  DateTime? fromDate;
-  DateTime? toDate;
+  late DateTime fromDate;
+  late DateTime toDate;
   IntervalEnum selectedInterval = IntervalEnum.daily;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize dates once in initState to prevent multiple API calls
+    //// I comment the minute , second and millisecond so that api should call one not everytime i scroll if there is any issue with that you can uncomment this
+    final now = DateTime.now().toUtc();
+    toDate = DateTime.utc(
+      now.year,
+      now.month,
+      now.day,
+      now.hour,
+      // now.minute,
+      // now.second,
+      // now.millisecond,
+    );
+    fromDate = DateTime.utc(
+      now.year - 10,
+      now.month,
+      now.day,
+      now.hour,
+      // now.minute,
+      // now.second,
+      // now.millisecond,
+    );
+  }
 
   // Helper method to build ChartRequestDto
   ChartRequestDto _buildChartRequestDto(IntervalEnum interval) {
-    final now = toDate != null ? toDate!.toUtc() : DateTime.now().toUtc();
-    final startDate = fromDate != null
-        ? fromDate!.toUtc()
-        : DateTime.utc(
-            now.year - 10,
-            now.month,
-            now.day,
-            now.hour,
-            now.minute,
-            now.second,
-            now.millisecond,
-          );
-    final endDateString = now.toIso8601String();
-    final startDateString = startDate.toIso8601String();
-
     return ChartRequestDto(
       symbol: widget.chatRouting.symbol,
       interval: interval.value,
-      startDate: startDateString,
-      endDate: endDateString,
+      startDate: fromDate.toIso8601String(),
+      endDate: toDate.toIso8601String(),
     );
   }
 
@@ -206,7 +217,7 @@ class _AnalysisContentV1State extends ConsumerState<AnalysisContentV1> {
 
     // Watch provider in build method
     final analysisState = ref.watch(analysisDataProvider(chartRequestDto));
-
+    print("analysisState${analysisState.value}");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -217,9 +228,10 @@ class _AnalysisContentV1State extends ConsumerState<AnalysisContentV1> {
           },
           onShowPressed: (from, to) {
             if (!mounted) return;
+            if (from == null || to == null) return;
             setState(() {
-              fromDate = from;
-              toDate = to;
+              fromDate = from.toUtc();
+              toDate = to.toUtc();
             });
           },
         ),

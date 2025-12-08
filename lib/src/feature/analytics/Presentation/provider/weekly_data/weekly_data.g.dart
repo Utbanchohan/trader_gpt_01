@@ -6,7 +6,7 @@ part of 'weekly_data.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getWeeklyDataHash() => r'c8c2bd6e3473e10c5fae233b789b8a5f5aa41338';
+String _$getWeeklyDataHash() => r'1f71496cf399d505be805feefdaba75738d60f92';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -66,7 +66,7 @@ class GetWeeklyDataFamily extends Family<AsyncValue<WeeklyModel>> {
 }
 
 /// See also [getWeeklyData].
-class GetWeeklyDataProvider extends AutoDisposeFutureProvider<WeeklyModel> {
+class GetWeeklyDataProvider extends FutureProvider<WeeklyModel> {
   /// See also [getWeeklyData].
   GetWeeklyDataProvider(String ticker)
     : this._internal(
@@ -113,7 +113,7 @@ class GetWeeklyDataProvider extends AutoDisposeFutureProvider<WeeklyModel> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<WeeklyModel> createElement() {
+  FutureProviderElement<WeeklyModel> createElement() {
     return _GetWeeklyDataProviderElement(this);
   }
 
@@ -133,13 +133,12 @@ class GetWeeklyDataProvider extends AutoDisposeFutureProvider<WeeklyModel> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin GetWeeklyDataRef on AutoDisposeFutureProviderRef<WeeklyModel> {
+mixin GetWeeklyDataRef on FutureProviderRef<WeeklyModel> {
   /// The parameter `ticker` of this provider.
   String get ticker;
 }
 
-class _GetWeeklyDataProviderElement
-    extends AutoDisposeFutureProviderElement<WeeklyModel>
+class _GetWeeklyDataProviderElement extends FutureProviderElement<WeeklyModel>
     with GetWeeklyDataRef {
   _GetWeeklyDataProviderElement(super.provider);
 

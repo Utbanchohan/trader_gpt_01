@@ -7,20 +7,19 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/buil
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/crypto_items.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
+
 import '../../domain/model/stock_price_model/stock_price_model.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
 
-  AnalyticsScreen({super.key, this.chatRouting});
+  const AnalyticsScreen({super.key, this.chatRouting});
 
   @override
   ConsumerState<AnalyticsScreen> createState() => _AnalyticsScreenState();
 }
 
-class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
-    with TickerProviderStateMixin {
+class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   StockPriceModel? stockPrices;
   bool analysisDataModelLoader = true;
   final compactFormatter = NumberFormat.compact();
@@ -53,23 +52,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
       body: SafeArea(
         top: true,
-        child: Column(
-          children: [
-            Expanded(
-              child:
-                  widget.chatRouting != null &&
-                      widget.chatRouting!.type.toLowerCase() == "crypto"
-                  ? CryptoItems(
-                      chatRouting: widget.chatRouting!,
-                      selectedStock: selectedStock!,
-                    )
-                  : BuildAnalyticTab(
-                      chatRouting: widget.chatRouting!,
-                      selectedStock: selectedStock!,
-                    ),
-            ),
-          ],
-        ),
+        child: widget.chatRouting != null &&
+            widget.chatRouting!.type.toLowerCase() == "crypto"
+        ? CryptoItems(
+            chatRouting: widget.chatRouting!,
+            selectedStock: selectedStock!,
+          )
+        : BuildAnalyticTab(
+            chatRouting: widget.chatRouting!,
+            selectedStock: selectedStock!,
+          ),
       ),
     );
   }

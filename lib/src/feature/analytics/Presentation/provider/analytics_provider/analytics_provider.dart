@@ -1,15 +1,10 @@
-import 'dart:developer';
-
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/company_detail/company_detail_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/compnay_model/company_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/esg_score_model/esg_score_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/matrics_data_model/matrics_data_model.dart';
-import '../../../../../core/local/repository/local_storage_repository.dart';
-import '../../../../../shared/custom_message.dart';
-import '../../../../../shared/states/app_loading_state.dart';
+
 import '../../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../../data/dto/esg_score_dto/esg_score_dto.dart';
 import '../../../data/dto/financial_dto/financial_dto.dart';
@@ -37,94 +32,43 @@ import '../../../domain/model/security_ownership_model/security_ownership_model.
 import '../../../domain/model/security_short/short_security_model.dart';
 import '../../../domain/model/share_stats/share_stats.dart';
 import '../../../domain/model/short_volume/short_volume_model.dart';
-import '../../../domain/model/stock_price_model/stock_price_model.dart';
 import '../../../domain/repositroy/overview_repository.dart'
     show overviewRepository, overviewRepositoryNrm;
 
 part 'analytics_provider.g.dart';
 
-@riverpod
-class AnalyticsProvider extends _$AnalyticsProvider {
-  @override
-  AppLoadingState build() => const AppLoadingState();
-
-  Future<StockPriceModel> stockPrices(StockPriceData stockprice) async {
-    try {
-      var res = await ref.read(overviewRepository).stockPrice(stockprice);
-      if (res.msg != null) {
-        return res;
-      } else {
-        return StockPriceModel(
-          data: StockPriceData(chart: [], chartVol: [], eodData: {}),
-        );
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        final refreshToken = ref.read(localDataProvider).marketRefreshToken;
-        if (refreshToken == null) rethrow;
-        try {
-          final newToken = ref.read(localDataProvider).marketRefreshToken;
-          if (newToken != null) {
-            ref.read(localDataProvider).setAccessTokenMarket(newToken);
-            return StockPriceModel(
-              data: StockPriceData(chart: [], chartVol: [], eodData: {}),
-            );
-          } else {
-            rethrow;
-          }
-        } catch (refreshError) {
-          rethrow;
-        }
-      } else {
-        rethrow;
-      }
-    }
-  }
-}
+// @riverpod
+// class AnalyticsProvider extends _$AnalyticsProvider {
+//   @override
+//   AppLoadingState build() => const AppLoadingState();
+//
+//   Future<StockPriceModel> stockPrices(StockPriceData stockprice) async {
+//     var res = await ref.read(overviewRepository).stockPrice(stockprice);
+//     if (res.msg != null) {
+//       return res;
+//     } else {
+//       return StockPriceModel(
+//         data: StockPriceData(chart: [], chartVol: [], eodData: {}),
+//       );
+//     }
+//   }
+// }
 
 //overview providers
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<OverviewData?> getOverview(Ref ref, String symbol) async {
-  try {
-    var res = await ref
-        .read(overviewRepository)
-        .getOverview(SymbolDto(symbol: symbol));
-    if (res.status == 200) {
-      return res.data;
-    } else {
-      return null;
-    }
-  } on DioException catch (e) {
-    if (e.response?.statusCode == 401) {
-      final refreshToken = ref.read(localDataProvider).marketRefreshToken;
-      if (refreshToken == null) rethrow;
-      try {
-        final newToken = ref.read(localDataProvider).marketRefreshToken;
-        if (newToken != null) {
-          ref.read(localDataProvider).setAccessTokenMarket(newToken);
-          var res = await ref
-              .read(overviewRepository)
-              .getOverview(SymbolDto(symbol: symbol));
-
-          if (res.status == 200) {
-            return res.data;
-          } else {
-            return null;
-          }
-        } else {
-          rethrow;
-        }
-      } catch (refreshError) {
-        rethrow;
-      }
-    } else {
-      rethrow;
-    }
+  var res = await ref
+      .read(overviewRepository)
+      .getOverview(SymbolDto(symbol: symbol));
+  if (res.status == 200) {
+    return res.data;
+  } else {
+    return null;
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<PriceTargetData?>?> priceTargetMatrics(
   Ref ref,
   SymbolDto symbol,
@@ -137,7 +81,7 @@ Future<List<PriceTargetData?>?> priceTargetMatrics(
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<MatricsResponse?> matricsData(Ref ref, String symbol) async {
   var res = await ref
       .read(overviewRepository)
@@ -150,7 +94,7 @@ Future<MatricsResponse?> matricsData(Ref ref, String symbol) async {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<PricePerformance?> pricePerformance(Ref ref, SymbolDto symbol) async {
   try {
     var res = await ref.read(overviewRepositoryNrm).pricePerformance(symbol);
@@ -165,7 +109,7 @@ Future<PricePerformance?> pricePerformance(Ref ref, SymbolDto symbol) async {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<SharesResponse?> shareStats(Ref ref, SymbolDto symbol) async {
   var res = await ref.read(overviewRepository).shareStats(symbol);
   if (res.status == 200) {
@@ -175,7 +119,7 @@ Future<SharesResponse?> shareStats(Ref ref, SymbolDto symbol) async {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<FundamentalResponse?> fundamentalData(Ref ref, SymbolDto symbol) async {
   var res = await ref.read(overviewRepository).fundamentalModel(symbol);
   if (res.status == 200) {
@@ -185,7 +129,7 @@ Future<FundamentalResponse?> fundamentalData(Ref ref, SymbolDto symbol) async {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<PriceComparisonModel?> priceComparison(
   Ref ref,
   PriceComparisonDto priceComparisonDto,
@@ -200,7 +144,7 @@ Future<PriceComparisonModel?> priceComparison(
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<AnalystRatingResponse?> analyticsData(Ref ref, SymbolDto symbol) async {
   var res = await ref.read(overviewRepository).analyticsData(symbol);
   if (res.status == 200) {
@@ -211,9 +155,11 @@ Future<AnalystRatingResponse?> analyticsData(Ref ref, SymbolDto symbol) async {
 }
 
 //company providers
-@riverpod
+@Riverpod(keepAlive: true)
 Future<CompanyDetailModel?> companyDetail(Ref ref, SymbolDto symbol) async {
+  print("companyDetail provider called with symbol: ${symbol.symbol}");
   var res = await ref.read(overviewRepository).companyDetail(symbol);
+  print("companyDetail provider response: ${res.toString()}");
   if (res.status == 200) {
     return res;
   } else {
@@ -221,7 +167,7 @@ Future<CompanyDetailModel?> companyDetail(Ref ref, SymbolDto symbol) async {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<EarningsModel?> earningsData(Ref ref, SymbolDto symbol) async {
   var res = await ref.read(overviewRepository).earningsData(symbol);
   if (res.status == 200) {
@@ -231,7 +177,7 @@ Future<EarningsModel?> earningsData(Ref ref, SymbolDto symbol) async {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<EsgScoreModel?> esgScore(Ref ref, String symbol) async {
   final now = DateTime.now().toUtc();
 
@@ -255,7 +201,7 @@ Future<EsgScoreModel?> esgScore(Ref ref, String symbol) async {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<InsiderTransactionResponse?> insiderTrades(
   Ref ref,
   SymbolDto symbol,
@@ -268,7 +214,7 @@ Future<InsiderTransactionResponse?> insiderTrades(
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<ShortVolumeModel?> shortVolumeData(Ref ref, SymbolDto symbol) async {
   var res = await ref.read(overviewRepository).shortVolumeData(symbol);
   if (res.status == 200) {
@@ -278,7 +224,7 @@ Future<ShortVolumeModel?> shortVolumeData(Ref ref, SymbolDto symbol) async {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<ShortSecurityResponse?> securityShortVolume(
   Ref ref,
   SymbolDto symbol,
@@ -291,7 +237,7 @@ Future<ShortSecurityResponse?> securityShortVolume(
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<SecurityOwnershipResponse?> shortOwnership(
   Ref ref,
   SymbolDto symbol,
@@ -304,78 +250,28 @@ Future<SecurityOwnershipResponse?> shortOwnership(
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<CompanyModel?> companyData(Ref ref, SymbolDto symbol) async {
-  try {
-    var res = await ref.read(overviewRepository).companyData(symbol);
-    if (res.status == 200) {
-      return res;
-    } else {
-      return null;
-    }
-  } on DioException catch (e) {
-    if (e.response?.statusCode == 401) {
-      final refreshToken = ref.read(localDataProvider).marketRefreshToken;
-      if (refreshToken == null) rethrow;
-      try {
-        final newToken = ref.read(localDataProvider).marketRefreshToken;
-        if (newToken != null) {
-          ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
-          var res = await ref.read(overviewRepository).companyData(symbol);
-          if (res.status == 200) {
-            return res;
-          } else {
-            return null;
-          }
-        } else {
-          rethrow;
-        }
-      } catch (refreshError) {
-        rethrow;
-      }
-    } else {
-      rethrow;
-    }
+  var res = await ref.read(overviewRepository).companyData(symbol);
+  if (res.status == 200) {
+    return res;
+  } else {
+    return null;
   }
 }
 
 //financial chart data provider
-@riverpod
+@Riverpod(keepAlive: true)
 Future<FinanceDataResponse?> financialCharts(Ref ref, SymbolDto symbol) async {
-  try {
-    var res = await ref.read(overviewRepository).financialCharts(symbol);
-    if (res.status == 200) {
-      return res;
-    } else {
-      return null;
-    }
-  } on DioException catch (e) {
-    if (e.response?.statusCode == 401) {
-      final refreshToken = ref.read(localDataProvider).marketRefreshToken;
-      if (refreshToken == null) rethrow;
-      try {
-        final newToken = ref.read(localDataProvider).marketRefreshToken;
-        if (newToken != null) {
-          ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
-          var res = await ref.read(overviewRepository).financialCharts(symbol);
-          if (res.status == 200) {
-            return res;
-          } else {
-            return null;
-          }
-        } else {
-          rethrow;
-        }
-      } catch (refreshError) {
-        rethrow;
-      }
-    } else {
-      rethrow;
-    }
+  var res = await ref.read(overviewRepository).financialCharts(symbol);
+  if (res.status == 200) {
+    return res;
+  } else {
+    return null;
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<FinancialResponse?> financialData(
   Ref ref,
   PriceRequestDto overview,
@@ -388,250 +284,189 @@ Future<FinancialResponse?> financialData(
   }
 }
 
-//earning providers
-@riverpod
+@Riverpod(keepAlive: true)
 Future<EarningChartModel?> earningChartData(
   Ref ref,
   ChartRequestDto overview,
 ) async {
-  try {
-    var res = await ref.read(overviewRepositoryNrm).earningChartData(overview);
-    if (res.msg == "Success") {
-      return res;
-    } else {
-      return null;
-    }
-  } on DioException catch (e) {
-    if (e.response?.statusCode == 401) {
-      final refreshToken = ref.read(localDataProvider).marketAccessTokenNew;
-      if (refreshToken == null) rethrow;
-      try {
-        final newToken = ref.read(localDataProvider).marketAccessTokenNew;
-        if (newToken != null) {
-          ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
-          var res = await ref
-              .read(overviewRepositoryNrm)
-              .earningChartData(overview);
-          if (res.msg == "Success") {
-            return res;
-          } else {
-            return null;
-          }
-        } else {
-          rethrow;
-        }
-      } catch (refreshError) {
-        print(e);
-        rethrow;
-      }
-    } else {
-      rethrow;
-      print(e);
-    }
+  print("earningChartData called======>>>>>>");
+  var res = await ref.read(overviewRepositoryNrm).earningChartData(overview);
+  print("earningChartData response======>>>>>>" + res.toString());
+  if (res.msg == "Success") {
+    return res;
+  } else {
+    return null;
   }
 }
 
-@riverpod
+//earning providers
+// @riverpod
+// Future<EarningChartModel?> earningChartData(
+//   Ref ref,
+//   ChartRequestDto overview,
+// ) async {
+//   try {
+//     print("earningChartData called======>>>>>>");
+//     var res = await ref.read(overviewRepositoryNrm).earningChartData(overview);
+//     print("earningChartData response======>>>>>>" + res.toString());
+//     if (res.msg == "Success") {
+//       return res;
+//     } else {
+//       return null;
+//     }
+//   } on DioException catch (e) {
+//     print("catch earningChartData errror======>>>>>>" + e.toString());
+//     if (e.response?.statusCode == 401) {
+//       final refreshToken = ref.read(localDataProvider).marketAccessTokenNew;
+//       if (refreshToken == null) rethrow;
+//       try {
+//         final newToken = ref.read(localDataProvider).marketAccessTokenNew;
+//         if (newToken != null) {
+//           ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
+//           var res = await ref
+//               .read(overviewRepositoryNrm)
+//               .earningChartData(overview);
+//           if (res.msg == "Success") {
+//             return res;
+//           } else {
+//             return null;
+//           }
+//         } else {
+//           rethrow;
+//         }
+//       } catch (refreshError) {
+//         print(e);
+//         rethrow;
+//       }
+//     } else {
+//       rethrow;
+//       print(e);
+//     }
+//   }
+// }
+@Riverpod(keepAlive: true)
 Future<EarningReportsModel?> earningReportData(
   Ref ref,
   ChartRequestDto overview,
 ) async {
-  try {
-    var res = await ref.read(overviewRepositoryNrm).earningReportData(overview);
-    if (res.msg == "Success") {
-      return res;
-    } else {
-      return null;
-    }
-  } on DioException catch (e) {
-    log("catch earningReportData errror======>>>>>>" + e.toString());
-
-    if (e.response?.statusCode == 401) {
-      final refreshToken = ref.read(localDataProvider).marketAccessTokenNew;
-      if (refreshToken == null) rethrow;
-      try {
-        final newToken = ref.read(localDataProvider).marketAccessTokenNew;
-        if (newToken != null) {
-          ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
-          var res = await ref
-              .read(overviewRepositoryNrm)
-              .earningReportData(overview);
-          if (res.msg == "Success") {
-            return res;
-          } else {
-            return null;
-          }
-        } else {
-          rethrow;
-        }
-      } catch (refreshError) {
-        log("rethorw earningReportData errror======>>>>>>" + e.toString());
-        rethrow;
-      }
-    } else {
-      rethrow;
-    }
+  print("earningReportData called======>>>>>>");
+  var res = await ref.read(overviewRepositoryNrm).earningReportData(overview);
+  print("earningReportData response======>>>>>>" + res.toString());
+  if (res.msg == "Success") {
+    return res;
+  } else {
+    return null;
   }
 }
+// @riverpod
+// Future<EarningReportsModel?> earningReportData(
+//   Ref ref,
+//   ChartRequestDto overview,
+// ) async {
+//   try {
+//     print("earningReportData called======>>>>>>");
+//     var res = await ref.read(overviewRepositoryNrm).earningReportData(overview);
+//     print("earningReportData response======>>>>>>" + res.toString());
+//     if (res.msg == "Success") {
+//       return res;
+//     } else {
+//       return null;
+//     }
+//   } on DioException catch (e) {
+//     log("catch earningReportData errror======>>>>>>" + e.toString());
+//
+//     if (e.response?.statusCode == 401) {
+//       final refreshToken = ref.read(localDataProvider).marketAccessTokenNew;
+//       if (refreshToken == null) rethrow;
+//       try {
+//         final newToken = ref.read(localDataProvider).marketAccessTokenNew;
+//         if (newToken != null) {
+//           ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
+//           var res = await ref
+//               .read(overviewRepositoryNrm)
+//               .earningReportData(overview);
+//           if (res.msg == "Success") {
+//             return res;
+//           } else {
+//             return null;
+//           }
+//         } else {
+//           rethrow;
+//         }
+//       } catch (refreshError) {
+//         log("rethorw earningReportData errror======>>>>>>" + e.toString());
+//         rethrow;
+//       }
+//     } else {
+//       rethrow;
+//     }
+//   }
+// }
 
 //analysis data provider
-@riverpod
+@Riverpod(keepAlive: true)
 Future<AnalysisDataModel?> analysisData(
   Ref ref,
   ChartRequestDto overview,
 ) async {
-  try {
-    var res = await ref.read(overviewRepositoryNrm).analysisData(overview);
-    if (res.msg == "Success") {
-      return res;
-    } else {
-      return null;
-    }
-  } on DioException catch (e) {
-    if (e.response?.statusCode == 401) {
-      final refreshToken = ref.read(localDataProvider).marketRefreshTokenNew;
-      if (refreshToken == null) rethrow;
-      try {
-        final newToken = ref.read(localDataProvider).marketRefreshTokenNew;
-        if (newToken != null) {
-          ref.read(localDataProvider).setAccessTokenMarketNew(newToken);
-          var res = await ref
-              .read(overviewRepositoryNrm)
-              .analysisData(overview);
-          if (res.msg == "Success") {
-            return res;
-          } else {
-            return null;
-          }
-        } else {
-          rethrow;
-        }
-      } catch (refreshError) {
-        rethrow;
-      }
-    } else {
-      rethrow;
-    }
+  print("analysisData called======>>>>>>");
+  var res = await ref.read(overviewRepositoryNrm).analysisData(overview);
+  print("analysisData response======>>>>>>" + res.toString());
+  if (res.msg == "Success") {
+    return res;
+  } else {
+    return null;
   }
 }
 
 //crypto apis start
-@riverpod
+@Riverpod(keepAlive: true)
 Future<HighlightResponse?> highlightsTop(
   Ref ref,
   HighlightRequest highlightRequest,
 ) async {
-  try {
-    var res = await ref.read(overviewRepository).highlightTop(highlightRequest);
-    if (res.msg == "Success") {
-      return res;
-    } else {
-      return null;
-    }
-  } on DioException catch (e) {
-    if (e.response?.statusCode == 401) {
-      final refreshToken = ref.read(localDataProvider).marketRefreshToken;
-      if (refreshToken == null) rethrow;
-      try {
-        final newToken = ref.read(localDataProvider).marketRefreshToken;
-        if (newToken != null) {
-          ref.read(localDataProvider).setAccessTokenMarket(newToken);
-          var res = await ref
-              .read(overviewRepository)
-              .highlightTop(highlightRequest);
-          if (res.msg == "Success") {
-            return res;
-          } else {
-            return null;
-          }
-        } else {
-          rethrow;
-        }
-      } catch (refreshError) {
-        rethrow;
-      }
-    } else {
-      rethrow;
-    }
+  var res = await ref.read(overviewRepository).highlightTop(highlightRequest);
+  if (res.msg == "Success") {
+    return res;
+  } else {
+    return null;
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<MarketCapResponse?> marketCapChart(
   Ref ref,
   MarketCapRequest symbol,
 ) async {
-  try {
-    var res = await ref.read(overviewRepository).marketCapChart(symbol);
-    if (res.msg == "Success") {
-      return res;
-    } else {
-      return null;
-    }
-  } on DioException catch (e) {
-    if (e.response?.statusCode == 401) {
-      try {
-        $showMessage(e.response!.data!['message'], isError: true);
-      } catch (e) {
-        $showMessage("Something went wrong", isError: true);
-      }
-    } else if (e.type == DioExceptionType.connectionError) {
-      print('❌ Network error');
-    } else {
-      print('❌ Unknown error: ${e.message}');
-    }
+  var res = await ref.read(overviewRepository).marketCapChart(symbol);
+  if (res.msg == "Success") {
+    return res;
+  } else {
+    return null;
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<CryptoMarketModel?> cryptoMarkets(Ref ref, SymbolDto symbol) async {
-  try {
-    var res = await ref.read(overviewRepository).cryptoMarkets(symbol);
-    if (res.msg == "Success") {
-      return res;
-    } else {
-      return null;
-    }
-  } on DioException catch (e) {
-    if (e.response?.statusCode == 401) {
-      try {
-        $showMessage(e.response!.data!['message'], isError: true);
-      } catch (e) {
-        $showMessage("Something went wrong", isError: true);
-      }
-    } else if (e.type == DioExceptionType.connectionError) {
-      print('❌ Network error');
-    } else {
-      print('❌ Unknown error: ${e.message}');
-    }
+  var res = await ref.read(overviewRepository).cryptoMarkets(symbol);
+  if (res.msg == "Success") {
+    return res;
+  } else {
+    return null;
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<PriceComparisonModel?> priceRatio(
   Ref ref,
   PriceComparisonDto symbol,
 ) async {
-  try {
-    var res = await ref.read(overviewRepository).priceRatio(symbol);
-    if (res.msg == "Success") {
-      return res;
-    } else {
-      return null;
-    }
-  } on DioException catch (e) {
-    if (e.response?.statusCode == 401) {
-      try {
-        $showMessage(e.response!.data!['message'], isError: true);
-      } catch (e) {
-        $showMessage("Something went wrong", isError: true);
-      }
-    } else if (e.type == DioExceptionType.connectionError) {
-      print('❌ Network error');
-    } else {
-      print('❌ Unknown error: ${e.message}');
-    }
+  var res = await ref.read(overviewRepository).priceRatio(symbol);
+  if (res.msg == "Success") {
+    return res;
+  } else {
+    return null;
   }
 }
 
-  //crypto apis end
+//crypto apis end

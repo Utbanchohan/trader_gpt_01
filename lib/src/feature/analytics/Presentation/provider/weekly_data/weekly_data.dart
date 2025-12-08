@@ -15,7 +15,7 @@ class WeeklyData extends _$WeeklyData {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<WeeklyModel> getWeeklyData(Ref ref, String ticker) async {
   final res = await ref.read(overviewRepositoryele).weeklyData(ticker);
   return res;

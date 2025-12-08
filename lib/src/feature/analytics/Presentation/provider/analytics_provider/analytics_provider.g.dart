@@ -6,7 +6,7 @@ part of 'analytics_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getOverviewHash() => r'0afa0dc84af827b1d217acd52d26f186e2e48fe2';
+String _$getOverviewHash() => r'615312b36b1a1db3aebe36b90970e326108aa8f0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -66,7 +66,7 @@ class GetOverviewFamily extends Family<AsyncValue<OverviewData?>> {
 }
 
 /// See also [getOverview].
-class GetOverviewProvider extends AutoDisposeFutureProvider<OverviewData?> {
+class GetOverviewProvider extends FutureProvider<OverviewData?> {
   /// See also [getOverview].
   GetOverviewProvider(String symbol)
     : this._internal(
@@ -112,7 +112,7 @@ class GetOverviewProvider extends AutoDisposeFutureProvider<OverviewData?> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<OverviewData?> createElement() {
+  FutureProviderElement<OverviewData?> createElement() {
     return _GetOverviewProviderElement(this);
   }
 
@@ -132,13 +132,12 @@ class GetOverviewProvider extends AutoDisposeFutureProvider<OverviewData?> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin GetOverviewRef on AutoDisposeFutureProviderRef<OverviewData?> {
+mixin GetOverviewRef on FutureProviderRef<OverviewData?> {
   /// The parameter `symbol` of this provider.
   String get symbol;
 }
 
-class _GetOverviewProviderElement
-    extends AutoDisposeFutureProviderElement<OverviewData?>
+class _GetOverviewProviderElement extends FutureProviderElement<OverviewData?>
     with GetOverviewRef {
   _GetOverviewProviderElement(super.provider);
 
@@ -147,7 +146,7 @@ class _GetOverviewProviderElement
 }
 
 String _$priceTargetMatricsHash() =>
-    r'39db882c4cbf745c6bd3b07ce2c487a1e784d887';
+    r'3948228b3a45dc10964a6583b0fe56d34c93c1e5';
 
 /// See also [priceTargetMatrics].
 @ProviderFor(priceTargetMatrics)
@@ -188,7 +187,7 @@ class PriceTargetMatricsFamily
 
 /// See also [priceTargetMatrics].
 class PriceTargetMatricsProvider
-    extends AutoDisposeFutureProvider<List<PriceTargetData?>?> {
+    extends FutureProvider<List<PriceTargetData?>?> {
   /// See also [priceTargetMatrics].
   PriceTargetMatricsProvider(SymbolDto symbol)
     : this._internal(
@@ -236,7 +235,7 @@ class PriceTargetMatricsProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<PriceTargetData?>?> createElement() {
+  FutureProviderElement<List<PriceTargetData?>?> createElement() {
     return _PriceTargetMatricsProviderElement(this);
   }
 
@@ -256,14 +255,13 @@ class PriceTargetMatricsProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin PriceTargetMatricsRef
-    on AutoDisposeFutureProviderRef<List<PriceTargetData?>?> {
+mixin PriceTargetMatricsRef on FutureProviderRef<List<PriceTargetData?>?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
 class _PriceTargetMatricsProviderElement
-    extends AutoDisposeFutureProviderElement<List<PriceTargetData?>?>
+    extends FutureProviderElement<List<PriceTargetData?>?>
     with PriceTargetMatricsRef {
   _PriceTargetMatricsProviderElement(super.provider);
 
@@ -271,7 +269,7 @@ class _PriceTargetMatricsProviderElement
   SymbolDto get symbol => (origin as PriceTargetMatricsProvider).symbol;
 }
 
-String _$matricsDataHash() => r'2e3d0c920a7bd8f3c9dde555725764d6e862121f';
+String _$matricsDataHash() => r'e37c4dd42ab28f3007ef8295d2bed9a94f4af4ea';
 
 /// See also [matricsData].
 @ProviderFor(matricsData)
@@ -310,7 +308,7 @@ class MatricsDataFamily extends Family<AsyncValue<MatricsResponse?>> {
 }
 
 /// See also [matricsData].
-class MatricsDataProvider extends AutoDisposeFutureProvider<MatricsResponse?> {
+class MatricsDataProvider extends FutureProvider<MatricsResponse?> {
   /// See also [matricsData].
   MatricsDataProvider(String symbol)
     : this._internal(
@@ -356,7 +354,7 @@ class MatricsDataProvider extends AutoDisposeFutureProvider<MatricsResponse?> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<MatricsResponse?> createElement() {
+  FutureProviderElement<MatricsResponse?> createElement() {
     return _MatricsDataProviderElement(this);
   }
 
@@ -376,13 +374,13 @@ class MatricsDataProvider extends AutoDisposeFutureProvider<MatricsResponse?> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin MatricsDataRef on AutoDisposeFutureProviderRef<MatricsResponse?> {
+mixin MatricsDataRef on FutureProviderRef<MatricsResponse?> {
   /// The parameter `symbol` of this provider.
   String get symbol;
 }
 
 class _MatricsDataProviderElement
-    extends AutoDisposeFutureProviderElement<MatricsResponse?>
+    extends FutureProviderElement<MatricsResponse?>
     with MatricsDataRef {
   _MatricsDataProviderElement(super.provider);
 
@@ -390,7 +388,7 @@ class _MatricsDataProviderElement
   String get symbol => (origin as MatricsDataProvider).symbol;
 }
 
-String _$pricePerformanceHash() => r'd4d4d6ef732621f8ef911ad1d61886b982d00aba';
+String _$pricePerformanceHash() => r'81ddbcfb2ed1944d132bcaada05bfe607f16f775';
 
 /// See also [pricePerformance].
 @ProviderFor(pricePerformance)
@@ -429,8 +427,7 @@ class PricePerformanceFamily extends Family<AsyncValue<PricePerformance?>> {
 }
 
 /// See also [pricePerformance].
-class PricePerformanceProvider
-    extends AutoDisposeFutureProvider<PricePerformance?> {
+class PricePerformanceProvider extends FutureProvider<PricePerformance?> {
   /// See also [pricePerformance].
   PricePerformanceProvider(SymbolDto symbol)
     : this._internal(
@@ -477,7 +474,7 @@ class PricePerformanceProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<PricePerformance?> createElement() {
+  FutureProviderElement<PricePerformance?> createElement() {
     return _PricePerformanceProviderElement(this);
   }
 
@@ -497,13 +494,13 @@ class PricePerformanceProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin PricePerformanceRef on AutoDisposeFutureProviderRef<PricePerformance?> {
+mixin PricePerformanceRef on FutureProviderRef<PricePerformance?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
 class _PricePerformanceProviderElement
-    extends AutoDisposeFutureProviderElement<PricePerformance?>
+    extends FutureProviderElement<PricePerformance?>
     with PricePerformanceRef {
   _PricePerformanceProviderElement(super.provider);
 
@@ -511,7 +508,7 @@ class _PricePerformanceProviderElement
   SymbolDto get symbol => (origin as PricePerformanceProvider).symbol;
 }
 
-String _$shareStatsHash() => r'45962da09f1960846a9c0687145345e5ca8e1095';
+String _$shareStatsHash() => r'9c482c81a13cc0596fe510e72af6f56221047cec';
 
 /// See also [shareStats].
 @ProviderFor(shareStats)
@@ -550,7 +547,7 @@ class ShareStatsFamily extends Family<AsyncValue<SharesResponse?>> {
 }
 
 /// See also [shareStats].
-class ShareStatsProvider extends AutoDisposeFutureProvider<SharesResponse?> {
+class ShareStatsProvider extends FutureProvider<SharesResponse?> {
   /// See also [shareStats].
   ShareStatsProvider(SymbolDto symbol)
     : this._internal(
@@ -596,7 +593,7 @@ class ShareStatsProvider extends AutoDisposeFutureProvider<SharesResponse?> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<SharesResponse?> createElement() {
+  FutureProviderElement<SharesResponse?> createElement() {
     return _ShareStatsProviderElement(this);
   }
 
@@ -616,13 +613,12 @@ class ShareStatsProvider extends AutoDisposeFutureProvider<SharesResponse?> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ShareStatsRef on AutoDisposeFutureProviderRef<SharesResponse?> {
+mixin ShareStatsRef on FutureProviderRef<SharesResponse?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
-class _ShareStatsProviderElement
-    extends AutoDisposeFutureProviderElement<SharesResponse?>
+class _ShareStatsProviderElement extends FutureProviderElement<SharesResponse?>
     with ShareStatsRef {
   _ShareStatsProviderElement(super.provider);
 
@@ -630,7 +626,7 @@ class _ShareStatsProviderElement
   SymbolDto get symbol => (origin as ShareStatsProvider).symbol;
 }
 
-String _$fundamentalDataHash() => r'b870d00e4037ca43f17b87bc12e2beb5ff88f5d8';
+String _$fundamentalDataHash() => r'ae3be63fe911e91dbbd52deace250e179a2af816';
 
 /// See also [fundamentalData].
 @ProviderFor(fundamentalData)
@@ -669,8 +665,7 @@ class FundamentalDataFamily extends Family<AsyncValue<FundamentalResponse?>> {
 }
 
 /// See also [fundamentalData].
-class FundamentalDataProvider
-    extends AutoDisposeFutureProvider<FundamentalResponse?> {
+class FundamentalDataProvider extends FutureProvider<FundamentalResponse?> {
   /// See also [fundamentalData].
   FundamentalDataProvider(SymbolDto symbol)
     : this._internal(
@@ -717,7 +712,7 @@ class FundamentalDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<FundamentalResponse?> createElement() {
+  FutureProviderElement<FundamentalResponse?> createElement() {
     return _FundamentalDataProviderElement(this);
   }
 
@@ -737,13 +732,13 @@ class FundamentalDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin FundamentalDataRef on AutoDisposeFutureProviderRef<FundamentalResponse?> {
+mixin FundamentalDataRef on FutureProviderRef<FundamentalResponse?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
 class _FundamentalDataProviderElement
-    extends AutoDisposeFutureProviderElement<FundamentalResponse?>
+    extends FutureProviderElement<FundamentalResponse?>
     with FundamentalDataRef {
   _FundamentalDataProviderElement(super.provider);
 
@@ -751,7 +746,7 @@ class _FundamentalDataProviderElement
   SymbolDto get symbol => (origin as FundamentalDataProvider).symbol;
 }
 
-String _$priceComparisonHash() => r'f2e76360ae17348ebfdb83ffbfb0325b69e70e93';
+String _$priceComparisonHash() => r'c80f74e778e61c64437ad2e6d0b3d2cd4d393b7c';
 
 /// See also [priceComparison].
 @ProviderFor(priceComparison)
@@ -790,8 +785,7 @@ class PriceComparisonFamily extends Family<AsyncValue<PriceComparisonModel?>> {
 }
 
 /// See also [priceComparison].
-class PriceComparisonProvider
-    extends AutoDisposeFutureProvider<PriceComparisonModel?> {
+class PriceComparisonProvider extends FutureProvider<PriceComparisonModel?> {
   /// See also [priceComparison].
   PriceComparisonProvider(PriceComparisonDto priceComparisonDto)
     : this._internal(
@@ -839,7 +833,7 @@ class PriceComparisonProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<PriceComparisonModel?> createElement() {
+  FutureProviderElement<PriceComparisonModel?> createElement() {
     return _PriceComparisonProviderElement(this);
   }
 
@@ -860,14 +854,13 @@ class PriceComparisonProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin PriceComparisonRef
-    on AutoDisposeFutureProviderRef<PriceComparisonModel?> {
+mixin PriceComparisonRef on FutureProviderRef<PriceComparisonModel?> {
   /// The parameter `priceComparisonDto` of this provider.
   PriceComparisonDto get priceComparisonDto;
 }
 
 class _PriceComparisonProviderElement
-    extends AutoDisposeFutureProviderElement<PriceComparisonModel?>
+    extends FutureProviderElement<PriceComparisonModel?>
     with PriceComparisonRef {
   _PriceComparisonProviderElement(super.provider);
 
@@ -876,7 +869,7 @@ class _PriceComparisonProviderElement
       (origin as PriceComparisonProvider).priceComparisonDto;
 }
 
-String _$analyticsDataHash() => r'b33c9801e92dfd8192a2bd8c9a7beea2bbcd48af';
+String _$analyticsDataHash() => r'7a57c6bcaf6c94b12c885fe4e95e14c56ea9a41e';
 
 /// See also [analyticsData].
 @ProviderFor(analyticsData)
@@ -915,8 +908,7 @@ class AnalyticsDataFamily extends Family<AsyncValue<AnalystRatingResponse?>> {
 }
 
 /// See also [analyticsData].
-class AnalyticsDataProvider
-    extends AutoDisposeFutureProvider<AnalystRatingResponse?> {
+class AnalyticsDataProvider extends FutureProvider<AnalystRatingResponse?> {
   /// See also [analyticsData].
   AnalyticsDataProvider(SymbolDto symbol)
     : this._internal(
@@ -963,7 +955,7 @@ class AnalyticsDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<AnalystRatingResponse?> createElement() {
+  FutureProviderElement<AnalystRatingResponse?> createElement() {
     return _AnalyticsDataProviderElement(this);
   }
 
@@ -983,13 +975,13 @@ class AnalyticsDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin AnalyticsDataRef on AutoDisposeFutureProviderRef<AnalystRatingResponse?> {
+mixin AnalyticsDataRef on FutureProviderRef<AnalystRatingResponse?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
 class _AnalyticsDataProviderElement
-    extends AutoDisposeFutureProviderElement<AnalystRatingResponse?>
+    extends FutureProviderElement<AnalystRatingResponse?>
     with AnalyticsDataRef {
   _AnalyticsDataProviderElement(super.provider);
 
@@ -997,7 +989,7 @@ class _AnalyticsDataProviderElement
   SymbolDto get symbol => (origin as AnalyticsDataProvider).symbol;
 }
 
-String _$companyDetailHash() => r'7ebaf2071da648ac70fed6893a566a332d142fde';
+String _$companyDetailHash() => r'08fa51ae2cdf67f99e2c6499704a7ecbbd4ba88b';
 
 /// See also [companyDetail].
 @ProviderFor(companyDetail)
@@ -1036,8 +1028,7 @@ class CompanyDetailFamily extends Family<AsyncValue<CompanyDetailModel?>> {
 }
 
 /// See also [companyDetail].
-class CompanyDetailProvider
-    extends AutoDisposeFutureProvider<CompanyDetailModel?> {
+class CompanyDetailProvider extends FutureProvider<CompanyDetailModel?> {
   /// See also [companyDetail].
   CompanyDetailProvider(SymbolDto symbol)
     : this._internal(
@@ -1084,7 +1075,7 @@ class CompanyDetailProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<CompanyDetailModel?> createElement() {
+  FutureProviderElement<CompanyDetailModel?> createElement() {
     return _CompanyDetailProviderElement(this);
   }
 
@@ -1104,13 +1095,13 @@ class CompanyDetailProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin CompanyDetailRef on AutoDisposeFutureProviderRef<CompanyDetailModel?> {
+mixin CompanyDetailRef on FutureProviderRef<CompanyDetailModel?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
 class _CompanyDetailProviderElement
-    extends AutoDisposeFutureProviderElement<CompanyDetailModel?>
+    extends FutureProviderElement<CompanyDetailModel?>
     with CompanyDetailRef {
   _CompanyDetailProviderElement(super.provider);
 
@@ -1118,7 +1109,7 @@ class _CompanyDetailProviderElement
   SymbolDto get symbol => (origin as CompanyDetailProvider).symbol;
 }
 
-String _$earningsDataHash() => r'd7fcc369b7cf825d3869f3a0714f51dc3b66f8f5';
+String _$earningsDataHash() => r'7b573e7927ad803ec7fcd7de34cdda9870b8eb7f';
 
 /// See also [earningsData].
 @ProviderFor(earningsData)
@@ -1157,7 +1148,7 @@ class EarningsDataFamily extends Family<AsyncValue<EarningsModel?>> {
 }
 
 /// See also [earningsData].
-class EarningsDataProvider extends AutoDisposeFutureProvider<EarningsModel?> {
+class EarningsDataProvider extends FutureProvider<EarningsModel?> {
   /// See also [earningsData].
   EarningsDataProvider(SymbolDto symbol)
     : this._internal(
@@ -1204,7 +1195,7 @@ class EarningsDataProvider extends AutoDisposeFutureProvider<EarningsModel?> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<EarningsModel?> createElement() {
+  FutureProviderElement<EarningsModel?> createElement() {
     return _EarningsDataProviderElement(this);
   }
 
@@ -1224,13 +1215,12 @@ class EarningsDataProvider extends AutoDisposeFutureProvider<EarningsModel?> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin EarningsDataRef on AutoDisposeFutureProviderRef<EarningsModel?> {
+mixin EarningsDataRef on FutureProviderRef<EarningsModel?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
-class _EarningsDataProviderElement
-    extends AutoDisposeFutureProviderElement<EarningsModel?>
+class _EarningsDataProviderElement extends FutureProviderElement<EarningsModel?>
     with EarningsDataRef {
   _EarningsDataProviderElement(super.provider);
 
@@ -1238,7 +1228,7 @@ class _EarningsDataProviderElement
   SymbolDto get symbol => (origin as EarningsDataProvider).symbol;
 }
 
-String _$esgScoreHash() => r'1de81fae3aae74eb044c4a9688b58a1880642bff';
+String _$esgScoreHash() => r'62f59aa8a19412bb698c587dc15b19d4c4c858e2';
 
 /// See also [esgScore].
 @ProviderFor(esgScore)
@@ -1275,7 +1265,7 @@ class EsgScoreFamily extends Family<AsyncValue<EsgScoreModel?>> {
 }
 
 /// See also [esgScore].
-class EsgScoreProvider extends AutoDisposeFutureProvider<EsgScoreModel?> {
+class EsgScoreProvider extends FutureProvider<EsgScoreModel?> {
   /// See also [esgScore].
   EsgScoreProvider(String symbol)
     : this._internal(
@@ -1321,7 +1311,7 @@ class EsgScoreProvider extends AutoDisposeFutureProvider<EsgScoreModel?> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<EsgScoreModel?> createElement() {
+  FutureProviderElement<EsgScoreModel?> createElement() {
     return _EsgScoreProviderElement(this);
   }
 
@@ -1341,13 +1331,12 @@ class EsgScoreProvider extends AutoDisposeFutureProvider<EsgScoreModel?> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin EsgScoreRef on AutoDisposeFutureProviderRef<EsgScoreModel?> {
+mixin EsgScoreRef on FutureProviderRef<EsgScoreModel?> {
   /// The parameter `symbol` of this provider.
   String get symbol;
 }
 
-class _EsgScoreProviderElement
-    extends AutoDisposeFutureProviderElement<EsgScoreModel?>
+class _EsgScoreProviderElement extends FutureProviderElement<EsgScoreModel?>
     with EsgScoreRef {
   _EsgScoreProviderElement(super.provider);
 
@@ -1355,7 +1344,7 @@ class _EsgScoreProviderElement
   String get symbol => (origin as EsgScoreProvider).symbol;
 }
 
-String _$insiderTradesHash() => r'87849eac121b835aa2bb78d00c50b6a8f90af452';
+String _$insiderTradesHash() => r'6c3b78b273a9284b0e0c10be19d9313421472d79';
 
 /// See also [insiderTrades].
 @ProviderFor(insiderTrades)
@@ -1396,7 +1385,7 @@ class InsiderTradesFamily
 
 /// See also [insiderTrades].
 class InsiderTradesProvider
-    extends AutoDisposeFutureProvider<InsiderTransactionResponse?> {
+    extends FutureProvider<InsiderTransactionResponse?> {
   /// See also [insiderTrades].
   InsiderTradesProvider(SymbolDto symbol)
     : this._internal(
@@ -1444,8 +1433,7 @@ class InsiderTradesProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<InsiderTransactionResponse?>
-  createElement() {
+  FutureProviderElement<InsiderTransactionResponse?> createElement() {
     return _InsiderTradesProviderElement(this);
   }
 
@@ -1465,14 +1453,13 @@ class InsiderTradesProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin InsiderTradesRef
-    on AutoDisposeFutureProviderRef<InsiderTransactionResponse?> {
+mixin InsiderTradesRef on FutureProviderRef<InsiderTransactionResponse?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
 class _InsiderTradesProviderElement
-    extends AutoDisposeFutureProviderElement<InsiderTransactionResponse?>
+    extends FutureProviderElement<InsiderTransactionResponse?>
     with InsiderTradesRef {
   _InsiderTradesProviderElement(super.provider);
 
@@ -1480,7 +1467,7 @@ class _InsiderTradesProviderElement
   SymbolDto get symbol => (origin as InsiderTradesProvider).symbol;
 }
 
-String _$shortVolumeDataHash() => r'790c70db3104be15a49378c6f8856621574a1d04';
+String _$shortVolumeDataHash() => r'8c61113c1a8ba7c3ae6b7644242cb6af27f40e71';
 
 /// See also [shortVolumeData].
 @ProviderFor(shortVolumeData)
@@ -1519,8 +1506,7 @@ class ShortVolumeDataFamily extends Family<AsyncValue<ShortVolumeModel?>> {
 }
 
 /// See also [shortVolumeData].
-class ShortVolumeDataProvider
-    extends AutoDisposeFutureProvider<ShortVolumeModel?> {
+class ShortVolumeDataProvider extends FutureProvider<ShortVolumeModel?> {
   /// See also [shortVolumeData].
   ShortVolumeDataProvider(SymbolDto symbol)
     : this._internal(
@@ -1567,7 +1553,7 @@ class ShortVolumeDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<ShortVolumeModel?> createElement() {
+  FutureProviderElement<ShortVolumeModel?> createElement() {
     return _ShortVolumeDataProviderElement(this);
   }
 
@@ -1587,13 +1573,13 @@ class ShortVolumeDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ShortVolumeDataRef on AutoDisposeFutureProviderRef<ShortVolumeModel?> {
+mixin ShortVolumeDataRef on FutureProviderRef<ShortVolumeModel?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
 class _ShortVolumeDataProviderElement
-    extends AutoDisposeFutureProviderElement<ShortVolumeModel?>
+    extends FutureProviderElement<ShortVolumeModel?>
     with ShortVolumeDataRef {
   _ShortVolumeDataProviderElement(super.provider);
 
@@ -1602,7 +1588,7 @@ class _ShortVolumeDataProviderElement
 }
 
 String _$securityShortVolumeHash() =>
-    r'315d426c49f99aaf3b860c5a4161643988856f3d';
+    r'31b86fcdd618d1cfd3ff7f527deb9b4cc8d9625e';
 
 /// See also [securityShortVolume].
 @ProviderFor(securityShortVolume)
@@ -1643,7 +1629,7 @@ class SecurityShortVolumeFamily
 
 /// See also [securityShortVolume].
 class SecurityShortVolumeProvider
-    extends AutoDisposeFutureProvider<ShortSecurityResponse?> {
+    extends FutureProvider<ShortSecurityResponse?> {
   /// See also [securityShortVolume].
   SecurityShortVolumeProvider(SymbolDto symbol)
     : this._internal(
@@ -1691,7 +1677,7 @@ class SecurityShortVolumeProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<ShortSecurityResponse?> createElement() {
+  FutureProviderElement<ShortSecurityResponse?> createElement() {
     return _SecurityShortVolumeProviderElement(this);
   }
 
@@ -1711,14 +1697,13 @@ class SecurityShortVolumeProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin SecurityShortVolumeRef
-    on AutoDisposeFutureProviderRef<ShortSecurityResponse?> {
+mixin SecurityShortVolumeRef on FutureProviderRef<ShortSecurityResponse?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
 class _SecurityShortVolumeProviderElement
-    extends AutoDisposeFutureProviderElement<ShortSecurityResponse?>
+    extends FutureProviderElement<ShortSecurityResponse?>
     with SecurityShortVolumeRef {
   _SecurityShortVolumeProviderElement(super.provider);
 
@@ -1726,7 +1711,7 @@ class _SecurityShortVolumeProviderElement
   SymbolDto get symbol => (origin as SecurityShortVolumeProvider).symbol;
 }
 
-String _$shortOwnershipHash() => r'fd32285c0a02443668a883fe5dcb224b2ce47aad';
+String _$shortOwnershipHash() => r'5a3e973b372a6c0e5faf52954430731a9dff182f';
 
 /// See also [shortOwnership].
 @ProviderFor(shortOwnership)
@@ -1767,7 +1752,7 @@ class ShortOwnershipFamily
 
 /// See also [shortOwnership].
 class ShortOwnershipProvider
-    extends AutoDisposeFutureProvider<SecurityOwnershipResponse?> {
+    extends FutureProvider<SecurityOwnershipResponse?> {
   /// See also [shortOwnership].
   ShortOwnershipProvider(SymbolDto symbol)
     : this._internal(
@@ -1815,7 +1800,7 @@ class ShortOwnershipProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<SecurityOwnershipResponse?> createElement() {
+  FutureProviderElement<SecurityOwnershipResponse?> createElement() {
     return _ShortOwnershipProviderElement(this);
   }
 
@@ -1835,14 +1820,13 @@ class ShortOwnershipProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ShortOwnershipRef
-    on AutoDisposeFutureProviderRef<SecurityOwnershipResponse?> {
+mixin ShortOwnershipRef on FutureProviderRef<SecurityOwnershipResponse?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
 class _ShortOwnershipProviderElement
-    extends AutoDisposeFutureProviderElement<SecurityOwnershipResponse?>
+    extends FutureProviderElement<SecurityOwnershipResponse?>
     with ShortOwnershipRef {
   _ShortOwnershipProviderElement(super.provider);
 
@@ -1850,7 +1834,7 @@ class _ShortOwnershipProviderElement
   SymbolDto get symbol => (origin as ShortOwnershipProvider).symbol;
 }
 
-String _$companyDataHash() => r'3835c91f4b056a1234e236ba4d9da2a49c87191c';
+String _$companyDataHash() => r'd55046d4787391a42427ec6278f721eeaf8395e3';
 
 /// See also [companyData].
 @ProviderFor(companyData)
@@ -1889,7 +1873,7 @@ class CompanyDataFamily extends Family<AsyncValue<CompanyModel?>> {
 }
 
 /// See also [companyData].
-class CompanyDataProvider extends AutoDisposeFutureProvider<CompanyModel?> {
+class CompanyDataProvider extends FutureProvider<CompanyModel?> {
   /// See also [companyData].
   CompanyDataProvider(SymbolDto symbol)
     : this._internal(
@@ -1935,7 +1919,7 @@ class CompanyDataProvider extends AutoDisposeFutureProvider<CompanyModel?> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<CompanyModel?> createElement() {
+  FutureProviderElement<CompanyModel?> createElement() {
     return _CompanyDataProviderElement(this);
   }
 
@@ -1955,13 +1939,12 @@ class CompanyDataProvider extends AutoDisposeFutureProvider<CompanyModel?> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin CompanyDataRef on AutoDisposeFutureProviderRef<CompanyModel?> {
+mixin CompanyDataRef on FutureProviderRef<CompanyModel?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
-class _CompanyDataProviderElement
-    extends AutoDisposeFutureProviderElement<CompanyModel?>
+class _CompanyDataProviderElement extends FutureProviderElement<CompanyModel?>
     with CompanyDataRef {
   _CompanyDataProviderElement(super.provider);
 
@@ -1969,7 +1952,7 @@ class _CompanyDataProviderElement
   SymbolDto get symbol => (origin as CompanyDataProvider).symbol;
 }
 
-String _$financialChartsHash() => r'c022013180e7f162749607c230c47bf1d02ad03a';
+String _$financialChartsHash() => r'19a8bbba400bab03f9e442e5d061bfa5bc4092f5';
 
 /// See also [financialCharts].
 @ProviderFor(financialCharts)
@@ -2008,8 +1991,7 @@ class FinancialChartsFamily extends Family<AsyncValue<FinanceDataResponse?>> {
 }
 
 /// See also [financialCharts].
-class FinancialChartsProvider
-    extends AutoDisposeFutureProvider<FinanceDataResponse?> {
+class FinancialChartsProvider extends FutureProvider<FinanceDataResponse?> {
   /// See also [financialCharts].
   FinancialChartsProvider(SymbolDto symbol)
     : this._internal(
@@ -2056,7 +2038,7 @@ class FinancialChartsProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<FinanceDataResponse?> createElement() {
+  FutureProviderElement<FinanceDataResponse?> createElement() {
     return _FinancialChartsProviderElement(this);
   }
 
@@ -2076,13 +2058,13 @@ class FinancialChartsProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin FinancialChartsRef on AutoDisposeFutureProviderRef<FinanceDataResponse?> {
+mixin FinancialChartsRef on FutureProviderRef<FinanceDataResponse?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
 class _FinancialChartsProviderElement
-    extends AutoDisposeFutureProviderElement<FinanceDataResponse?>
+    extends FutureProviderElement<FinanceDataResponse?>
     with FinancialChartsRef {
   _FinancialChartsProviderElement(super.provider);
 
@@ -2090,7 +2072,7 @@ class _FinancialChartsProviderElement
   SymbolDto get symbol => (origin as FinancialChartsProvider).symbol;
 }
 
-String _$financialDataHash() => r'165fc8921dd8dc268b9c3b81aa5e960a0e00cc15';
+String _$financialDataHash() => r'fe842593abc195798eeca450772bf2387a3ab373';
 
 /// See also [financialData].
 @ProviderFor(financialData)
@@ -2129,8 +2111,7 @@ class FinancialDataFamily extends Family<AsyncValue<FinancialResponse?>> {
 }
 
 /// See also [financialData].
-class FinancialDataProvider
-    extends AutoDisposeFutureProvider<FinancialResponse?> {
+class FinancialDataProvider extends FutureProvider<FinancialResponse?> {
   /// See also [financialData].
   FinancialDataProvider(PriceRequestDto overview)
     : this._internal(
@@ -2177,7 +2158,7 @@ class FinancialDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<FinancialResponse?> createElement() {
+  FutureProviderElement<FinancialResponse?> createElement() {
     return _FinancialDataProviderElement(this);
   }
 
@@ -2197,13 +2178,13 @@ class FinancialDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin FinancialDataRef on AutoDisposeFutureProviderRef<FinancialResponse?> {
+mixin FinancialDataRef on FutureProviderRef<FinancialResponse?> {
   /// The parameter `overview` of this provider.
   PriceRequestDto get overview;
 }
 
 class _FinancialDataProviderElement
-    extends AutoDisposeFutureProviderElement<FinancialResponse?>
+    extends FutureProviderElement<FinancialResponse?>
     with FinancialDataRef {
   _FinancialDataProviderElement(super.provider);
 
@@ -2211,7 +2192,7 @@ class _FinancialDataProviderElement
   PriceRequestDto get overview => (origin as FinancialDataProvider).overview;
 }
 
-String _$earningChartDataHash() => r'5d0d997d3c81326f0790ca50b98970899cd471c4';
+String _$earningChartDataHash() => r'ce261a2e74eaa424146a6216d979a12d02e57ddb';
 
 /// See also [earningChartData].
 @ProviderFor(earningChartData)
@@ -2250,8 +2231,7 @@ class EarningChartDataFamily extends Family<AsyncValue<EarningChartModel?>> {
 }
 
 /// See also [earningChartData].
-class EarningChartDataProvider
-    extends AutoDisposeFutureProvider<EarningChartModel?> {
+class EarningChartDataProvider extends FutureProvider<EarningChartModel?> {
   /// See also [earningChartData].
   EarningChartDataProvider(ChartRequestDto overview)
     : this._internal(
@@ -2298,7 +2278,7 @@ class EarningChartDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<EarningChartModel?> createElement() {
+  FutureProviderElement<EarningChartModel?> createElement() {
     return _EarningChartDataProviderElement(this);
   }
 
@@ -2318,13 +2298,13 @@ class EarningChartDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin EarningChartDataRef on AutoDisposeFutureProviderRef<EarningChartModel?> {
+mixin EarningChartDataRef on FutureProviderRef<EarningChartModel?> {
   /// The parameter `overview` of this provider.
   ChartRequestDto get overview;
 }
 
 class _EarningChartDataProviderElement
-    extends AutoDisposeFutureProviderElement<EarningChartModel?>
+    extends FutureProviderElement<EarningChartModel?>
     with EarningChartDataRef {
   _EarningChartDataProviderElement(super.provider);
 
@@ -2332,7 +2312,7 @@ class _EarningChartDataProviderElement
   ChartRequestDto get overview => (origin as EarningChartDataProvider).overview;
 }
 
-String _$earningReportDataHash() => r'947ae52ee1f5369e4e0bd00810ecfbb1a1e57325';
+String _$earningReportDataHash() => r'f75db866a4a8d43e8de52d596ea3eaa86163ca63';
 
 /// See also [earningReportData].
 @ProviderFor(earningReportData)
@@ -2371,8 +2351,7 @@ class EarningReportDataFamily extends Family<AsyncValue<EarningReportsModel?>> {
 }
 
 /// See also [earningReportData].
-class EarningReportDataProvider
-    extends AutoDisposeFutureProvider<EarningReportsModel?> {
+class EarningReportDataProvider extends FutureProvider<EarningReportsModel?> {
   /// See also [earningReportData].
   EarningReportDataProvider(ChartRequestDto overview)
     : this._internal(
@@ -2420,7 +2399,7 @@ class EarningReportDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<EarningReportsModel?> createElement() {
+  FutureProviderElement<EarningReportsModel?> createElement() {
     return _EarningReportDataProviderElement(this);
   }
 
@@ -2440,14 +2419,13 @@ class EarningReportDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin EarningReportDataRef
-    on AutoDisposeFutureProviderRef<EarningReportsModel?> {
+mixin EarningReportDataRef on FutureProviderRef<EarningReportsModel?> {
   /// The parameter `overview` of this provider.
   ChartRequestDto get overview;
 }
 
 class _EarningReportDataProviderElement
-    extends AutoDisposeFutureProviderElement<EarningReportsModel?>
+    extends FutureProviderElement<EarningReportsModel?>
     with EarningReportDataRef {
   _EarningReportDataProviderElement(super.provider);
 
@@ -2456,7 +2434,7 @@ class _EarningReportDataProviderElement
       (origin as EarningReportDataProvider).overview;
 }
 
-String _$analysisDataHash() => r'ecd965fc038e5b94f807d873c6bfa5a2d49ba261';
+String _$analysisDataHash() => r'f1db876a98b87cfc39b64016f8f0fbd7b9e5effc';
 
 /// See also [analysisData].
 @ProviderFor(analysisData)
@@ -2495,8 +2473,7 @@ class AnalysisDataFamily extends Family<AsyncValue<AnalysisDataModel?>> {
 }
 
 /// See also [analysisData].
-class AnalysisDataProvider
-    extends AutoDisposeFutureProvider<AnalysisDataModel?> {
+class AnalysisDataProvider extends FutureProvider<AnalysisDataModel?> {
   /// See also [analysisData].
   AnalysisDataProvider(ChartRequestDto overview)
     : this._internal(
@@ -2543,7 +2520,7 @@ class AnalysisDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<AnalysisDataModel?> createElement() {
+  FutureProviderElement<AnalysisDataModel?> createElement() {
     return _AnalysisDataProviderElement(this);
   }
 
@@ -2563,13 +2540,13 @@ class AnalysisDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin AnalysisDataRef on AutoDisposeFutureProviderRef<AnalysisDataModel?> {
+mixin AnalysisDataRef on FutureProviderRef<AnalysisDataModel?> {
   /// The parameter `overview` of this provider.
   ChartRequestDto get overview;
 }
 
 class _AnalysisDataProviderElement
-    extends AutoDisposeFutureProviderElement<AnalysisDataModel?>
+    extends FutureProviderElement<AnalysisDataModel?>
     with AnalysisDataRef {
   _AnalysisDataProviderElement(super.provider);
 
@@ -2577,7 +2554,7 @@ class _AnalysisDataProviderElement
   ChartRequestDto get overview => (origin as AnalysisDataProvider).overview;
 }
 
-String _$highlightsTopHash() => r'16cf69ae7fbb8680571b97bd0838025ada0c7b80';
+String _$highlightsTopHash() => r'08b8617fc72037cfa063296343b7fa625aa737ef';
 
 /// See also [highlightsTop].
 @ProviderFor(highlightsTop)
@@ -2616,8 +2593,7 @@ class HighlightsTopFamily extends Family<AsyncValue<HighlightResponse?>> {
 }
 
 /// See also [highlightsTop].
-class HighlightsTopProvider
-    extends AutoDisposeFutureProvider<HighlightResponse?> {
+class HighlightsTopProvider extends FutureProvider<HighlightResponse?> {
   /// See also [highlightsTop].
   HighlightsTopProvider(HighlightRequest highlightRequest)
     : this._internal(
@@ -2664,7 +2640,7 @@ class HighlightsTopProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<HighlightResponse?> createElement() {
+  FutureProviderElement<HighlightResponse?> createElement() {
     return _HighlightsTopProviderElement(this);
   }
 
@@ -2685,13 +2661,13 @@ class HighlightsTopProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin HighlightsTopRef on AutoDisposeFutureProviderRef<HighlightResponse?> {
+mixin HighlightsTopRef on FutureProviderRef<HighlightResponse?> {
   /// The parameter `highlightRequest` of this provider.
   HighlightRequest get highlightRequest;
 }
 
 class _HighlightsTopProviderElement
-    extends AutoDisposeFutureProviderElement<HighlightResponse?>
+    extends FutureProviderElement<HighlightResponse?>
     with HighlightsTopRef {
   _HighlightsTopProviderElement(super.provider);
 
@@ -2700,7 +2676,7 @@ class _HighlightsTopProviderElement
       (origin as HighlightsTopProvider).highlightRequest;
 }
 
-String _$marketCapChartHash() => r'ead42c34212b5f8417544a4b3ce8eae821c5f1a3';
+String _$marketCapChartHash() => r'fe6bde66e13ef5595457c677755905a7201aa271';
 
 /// See also [marketCapChart].
 @ProviderFor(marketCapChart)
@@ -2739,8 +2715,7 @@ class MarketCapChartFamily extends Family<AsyncValue<MarketCapResponse?>> {
 }
 
 /// See also [marketCapChart].
-class MarketCapChartProvider
-    extends AutoDisposeFutureProvider<MarketCapResponse?> {
+class MarketCapChartProvider extends FutureProvider<MarketCapResponse?> {
   /// See also [marketCapChart].
   MarketCapChartProvider(MarketCapRequest symbol)
     : this._internal(
@@ -2787,7 +2762,7 @@ class MarketCapChartProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<MarketCapResponse?> createElement() {
+  FutureProviderElement<MarketCapResponse?> createElement() {
     return _MarketCapChartProviderElement(this);
   }
 
@@ -2807,13 +2782,13 @@ class MarketCapChartProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin MarketCapChartRef on AutoDisposeFutureProviderRef<MarketCapResponse?> {
+mixin MarketCapChartRef on FutureProviderRef<MarketCapResponse?> {
   /// The parameter `symbol` of this provider.
   MarketCapRequest get symbol;
 }
 
 class _MarketCapChartProviderElement
-    extends AutoDisposeFutureProviderElement<MarketCapResponse?>
+    extends FutureProviderElement<MarketCapResponse?>
     with MarketCapChartRef {
   _MarketCapChartProviderElement(super.provider);
 
@@ -2821,7 +2796,7 @@ class _MarketCapChartProviderElement
   MarketCapRequest get symbol => (origin as MarketCapChartProvider).symbol;
 }
 
-String _$cryptoMarketsHash() => r'5b933e6f6def2385152c443bbc51462badf577a3';
+String _$cryptoMarketsHash() => r'1b523a1386183b45707fcc07a06004e8e7bb4747';
 
 /// See also [cryptoMarkets].
 @ProviderFor(cryptoMarkets)
@@ -2860,8 +2835,7 @@ class CryptoMarketsFamily extends Family<AsyncValue<CryptoMarketModel?>> {
 }
 
 /// See also [cryptoMarkets].
-class CryptoMarketsProvider
-    extends AutoDisposeFutureProvider<CryptoMarketModel?> {
+class CryptoMarketsProvider extends FutureProvider<CryptoMarketModel?> {
   /// See also [cryptoMarkets].
   CryptoMarketsProvider(SymbolDto symbol)
     : this._internal(
@@ -2908,7 +2882,7 @@ class CryptoMarketsProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<CryptoMarketModel?> createElement() {
+  FutureProviderElement<CryptoMarketModel?> createElement() {
     return _CryptoMarketsProviderElement(this);
   }
 
@@ -2928,13 +2902,13 @@ class CryptoMarketsProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin CryptoMarketsRef on AutoDisposeFutureProviderRef<CryptoMarketModel?> {
+mixin CryptoMarketsRef on FutureProviderRef<CryptoMarketModel?> {
   /// The parameter `symbol` of this provider.
   SymbolDto get symbol;
 }
 
 class _CryptoMarketsProviderElement
-    extends AutoDisposeFutureProviderElement<CryptoMarketModel?>
+    extends FutureProviderElement<CryptoMarketModel?>
     with CryptoMarketsRef {
   _CryptoMarketsProviderElement(super.provider);
 
@@ -2942,7 +2916,7 @@ class _CryptoMarketsProviderElement
   SymbolDto get symbol => (origin as CryptoMarketsProvider).symbol;
 }
 
-String _$priceRatioHash() => r'7f016716f6a1aad32f1233859f3a571da3b6cd3f';
+String _$priceRatioHash() => r'565cac3ffd2832575f1aaaa6c0b3909fe7b630f5';
 
 /// See also [priceRatio].
 @ProviderFor(priceRatio)
@@ -2981,8 +2955,7 @@ class PriceRatioFamily extends Family<AsyncValue<PriceComparisonModel?>> {
 }
 
 /// See also [priceRatio].
-class PriceRatioProvider
-    extends AutoDisposeFutureProvider<PriceComparisonModel?> {
+class PriceRatioProvider extends FutureProvider<PriceComparisonModel?> {
   /// See also [priceRatio].
   PriceRatioProvider(PriceComparisonDto symbol)
     : this._internal(
@@ -3028,7 +3001,7 @@ class PriceRatioProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<PriceComparisonModel?> createElement() {
+  FutureProviderElement<PriceComparisonModel?> createElement() {
     return _PriceRatioProviderElement(this);
   }
 
@@ -3048,13 +3021,13 @@ class PriceRatioProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin PriceRatioRef on AutoDisposeFutureProviderRef<PriceComparisonModel?> {
+mixin PriceRatioRef on FutureProviderRef<PriceComparisonModel?> {
   /// The parameter `symbol` of this provider.
   PriceComparisonDto get symbol;
 }
 
 class _PriceRatioProviderElement
-    extends AutoDisposeFutureProviderElement<PriceComparisonModel?>
+    extends FutureProviderElement<PriceComparisonModel?>
     with PriceRatioRef {
   _PriceRatioProviderElement(super.provider);
 
@@ -3062,21 +3035,5 @@ class _PriceRatioProviderElement
   PriceComparisonDto get symbol => (origin as PriceRatioProvider).symbol;
 }
 
-String _$analyticsProviderHash() => r'655798700dd7bdf23c1e064675345fe8c2ed5d44';
-
-/// See also [AnalyticsProvider].
-@ProviderFor(AnalyticsProvider)
-final analyticsProviderProvider =
-    AutoDisposeNotifierProvider<AnalyticsProvider, AppLoadingState>.internal(
-      AnalyticsProvider.new,
-      name: r'analyticsProviderProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$analyticsProviderHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$AnalyticsProvider = AutoDisposeNotifier<AppLoadingState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

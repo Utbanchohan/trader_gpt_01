@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/analysis_content.dart';
@@ -15,6 +14,7 @@ import '../../../../chat/domain/model/chat_stock_model.dart';
 class BuildAnalyticTab extends StatefulWidget {
   final ChatRouting chatRouting;
   final Stock selectedStock;
+
   const BuildAnalyticTab({
     super.key,
     required this.chatRouting,
@@ -27,11 +27,13 @@ class BuildAnalyticTab extends StatefulWidget {
 
 class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
   ScrollController _scrollController = ScrollController();
+
   //raza: if its only using in app bar no need to use variable
   final GlobalKey _scrollableKey = GlobalKey();
   final Map<String, GlobalKey> _keys = {};
   final Map<String, GlobalKey> _chipKeys = {};
   String _activeSection = 'overview';
+  bool _isScrollingProgrammatically = false;
 
   final List<Map<String, dynamic>> sections = [
     {
@@ -67,7 +69,13 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
   ];
 
   void _handleScroll() {
-    double scrollPos = _scrollController.offset;
+    // Skip if we're scrolling programmatically (via tap)
+    if (_isScrollingProgrammatically) return;
+
+    const double headerHeight = 60.0;
+    const double threshold = 100.0; // Threshold for section activation
+
+    String? newActiveSection;
 
     for (var section in sections) {
       final String id = section['id'];
@@ -75,127 +83,85 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
 
       if (key?.currentContext == null) continue;
 
-      final box = key!.currentContext!.findRenderObject() as RenderBox;
-      final offset = box.localToGlobal(
-        Offset.zero,
-        ancestor: context.findRenderObject(),
-      );
+      try {
+        final box = key!.currentContext!.findRenderObject() as RenderBox;
+        final position = box.localToGlobal(Offset.zero);
 
-      // Header height
-      const double headerHeight = 60;
+        // Check if section is in the active zone (just below the header)
+        // A section is active if its top is at or above the header + threshold
+        // and its bottom is below the header
+        final sectionTop = position.dy;
+        final sectionBottom = position.dy + box.size.height;
 
-      // Section becomes active when it is below header but visible
-      if (offset.dy <= headerHeight + 10 && offset.dy > -box.size.height / 2) {
-        if (_activeSection != id) {
-          setState(() => _activeSection = id);
+        if (sectionTop <= headerHeight + threshold &&
+            sectionBottom > headerHeight) {
+          newActiveSection = id;
+          break;
         }
-        break;
+      } catch (e) {
+        // Ignore errors during layout
+        continue;
       }
     }
-  }
 
-  void _scrollActiveChipIntoView(String id) {
-    final keyContext = _keys[id]?.currentContext;
-    if (keyContext == null) return;
-
-    final box = keyContext.findRenderObject() as RenderBox;
-    final offset = box.localToGlobal(
-      Offset.zero,
-      ancestor: context.findRenderObject(),
-    );
-
-    // Subtract chip header height (60)
-    final scrollOffset = offset.dy + _scrollController.offset - 60;
-
-    _scrollController.animateTo(
-      scrollOffset,
-      duration: Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
-
-    // try {
-    //   final ctx = _chipKeys[id]?.currentContext;
-    //   if (ctx != null) {
-    //     Scrollable.ensureVisible(
-    //       ctx,
-    //       duration: const Duration(milliseconds: 250),
-    //       curve: Curves.easeInOut,
-    //       alignment: 0.5,
-    //     );
-    //   }
-    // } catch (e) {
-    //   // ignore errors if layout not ready
-    // }
+    if (newActiveSection != null && _activeSection != newActiveSection) {
+      setState(() => _activeSection = newActiveSection!);
+    }
   }
 
   Future<void> scrollToSection(String sectionId) async {
     final key = _keys[sectionId];
-    if (key == null) return;
-
-    try {
-      await Scrollable.ensureVisible(
-        key.currentContext!,
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
-        alignment: 0, // scroll to top of viewport
-      );
-
-      setState(() => _activeSection = sectionId);
-    } catch (_) {
-      // Section not built yet; scroll a bit and retry
-      await _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent * 0.1,
-        duration: Duration(milliseconds: 50),
-        curve: Curves.easeInOut,
-      );
-
-      // Retry
-      await Future.delayed(Duration(milliseconds: 50));
-      if (key.currentContext != null) {
-        await Scrollable.ensureVisible(
-          key.currentContext!,
-          duration: const Duration(milliseconds: 350),
-          curve: Curves.easeInOut,
-          alignment: 0,
-        );
-        setState(() => _activeSection = sectionId);
-      }
+    if (key?.currentContext == null) {
+      debugPrint('Key context is null for section: $sectionId');
+      return;
     }
 
-    // final key = _keys[sectionId];
-    // if (key == null || key.currentContext == null) return;
+    const double headerHeight = 60.0;
 
-    // // Wait for layout
-    // await Future.delayed(Duration(milliseconds: 20));
+    // Set flag to prevent _handleScroll from interfering
+    _isScrollingProgrammatically = true;
 
-    // // Get position of the widget
-    // final box = key!.currentContext!.findRenderObject() as RenderBox;
-    // final position = box.localToGlobal(
-    //   Offset.zero,
-    //   ancestor: context.findRenderObject(),
-    // );
+    // Update active section immediately
+    setState(() => _activeSection = sectionId);
 
-    // // Pinned chips height
-    // const double pinnedHeaderHeight = 60;
+    try {
+      final box = key!.currentContext!.findRenderObject() as RenderBox;
+      final position = box.localToGlobal(Offset.zero);
 
-    // // Calculate final offset inside the scrollable
-    // final targetOffset =
-    //     _scrollController.offset + position.dy - pinnedHeaderHeight;
+      // Calculate the target scroll offset
+      // We want to position the section just below the header
+      final targetOffset =
+          _scrollController.offset + position.dy - headerHeight;
 
-    // // Animate to that position
-    // await _scrollController.animateTo(
-    //   targetOffset,
-    //   duration: const Duration(milliseconds: 350),
-    //   curve: Curves.easeInOut,
-    // );
+      // Clamp the offset to valid scroll range
+      final maxScroll = _scrollController.position.maxScrollExtent;
+      final minScroll = _scrollController.position.minScrollExtent;
+      final clampedOffset = targetOffset.clamp(minScroll, maxScroll);
 
-    // // Update active section
-    // setState(() => _activeSection = sectionId);
+      debugPrint('Scrolling to section: $sectionId, offset: $clampedOffset');
+
+      // Animate to target position
+      await _scrollController.animateTo(
+        clampedOffset,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+      );
+    } catch (e) {
+      debugPrint('Error scrolling to section: $e');
+    } finally {
+      // Re-enable scroll detection after a short delay
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          _isScrollingProgrammatically = false;
+        }
+      });
+    }
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _scrollController.removeListener(_handleScroll);
     super.dispose();
   }
 
@@ -212,17 +178,16 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
       _chipKeys[section['id']] = GlobalKey();
     }
     _scrollController.addListener(_handleScroll);
-    if (widget.chatRouting != null) {
-      if (widget.chatRouting!.type.toLowerCase() == "crypto") {
-        // cryptoApis();
-      } else {
-        // firstIndexData();
-      }
+    if (widget.chatRouting.type.toLowerCase() == "crypto") {
+      // cryptoApis();
+    } else {
+      // firstIndexData();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    print("rebuild BuildAnalyticTab");
     return CustomScrollView(
       key: _scrollableKey,
       controller: _scrollController,
@@ -294,6 +259,7 @@ class _ChipsHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double _maxExtent;
   final List<Map<String, dynamic>> sections;
   final Map<String, GlobalKey> chipKeys;
+
   //raza: wrong parm type , why its function
   final String Function() activeSectionIdGetter;
   final void Function(String id) onTap;
@@ -323,7 +289,7 @@ class _ChipsHeaderDelegate extends SliverPersistentHeaderDelegate {
     //raza: wrong way to use
     final activeId = activeSectionIdGetter();
     return Container(
-      color: Colors.red,
+      color: AppColors.primaryColor,
       padding: const EdgeInsets.only(top: 8, bottom: 8),
       alignment: Alignment.centerLeft,
       child: SingleChildScrollView(
@@ -348,7 +314,7 @@ class _ChipsHeaderDelegate extends SliverPersistentHeaderDelegate {
                   border: Border.all(
                     color: isActive
                         ? Colors.transparent
-                        : AppColors.colorB2B2B7.withOpacity(0.4),
+                        : AppColors.colorB2B2B7.withValues(alpha: 0.4),
                     width: 1,
                   ),
                 ),

@@ -181,7 +181,7 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
   fundamental(SymbolDto symbol) async {
     try {
       fundamentalResponseLoder = true;
-      var res = await ref.watch(fundamentalDataProvider(symbol));
+      var res =  ref.watch(fundamentalDataProvider(symbol));
 
       switch (res) {
         case AsyncData(:final value):
@@ -613,7 +613,7 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
 
     final stockManagerState = ref.watch(stocksManagerProvider);
 
-    final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
+    final liveStock = stockManagerState[widget.chatRouting.stockid];
     double change = liveStock != null
         ? PriceUtils.getChangesPercentage(
                         liveStock.price,
@@ -914,10 +914,10 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
                     // key: UniqueKey(),
                     name: "OHLC/V Candlestick Chart",
                     data: buildChartSpots(overviewCandleChartModel!),
-                    selectedItem: selectedCandleOverview ?? "D",
+                    selectedItem: selectedCandleOverview,
                     onPressed: (val) {
                       getOverviewCandleChart(
-                        widget.chatRouting!.symbol,
+                        widget.chatRouting.symbol,
                         val == 'H'
                             ? IntervalEnum.hour
                             : val == 'D'
@@ -1141,7 +1141,12 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
 // OverviewContentV1 - Properly refactored with correct Riverpod usage
 // ============================================================================
 
-class OverviewContentV1 extends ConsumerStatefulWidget {
+// State provider for selected candle interval per symbol
+final selectedCandleIntervalProvider = StateProvider.family<String, String>(
+  (ref, symbol) => "D",
+);
+
+class OverviewContentV1 extends ConsumerWidget {
   final ChatRouting chatRouting;
   final Stock selectedStock;
 
@@ -1151,74 +1156,29 @@ class OverviewContentV1 extends ConsumerStatefulWidget {
     required this.selectedStock,
   });
 
-  @override
-  ConsumerState<OverviewContentV1> createState() => _OverviewContentV1State();
-}
-
-class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
-  String selectedCandleOverview = "D";
-
   // Helper method to calculate chart date range based on interval
+  // Uses date-only (no time component) to ensure stable provider keys
   Map<String, String> _calculateChartDateRange(IntervalEnum interval) {
     final now = DateTime.now().toUtc();
+    // Use date-only to avoid creating new provider instances on every build
+    final today = DateTime.utc(now.year, now.month, now.day);
     DateTime startDate;
-    final endDateString = now.toIso8601String();
 
     switch (interval.value) {
       case "hour":
-        startDate = DateTime.utc(
-          now.year,
-          now.month - 2,
-          now.day,
-          now.hour,
-          now.minute,
-          now.second,
-          now.millisecond,
-        );
+        startDate = DateTime.utc(today.year, today.month - 2, today.day);
         break;
       case "daily":
-        startDate = DateTime.utc(
-          now.year - 2,
-          now.month,
-          now.day,
-          now.hour,
-          now.minute,
-          now.second,
-          now.millisecond,
-        );
+        startDate = DateTime.utc(today.year - 2, today.month, today.day);
         break;
       case "weekly":
-        startDate = DateTime.utc(
-          now.year - 3,
-          now.month,
-          now.day,
-          now.hour,
-          now.minute,
-          now.second,
-          now.millisecond,
-        );
+        startDate = DateTime.utc(today.year - 3, today.month, today.day);
         break;
       case "monthly":
-        startDate = DateTime.utc(
-          now.year - 10,
-          now.month,
-          now.day,
-          now.hour,
-          now.minute,
-          now.second,
-          now.millisecond,
-        );
+        startDate = DateTime.utc(today.year - 10, today.month, today.day);
         break;
       default:
-        startDate = DateTime.utc(
-          now.year - 2,
-          now.month,
-          now.day,
-          now.hour,
-          now.minute,
-          now.second,
-          now.millisecond,
-        );
+        startDate = DateTime.utc(today.year - 2, today.month, today.day);
     }
 
     double intervalMs = 0;
@@ -1235,13 +1195,13 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
     }
 
     double dummyIntervals =
-        (now.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch) /
+        (today.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch) /
         intervalMs;
     var dataPoint = intervalMs > 0 ? (dummyIntervals + 1).floor() : 1;
 
     return {
       'startDate': startDate.toIso8601String(),
-      'endDate': endDateString,
+      'endDate': today.toIso8601String(),
       'dataPoint': dataPoint.toString(),
     };
   }
@@ -1263,44 +1223,41 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Watch all providers in build method
-    final overviewState = ref.watch(
-      getOverviewProvider(widget.chatRouting.symbol),
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Watch selected candle interval state
+    final selectedCandleOverview = ref.watch(
+      selectedCandleIntervalProvider(chatRouting.symbol),
     );
+
+    // Watch all providers in build method
+    final overviewState = ref.watch(getOverviewProvider(chatRouting.symbol));
     final priceTargetState = ref.watch(
-      priceTargetMatricsProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+      priceTargetMatricsProvider(SymbolDto(symbol: chatRouting.symbol)),
     );
     final pricePerformanceState = ref.watch(
-      pricePerformanceProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+      pricePerformanceProvider(SymbolDto(symbol: chatRouting.symbol)),
     );
     final analyticsState = ref.watch(
-      analyticsDataProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+      analyticsDataProvider(SymbolDto(symbol: chatRouting.symbol)),
     );
-    final matricsState = ref.watch(
-      matricsDataProvider(widget.chatRouting.symbol),
-    );
+    final matricsState = ref.watch(matricsDataProvider(chatRouting.symbol));
     final fundamentalState = ref.watch(
-      fundamentalDataProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+      fundamentalDataProvider(SymbolDto(symbol: chatRouting.symbol)),
     );
     final sharesState = ref.watch(
-      shareStatsProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+      shareStatsProvider(SymbolDto(symbol: chatRouting.symbol)),
     );
     final priceComparisonState = ref.watch(
       priceComparisonProvider(
         PriceComparisonDto(
           daysBack: 365,
-          symbol1: widget.chatRouting.symbol,
+          symbol1: chatRouting.symbol,
           symbol2: "SPY",
         ),
       ),
     );
-    final weeklyState = ref.watch(
-      getWeeklyDataProvider(widget.chatRouting.symbol),
-    );
-    final monthlyState = ref.watch(
-      getMonthlyDataProvider(widget.chatRouting.symbol),
-    );
+    final weeklyState = ref.watch(getWeeklyDataProvider(chatRouting.symbol));
+    final monthlyState = ref.watch(getMonthlyDataProvider(chatRouting.symbol));
 
     // Calculate chart date range based on selected interval
     final interval = selectedCandleOverview == 'H'
@@ -1313,21 +1270,22 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
         ? IntervalEnum.monthly
         : IntervalEnum.daily;
 
-    final chartDateRange = _calculateChartDateRange(interval);
-    final chartState = ref.watch(
-      getOverviewCandleChartProvider(
-        widget.chatRouting.symbol + "_NASDAQ",
-        interval.value,
-        chartDateRange['startDate']!,
-        chartDateRange['endDate']!,
-        "1",
-        chartDateRange['dataPoint']!,
-      ),
-    );
+///////////////////////////////////////////////////This Api has 504///////////////////////////////////////////////////////////////////
+    // final chartDateRange = _calculateChartDateRange(interval);
+    // final chartState = ref.watch(
+    //   getOverviewCandleChartProvider(
+    //     chatRouting.symbol + "_NASDAQ",
+    //     interval.value,
+    //     chartDateRange['startDate']!,
+    //     chartDateRange['endDate']!,
+    //     "1",
+    //     chartDateRange['dataPoint']!,
+    //   ),
+    // );
 
     // Watch stock manager for live prices
     final stockManagerState = ref.watch(stocksManagerProvider);
-    final liveStock = stockManagerState[widget.chatRouting.stockid ?? ''];
+    final liveStock = stockManagerState[chatRouting.stockid];
 
     // Calculate price change
     double change = liveStock != null
@@ -1341,16 +1299,16 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
                   liveStock.price,
                   liveStock.previousClose,
                 )!
-              : widget.chatRouting.changePercentage
-        : widget.chatRouting.changePercentage;
+              : chatRouting.changePercentage
+        : chatRouting.changePercentage;
 
     List<String> questions = [
-      "Provide a comprehensive company analysis of ${widget.chatRouting.companyName}",
-      "Technical analysis for ${widget.chatRouting.companyName}",
-      "Analyze analyst sentiment for ${widget.chatRouting.companyName}",
-      "Perform DCF valuation analysis for  ${widget.chatRouting.companyName}",
-      "Perform DCF valuation analysis for ${widget.chatRouting.companyName}",
-      "Analyze analyst sentiment for ${widget.chatRouting.companyName}",
+      "Provide a comprehensive company analysis of ${chatRouting.companyName}",
+      "Technical analysis for ${chatRouting.companyName}",
+      "Analyze analyst sentiment for ${chatRouting.companyName}",
+      "Perform DCF valuation analysis for  ${chatRouting.companyName}",
+      "Perform DCF valuation analysis for ${chatRouting.companyName}",
+      "Analyze analyst sentiment for ${chatRouting.companyName}",
     ];
 
     return Padding(
@@ -1372,11 +1330,11 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
-                    child: widget.selectedStock.type.toLowerCase() == "crypto"
+                    child: selectedStock.type.toLowerCase() == "crypto"
                         ? Image.network(
                             getItemImage(
                               ImageType.crypto,
-                              widget.selectedStock.symbol,
+                              selectedStock.symbol,
                             ),
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
@@ -1387,10 +1345,7 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
                             },
                           )
                         : SvgPicture.network(
-                            getItemImage(
-                              ImageType.stock,
-                              widget.selectedStock.symbol,
-                            ),
+                            getItemImage(ImageType.stock, selectedStock.symbol),
                             fit: BoxFit.cover,
                             placeholderBuilder: (context) => SizedBox(
                               height: 26.h,
@@ -1417,11 +1372,11 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
                       child: Row(
                         children: [
                           ShowInfoPopup(
-                            chatRouting: widget.chatRouting,
+                            chatRouting: chatRouting,
                             question: questions[0],
                             text: "Complete Company Analysis",
                             child: MdSnsText(
-                              "#${widget.selectedStock.symbol}",
+                              "#${selectedStock.symbol}",
                               variant: TextVariant.h3,
                               fontWeight: TextFontWeightVariant.h1,
                               color: AppColors.white,
@@ -1440,10 +1395,7 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width / 1.7,
                             child: MdSnsText(
-                              widget.selectedStock.companyName
-                                  .split("-")
-                                  .first
-                                  .trim(),
+                              selectedStock.companyName.split("-").first.trim(),
                               color: AppColors.colorB2B2B7,
                               variant: TextVariant.h4,
                               maxLines: 1,
@@ -1464,7 +1416,7 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
                                   isAbs: false,
                                 )
                               : Filters.systemNumberConvention(
-                                  widget.selectedStock.price,
+                                  selectedStock.price,
                                   isPrice: true,
                                   isAbs: false,
                                 ),
@@ -1598,39 +1550,44 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
             },
             SizedBox(height: 20.h),
 
+///////////////////////////////////////////////////This Api has 504///////////////////////////////////////////////////////////////////
             // Candle Chart
-            switch (chartState) {
-              AsyncData(:final value) when value.data.isNotEmpty =>
-                CustomCandleChart(
-                  name: "OHLC/V Candlestick Chart",
-                  data: _buildChartSpots(value.data),
-                  selectedItem: selectedCandleOverview,
-                  onPressed: (val) {
-                    if (!mounted) return;
-                    setState(() {
-                      selectedCandleOverview = val;
-                    });
-                  },
-                ),
-              AsyncLoading() => SizedBox(
-                height: 300.h,
-                child: CustomCandleChartShimmer(),
-              ),
-              AsyncError() => SizedBox(),
-              _ => SizedBox(),
-            },
-            SizedBox(height: 20.h),
+            // switch (chartState) {
+            //   AsyncData(:final value) when value.data.isNotEmpty =>
+            //     CustomCandleChart(
+            //       name: "OHLC/V Candlestick Chart",
+            //       data: _buildChartSpots(value.data),
+            //       selectedItem: selectedCandleOverview,
+            //       onPressed: (val) {
+            //         ref
+            //                 .read(
+            //                   selectedCandleIntervalProvider(
+            //                     chatRouting.symbol,
+            //                   ).notifier,
+            //                 )
+            //                 .state =
+            //             val;
+            //       },
+            //     ),
+            //   AsyncLoading() => SizedBox(
+            //     height: 300.h,
+            //     child: CustomCandleChartShimmer(),
+            //   ),
+            //   AsyncError() => SizedBox(),
+            //   _ => SizedBox(),
+            // },
+            // SizedBox(height: 20.h),
 
             // Price Target Metrics
             switch (priceTargetState) {
               AsyncData(:final value) when value != null && value.isNotEmpty =>
                 PriceTargetWidget(
                   data: value.whereType<PriceTargetData>().toList(),
-                  chatRouting: widget.chatRouting,
+                  chatRouting: chatRouting,
                 ),
               AsyncLoading() => PriceTargetWidget(
                 data: null,
-                chatRouting: widget.chatRouting,
+                chatRouting: chatRouting,
               ),
               AsyncError() => SizedBox(),
               _ => SizedBox(),
@@ -1642,14 +1599,14 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
               AsyncData(:final value)
                   when value != null && value.data.PercentInsiders != null =>
                 ShareStructureCard(
-                  chatRouting: widget.chatRouting,
+                  chatRouting: chatRouting,
                   matrics: null,
                   fundamentalData: null,
                   shareData: value.data,
                   heading: Headings.shareStructure,
                 ),
               AsyncLoading() => ShareStructureCard(
-                chatRouting: widget.chatRouting,
+                chatRouting: chatRouting,
                 matrics: null,
                 fundamentalData: null,
                 shareData: null,
@@ -1684,14 +1641,14 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
                   when value != null &&
                       value.data.fundamentals.annualIncome.isNotEmpty =>
                 ShareStructureCard(
-                  chatRouting: widget.chatRouting,
+                  chatRouting: chatRouting,
                   matrics: null,
                   fundamentalData: value.data,
                   shareData: null,
                   heading: Headings.fundamental,
                 ),
               AsyncLoading() => ShareStructureCard(
-                chatRouting: widget.chatRouting,
+                chatRouting: chatRouting,
                 matrics: null,
                 fundamentalData: null,
                 shareData: null,
@@ -1709,14 +1666,14 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
                       value.data != null &&
                       value.data!.isNotEmpty =>
                 ShareStructureCard(
-                  chatRouting: widget.chatRouting,
+                  chatRouting: chatRouting,
                   matrics: value.data,
                   fundamentalData: null,
                   shareData: null,
                   heading: Headings.matrics,
                 ),
               AsyncLoading() => ShareStructureCard(
-                chatRouting: widget.chatRouting,
+                chatRouting: chatRouting,
                 matrics: null,
                 fundamentalData: null,
                 shareData: null,
@@ -1729,12 +1686,11 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
 
             // Monthly Data
             switch (monthlyState) {
-              AsyncData(:final value) when value != null =>
-                WeeklySeasonalityChart(
-                  data: value,
-                  isWeekly: false,
-                  weeklyModel: WeeklyModel(),
-                ),
+              AsyncData(:final value) => WeeklySeasonalityChart(
+                data: value,
+                isWeekly: false,
+                weeklyModel: WeeklyModel(),
+              ),
               AsyncLoading() => shimmerBox(height: 400, radius: 16),
               AsyncError() => SizedBox(),
               _ => SizedBox(),
@@ -1743,12 +1699,11 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
 
             // Weekly Data
             switch (weeklyState) {
-              AsyncData(:final value) when value != null =>
-                WeeklySeasonalityChart(
-                  weeklyModel: value,
-                  isWeekly: true,
-                  data: ProbabilityResponse(),
-                ),
+              AsyncData(:final value) => WeeklySeasonalityChart(
+                weeklyModel: value,
+                isWeekly: true,
+                data: ProbabilityResponse(),
+              ),
               AsyncLoading() => shimmerBox(height: 400, radius: 16),
               AsyncError() => SizedBox(),
               _ => SizedBox(),
@@ -1759,11 +1714,11 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
             switch (priceComparisonState) {
               AsyncData(:final value)
                   when value != null &&
-                      value.data.data[widget.chatRouting.symbol] != null &&
+                      value.data.data[chatRouting.symbol] != null &&
                       value.data.data['SPY'] != null =>
                 PriceComparisonChart(
                   priceComparisonModel: value,
-                  symbol: widget.chatRouting.symbol,
+                  symbol: chatRouting.symbol,
                   twoCharts: true,
                 ),
               AsyncLoading() => shimmerBox(height: 300, radius: 16),
@@ -1776,10 +1731,7 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
             switch (analyticsState) {
               AsyncData(:final value)
                   when value != null && value.data.isNotEmpty =>
-                AnalyticsWidget(
-                  chatRouting: widget.chatRouting,
-                  data: value.data,
-                ),
+                AnalyticsWidget(chatRouting: chatRouting, data: value.data),
               AsyncLoading() => shimmerBox(height: 170, radius: 16),
               AsyncError() => SizedBox(),
               _ => SizedBox(),

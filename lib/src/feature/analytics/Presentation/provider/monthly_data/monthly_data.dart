@@ -14,7 +14,7 @@ class MonthlyData extends _$MonthlyData {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<ProbabilityResponse> getMonthlyData(Ref ref, String ticker) async {
   final res = await ref.read(overviewRepositoryele).monthlyData(ticker);
   return res;

@@ -6,7 +6,7 @@ part of 'monthly_data.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getMonthlyDataHash() => r'9287744e2a797d5937c29472bed771d60d2ded14';
+String _$getMonthlyDataHash() => r'001f7a3ab921cfe0517e1808e21100b45b9f693f';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -66,8 +66,7 @@ class GetMonthlyDataFamily extends Family<AsyncValue<ProbabilityResponse>> {
 }
 
 /// See also [getMonthlyData].
-class GetMonthlyDataProvider
-    extends AutoDisposeFutureProvider<ProbabilityResponse> {
+class GetMonthlyDataProvider extends FutureProvider<ProbabilityResponse> {
   /// See also [getMonthlyData].
   GetMonthlyDataProvider(String ticker)
     : this._internal(
@@ -114,7 +113,7 @@ class GetMonthlyDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<ProbabilityResponse> createElement() {
+  FutureProviderElement<ProbabilityResponse> createElement() {
     return _GetMonthlyDataProviderElement(this);
   }
 
@@ -134,13 +133,13 @@ class GetMonthlyDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin GetMonthlyDataRef on AutoDisposeFutureProviderRef<ProbabilityResponse> {
+mixin GetMonthlyDataRef on FutureProviderRef<ProbabilityResponse> {
   /// The parameter `ticker` of this provider.
   String get ticker;
 }
 
 class _GetMonthlyDataProviderElement
-    extends AutoDisposeFutureProviderElement<ProbabilityResponse>
+    extends FutureProviderElement<ProbabilityResponse>
     with GetMonthlyDataRef {
   _GetMonthlyDataProviderElement(super.provider);
 
