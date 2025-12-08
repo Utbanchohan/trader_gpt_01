@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -442,6 +444,8 @@ Future<EarningReportsModel?> earningReportData(
       return null;
     }
   } on DioException catch (e) {
+    log("catch earningReportData errror======>>>>>>" + e.toString());
+
     if (e.response?.statusCode == 401) {
       final refreshToken = ref.read(localDataProvider).marketAccessTokenNew;
       if (refreshToken == null) rethrow;
@@ -461,6 +465,7 @@ Future<EarningReportsModel?> earningReportData(
           rethrow;
         }
       } catch (refreshError) {
+        log("rethorw earningReportData errror======>>>>>>" + e.toString());
         rethrow;
       }
     } else {

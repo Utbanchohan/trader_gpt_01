@@ -266,9 +266,12 @@ class _EarningContentV1State extends ConsumerState<EarningContentV1> {
     final earningChartState = ref.watch(
       earningChartDataProvider(chartRequestDto),
     );
+    // print(earningChartState.value);
+
     final earningReportState = ref.watch(
       earningReportDataProvider(chartRequestDto),
     );
+    print(earningReportState.value);
     final companyDetailState = ref.watch(
       companyDetailProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
     );
