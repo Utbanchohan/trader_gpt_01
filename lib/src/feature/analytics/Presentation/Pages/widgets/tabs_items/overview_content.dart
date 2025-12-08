@@ -1600,8 +1600,7 @@ class _OverviewContentV1State extends ConsumerState<OverviewContentV1> {
 
             // Candle Chart
             switch (chartState) {
-              AsyncData(:final value)
-                  when value != null && value.data.isNotEmpty =>
+              AsyncData(:final value) when value.data.isNotEmpty =>
                 CustomCandleChart(
                   name: "OHLC/V Candlestick Chart",
                   data: _buildChartSpots(value.data),

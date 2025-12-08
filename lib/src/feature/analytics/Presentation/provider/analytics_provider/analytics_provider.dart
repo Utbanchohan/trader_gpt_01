@@ -419,10 +419,12 @@ Future<EarningChartModel?> earningChartData(
           rethrow;
         }
       } catch (refreshError) {
+        print(e);
         rethrow;
       }
     } else {
       rethrow;
+      print(e);
     }
   }
 }
