@@ -60,7 +60,34 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Container(child: Image.asset(mainImage)),
+        Container(
+          height: 320.h,
+          child: Stack(
+            children: [
+              Positioned.fill(child: Image.asset(mainImage, fit: BoxFit.cover)),
+
+              Positioned(
+                top: 8,
+                right: 8,
+                child: InkWell(
+                  onTap: () {
+                    context.pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.4),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.close, color: AppColors.white, size: 18),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Container(child: Image.asset(mainImage)),
         SizedBox(height: 20),
 
         Image.asset(imagePath, width: 60, height: 60, fit: BoxFit.contain),

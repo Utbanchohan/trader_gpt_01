@@ -538,7 +538,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                             MarkdownStyleSheet.fromTheme(
                               Theme.of(context),
                             ).copyWith(
-                              tableColumnWidth: FixedColumnWidth(100.w),
+                              tableColumnWidth: FixedColumnWidth(120.w),
                               tableScrollbarThumbVisibility: false,
                               tableBorder: TableBorder.all(
                                 color: Colors.white24,

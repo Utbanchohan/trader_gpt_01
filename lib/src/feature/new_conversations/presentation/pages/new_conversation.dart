@@ -184,7 +184,8 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           image: "",
           companyName: stock.companyName,
           price: stock.price,
-          changePercentage: stock.pctChange,
+          changePercentage:
+              double.tryParse(stock.pct_change.replaceAll('%', '')) ?? 0,
           trendChart: trend,
           stockid: stock.stockId,
         ),
@@ -636,7 +637,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 40,
+                    width: 49,
                     child: MdSnsText(
                       widget.symbol,
                       color: Colors.white,

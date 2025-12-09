@@ -67,10 +67,11 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding:  EdgeInsets.only(right: 10.w),
+            padding: EdgeInsets.only(right: 10.w),
             child: Column(
               children: [
                 Container(
@@ -126,7 +127,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                           ),
                   ),
                 ),
-            
+
                 // Image.network(
                 //   stocks.logoUrl,
                 //   width: 42.w,
@@ -224,12 +225,14 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                    Filters.systemNumberConvention(
-                          change,
-                          isPrice: false,
-                          isAbs: false,
-                        ).replaceAll('%', '') +
-                        "%",
+                    change.isNotEmpty
+                        ? Filters.systemNumberConvention(
+                                change,
+                                isPrice: false,
+                                isAbs: false,
+                              ).replaceAll('%', '') +
+                              "%"
+                        : "0.00%",
                     color: change.contains("-")
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,

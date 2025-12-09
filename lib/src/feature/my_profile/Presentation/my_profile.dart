@@ -8,12 +8,14 @@ import 'package:trader_gpt/src/core/routes/routes.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/memory_model/memory_model.dart';
 import 'package:trader_gpt/src/feature/my_profile/Presentation/provider/memory_provider/memory_provider.dart';
+import 'package:trader_gpt/src/feature/s3_uploader/domain/models/media_model.dart';
+import 'package:trader_gpt/src/feature/s3_uploader/presentation/image_pickert.dart';
+import 'package:trader_gpt/src/feature/s3_uploader/providers/upload_provider.dart'
+    show uploadNotifierProvider;
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/memory_widgets.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-
-import '../../../shared/widgets/loading_widget.dart';
 
 class MyProfileScreen extends ConsumerStatefulWidget {
   const MyProfileScreen({super.key});
@@ -28,12 +30,18 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
   User? userModel;
   MemoryModel? memories;
   bool? memoriesLoading = false;
-
+  MediaModel? mediaModel;
+  String? imageUrl;
+  User? user;
   getUser() async {
     dynamic userData = await ref.watch(localDataProvider).getUser();
     if (userData != null) {
       setState(() {
         userModel = User.fromJson(userData);
+        mediaModel = MediaModel(
+          url: userModel!.imgUrl.isNotEmpty ? userModel!.imgUrl : "",
+          type: "image",
+        );
       });
     }
   }
@@ -66,6 +74,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
   @override
   Widget build(BuildContext context) {
     getUser();
+    final state = ref.watch(uploadNotifierProvider);
+
     return Scaffold(
       backgroundColor: const Color(0xFF0D1B2A),
       body: SafeArea(
@@ -83,18 +93,137 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
                   width: 23.w,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
+              // Stack(
+              //   alignment: Alignment.bottomRight,
+              //   children: [
+              //     state.when(
+              //       data: (media) {
+              //         mediaModel = media != null && media.url.isNotEmpty
+              //             ? media
+              //             : mediaModel;
+              //         return Container(
+              //           height: 63.h,
+              //           width: 63.w,
+              //           decoration: BoxDecoration(
+              //             shape: BoxShape.circle,
+              //             image: DecorationImage(
+              //               image: mediaModel != null
+              //                   ? NetworkImage(mediaModel!.url)
+              //                   : AssetImage(
+              //                           Assets.images.placeholderimage.path,
+              //                         )
+              //                         as ImageProvider,
+              //               fit: BoxFit.cover,
+              //             ),
+              //           ),
+              //         );
+              //       },
+              //       loading: () => CircularProgressIndicator(),
+              //       error: (e, st) => MdSnsText("Error: $e"),
+              //     ),
+              //     GestureDetector(
+              //       onTap: () {
+              //         showModalBottomSheet(
+              //           backgroundColor: AppColors.color1B254B,
+              //           context: context,
+              //           shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.vertical(
+              //               top: Radius.circular(20),
+              //             ),
+              //           ),
+              //           builder: (BuildContext context) {
+              //             return SizedBox(
+              //               height: MediaQuery.sizeOf(context).height * 0.25,
+              //               child: UploadImageScreen(),
+              //             );
+              //           },
+              //         );
+              //       },
+              //       child: Container(
+              //         height: 25.h,
+              //         width: 24.w,
+              //         decoration: BoxDecoration(
+              //           color: AppColors.color1B254B,
+              //           shape: BoxShape.circle,
+              //         ),
+              //         padding: EdgeInsets.all(4.w),
+              //         child: Image.asset(
+              //           Assets.images.camera.path,
+              //           width: 12.w,
+              //           height: 13.h,
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
 
               // Profile Section
               Center(
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 50.r,
-                      backgroundImage:
-                          userModel != null && userModel!.imgUrl.isNotEmpty
-                          ? NetworkImage(userModel!.imgUrl)
-                          : AssetImage(Assets.images.placeholderimage.path),
+                    GestureDetector(
+                      onTap: () {
+                        context.pushNamed(
+                          AppRoutes.profilePage.name,
+                          extra: true,
+                        );
+                      },
+                      child: Stack(
+                        children: [
+                          state.when(
+                            data: (media) {
+                              mediaModel = media != null && media.url.isNotEmpty
+                                  ? media
+                                  : mediaModel;
+
+                              return CircleAvatar(
+                                radius: 50.r,
+                                backgroundImage:
+                                    mediaModel != null &&
+                                        mediaModel!.url.isNotEmpty
+                                    ? NetworkImage(mediaModel!.url)
+                                    : AssetImage(
+                                            Assets.images.placeholderimage.path,
+                                          )
+                                          as ImageProvider,
+                              );
+                            },
+
+                            loading: () => SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: Center(child: CircularProgressIndicator()),
+                            ),
+                            error: (e, st) => MdSnsText("Error: $e"),
+                          ),
+
+                          Positioned(
+                            bottom: 0,
+                            right: 5,
+                            child: Container(
+                              height: 24.h,
+                              width: 24.w,
+                              decoration: BoxDecoration(
+                                color: AppColors.color1B254B,
+                                shape: BoxShape.circle,
+                              ),
+                              padding: EdgeInsets.all(4.w),
+                              child:
+                                  // Icon(
+                                  //   Icons.edit,
+                                  //   color: AppColors.white,
+                                  //   size: 16,
+                                  // ),
+                                  Image.asset(
+                                    Assets.images.edit2.path,
+                                    width: 12.w,
+                                    height: 12.h,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 12),
                     MdSnsText(
