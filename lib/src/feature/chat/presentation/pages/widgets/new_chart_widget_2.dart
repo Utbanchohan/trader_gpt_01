@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math';
 
-class ChartData {
+class ChartDataNewWidget {
   final String? title;
   final String? chartType;
   final String? subType;
@@ -15,7 +15,7 @@ class ChartData {
   final List<num>? bins;
   final List<num>? volume;
 
-  ChartData({
+  ChartDataNewWidget({
     this.title,
     this.chartType,
     this.subType,
@@ -31,7 +31,8 @@ class ChartData {
 }
 
 class ChartWidget extends StatefulWidget {
-  final ChartData chartData;
+  final ChartDataNewWidget chartData;
+  final double height;
   final Color textColor;
   final Color axisColor;
   final Color gridColor;
@@ -41,6 +42,7 @@ class ChartWidget extends StatefulWidget {
   const ChartWidget({
     Key? key,
     required this.chartData,
+    this.height = 450,
     this.textColor = Colors.white,
     this.axisColor = const Color(0xFF7A90B2),
     this.gridColor = const Color(0xFF091224),
@@ -54,7 +56,7 @@ class ChartWidget extends StatefulWidget {
 
 class _ChartWidgetState extends State<ChartWidget> {
   String? _selectedChartType;
-  late List<ChartTypeOption> _chartTypeOptions;
+  List<ChartTypeOption> _chartTypeOptions = [];
 
   @override
   void initState() {
@@ -79,22 +81,22 @@ class _ChartWidgetState extends State<ChartWidget> {
 
     // Special chart types that shouldn't show dropdown
     final specialTypes = [
-      'heatmap',
-      'correlation',
-      'radar',
-      'treemap',
-      'waterfall',
-      'candlestick',
-      'gradient_mapping',
-      'polar',
-      'histogram',
+      "heatmap",
+      "correlation",
+      "radar",
+      "treemap",
+      "waterfall",
+      "candlestick",
+      "gradient_mapping",
+      "polar",
+      "histogram",
     ];
 
     final isSpecialChart = specialTypes.any(
       (type) => chartType.contains(type) || subType.contains(type),
     );
 
-    // Check for multi-axis configuration
+    // Check if backend provided complete multi-axis configuration
     final hasMultiAxis =
         widget.chartData.yAxis is List &&
         (widget.chartData.yAxis as List).length > 2;
@@ -115,65 +117,59 @@ class _ChartWidgetState extends State<ChartWidget> {
           !isArrayOfArrays && first is Map<String, dynamic>;
 
       final categoriesLen = categories.length;
-      const maxPieCategories = 16;
+      const MAX_PIE_CATEGORIES = 16;
 
       // Multi-series (array of arrays)
       if (isArrayOfArrays && first is List) {
-        // Check for OHLC candlestick data
+        // Check if this is OHLC candlestick data
         final isCandlestickFormat = first.length == 4;
 
         if (isCandlestickFormat) {
-          types.add(ChartTypeOption('Candlestick', 'candlestick'));
+          types.add(ChartTypeOption("Candlestick", "candlestick"));
         } else {
-          types.addAll([
-            ChartTypeOption('Bar', 'bar'),
-            ChartTypeOption('Line', 'line'),
-            ChartTypeOption('Area', 'area'),
-            ChartTypeOption('Scatter', 'scatter'),
-          ]);
+          types.add(ChartTypeOption("Bar", "bar"));
+          types.add(ChartTypeOption("Line", "line"));
+          types.add(ChartTypeOption("Area", "area"));
+          types.add(ChartTypeOption("Scatter", "scatter"));
 
-          // Allow Pie for single series
-          if (data.length == 1 && categoriesLen <= maxPieCategories) {
-            types.add(ChartTypeOption('Pie', 'pie'));
+          if (data.length == 1 && categoriesLen <= MAX_PIE_CATEGORIES) {
+            types.add(ChartTypeOption("Pie", "pie"));
           }
         }
       }
 
       // Single flat primitive array
       if (isFlatPrimitiveArray) {
-        types.addAll([
-          ChartTypeOption('Bar', 'bar'),
-          ChartTypeOption('Line', 'line'),
-          ChartTypeOption('Area', 'area'),
-          ChartTypeOption('Scatter', 'scatter'),
-        ]);
+        types.add(ChartTypeOption("Bar", "bar"));
+        types.add(ChartTypeOption("Line", "line"));
+        types.add(ChartTypeOption("Area", "area"));
+        types.add(ChartTypeOption("Scatter", "scatter"));
 
-        if (categoriesLen <= maxPieCategories) {
-          types.add(ChartTypeOption('Pie', 'pie'));
+        if (categoriesLen <= MAX_PIE_CATEGORIES) {
+          types.add(ChartTypeOption("Pie", "pie"));
         }
 
         // Check for OHLC format
         if (data.length == categoriesLen * 4) {
-          types.add(ChartTypeOption('Candlestick', 'candlestick'));
+          types.add(ChartTypeOption("Candlestick", "candlestick"));
         }
       }
 
       // Array of series-like objects
       if (isSeriesObjectArray) {
-        types.addAll([
-          ChartTypeOption('Bar', 'bar'),
-          ChartTypeOption('Line', 'line'),
-          ChartTypeOption('Area', 'area'),
-          ChartTypeOption('Scatter', 'scatter'),
-        ]);
+        types.add(ChartTypeOption("Bar", "bar"));
+        types.add(ChartTypeOption("Line", "line"));
+        types.add(ChartTypeOption("Area", "area"));
+        types.add(ChartTypeOption("Scatter", "scatter"));
 
         if (data.length == 1) {
           final s = data[0] as Map<String, dynamic>;
           final sData = s['data'];
           if (sData is List &&
-              (sData.isNotEmpty && (sData[0] is num || sData[0] is String)) &&
-              categoriesLen <= maxPieCategories) {
-            types.add(ChartTypeOption('Pie', 'pie'));
+              sData.isNotEmpty &&
+              (sData[0] is num || sData[0] is String) &&
+              categoriesLen <= MAX_PIE_CATEGORIES) {
+            types.add(ChartTypeOption("Pie", "pie"));
           }
         }
       }
@@ -201,32 +197,166 @@ class _ChartWidgetState extends State<ChartWidget> {
     }
   }
 
+  // Helper methods
+  double _toDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
+
+  String _formatNumber(double value) {
+    if (value.abs() >= 1e12) return '${(value / 1e12).toStringAsFixed(1)}T';
+    if (value.abs() >= 1e9) return '${(value / 1e9).toStringAsFixed(1)}B';
+    if (value.abs() >= 1e6) return '${(value / 1e6).toStringAsFixed(1)}M';
+    if (value.abs() >= 1e3) return '${(value / 1e3).toStringAsFixed(1)}K';
+    return value.toStringAsFixed(value.abs() < 1 ? 2 : 1);
+  }
+
+  String _formatCategory(String category) {
+    try {
+      final isoLike = RegExp(r'^\d{4}-\d{2}-\d{2}(T.*)?$');
+      if (isoLike.hasMatch(category)) {
+        final date = DateTime.tryParse(category);
+        if (date != null) {
+          final mm = date.month.toString().padLeft(2, '0');
+          final dd = date.day.toString().padLeft(2, '0');
+          return '$mm/$dd';
+        }
+      }
+    } catch (e) {}
+
+    if (category.length > 10) return '${category.substring(0, 8)}...';
+    return category;
+  }
+
+  // Get evenly spaced indices for X-axis labels (max 5-6)
+  List<int> _getSpacedIndices(int total, int maxVisible) {
+    if (total <= maxVisible) return List.generate(total, (i) => i);
+
+    final step = (total - 1) / (maxVisible - 1);
+    final indices = <int>[];
+
+    for (int i = 0; i < maxVisible; i++) {
+      final index = (i * step).round();
+      indices.add(index.clamp(0, total - 1));
+    }
+
+    // Ensure first and last are always included
+    if (indices.first != 0) indices[0] = 0;
+    if (indices.last != total - 1) indices[indices.length - 1] = total - 1;
+
+    return indices.toSet().toList()..sort();
+  }
+
+  // Get nice Y-axis values (max 5-6)
+  List<double> _getYAxisValues(List<double> values, int maxTitles) {
+    if (values.isEmpty) return [0, 1, 2, 3, 4, 5];
+
+    final minVal = values.reduce(min);
+    final maxVal = values.reduce(max);
+
+    if ((maxVal - minVal).abs() < 0.0001) {
+      return List.generate(maxTitles, (i) => minVal + i);
+    }
+
+    // Calculate nice interval
+    final range = maxVal - minVal;
+    final niceRange = _niceNumber(range, false);
+    final niceMin = (minVal / niceRange).floor() * niceRange;
+    final niceMax = (maxVal / niceRange).ceil() * niceRange;
+
+    final List<double> result = [];
+    double current = niceMin;
+    final step = niceRange;
+
+    while (current <= niceMax && result.length < maxTitles) {
+      result.add(current);
+      current += step;
+    }
+
+    return result;
+  }
+
+  double _niceNumber(double value, bool round) {
+    final exponent = value == 0 ? 0 : (log(value) / ln10).floor();
+    final fraction = value / pow(10, exponent);
+
+    double niceFraction;
+    if (round) {
+      if (fraction < 1.5) {
+        niceFraction = 1.0;
+      } else if (fraction < 3.0) {
+        niceFraction = 2.0;
+      } else if (fraction < 7.0) {
+        niceFraction = 5.0;
+      } else {
+        niceFraction = 10.0;
+      }
+    } else {
+      if (fraction <= 1.0) {
+        niceFraction = 1.0;
+      } else if (fraction <= 2.0) {
+        niceFraction = 2.0;
+      } else if (fraction <= 5.0) {
+        niceFraction = 5.0;
+      } else {
+        niceFraction = 10.0;
+      }
+    }
+
+    return niceFraction * pow(10, exponent);
+  }
+
+  // Calculate chart height based on content
+  double _calculateChartHeight() {
+    double height = widget.height;
+
+    // Subtract title height if exists
+    if (widget.chartData.title != null) height -= 40;
+
+    // Subtract dropdown height if exists
+    if (_chartTypeOptions.isNotEmpty) height -= 60;
+
+    // Ensure minimum chart height
+    return max(height, 300);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final chartHeight = _calculateChartHeight();
+
     return Container(
       color: widget.backgroundColor,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(12.0),
+      height: widget.height,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Title
-          if (widget.chartData.title != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
+          if (widget.chartData.title != null &&
+              widget.chartData.title!.isNotEmpty)
+            Container(
+              height: 32,
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.only(bottom: 8),
               child: Text(
                 widget.chartData.title!,
                 style: TextStyle(
                   color: widget.textColor,
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
 
           // Chart Type Dropdown
           if (_chartTypeOptions.isNotEmpty)
             Container(
-              padding: const EdgeInsets.only(bottom: 16.0),
+              height: 50,
+              margin: const EdgeInsets.only(bottom: 12),
               child: DropdownButtonFormField<String>(
                 value: _selectedChartType,
                 items: _chartTypeOptions.map((option) {
@@ -243,21 +373,24 @@ class _ChartWidgetState extends State<ChartWidget> {
                   filled: true,
                   fillColor: Colors.black.withOpacity(0.2),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(6),
                     borderSide: BorderSide(color: widget.axisColor),
                   ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                   hintText: 'Select Chart Type',
                   hintStyle: TextStyle(
                     color: widget.textColor.withOpacity(0.7),
                   ),
                 ),
                 dropdownColor: widget.gridColor,
-                style: TextStyle(color: widget.textColor),
+                style: TextStyle(color: widget.textColor, fontSize: 14),
+                icon: Icon(Icons.arrow_drop_down, color: widget.textColor),
+                isExpanded: true,
               ),
             ),
 
-          // Chart Container
-          Expanded(child: _buildChart()),
+          // Chart Container with FIXED height
+          SizedBox(height: chartHeight, child: _buildChart()),
         ],
       ),
     );
@@ -266,56 +399,36 @@ class _ChartWidgetState extends State<ChartWidget> {
   Widget _buildChart() {
     final chartType = _selectedChartType ?? widget.chartData.chartType ?? '';
     final subType = widget.chartData.subType ?? '';
-    final useDropdownOnly =
-        _selectedChartType != null &&
-        _selectedChartType != widget.chartData.chartType;
 
     // Determine chart type
     bool isHeatmap =
         chartType == 'heatmap' ||
-        (!useDropdownOnly &&
-            (subType.contains('heatmap') || subType.contains('correlation')));
+        (subType.contains('heatmap') || subType.contains('correlation'));
     bool isPie =
         chartType == 'pie' ||
         chartType == 'doughnut' ||
-        (!useDropdownOnly &&
-            (subType.contains('pie') || subType.contains('doughnut')));
-    bool isDoughnut =
-        chartType == 'doughnut' ||
-        (!useDropdownOnly && subType.contains('doughnut'));
-    bool isScatter =
-        chartType == 'scatter' ||
-        (!useDropdownOnly && subType.contains('scatter'));
+        (subType.contains('pie') || subType.contains('doughnut'));
+    bool isDoughnut = chartType == 'doughnut' || subType.contains('doughnut');
+    bool isScatter = chartType == 'scatter' || subType.contains('scatter');
     bool isCandlestick =
-        chartType == 'candlestick' ||
-        (!useDropdownOnly && subType.contains('candlestick'));
+        chartType == 'candlestick' || subType.contains('candlestick');
     bool isBar =
         chartType == 'bar' ||
-        (!useDropdownOnly &&
-            (subType.contains('bar') || subType.contains('grouped_bar')));
+        (subType.contains('bar') || subType.contains('grouped_bar'));
     bool isHorizontal =
-        chartType == 'horizontal_bar' ||
-        (!useDropdownOnly && subType.contains('horizontal'));
+        chartType == 'horizontal_bar' || subType.contains('horizontal');
     bool isHistogram =
-        chartType == 'histogram' ||
-        (!useDropdownOnly && subType.contains('histogram'));
+        chartType == 'histogram' || subType.contains('histogram');
     bool isWaterfall =
-        chartType == 'waterfall' ||
-        (!useDropdownOnly && subType.contains('waterfall'));
-    bool isLine =
-        chartType == 'line' || (!useDropdownOnly && subType.contains('line'));
-    bool isArea =
-        chartType == 'area' || (!useDropdownOnly && subType.contains('area'));
+        chartType == 'waterfall' || subType.contains('waterfall');
+    bool isLine = chartType == 'line' || subType.contains('line');
+    bool isArea = chartType == 'area' || subType.contains('area');
+    bool isStacked = subType.contains('stacked');
 
-    // Build appropriate chart
-    if (isHeatmap) {
-      return _buildHeatmap();
-    } else if (isPie) {
+    if (isPie) {
       return _buildPieChart(isDoughnut: isDoughnut);
     } else if (isScatter) {
       return _buildScatterChart();
-    } else if (isCandlestick) {
-      return _buildCandlestickChart();
     } else if (isBar) {
       if (isHorizontal) {
         return _buildHorizontalBarChart();
@@ -324,71 +437,80 @@ class _ChartWidgetState extends State<ChartWidget> {
       } else if (isWaterfall) {
         return _buildWaterfallChart();
       } else {
-        return _buildBarChart();
+        return _buildBarChart(isStacked: isStacked);
       }
     } else if (isLine || isArea) {
       return _buildLineChart(isArea: isArea);
     } else {
-      // Default to line chart
-      return _buildLineChart();
+      return _buildBarChart(isStacked: isStacked);
     }
   }
 
-  Widget _buildBarChart() {
+  Widget _buildBarChart({bool isStacked = false}) {
     final categories = _getCategories();
     final data = widget.chartData.data;
+    final legend = widget.chartData.legend ?? [];
+
+    if (data == null || categories.isEmpty) {
+      return _buildNoDataWidget();
+    }
 
     List<BarChartGroupData> barGroups = [];
-    List<Color> colors = [
-      Colors.blue,
-      Colors.green,
-      Colors.orange,
-      Colors.purple,
-      Colors.red,
+    List<double> allValues = [];
+    final colors = [
+      const Color(0xFF3B82F6),
+      const Color(0xFF10B981),
+      const Color(0xFFF59E0B),
+      const Color(0xFFEF4444),
+      const Color(0xFF8B5CF6),
     ];
 
     if (data is List) {
       final first = data.isNotEmpty ? data[0] : null;
 
       if (first is List) {
-        // Multi-series data
+        // Multi-series bar chart
         final numSeries = data.length;
-        final barWidth = 0.15;
 
         for (int i = 0; i < categories.length; i++) {
           final bars = <BarChartRodData>[];
+          double stackOffset = 0;
 
           for (int j = 0; j < numSeries; j++) {
             if (j < data.length && i < (data[j] as List).length) {
               final value = (data[j] as List)[i];
               final numValue = _toDouble(value);
+              allValues.add(numValue);
 
               bars.add(
                 BarChartRodData(
-                  toY: numValue,
-                  width: barWidth * categories.length,
+                  fromY: isStacked ? stackOffset : 0,
+                  toY: isStacked ? (stackOffset + numValue) : numValue,
+                  width: 16,
                   color: colors[j % colors.length],
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(2),
                 ),
               );
+
+              if (isStacked) stackOffset += numValue;
             }
           }
 
           barGroups.add(
             BarChartGroupData(
               x: i,
-              groupVertically: true,
-              barsSpace: 4,
               barRods: bars,
+              barsSpace: isStacked ? 0 : 4,
             ),
           );
         }
       } else if (first is num || first is String) {
-        // Single series
+        // Single series bar chart
         for (int i = 0; i < categories.length; i++) {
           if (i < data.length) {
             final value = data[i];
             final numValue = _toDouble(value);
+            allValues.add(numValue);
 
             barGroups.add(
               BarChartGroupData(
@@ -396,8 +518,8 @@ class _ChartWidgetState extends State<ChartWidget> {
                 barRods: [
                   BarChartRodData(
                     toY: numValue,
-                    width: 16,
-                    color: Colors.blue,
+                    width: 20,
+                    color: colors[0],
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ],
@@ -408,21 +530,37 @@ class _ChartWidgetState extends State<ChartWidget> {
       }
     }
 
+    if (barGroups.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
+    // Get limited X-axis indices (max 5-6)
+    final maxXLabels = min(6, categories.length);
+    final xLabelIndices = _getSpacedIndices(categories.length, maxXLabels);
+
+    // Get Y-axis values (max 5-6)
+    final yValues = _getYAxisValues(allValues, 5);
+
     return BarChart(
       BarChartData(
         barTouchData: BarTouchData(
+          enabled: true,
           touchTooltipData: BarTouchTooltipData(
-            // tooltipBgColor: Colors.black.withOpacity(0.8),
+            //tooltipBgColor: Colors.black.withOpacity(0.9),
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               final category = categories[group.x.toInt()];
-              final value = rod.toY;
+              final value = rod.toY - (isStacked ? rod.fromY : 0);
+              final seriesName = legend.length > rodIndex
+                  ? legend[rodIndex]
+                  : 'Series ${rodIndex + 1}';
+
               return BarTooltipItem(
-                '$category: ${_formatNumber(value)}\n',
-                TextStyle(color: widget.textColor),
+                '$category\n',
+                TextStyle(color: Colors.white, fontSize: 12),
                 children: [
                   TextSpan(
-                    text: 'Value: ${_formatNumber(value)}',
-                    style: TextStyle(color: widget.textColor),
+                    text: '$seriesName: ${_formatNumber(value)}',
+                    style: const TextStyle(color: Colors.white70, fontSize: 11),
                   ),
                 ],
               );
@@ -435,46 +573,72 @@ class _ChartWidgetState extends State<ChartWidget> {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-                if (value.toInt() >= 0 && value.toInt() < categories.length) {
+                final index = value.toInt();
+                if (xLabelIndices.contains(index) &&
+                    index < categories.length) {
+                  final shouldRotate = categories.length > 8;
                   return Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      _formatCategory(categories[value.toInt()]),
-                      style: TextStyle(color: widget.axisColor, fontSize: 10),
-                      overflow: TextOverflow.ellipsis,
+                    padding: EdgeInsets.only(top: shouldRotate ? 8.0 : 4.0),
+                    child: Transform.rotate(
+                      angle: shouldRotate ? -0.5 : 0,
+                      child: Text(
+                        _formatCategory(categories[index]),
+                        style: TextStyle(
+                          color: widget.axisColor,
+                          fontSize: categories.length > 12 ? 9 : 10,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   );
                 }
                 return const SizedBox();
               },
-              reservedSize: 40,
+              reservedSize: categories.length > 8 ? 45 : 32,
             ),
           ),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+              interval: yValues.length > 1 ? yValues[1] - yValues[0] : 1,
               getTitlesWidget: (value, meta) {
-                return Text(
-                  _formatNumber(value),
-                  style: TextStyle(color: widget.axisColor, fontSize: 10),
-                );
+                if (yValues.any((v) => (v - value).abs() < 0.001)) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 6.0),
+                    child: Text(
+                      _formatNumber(value),
+                      style: TextStyle(color: widget.axisColor, fontSize: 10),
+                      textAlign: TextAlign.right,
+                    ),
+                  );
+                }
+                return const SizedBox();
               },
-              reservedSize: 40,
+              reservedSize: 45,
             ),
           ),
-          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
         ),
         borderData: FlBorderData(
           show: true,
-          border: Border.all(color: widget.gridColor),
+          border: Border.all(color: widget.gridColor, width: 0.5),
         ),
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
-          getDrawingHorizontalLine: (value) {
-            return FlLine(color: widget.gridColor, strokeWidth: 1);
-          },
+          horizontalInterval: yValues.length > 1
+              ? yValues[1] - yValues[0]
+              : null,
+          getDrawingHorizontalLine: (value) => FlLine(
+            color: widget.gridColor.withOpacity(0.5),
+            strokeWidth: 0.5,
+          ),
         ),
         barGroups: barGroups,
       ),
@@ -486,30 +650,34 @@ class _ChartWidgetState extends State<ChartWidget> {
     final data = widget.chartData.data;
     final legend = widget.chartData.legend ?? [];
 
+    if (data == null || categories.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
     List<LineChartBarData> lineBars = [];
-    List<Color> colors = [
-      Colors.blue,
-      Colors.green,
-      Colors.orange,
-      Colors.purple,
-      Colors.red,
+    List<double> allValues = [];
+    final colors = [
+      const Color(0xFF3B82F6),
+      const Color(0xFF10B981),
+      const Color(0xFFF59E0B),
+      const Color(0xFFEF4444),
+      const Color(0xFF8B5CF6),
     ];
 
     if (data is List) {
       final first = data.isNotEmpty ? data[0] : null;
 
       if (first is List) {
-        // Multi-series data
+        // Multi-series line chart
         for (int i = 0; i < data.length; i++) {
           final seriesData = data[i] as List;
           final points = <FlSpot>[];
 
-          for (int j = 0; j < categories.length; j++) {
-            if (j < seriesData.length) {
-              final value = seriesData[j];
-              final numValue = _toDouble(value);
-              points.add(FlSpot(j.toDouble(), numValue));
-            }
+          for (int j = 0; j < min(categories.length, seriesData.length); j++) {
+            final value = seriesData[j];
+            final numValue = _toDouble(value);
+            allValues.add(numValue);
+            points.add(FlSpot(j.toDouble(), numValue));
           }
 
           lineBars.add(
@@ -523,59 +691,78 @@ class _ChartWidgetState extends State<ChartWidget> {
               belowBarData: isArea
                   ? BarAreaData(
                       show: true,
-                      color: colors[i % colors.length].withOpacity(0.3),
+                      color: colors[i % colors.length].withOpacity(0.1),
                     )
                   : null,
             ),
           );
         }
       } else if (first is num || first is String) {
-        // Single series
+        // Single series line chart
         final points = <FlSpot>[];
 
-        for (int i = 0; i < categories.length; i++) {
-          if (i < data.length) {
-            final value = data[i];
-            final numValue = _toDouble(value);
-            points.add(FlSpot(i.toDouble(), numValue));
-          }
+        for (int i = 0; i < min(categories.length, data.length); i++) {
+          final value = data[i];
+          final numValue = _toDouble(value);
+          allValues.add(numValue);
+          points.add(FlSpot(i.toDouble(), numValue));
         }
 
         lineBars.add(
           LineChartBarData(
             spots: points,
             isCurved: true,
-            color: Colors.blue,
+            color: colors[0],
             barWidth: 2,
             isStrokeCapRound: true,
             dotData: FlDotData(show: false),
             belowBarData: isArea
-                ? BarAreaData(show: true, color: Colors.blue.withOpacity(0.3))
+                ? BarAreaData(show: true, color: colors[0].withOpacity(0.1))
                 : null,
           ),
         );
       }
     }
 
+    if (lineBars.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
+    // Get limited X-axis indices (max 5-6)
+    final maxXLabels = min(6, categories.length);
+    final xLabelIndices = _getSpacedIndices(categories.length, maxXLabels);
+
+    // Get Y-axis values (max 5-6)
+    final yValues = _getYAxisValues(allValues, 5);
+
     return LineChart(
       LineChartData(
         lineTouchData: LineTouchData(
+          enabled: true,
           touchTooltipData: LineTouchTooltipData(
-            // tooltipBgColor: Colors.black.withOpacity(0.8),
-            getTooltipItems: (touchedSpots) {
+            //tooltipBgColor: Colors.black.withOpacity(0.9),
+            // FIXED: Using proper callback format
+            getTooltipItems: (List<LineBarSpot> touchedSpots) {
               return touchedSpots.map((touchedSpot) {
                 final index = touchedSpot.spotIndex;
                 final category = index < categories.length
                     ? categories[index]
-                    : 'Unknown';
+                    : 'Point $index';
                 final value = touchedSpot.y;
+                final seriesName = legend.length > touchedSpot.barIndex
+                    ? legend[touchedSpot.barIndex]
+                    : 'Series ${touchedSpot.barIndex + 1}';
+
                 return LineTooltipItem(
                   '$category\n',
-                  TextStyle(color: widget.textColor),
+                  TextStyle(color: Colors.white, fontSize: 12),
                   children: [
                     TextSpan(
-                      text: 'Value: ${_formatNumber(value)}',
-                      style: TextStyle(color: widget.textColor),
+                      text: '$seriesName: ${_formatNumber(value)}',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 11,
+                      ),
                     ),
                   ],
                 );
@@ -589,47 +776,73 @@ class _ChartWidgetState extends State<ChartWidget> {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-                if (value.toInt() >= 0 && value.toInt() < categories.length) {
+                final index = value.toInt();
+                if (xLabelIndices.contains(index) &&
+                    index < categories.length) {
+                  final shouldRotate = categories.length > 8;
                   return Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      _formatCategory(categories[value.toInt()]),
-                      style: TextStyle(color: widget.axisColor, fontSize: 10),
-                      overflow: TextOverflow.ellipsis,
+                    padding: EdgeInsets.only(top: shouldRotate ? 8.0 : 4.0),
+                    child: Transform.rotate(
+                      angle: shouldRotate ? -0.5 : 0,
+                      child: Text(
+                        _formatCategory(categories[index]),
+                        style: TextStyle(
+                          color: widget.axisColor,
+                          fontSize: categories.length > 12 ? 9 : 10,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   );
                 }
                 return const SizedBox();
               },
-              reservedSize: 40,
+              reservedSize: categories.length > 8 ? 45 : 32,
             ),
           ),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+              interval: yValues.length > 1 ? yValues[1] - yValues[0] : 1,
               getTitlesWidget: (value, meta) {
-                return Text(
-                  _formatNumber(value),
-                  style: TextStyle(color: widget.axisColor, fontSize: 10),
-                );
+                if (yValues.any((v) => (v - value).abs() < 0.001)) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 6.0),
+                    child: Text(
+                      _formatNumber(value),
+                      style: TextStyle(color: widget.axisColor, fontSize: 10),
+                      textAlign: TextAlign.right,
+                    ),
+                  );
+                }
+                return const SizedBox();
               },
-              reservedSize: 40,
+              reservedSize: 45,
             ),
           ),
-          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
         ),
         borderData: FlBorderData(
           show: true,
-          border: Border.all(color: widget.gridColor),
+          border: Border.all(color: widget.gridColor, width: 0.5),
         ),
         gridData: FlGridData(
           show: true,
           drawHorizontalLine: true,
           drawVerticalLine: false,
-          getDrawingHorizontalLine: (value) {
-            return FlLine(color: widget.gridColor, strokeWidth: 1);
-          },
+          horizontalInterval: yValues.length > 1
+              ? yValues[1] - yValues[0]
+              : null,
+          getDrawingHorizontalLine: (value) => FlLine(
+            color: widget.gridColor.withOpacity(0.5),
+            strokeWidth: 0.5,
+          ),
         ),
         lineBarsData: lineBars,
       ),
@@ -640,23 +853,27 @@ class _ChartWidgetState extends State<ChartWidget> {
     final categories = _getCategories();
     final data = widget.chartData.data;
 
+    if (data == null || categories.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
     List<PieChartSectionData> sections = [];
     final colors = [
-      Colors.blue,
-      Colors.green,
-      Colors.orange,
-      Colors.purple,
-      Colors.red,
-      Colors.yellow,
-      Colors.cyan,
-      Colors.pink,
+      const Color(0xFF3B82F6),
+      const Color(0xFF10B981),
+      const Color(0xFFF59E0B),
+      const Color(0xFFEF4444),
+      const Color(0xFF8B5CF6),
+      const Color(0xFFEC4899),
+      const Color(0xFF06B6D4),
+      const Color(0xFF84CC16),
     ];
 
     if (data is List) {
       final first = data.isNotEmpty ? data[0] : null;
 
       if (first is num || first is String) {
-        // Single series
+        // Single series pie chart
         double total = 0;
         final values = <double>[];
 
@@ -666,20 +883,46 @@ class _ChartWidgetState extends State<ChartWidget> {
           total += value;
         }
 
-        for (int i = 0; i < min(categories.length, values.length); i++) {
+        // Limit to max 8 categories for readability
+        final maxCategories = min(8, values.length);
+
+        for (int i = 0; i < maxCategories; i++) {
           final percentage = total > 0 ? (values[i] / total) * 100 : 0;
 
           sections.add(
             PieChartSectionData(
               value: values[i],
               title:
-                  '${categories[i]}\n${_formatNumber(values[i])} (${percentage.toStringAsFixed(1)}%)',
+                  '${_formatCategory(categories[i])}\n${percentage.toStringAsFixed(1)}%',
               color: colors[i % colors.length],
-              radius: isDoughnut ? 30 : 40,
+              radius: 60,
               titleStyle: TextStyle(
+                fontSize: values.length > 6 ? 10 : 12,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          );
+        }
+
+        // Add "Other" section if there are more categories
+        if (values.length > maxCategories) {
+          double otherTotal = 0;
+          for (int i = maxCategories; i < values.length; i++) {
+            otherTotal += values[i];
+          }
+          final otherPercentage = total > 0 ? (otherTotal / total) * 100 : 0;
+
+          sections.add(
+            PieChartSectionData(
+              value: otherTotal,
+              title: 'Other\n${otherPercentage.toStringAsFixed(1)}%',
+              color: Colors.grey,
+              radius: 60,
+              titleStyle: const TextStyle(
                 fontSize: 12,
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
               ),
             ),
           );
@@ -687,14 +930,38 @@ class _ChartWidgetState extends State<ChartWidget> {
       }
     }
 
+    if (sections.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
     return PieChart(
       PieChartData(
         pieTouchData: PieTouchData(
           touchCallback: (FlTouchEvent event, pieTouchResponse) {},
+          // touchTooltipData: PieTouchTooltipData(
+          //   //tooltipBgColor: Colors.black.withOpacity(0.9),
+          //   getTooltipItem: (section, sectionIndex, isTouched) {
+          //     final value = section.value;
+          //     final category = sectionIndex < categories.length
+          //         ? categories[sectionIndex]
+          //         : 'Other';
+          //     return PieTooltipItem(
+          //       '$category: ${_formatNumber(value)}\n',
+          //       TextStyle(color: Colors.white, fontSize: 12),
+          //       children: [
+          //         TextSpan(
+          //           text:
+          //               '${(value / sections.fold(0, (sum, s) => sum + s.value.toInt()) * 100).toStringAsFixed(1)}%',
+          //           style: const TextStyle(color: Colors.white70, fontSize: 11),
+          //         ),
+          //       ],
+          //     );
+          //   },
+          // ),
         ),
         sections: sections,
         centerSpaceRadius: isDoughnut ? 40 : 0,
-        sectionsSpace: 2,
+        sectionsSpace: 1,
       ),
     );
   }
@@ -703,39 +970,82 @@ class _ChartWidgetState extends State<ChartWidget> {
     final categories = _getCategories();
     final data = widget.chartData.data;
 
-    List<ScatterSpot> spots = [];
+    if (data == null || categories.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
+    List<FlSpot> spots = [];
+    List<double> yValues = [];
 
     if (data is List) {
       final first = data.isNotEmpty ? data[0] : null;
 
       if (first is num || first is String) {
-        // Single series
+        // Single series scatter chart
         for (int i = 0; i < min(categories.length, data.length); i++) {
           final value = _toDouble(data[i]);
-          spots.add(ScatterSpot(i.toDouble(), value));
+          yValues.add(value);
+          spots.add(FlSpot(i.toDouble(), value));
         }
       }
     }
 
+    if (spots.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
+    // Get limited X-axis indices (max 5-6)
+    final maxXLabels = min(6, categories.length);
+    final xLabelIndices = _getSpacedIndices(categories.length, maxXLabels);
+
+    // Get Y-axis values (max 5-6)
+    final yAxisValues = _getYAxisValues(yValues, 5);
+
     return ScatterChart(
       ScatterChartData(
-        scatterSpots: spots,
+        scatterSpots: spots
+            .map(
+              (spot) => ScatterSpot(
+                spot.x,
+                spot.y,
+                // color: _getColorForIndex(0),
+                // radius: 4,
+              ),
+            )
+            .toList(),
         minX: 0,
-        maxX: categories.length.toDouble(),
-        borderData: FlBorderData(
-          show: true,
-          border: Border.all(color: widget.gridColor),
-        ),
-        gridData: FlGridData(
-          show: true,
-          drawHorizontalLine: true,
-          drawVerticalLine: true,
-          getDrawingHorizontalLine: (value) {
-            return FlLine(color: widget.gridColor, strokeWidth: 1);
-          },
-          getDrawingVerticalLine: (value) {
-            return FlLine(color: widget.gridColor, strokeWidth: 1);
-          },
+        maxX: categories.length > 1 ? (categories.length - 1).toDouble() : 1,
+        minY: yValues.reduce(min) * 0.9,
+        maxY: yValues.reduce(max) * 1.1,
+        scatterTouchData: ScatterTouchData(
+          enabled: true,
+          touchTooltipData: ScatterTouchTooltipData(
+            //tooltipBgColor: Colors.black.withOpacity(0.9),
+            // FIXED: Scatter chart has a different callback format
+            // getTooltipItems: (ScatterSpot touchedSpot) {
+            //   final index = touchedSpot.spotIndex;
+            //   final category = index < categories.length
+            //       ? categories[index]
+            //       : 'Point $index';
+            //   final value = touchedSpot.y;
+
+            //   return [
+            //     ScatterTooltipItem(
+            //       '$category\n',
+            //       TextStyle(color: Colors.white, fontSize: 12),
+            //       children: [
+            //         TextSpan(
+            //           text: 'Value: ${_formatNumber(value)}',
+            //           style: const TextStyle(
+            //             color: Colors.white70,
+            //             fontSize: 11,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ];
+            // },
+          ),
         ),
         titlesData: FlTitlesData(
           show: true,
@@ -743,76 +1053,113 @@ class _ChartWidgetState extends State<ChartWidget> {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-                if (value.toInt() >= 0 && value.toInt() < categories.length) {
+                final index = value.toInt();
+                if (xLabelIndices.contains(index) &&
+                    index < categories.length) {
+                  final shouldRotate = categories.length > 8;
                   return Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      _formatCategory(categories[value.toInt()]),
-                      style: TextStyle(color: widget.axisColor, fontSize: 10),
-                      overflow: TextOverflow.ellipsis,
+                    padding: EdgeInsets.only(top: shouldRotate ? 8.0 : 4.0),
+                    child: Transform.rotate(
+                      angle: shouldRotate ? -0.5 : 0,
+                      child: Text(
+                        _formatCategory(categories[index]),
+                        style: TextStyle(
+                          color: widget.axisColor,
+                          fontSize: categories.length > 12 ? 9 : 10,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   );
                 }
                 return const SizedBox();
               },
-              reservedSize: 40,
+              reservedSize: categories.length > 8 ? 45 : 32,
             ),
           ),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+              interval: yAxisValues.length > 1
+                  ? yAxisValues[1] - yAxisValues[0]
+                  : 1,
               getTitlesWidget: (value, meta) {
-                return Text(
-                  _formatNumber(value),
-                  style: TextStyle(color: widget.axisColor, fontSize: 10),
-                );
+                if (yAxisValues.any((v) => (v - value).abs() < 0.001)) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 6.0),
+                    child: Text(
+                      _formatNumber(value),
+                      style: TextStyle(color: widget.axisColor, fontSize: 10),
+                      textAlign: TextAlign.right,
+                    ),
+                  );
+                }
+                return const SizedBox();
               },
-              reservedSize: 40,
+              reservedSize: 45,
             ),
           ),
-          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+        ),
+        borderData: FlBorderData(
+          show: true,
+          border: Border.all(color: widget.gridColor, width: 0.5),
+        ),
+        gridData: FlGridData(
+          show: true,
+          drawHorizontalLine: true,
+          drawVerticalLine: false,
+          horizontalInterval: yAxisValues.length > 1
+              ? yAxisValues[1] - yAxisValues[0]
+              : null,
+          getDrawingHorizontalLine: (value) => FlLine(
+            color: widget.gridColor.withOpacity(0.5),
+            strokeWidth: 0.5,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildCandlestickChart() {
+  Widget _buildHorizontalBarChart() {
     final categories = _getCategories();
     final data = widget.chartData.data;
 
-    List<CandleData> candles = [];
+    if (data == null || categories.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
+    List<BarChartGroupData> barGroups = [];
+    List<double> allValues = [];
 
     if (data is List) {
       final first = data.isNotEmpty ? data[0] : null;
 
-      if (first is List && first.length == 4) {
-        // OHLC format: array of arrays
-        for (int i = 0; i < min(categories.length, data.length); i++) {
-          final candle = data[i] as List;
-          if (candle.length >= 4) {
-            candles.add(
-              CandleData(
-                open: _toDouble(candle[0]),
-                close: _toDouble(candle[1]),
-                low: _toDouble(candle[2]),
-                high: _toDouble(candle[3]),
-              ),
-            );
-          }
-        }
-      } else if (first is num || first is String) {
-        // Flat array format (4 values per category)
-        final valuesPerCandle = 4;
+      if (first is num || first is String) {
+        // Single series horizontal bar chart
         for (int i = 0; i < categories.length; i++) {
-          final startIdx = i * valuesPerCandle;
-          if (startIdx + valuesPerCandle <= data.length) {
-            candles.add(
-              CandleData(
-                open: _toDouble(data[startIdx]),
-                close: _toDouble(data[startIdx + 1]),
-                low: _toDouble(data[startIdx + 2]),
-                high: _toDouble(data[startIdx + 3]),
+          if (i < data.length) {
+            final value = data[i];
+            final numValue = _toDouble(value);
+            allValues.add(numValue);
+
+            barGroups.add(
+              BarChartGroupData(
+                x: i,
+                barRods: [
+                  BarChartRodData(
+                    toY: numValue,
+                    width: 16,
+                    color: const Color(0xFF3B82F6),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ],
               ),
             );
           }
@@ -820,123 +1167,322 @@ class _ChartWidgetState extends State<ChartWidget> {
       }
     }
 
-    // Since fl_chart doesn't have native candlestick support,
-    // we'll use a custom painter or switch to another library
-    // For now, show a placeholder
-    return Center(
-      child: Text(
-        'Candlestick chart requires additional implementation',
-        style: TextStyle(color: widget.textColor),
-      ),
-    );
-  }
+    if (barGroups.isEmpty) {
+      return _buildNoDataWidget();
+    }
 
-  Widget _buildHeatmap() {
-    final xLabels = widget.chartData.xAxis is List
-        ? (widget.chartData.xAxis as List).map((e) => e.toString()).toList()
-        : [];
-    final yLabels = widget.chartData.yAxis is List
-        ? (widget.chartData.yAxis as List).map((e) => e.toString()).toList()
-        : [];
+    // Get limited Y-axis indices (max 5-6) - Y-axis is vertical for horizontal bar chart
+    final maxYLabels = min(6, categories.length);
+    final yLabelIndices = _getSpacedIndices(categories.length, maxYLabels);
 
-    return Center(
-      child: Text(
-        'Heatmap chart requires additional implementation',
-        style: TextStyle(color: widget.textColor),
-      ),
-    );
-  }
+    // Get X-axis values (max 5-6) - X-axis is horizontal for horizontal bar chart
+    final xValues = _getYAxisValues(allValues, 5);
 
-  Widget _buildHorizontalBarChart() {
-    // Similar to bar chart but with swapped axes
-    return Center(
-      child: Text(
-        'Horizontal bar chart',
-        style: TextStyle(color: widget.textColor),
+    return BarChart(
+      BarChartData(
+        alignment: BarChartAlignment.start,
+        barTouchData: BarTouchData(
+          enabled: true,
+          touchTooltipData: BarTouchTooltipData(
+            //tooltipBgColor: Colors.black.withOpacity(0.9),
+            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+              final category = categories[group.x.toInt()];
+              final value = rod.toY;
+
+              return BarTooltipItem(
+                '$category\n',
+                TextStyle(color: Colors.white, fontSize: 12),
+                children: [
+                  TextSpan(
+                    text: 'Value: ${_formatNumber(value)}',
+                    style: const TextStyle(color: Colors.white70, fontSize: 11),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+        titlesData: FlTitlesData(
+          show: true,
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) {
+                final index = value.toInt();
+                if (yLabelIndices.contains(index) &&
+                    index < categories.length) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Text(
+                      _formatCategory(categories[index]),
+                      style: TextStyle(
+                        color: widget.axisColor,
+                        fontSize: categories.length > 12 ? 9 : 10,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.right,
+                    ),
+                  );
+                }
+                return const SizedBox();
+              },
+              reservedSize: 80,
+            ),
+          ),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              interval: xValues.length > 1 ? xValues[1] - xValues[0] : 1,
+              getTitlesWidget: (value, meta) {
+                if (xValues.any((v) => (v - value).abs() < 0.001)) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      _formatNumber(value),
+                      style: TextStyle(color: widget.axisColor, fontSize: 10),
+                    ),
+                  );
+                }
+                return const SizedBox();
+              },
+              reservedSize: 30,
+            ),
+          ),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+        ),
+        borderData: FlBorderData(
+          show: true,
+          border: Border.all(color: widget.gridColor, width: 0.5),
+        ),
+        gridData: FlGridData(
+          show: true,
+          drawVerticalLine: true,
+          drawHorizontalLine: false,
+          verticalInterval: xValues.length > 1 ? xValues[1] - xValues[0] : null,
+          getDrawingVerticalLine: (value) => FlLine(
+            color: widget.gridColor.withOpacity(0.5),
+            strokeWidth: 0.5,
+          ),
+        ),
+        barGroups: barGroups,
       ),
     );
   }
 
   Widget _buildHistogramChart() {
-    final categories = widget.chartData.bins is List
-        ? (widget.chartData.bins as List).map((e) => e.toString()).toList()
+    final categories = widget.chartData.bins != null
+        ? widget.chartData.bins!.map((e) => e.toString()).toList()
         : _getCategories();
+    final data = widget.chartData.data;
 
-    return Center(
-      child: Text('Histogram chart', style: TextStyle(color: widget.textColor)),
-    );
+    if (data == null || categories.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
+    return _buildBarChart(); // Use regular bar chart for histogram
   }
 
   Widget _buildWaterfallChart() {
-    return Center(
-      child: Text('Waterfall chart', style: TextStyle(color: widget.textColor)),
+    final categories = _getCategories();
+    final data = widget.chartData.data;
+
+    if (data == null || categories.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
+    List<BarChartGroupData> barGroups = [];
+    List<double> values = [];
+
+    if (data is List) {
+      for (int i = 0; i < min(categories.length, data.length); i++) {
+        final value = _toDouble(data[i]);
+        values.add(value);
+      }
+    }
+
+    if (values.isEmpty) {
+      return _buildNoDataWidget();
+    }
+
+    // Calculate cumulative values for waterfall
+    List<double> cumulative = [];
+    double runningTotal = 0;
+
+    for (double value in values) {
+      runningTotal += value;
+      cumulative.add(runningTotal);
+    }
+
+    // Create bars for waterfall
+    for (int i = 0; i < values.length; i++) {
+      final isIncrease = values[i] >= 0;
+      final fromY = i == 0 ? 0 : cumulative[i - 1];
+      final toY = cumulative[i];
+
+      barGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              fromY: fromY.toDouble(),
+              toY: toY,
+              width: 20,
+              color: isIncrease
+                  ? const Color(0xFF10B981)
+                  : const Color(0xFFEF4444),
+              borderRadius: BorderRadius.zero,
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Get limited X-axis indices (max 5-6)
+    final maxXLabels = min(6, categories.length);
+    final xLabelIndices = _getSpacedIndices(categories.length, maxXLabels);
+
+    // Get Y-axis values (max 5-6)
+    final yValues = _getYAxisValues(cumulative, 5);
+
+    return BarChart(
+      BarChartData(
+        barTouchData: BarTouchData(
+          enabled: true,
+          touchTooltipData: BarTouchTooltipData(
+            //tooltipBgColor: Colors.black.withOpacity(0.9),
+            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+              final category = categories[group.x.toInt()];
+              final change = values[group.x.toInt()];
+              final cumulativeValue = cumulative[group.x.toInt()];
+              final isIncrease = change >= 0;
+
+              return BarTooltipItem(
+                '$category\n',
+                TextStyle(color: Colors.white, fontSize: 12),
+                children: [
+                  TextSpan(
+                    text:
+                        'Change: ${isIncrease ? '+' : ''}${_formatNumber(change)}\n',
+                    style: TextStyle(
+                      color: isIncrease ? Colors.green : Colors.red,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Total: ${_formatNumber(cumulativeValue)}',
+                    style: const TextStyle(color: Colors.white70, fontSize: 11),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+        titlesData: FlTitlesData(
+          show: true,
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) {
+                final index = value.toInt();
+                if (xLabelIndices.contains(index) &&
+                    index < categories.length) {
+                  final shouldRotate = categories.length > 8;
+                  return Padding(
+                    padding: EdgeInsets.only(top: shouldRotate ? 8.0 : 4.0),
+                    child: Transform.rotate(
+                      angle: shouldRotate ? -0.5 : 0,
+                      child: Text(
+                        _formatCategory(categories[index]),
+                        style: TextStyle(
+                          color: widget.axisColor,
+                          fontSize: categories.length > 12 ? 9 : 10,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  );
+                }
+                return const SizedBox();
+              },
+              reservedSize: categories.length > 8 ? 45 : 32,
+            ),
+          ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              interval: yValues.length > 1 ? yValues[1] - yValues[0] : 1,
+              getTitlesWidget: (value, meta) {
+                if (yValues.any((v) => (v - value).abs() < 0.001)) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 6.0),
+                    child: Text(
+                      _formatNumber(value),
+                      style: TextStyle(color: widget.axisColor, fontSize: 10),
+                      textAlign: TextAlign.right,
+                    ),
+                  );
+                }
+                return const SizedBox();
+              },
+              reservedSize: 45,
+            ),
+          ),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+        ),
+        borderData: FlBorderData(
+          show: true,
+          border: Border.all(color: widget.gridColor, width: 0.5),
+        ),
+        gridData: FlGridData(
+          show: true,
+          drawVerticalLine: false,
+          horizontalInterval: yValues.length > 1
+              ? yValues[1] - yValues[0]
+              : null,
+          getDrawingHorizontalLine: (value) => FlLine(
+            color: widget.gridColor.withOpacity(0.5),
+            strokeWidth: 0.5,
+          ),
+        ),
+        barGroups: barGroups,
+      ),
     );
   }
 
-  double _toDouble(dynamic value) {
-    if (value == null) return 0.0;
-    if (value is num) return value.toDouble();
-    if (value is String) {
-      return double.tryParse(value) ?? 0.0;
-    }
-    return 0.0;
-  }
-
-  String _formatNumber(double value) {
-    // Simple number formatting
-    if (value >= 1e12) {
-      return '\$${(value / 1e12).toStringAsFixed(2)}T';
-    } else if (value >= 1e9) {
-      return '\$${(value / 1e9).toStringAsFixed(2)}B';
-    } else if (value >= 1e6) {
-      return '\$${(value / 1e6).toStringAsFixed(2)}M';
-    } else if (value >= 1e3) {
-      return '\$${(value / 1e3).toStringAsFixed(2)}K';
-    } else {
-      return '\$${value.toStringAsFixed(2)}';
-    }
-  }
-
-  String _formatCategory(String category) {
-    // Try to parse dates
-    try {
-      final isoLike = RegExp(r'^\d{4}-\d{2}-\d{2}(T.*)?$');
-      if (isoLike.hasMatch(category)) {
-        final date = DateTime.tryParse(category);
-        if (date != null) {
-          final mm = date.month.toString().padLeft(2, '0');
-          final dd = date.day.toString().padLeft(2, '0');
-          return '$mm/$dd';
-        }
-      }
-
-      // Try numeric timestamp
-      final numValue = double.tryParse(category);
-      if (numValue != null) {
-        if (numValue > 1000000000 && numValue < 10000000000) {
-          final date = DateTime.fromMillisecondsSinceEpoch(
-            (numValue * 1000).toInt(),
-          );
-          final mm = date.month.toString().padLeft(2, '0');
-          final dd = date.day.toString().padLeft(2, '0');
-          return '$mm/$dd';
-        } else if (numValue > 1000000000000) {
-          final date = DateTime.fromMillisecondsSinceEpoch(numValue.toInt());
-          final mm = date.month.toString().padLeft(2, '0');
-          final dd = date.day.toString().padLeft(2, '0');
-          return '$mm/$dd';
-        }
-      }
-    } catch (e) {
-      // Ignore errors
-    }
-
-    // Truncate long categories
-    if (category.length > 15) {
-      return '${category.substring(0, 12)}...';
-    }
-
-    return category;
+  Widget _buildNoDataWidget() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.bar_chart,
+            color: widget.textColor.withOpacity(0.3),
+            size: 48,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'No data available',
+            style: TextStyle(
+              color: widget.textColor.withOpacity(0.5),
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -945,18 +1491,4 @@ class ChartTypeOption {
   final String value;
 
   ChartTypeOption(this.label, this.value);
-}
-
-class CandleData {
-  final double open;
-  final double close;
-  final double low;
-  final double high;
-
-  CandleData({
-    required this.open,
-    required this.close,
-    required this.low,
-    required this.high,
-  });
 }

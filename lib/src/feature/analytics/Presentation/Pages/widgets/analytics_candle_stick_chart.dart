@@ -13,13 +13,15 @@ class CustomCandleChart extends StatefulWidget {
   final List<ChartData> data;
   final void Function(String id) onPressed;
   final String selectedItem;
+  bool? fromChat;
 
-  const CustomCandleChart({
+  CustomCandleChart({
     super.key,
     required this.data,
     required this.onPressed,
     required this.name,
     required this.selectedItem,
+    this.fromChat,
   });
 
   @override
@@ -165,12 +167,14 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                       variant: TextVariant.h3,
                     ),
                     SizedBox(height: 2),
-                    MdSnsText(
-                      "Description about OHLC chart",
-                      color: AppColors.fieldTextColor,
-                      fontWeight: TextFontWeightVariant.h4,
-                      variant: TextVariant.h4,
-                    ),
+                    widget.fromChat == null
+                        ? MdSnsText(
+                            "Description about OHLC chart",
+                            color: AppColors.fieldTextColor,
+                            fontWeight: TextFontWeightVariant.h4,
+                            variant: TextVariant.h4,
+                          )
+                        : SizedBox(),
                   ],
                 ),
               ),
@@ -212,35 +216,37 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                     //         );
                     //       })
                     //     :
-                    List.generate(labels.length, (index) {
-                      return GestureDetector(
-                        onTap: () {
-                          widget.onPressed(labels[index]);
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 5,
+                    widget.fromChat == null
+                    ? List.generate(labels.length, (index) {
+                        return GestureDetector(
+                          onTap: () {
+                            widget.onPressed(labels[index]);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: labels[index] == widget.selectedItem
+                                  ? AppColors.color0E1738
+                                  : AppColors.colo2C3754,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: MdSnsText(
+                              labels[index],
+                              color: widget.selectedItem == labels[index]
+                                  ? Colors.white
+                                  : Colors.white70,
+                              variant: TextVariant.h5,
+                              fontWeight: TextFontWeightVariant.h2,
+                            ),
                           ),
-                          decoration: BoxDecoration(
-                            color: labels[index] == widget.selectedItem
-                                ? AppColors.color0E1738
-                                : AppColors.colo2C3754,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: MdSnsText(
-                            labels[index],
-                            color: widget.selectedItem == labels[index]
-                                ? Colors.white
-                                : Colors.white70,
-                            variant: TextVariant.h5,
-                            fontWeight: TextFontWeightVariant.h2,
-                          ),
-                        ),
-                      );
-                    }),
+                        );
+                      })
+                    : [],
               ),
             ],
           ),
@@ -293,6 +299,8 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                   ),
                   rightTitles: AxisTitles(
                     sideTitles: SideTitles(
+                      maxIncluded: false,
+                      minIncluded: false,
                       showTitles: true,
                       reservedSize: 45.w,
                       interval: calculateInterval(
