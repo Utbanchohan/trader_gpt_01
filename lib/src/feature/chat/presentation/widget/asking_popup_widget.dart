@@ -34,7 +34,7 @@ class _AskingPopupWidgetState extends State<AskingPopupWidget>
     with TickerProviderStateMixin {
   @override
   void initState() {
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 1, vsync: this);
     tabController.animateTo(widget.index);
     super.initState();
   }
