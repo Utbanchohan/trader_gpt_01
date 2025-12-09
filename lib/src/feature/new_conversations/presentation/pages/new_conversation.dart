@@ -184,7 +184,8 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           image: "",
           companyName: stock.companyName,
           price: stock.price,
-          changePercentage: stock.pctChange,
+          changePercentage:
+              double.tryParse(stock.pct_change.replaceAll('%', '')) ?? 0,
           trendChart: trend,
           stockid: stock.stockId,
         ),

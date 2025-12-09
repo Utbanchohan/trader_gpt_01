@@ -457,7 +457,12 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       companyName: convo[index].companyName,
                                       price: stocks[stockIndex].price,
                                       changePercentage:
-                                          stocks[stockIndex].pctChange,
+                                          double.tryParse(
+                                            stocks[stockIndex].pct_change
+                                                .replaceAll('%', ''),
+                                          ) ??
+                                          0,
+
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
                                       stockid: convo[index].stockId,
@@ -581,7 +586,12 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       companyName: convo[index].companyName,
                                       price: stocks[stockIndex].price,
                                       changePercentage:
-                                          stocks[stockIndex].pctChange,
+                                          double.tryParse(
+                                            stocks[stockIndex].pct_change
+                                                .replaceAll('%', ''),
+                                          ) ??
+                                          0,
+
                                       trendChart:
                                           stocks[stockIndex]
                                                   .fiveDayTrend
@@ -678,7 +688,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                         )
                       : WelcomeWidget(),
 
-                  // Second tab
                   stocksChat != null &&
                           stocksChat.isNotEmpty &&
                           stocks.isNotEmpty
@@ -718,7 +727,12 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       price: stocks[stockIndex].price,
                                       type: stock.type,
                                       changePercentage:
-                                          stocks[stockIndex].pctChange,
+                                          double.tryParse(
+                                            stocks[stockIndex].pct_change
+                                                .replaceAll('%', ''),
+                                          ) ??
+                                          0,
+
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
                                       stockid: stock.stockId,
@@ -843,7 +857,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       price: stocks[stockIndex].price,
                                       type: stock.type,
                                       changePercentage:
-                                          stocks[stockIndex].pctChange,
+                                          double.tryParse(
+                                            stocks[stockIndex].pct_change
+                                                .replaceAll('%', ''),
+                                          ) ??
+                                          0,
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
                                       stockid: stock.stockId,
@@ -928,7 +946,6 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                           },
                         )
                       : WelcomeWidget(),
-                  // Third tab
                   eftsChats != null && eftsChats.isNotEmpty && stocks.isNotEmpty
                       ? ListView.separated(
                           itemCount:
@@ -966,7 +983,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                                       price: stocks[stockIndex].price,
                                       type: stock.type,
                                       changePercentage:
-                                          stocks[stockIndex].pctChange,
+                                          double.tryParse(
+                                            stocks[stockIndex].pct_change
+                                                .replaceAll('%', ''),
+                                          ) ??
+                                          0,
                                       trendChart:
                                           stocks[stockIndex].fiveDayTrend[0],
                                       stockid: stock.stockId,
@@ -1071,7 +1092,11 @@ class _ConversationStartState extends ConsumerState<ConversationStart>
                   companyName: convo1.companyName,
                   price: stocks[stockIndex].price,
                   type: convo1.type,
-                  changePercentage: stocks[stockIndex].pctChange,
+                  changePercentage:
+                      double.tryParse(
+                        stocks[stockIndex].pct_change.replaceAll('%', ''),
+                      ) ??
+                      0,
                   trendChart: stocks[stockIndex].fiveDayTrend.isNotEmpty
                       ? stocks[stockIndex].fiveDayTrend[0]
                       : FiveDayTrend(data: [0, 0, 0, 0, 0]),
