@@ -48,7 +48,7 @@ class _ConversationChatAppBarState
     final stockManagerState = ref.watch(stocksManagerProvider);
 
     final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
-    double change = liveStock != null
+    double change = liveStock != null && liveStock.stockId.isNotEmpty
         ? PriceUtils.getChangesPercentage(
                         liveStock.price,
                         liveStock.previousClose,
@@ -56,9 +56,10 @@ class _ConversationChatAppBarState
                       null &&
                   liveStock.price != liveStock.previousClose
               ? PriceUtils.getChangesPercentage(
-                  liveStock.price,
-                  liveStock.previousClose,
-                )!
+                      liveStock.price,
+                      liveStock.previousClose,
+                    ) ??
+                    0
               : widget.chatRouting!.changePercentage
         : widget.chatRouting!.changePercentage;
 

@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart' show debugPrint, Uint8List, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trader_gpt/src/feature/aurh_provider/auth_provider.dart';
 import 'package:trader_gpt/src/shared/flavours.dart';
 
 import '../../shared/custom_message.dart';

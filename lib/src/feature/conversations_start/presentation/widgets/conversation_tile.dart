@@ -67,10 +67,11 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding:  EdgeInsets.only(right: 10.w),
+            padding: EdgeInsets.only(right: 10.w),
             child: Column(
               children: [
                 Container(
@@ -126,7 +127,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                           ),
                   ),
                 ),
-            
+
                 // Image.network(
                 //   stocks.logoUrl,
                 //   width: 42.w,
@@ -231,7 +232,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                                 isAbs: false,
                               ).replaceAll('%', '') +
                               "%"
-                        : "0.0%",
+                        : "0.00%",
                     color: change.contains("-")
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,

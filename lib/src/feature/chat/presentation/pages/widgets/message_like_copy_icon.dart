@@ -136,16 +136,34 @@ class _MessageLikeCopyIconState extends ConsumerState<MessageLikeCopyIcon> {
               ),
               SizedBox(width: 10),
 
-              Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: AppColors.fieldColor,
-                ),
-                child: Image.asset(
-                  Assets.images.regenerate.path,
-                  width: 14,
-                  height: 14,
+              // Container(
+              //   padding: EdgeInsets.all(10),
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(8),
+              //     color: AppColors.fieldColor,
+              //   ),
+              //   child: Image.asset(
+              //     Assets.images.regenerate.path,
+              //     width: 14,
+              //     height: 14,
+              //   ),
+              // ),
+              GestureDetector(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: widget.message));
+                  $showMessage("Copied to Clipboard");
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppColors.bubbleColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Image.asset(
+                    Assets.images.copy.path,
+                    width: 14,
+                    height: 14,
+                  ),
                 ),
               ),
             ],
