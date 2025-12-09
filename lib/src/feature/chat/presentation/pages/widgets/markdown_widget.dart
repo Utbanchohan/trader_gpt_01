@@ -6,20 +6,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trader_gpt/gen/assets.gen.dart';
-import 'package:trader_gpt/src/core/extensions/custom_extensions.dart';
+import 'package:trader_gpt/src/feature/analytics/domain/model/analysis_data/analysis_data_model.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/display_table_widget.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/message_like_copy_icon.dart';
 import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/new_chart_widget.dart';
+import 'package:trader_gpt/src/feature/chat/presentation/pages/widgets/new_chart_widget_2.dart'
+    hide ChartData;
 import 'package:trader_gpt/src/shared/extensions/custom_extensions.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/extensions/symbol_image.dart';
 import '../../../../../core/theme/app_colors.dart';
-import '../../../../../shared/widgets/InfoWidget_widgets.dart';
+import '../../../../analytics/Presentation/Pages/widgets/analytics_candle_stick_chart.dart';
 import '../../../domain/model/chat_response/chat_message_model.dart';
 import '../../../domain/model/updates_questions_model/updates_questions_model.dart';
-import 'chart_widget.dart';
 
 class ModelOfAxis {
   final List<String> xAxis;
@@ -64,6 +65,8 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
   List<TableColumn> headings = [];
   final List<Map<String, dynamic>> dataTable = [];
   ModelOfAxis? model;
+  List<ChartData> candleChartData = [];
+  DisplayData? displayableData;
 
   ModelOfAxis changeDisplayAble(List<String> display) {
     if (display.isEmpty) return ModelOfAxis(yAxis: [], xAxis: []);
@@ -75,17 +78,34 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
       try {
         final decoded = jsonDecode(e) as Map<String, dynamic>;
         final data = DisplayData.fromJson(decoded);
+        displayableData = DisplayData.fromJson(decoded);
         if (data.chartType != null) {
-          if (data.xAxis?.data != null) {
-            addNewxAxis.addAll(
-              (data.xAxis?.data ?? []).map((e) => e.toString()),
-            );
-          }
+          if (data.chartType == "candlestick") {
+            for (int i = 0; i < data.xAxis!.data!.length; i++) {
+              candleChartData.add(
+                ChartData(
+                  x: data.xAxis!.data![i],
+                  y: [
+                    (data.data![i][0]).toDouble(),
+                    (data.data![i][1]).toDouble(),
+                    (data.data![i][2]).toDouble(),
+                    (data.data![i][3]).toDouble(),
+                  ],
+                ),
+              );
+            }
+          } else {
+            if (data.xAxis?.data != null) {
+              addNewxAxis.addAll(
+                (data.xAxis?.data ?? []).map((e) => e.toString()),
+              );
+            }
 
-          if (data.data != null) {
-            addNewyAxis.addAll(
-              (data.data ?? []).map((e) => (e as num).toDouble()),
-            );
+            if (data.data != null) {
+              addNewyAxis.addAll(
+                (data.data ?? []).map((e) => (e as num).toDouble()),
+              );
+            }
           }
         } else {
           if (data.data != null) {
@@ -479,9 +499,25 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       widget.type != "user"
-                          ? model != null &&
-                                    model!.xAxis.isNotEmpty &&
-                                    model!.yAxis.isNotEmpty
+                          ? displayableData != null &&
+                                    displayableData!.chartType ==
+                                        "candlestick" &&
+                                    candleChartData.isNotEmpty
+                                ? CustomCandleChart(
+                                    fromChat: true,
+                                    key: UniqueKey(),
+                                    selectedItem: "",
+
+                                    name: displayableData!.title.toString(),
+                                    data: candleChartData,
+
+                                    onPressed: (val) {
+                                      if (!mounted) return;
+                                    },
+                                  )
+                                : model != null &&
+                                      model!.xAxis.isNotEmpty &&
+                                      model!.yAxis.isNotEmpty
                                 ? SizedBox(
                                     height:
                                         MediaQuery.sizeOf(context).height *
@@ -489,9 +525,22 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                     width:
                                         MediaQuery.sizeOf(context).width *
                                         0.85.w,
-                                    child: ChartExample(
-                                      data: model!.yAxis,
-                                      xAxis: model!.xAxis,
+                                    child: SizedBox(
+                                      height: 500,
+                                      child:
+                                          //  ChartWidget(
+                                          //   chartData: ChartDataNewWidget(
+                                          //     title: 'Sales Performance',
+                                          //     chartType: 'candlestick',
+                                          //     data: model!.yAxis,
+                                          //     xAxis: model!.xAxis,
+                                          //     legend: ['Sales'],
+                                          //   ),
+                                          // ),
+                                          ChartExample(
+                                            data: model!.yAxis,
+                                            xAxis: model!.xAxis,
+                                          ),
                                     ),
                                   )
                                 : dataTable.isNotEmpty && headings.isNotEmpty
@@ -500,9 +549,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                       cols: headings,
                                       data: dataTable,
                                     ),
-
                                     // headings: headings,
-
                                     // //  [
                                     // //   "Date",
                                     // //   "Revenue Avg",
@@ -521,6 +568,14 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                                     model!.xAxis.isNotEmpty &&
                                     model!.yAxis.isNotEmpty) ||
                                 (dataTable.isNotEmpty)
+                            ? 10
+                            : 0,
+                      ),
+                      SizedBox(
+                        height:
+                            displayableData != null &&
+                                displayableData!.chartType == "candlestick" &&
+                                candleChartData.isNotEmpty
                             ? 10
                             : 0,
                       ),
