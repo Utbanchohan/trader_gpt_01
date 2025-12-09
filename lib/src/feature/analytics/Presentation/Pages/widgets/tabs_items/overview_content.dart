@@ -181,7 +181,7 @@ class _OverviewContentState extends ConsumerState<OverviewContent> {
   fundamental(SymbolDto symbol) async {
     try {
       fundamentalResponseLoder = true;
-      var res =  ref.watch(fundamentalDataProvider(symbol));
+      var res = ref.watch(fundamentalDataProvider(symbol));
 
       switch (res) {
         case AsyncData(:final value):
@@ -1270,7 +1270,7 @@ class OverviewContentV1 extends ConsumerWidget {
         ? IntervalEnum.monthly
         : IntervalEnum.daily;
 
-///////////////////////////////////////////////////This Api has 504///////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////This Api has 504///////////////////////////////////////////////////////////////////
     // final chartDateRange = _calculateChartDateRange(interval);
     // final chartState = ref.watch(
     //   getOverviewCandleChartProvider(
@@ -1550,7 +1550,7 @@ class OverviewContentV1 extends ConsumerWidget {
             },
             SizedBox(height: 20.h),
 
-///////////////////////////////////////////////////This Api has 504///////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////This Api has 504///////////////////////////////////////////////////////////////////
             // Candle Chart
             // switch (chartState) {
             //   AsyncData(:final value) when value.data.isNotEmpty =>

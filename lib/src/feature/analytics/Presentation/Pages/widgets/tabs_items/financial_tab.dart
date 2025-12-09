@@ -45,8 +45,6 @@ class _FinancialTabState extends ConsumerState<FinancialTab> {
           }
         case AsyncError(:final error):
           financialResponseLoader = false;
-        case AsyncLoading():
-          financialResponseLoader = true;
       }
     } catch (e) {
       financialResponseLoader = false;

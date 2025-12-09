@@ -6,7 +6,6 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/earning_content.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/financial_tab.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/overview_content.dart';
-
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../shared/socket/model/stock_model.dart/stock_model.dart';
 import '../../../../chat/domain/model/chat_stock_model.dart';
@@ -26,11 +25,10 @@ class BuildAnalyticTab extends StatefulWidget {
 }
 
 class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+  final ScrollController _chipScrollController = ScrollController();
 
-  //raza: if its only using in app bar no need to use variable
-  final GlobalKey _scrollableKey = GlobalKey();
-  final Map<String, GlobalKey> _keys = {};
+  final Map<String, GlobalKey> _sectionKeys = {};
   final Map<String, GlobalKey> _chipKeys = {};
   String _activeSection = 'overview';
   bool _isScrollingProgrammatically = false;
@@ -39,314 +37,562 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
     {
       'id': 'overview',
       'title': 'Overview',
-      'color': Colors.red,
-      "image": Assets.images.categoryc1.path,
+
+      'image': Assets.images.categoryc1.path,
     },
-    {
-      'id': 'company',
-      'title': 'Company',
-      'color': Colors.green,
-      "image": Assets.images.c2.path,
-    },
+    {'id': 'company', 'title': 'Company', 'image': Assets.images.c2.path},
     {
       'id': 'financial',
       'title': 'Financial',
-      'color': Colors.blue,
-      "image": Assets.images.diagramc3.path,
+      'image': Assets.images.diagramc3.path,
     },
     {
       'id': 'earnings',
       'title': 'Earnings',
-      'color': Colors.orange,
-      "image": Assets.images.directboxNotifc4.path,
+      'image': Assets.images.directboxNotifc4.path,
     },
     {
       'id': 'analytics',
       'title': 'Analytics',
-      'color': Colors.orange,
-      "image": Assets.images.categoryc1.path,
+      'image': Assets.images.categoryc1.path,
     },
   ];
 
-  void _handleScroll() {
-    // Skip if we're scrolling programmatically (via tap)
-    if (_isScrollingProgrammatically) return;
-
-    const double headerHeight = 60.0;
-    const double threshold = 100.0; // Threshold for section activation
-
-    String? newActiveSection;
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
 
     for (var section in sections) {
-      final String id = section['id'];
-      final key = _keys[id];
+      _sectionKeys[section['id']] = GlobalKey();
+      _chipKeys[section['id']] = GlobalKey();
+    }
 
-      if (key?.currentContext == null) continue;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToSection(_activeSection, animate: false);
+    });
+  }
 
-      try {
+  void _onScroll() {
+    if (_isScrollingProgrammatically) return;
+
+    const double headerHeight = 60;
+    const double threshold = 100;
+
+    String? newActive;
+
+    if (_scrollController.offset <= 0) {
+      newActive = 'overview';
+    } else {
+      // 2️⃣ Loop through sections
+      for (var i = 0; i < sections.length; i++) {
+        final section = sections[i];
+        final key = _sectionKeys[section['id']];
+        if (key?.currentContext == null) continue;
+
         final box = key!.currentContext!.findRenderObject() as RenderBox;
-        final position = box.localToGlobal(Offset.zero);
+        final top = box.localToGlobal(Offset.zero).dy;
+        final bottom = top + box.size.height;
 
-        // Check if section is in the active zone (just below the header)
-        // A section is active if its top is at or above the header + threshold
-        // and its bottom is below the header
-        final sectionTop = position.dy;
-        final sectionBottom = position.dy + box.size.height;
-
-        if (sectionTop <= headerHeight + threshold &&
-            sectionBottom > headerHeight) {
-          newActiveSection = id;
+        // 3️⃣ LAST section special handling
+        if (i == sections.length - 1 &&
+            _scrollController.offset >=
+                _scrollController.position.maxScrollExtent - 50) {
+          newActive = section['id'];
           break;
         }
-      } catch (e) {
-        // Ignore errors during layout
-        continue;
+
+        // 4️⃣ Normal sections detection
+        if (top <= headerHeight + threshold && bottom > headerHeight) {
+          newActive = section['id'];
+          break;
+        }
       }
     }
 
-    if (newActiveSection != null && _activeSection != newActiveSection) {
-      setState(() => _activeSection = newActiveSection!);
+    // 5️⃣ Update active section if changed
+    if (newActive != null && newActive != _activeSection) {
+      setState(() => _activeSection = newActive!);
+      _scrollChipToActive(newActive!);
     }
   }
 
-  Future<void> scrollToSection(String sectionId) async {
-    final key = _keys[sectionId];
-    if (key?.currentContext == null) {
-      debugPrint('Key context is null for section: $sectionId');
-      return;
-    }
+  Future<void> _scrollToSection(String id, {bool animate = true}) async {
+    final key = _sectionKeys[id];
+    if (key?.currentContext == null) return;
 
-    const double headerHeight = 60.0;
+    final box = key!.currentContext!.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero).dy;
+    const double headerHeight = 60;
 
-    // Set flag to prevent _handleScroll from interfering
+    final target = _scrollController.offset + offset - headerHeight;
+
     _isScrollingProgrammatically = true;
 
-    // Update active section immediately
-    setState(() => _activeSection = sectionId);
-
-    try {
-      final box = key!.currentContext!.findRenderObject() as RenderBox;
-      final position = box.localToGlobal(Offset.zero);
-
-      // Calculate the target scroll offset
-      // We want to position the section just below the header
-      final targetOffset =
-          _scrollController.offset + position.dy - headerHeight;
-
-      // Clamp the offset to valid scroll range
-      final maxScroll = _scrollController.position.maxScrollExtent;
-      final minScroll = _scrollController.position.minScrollExtent;
-      final clampedOffset = targetOffset.clamp(minScroll, maxScroll);
-
-      debugPrint('Scrolling to section: $sectionId, offset: $clampedOffset');
-
-      // Animate to target position
+    if (animate) {
       await _scrollController.animateTo(
-        clampedOffset,
+        target.clamp(
+          _scrollController.position.minScrollExtent,
+          _scrollController.position.maxScrollExtent,
+        ),
         duration: const Duration(milliseconds: 350),
         curve: Curves.easeInOut,
       );
-    } catch (e) {
-      debugPrint('Error scrolling to section: $e');
-    } finally {
-      // Re-enable scroll detection after a short delay
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (mounted) {
-          _isScrollingProgrammatically = false;
-        }
-      });
+    } else {
+      _scrollController.jumpTo(
+        target.clamp(
+          _scrollController.position.minScrollExtent,
+          _scrollController.position.maxScrollExtent,
+        ),
+      );
     }
+
+    setState(() => _activeSection = id);
+    _scrollChipToActive(id);
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _isScrollingProgrammatically = false;
+    });
+  }
+
+  void _scrollChipToActive(String id) {
+    final key = _chipKeys[id];
+    if (key?.currentContext == null || !_chipScrollController.hasClients)
+      return;
+
+    final box = key!.currentContext!.findRenderObject() as RenderBox;
+    final pos = box.localToGlobal(Offset.zero);
+    final width = box.size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final target =
+        _chipScrollController.offset + pos.dx - (screenWidth / 2) + (width / 2);
+
+    _chipScrollController.animateTo(
+      target.clamp(
+        _chipScrollController.position.minScrollExtent,
+        _chipScrollController.position.maxScrollExtent,
+      ),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _scrollController.removeListener(_handleScroll);
+    _chipScrollController.dispose();
     super.dispose();
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    ///dummy scroller
-    _scrollController = ScrollController();
-    //raza: instead of using map with id to save Global key , create section model and use everything there
-    //no need to use double maping
-    for (var section in sections) {
-      _keys[section['id']] = GlobalKey();
-      _chipKeys[section['id']] = GlobalKey();
-    }
-    _scrollController.addListener(_handleScroll);
-    if (widget.chatRouting.type.toLowerCase() == "crypto") {
-      // cryptoApis();
-    } else {
-      // firstIndexData();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    print("rebuild BuildAnalyticTab");
-    return CustomScrollView(
-      key: _scrollableKey,
-      controller: _scrollController,
-      // physics: BouncingScrollPhysics(),
-      slivers: [
-        SliverPersistentHeader(
-          pinned: true,
-          delegate: _ChipsHeaderDelegate(
-            minExtent: 60,
-            maxExtent: 60,
-            sections: sections,
-            activeSectionIdGetter: () => _activeSection,
-            chipKeys: _chipKeys,
-            onTap: (id) => scrollToSection(id),
+    return Column(
+      children: [
+        SizedBox(
+          height: 60,
+          child: SingleChildScrollView(
+            controller: _chipScrollController,
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: sections.map((section) {
+                final id = section['id'] as String;
+                final isActive = _activeSection == id;
+
+                return GestureDetector(
+                  onTap: () => _scrollToSection(id),
+                  child: Container(
+                    key: _chipKeys[id],
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isActive
+                          ? AppColors.bubbleColor
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(
+                        color: isActive
+                            ? Colors.transparent
+                            : AppColors.colorB2B2B7.withOpacity(0.4),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Image.asset(section['image'], width: 14, height: 14),
+                        SizedBox(width: 8.w),
+                        Text(
+                          section['title'],
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: isActive
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
           ),
         ),
-
-        SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            final id = sections[index]['id'];
-            switch (id) {
-              case "overview":
-                return Container(
-                  key: _keys[id],
-                  child:
-                      // OverviewContent(
-                      OverviewContentV1(
-                        chatRouting: widget.chatRouting,
-                        selectedStock: widget.selectedStock,
-                      ),
-                );
-
-              case "company":
-                return Container(
-                  key: _keys[id],
-                  child: CompanyContentV1(chatRouting: widget.chatRouting),
-                );
-
-              case "financial":
-                return Container(
-                  key: _keys[id],
-                  child: FinancialTabV1(symbol: widget.selectedStock.symbol),
-                );
-
-              case "earnings":
-                return Container(
-                  key: _keys[id],
-                  child: EarningContentV1(chatRouting: widget.chatRouting),
-                );
-
-              case "analytics":
-                return Container(
-                  key: _keys[id],
-                  child: AnalysisContentV1(chatRouting: widget.chatRouting),
-                );
-
-              default:
-                return Container(height: 600, color: Colors.red);
-            }
-          }, childCount: sections.length),
+        Expanded(
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return Column(
+                    children: sections.map((section) {
+                      final id = section['id'];
+                      Widget content;
+                      switch (id) {
+                        case 'overview':
+                          content = OverviewContentV1(
+                            chatRouting: widget.chatRouting,
+                            selectedStock: widget.selectedStock,
+                          );
+                          break;
+                        case 'company':
+                          content = CompanyContentV1(
+                            chatRouting: widget.chatRouting,
+                          );
+                          break;
+                        case 'financial':
+                          content = FinancialTabV1(
+                            symbol: widget.selectedStock.symbol,
+                          );
+                          break;
+                        case 'earnings':
+                          content = EarningContentV1(
+                            chatRouting: widget.chatRouting,
+                          );
+                          break;
+                        case 'analytics':
+                          content = AnalysisContentV1(
+                            chatRouting: widget.chatRouting,
+                          );
+                          break;
+                        default:
+                          content = SizedBox(height: 600);
+                      }
+                      return Container(key: _sectionKeys[id], child: content);
+                    }).toList(),
+                  );
+                }, childCount: sections.length),
+              ),
+            ],
+          ),
         ),
       ],
     );
   }
 }
 
-class _ChipsHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final double _minExtent;
-  final double _maxExtent;
-  final List<Map<String, dynamic>> sections;
-  final Map<String, GlobalKey> chipKeys;
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:trader_gpt/gen/assets.gen.dart';
+// import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/analysis_content.dart';
+// import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/company_content.dart';
+// import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/earning_content.dart';
+// import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/financial_tab.dart';
+// import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/overview_content.dart';
+// import '../../../../../core/theme/app_colors.dart';
+// import '../../../../../shared/socket/model/stock_model.dart/stock_model.dart';
+// import '../../../../chat/domain/model/chat_stock_model.dart';
 
-  //raza: wrong parm type , why its function
-  final String Function() activeSectionIdGetter;
-  final void Function(String id) onTap;
+// class BuildAnalyticTab extends StatefulWidget {
+//   final ChatRouting chatRouting;
+//   final Stock selectedStock;
 
-  _ChipsHeaderDelegate({
-    required double minExtent,
-    required double maxExtent,
-    required this.sections,
-    required this.chipKeys,
-    required this.activeSectionIdGetter,
-    required this.onTap,
-  }) : _minExtent = minExtent,
-       _maxExtent = maxExtent;
+//   const BuildAnalyticTab({
+//     super.key,
+//     required this.chatRouting,
+//     required this.selectedStock,
+//   });
 
-  @override
-  double get minExtent => _minExtent;
+//   @override
+//   State<BuildAnalyticTab> createState() => _BuildAnalyticTabState();
+// }
 
-  @override
-  double get maxExtent => _maxExtent;
+// class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
+//   final ScrollController _scrollController = ScrollController();
+//   final ScrollController _chipScrollController = ScrollController();
 
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    //raza: wrong way to use
-    final activeId = activeSectionIdGetter();
-    return Container(
-      color: AppColors.primaryColor,
-      padding: const EdgeInsets.only(top: 8, bottom: 8),
-      alignment: Alignment.centerLeft,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          children: sections.map((section) {
-            final id = section['id'] as String;
-            final bool isActive = activeId == id;
-            return GestureDetector(
-              onTap: () => onTap(id),
-              child: Container(
-                key: chipKeys[id],
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 8,
-                ),
-                margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                decoration: BoxDecoration(
-                  color: isActive ? AppColors.bubbleColor : Colors.transparent,
-                  borderRadius: BorderRadius.circular(50),
-                  border: Border.all(
-                    color: isActive
-                        ? Colors.transparent
-                        : AppColors.colorB2B2B7.withValues(alpha: 0.4),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      section['image'] as String,
-                      width: 14,
-                      height: 14,
-                    ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      section['title'] as String,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: isActive
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
+//   final Map<String, GlobalKey> _sectionKeys = {};
+//   final Map<String, GlobalKey> _chipKeys = {};
+//   String _activeSection = 'overview';
+//   bool _isScrollingProgrammatically = false;
 
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return true;
-  }
-}
+//   final List<Map<String, dynamic>> sections = [
+//     {
+//       'id': 'overview',
+//       'title': 'Overview',
+
+//       'image': Assets.images.categoryc1.path,
+//     },
+//     {'id': 'company', 'title': 'Company', 'image': Assets.images.c2.path},
+//     {
+//       'id': 'financial',
+//       'title': 'Financial',
+//       'image': Assets.images.diagramc3.path,
+//     },
+//     {
+//       'id': 'earnings',
+//       'title': 'Earnings',
+//       'image': Assets.images.directboxNotifc4.path,
+//     },
+//     {
+//       'id': 'analytics',
+//       'title': 'Analytics',
+//       'image': Assets.images.categoryc1.path,
+//     },
+//   ];
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _scrollController.addListener(_onScroll);
+
+//     for (var section in sections) {
+//       _sectionKeys[section['id']] = GlobalKey();
+//       _chipKeys[section['id']] = GlobalKey();
+//     }
+
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       _scrollToSection(_activeSection, animate: false);
+//     });
+//   }
+
+//   void _onScroll() {
+//     if (_isScrollingProgrammatically) return;
+
+//     const double headerHeight = 60;
+//     const double threshold = 100;
+
+//     String? newActive;
+
+//     if (_scrollController.offset <= 0) {
+//       newActive = 'overview';
+//     } else {
+//       // 2️⃣ Loop through sections
+//       for (var i = 0; i < sections.length; i++) {
+//         final section = sections[i];
+//         final key = _sectionKeys[section['id']];
+//         if (key?.currentContext == null) continue;
+
+//         final box = key!.currentContext!.findRenderObject() as RenderBox;
+//         final top = box.localToGlobal(Offset.zero).dy;
+//         final bottom = top + box.size.height;
+
+//         // 3️⃣ LAST section special handling
+//         if (i == sections.length - 1 &&
+//             _scrollController.offset >=
+//                 _scrollController.position.maxScrollExtent - 50) {
+//           newActive = section['id'];
+//           break;
+//         }
+
+//         // 4️⃣ Normal sections detection
+//         if (top <= headerHeight + threshold && bottom > headerHeight) {
+//           newActive = section['id'];
+//           break;
+//         }
+//       }
+//     }
+
+//     // 5️⃣ Update active section if changed
+//     if (newActive != null && newActive != _activeSection) {
+//       setState(() => _activeSection = newActive!);
+//       _scrollChipToActive(newActive!);
+//     }
+//   }
+
+//   Future<void> _scrollToSection(String id, {bool animate = true}) async {
+//     final key = _sectionKeys[id];
+//     if (key?.currentContext == null) return;
+
+//     final box = key!.currentContext!.findRenderObject() as RenderBox;
+//     final offset = box.localToGlobal(Offset.zero).dy;
+//     const double headerHeight = 60;
+
+//     final target = _scrollController.offset + offset - headerHeight;
+
+//     _isScrollingProgrammatically = true;
+
+//     if (animate) {
+//       await _scrollController.animateTo(
+//         target.clamp(
+//           _scrollController.position.minScrollExtent,
+//           _scrollController.position.maxScrollExtent,
+//         ),
+//         duration: const Duration(milliseconds: 350),
+//         curve: Curves.easeInOut,
+//       );
+//     } else {
+//       _scrollController.jumpTo(
+//         target.clamp(
+//           _scrollController.position.minScrollExtent,
+//           _scrollController.position.maxScrollExtent,
+//         ),
+//       );
+//     }
+
+//     setState(() => _activeSection = id);
+//     _scrollChipToActive(id);
+
+//     Future.delayed(const Duration(milliseconds: 100), () {
+//       _isScrollingProgrammatically = false;
+//     });
+//   }
+
+//   void _scrollChipToActive(String id) {
+//     final key = _chipKeys[id];
+//     if (key?.currentContext == null || !_chipScrollController.hasClients)
+//       return;
+
+//     final box = key!.currentContext!.findRenderObject() as RenderBox;
+//     final pos = box.localToGlobal(Offset.zero);
+//     final width = box.size.width;
+//     final screenWidth = MediaQuery.of(context).size.width;
+
+//     final target =
+//         _chipScrollController.offset + pos.dx - (screenWidth / 2) + (width / 2);
+
+//     _chipScrollController.animateTo(
+//       target.clamp(
+//         _chipScrollController.position.minScrollExtent,
+//         _chipScrollController.position.maxScrollExtent,
+//       ),
+//       duration: const Duration(milliseconds: 300),
+//       curve: Curves.easeInOut,
+//     );
+//   }
+
+//   @override
+//   void dispose() {
+//     _scrollController.dispose();
+//     _chipScrollController.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         SizedBox(
+//           height: 60,
+//           child: SingleChildScrollView(
+//             controller: _chipScrollController,
+//             scrollDirection: Axis.horizontal,
+//             padding: const EdgeInsets.symmetric(horizontal: 8),
+//             child: Row(
+//               children: sections.map((section) {
+//                 final id = section['id'] as String;
+//                 final isActive = _activeSection == id;
+
+//                 return GestureDetector(
+//                   onTap: () {
+//                     Future.delayed(const Duration(milliseconds: 50), () {
+//                       _scrollToSection(id);
+//                     });
+//                   },
+//                   child: Container(
+//                     key: _chipKeys[id],
+//                     padding: const EdgeInsets.symmetric(
+//                       horizontal: 14,
+//                       vertical: 8,
+//                     ),
+//                     margin: const EdgeInsets.symmetric(
+//                       horizontal: 6,
+//                       vertical: 4,
+//                     ),
+//                     decoration: BoxDecoration(
+//                       color: isActive
+//                           ? AppColors.bubbleColor
+//                           : Colors.transparent,
+//                       borderRadius: BorderRadius.circular(50),
+//                       border: Border.all(
+//                         color: isActive
+//                             ? Colors.transparent
+//                             : AppColors.colorB2B2B7.withOpacity(0.4),
+//                       ),
+//                     ),
+//                     child: Row(
+//                       children: [
+//                         Image.asset(section['image'], width: 14, height: 14),
+//                         SizedBox(width: 8.w),
+//                         Text(
+//                           section['title'],
+//                           style: TextStyle(
+//                             color: Colors.white,
+//                             fontWeight: isActive
+//                                 ? FontWeight.bold
+//                                 : FontWeight.normal,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 );
+//               }).toList(),
+//             ),
+//           ),
+//         ),
+//         Expanded(
+//           child: CustomScrollView(
+//             controller: _scrollController,
+//             slivers: [
+//               SliverList(
+//                 delegate: SliverChildBuilderDelegate((context, index) {
+//                   final section = sections[index];
+//                   final id = section['id'];
+//                   Widget content;
+//                   switch (id) {
+//                     case 'overview':
+//                       content = OverviewContentV1(
+//                         chatRouting: widget.chatRouting,
+//                         selectedStock: widget.selectedStock,
+//                       );
+//                       break;
+//                     case 'company':
+//                       content = CompanyContentV1(
+//                         chatRouting: widget.chatRouting,
+//                       );
+//                       break;
+//                     case 'financial':
+//                       content = FinancialTabV1(
+//                         symbol: widget.selectedStock.symbol,
+//                       );
+//                       break;
+//                     case 'earnings':
+//                       content = EarningContentV1(
+//                         chatRouting: widget.chatRouting,
+//                       );
+//                       break;
+//                     case 'analytics':
+//                       content = AnalysisContentV1(
+//                         chatRouting: widget.chatRouting,
+//                       );
+//                       break;
+//                     default:
+//                       content = SizedBox(height: 600);
+//                   }
+//                   return Container(key: _sectionKeys[id], child: content);
+//                 }, childCount: sections.length),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }

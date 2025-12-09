@@ -138,9 +138,9 @@ class _FinancialTabSummaryState extends State<FinancialTabSummary> {
                         .metrics["Stock Buyback Percentage"] ??
                     [],
               )
-            : SizedBox(),
-        // CashDebtShimmer(),
-        const SizedBox(height: 150),
+            : const SizedBox(height: 150),
+
+        SizedBox(height: 20),
         widget.financialLoader == true
             ? CashDebtShimmer()
             : widget.financeChartsDataModel != null &&

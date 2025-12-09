@@ -5,6 +5,10 @@ import 'package:trader_gpt/src/core/extensions/empty_stock.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/build_analytic_tab.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/crypto_items.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/overview_content.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/monthly_data/monthly_data.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data/weekly_data.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
 import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.dart';
 
@@ -46,22 +50,56 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   }
 
   @override
+  dispose() {
+    super.dispose();
+    disposeProviders();
+  }
+
+  disposeProviders() {
+    // ref.invalidate(financialChartsProvider);
+    // ref.invalidate(financialDataProvider);
+    // ref.invalidate(selectedCandleIntervalProvider);
+    // ref.invalidate(getOverviewProvider);
+    // ref.invalidate(priceTargetMatricsProvider);
+    // ref.invalidate(pricePerformanceProvider);
+    // ref.invalidate(analyticsDataProvider);
+    // ref.invalidate(matricsDataProvider);
+    // ref.invalidate(fundamentalDataProvider);
+    // ref.invalidate(shareStatsProvider);
+    // ref.invalidate(priceComparisonProvider);
+    // ref.invalidate(getWeeklyDataProvider);
+    // ref.invalidate(getMonthlyDataProvider);
+    // ref.invalidate(companyDataProvider);
+    // ref.invalidate(earningsDataProvider);
+    // ref.invalidate(esgScoreProvider);
+    // ref.invalidate(insiderTradesProvider);
+    // ref.invalidate(securityShortVolumeProvider);
+    // ref.invalidate(shortOwnershipProvider);
+    // ref.invalidate(shortVolumeDataProvider);
+    // ref.invalidate(companyDetailProvider);
+    // ref.invalidate(earningChartDataProvider);
+    // ref.invalidate(earningReportDataProvider);
+    // ref.invalidate(analysisDataProvider);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
 
       body: SafeArea(
         top: true,
-        child: widget.chatRouting != null &&
-            widget.chatRouting!.type.toLowerCase() == "crypto"
-        ? CryptoItems(
-            chatRouting: widget.chatRouting!,
-            selectedStock: selectedStock!,
-          )
-        : BuildAnalyticTab(
-            chatRouting: widget.chatRouting!,
-            selectedStock: selectedStock!,
-          ),
+        child:
+            widget.chatRouting != null &&
+                widget.chatRouting!.type.toLowerCase() == "crypto"
+            ? CryptoItems(
+                chatRouting: widget.chatRouting!,
+                selectedStock: selectedStock!,
+              )
+            : BuildAnalyticTab(
+                chatRouting: widget.chatRouting!,
+                selectedStock: selectedStock!,
+              ),
       ),
     );
   }

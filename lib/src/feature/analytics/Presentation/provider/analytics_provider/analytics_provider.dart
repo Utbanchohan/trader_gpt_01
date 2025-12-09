@@ -263,11 +263,18 @@ Future<CompanyModel?> companyData(Ref ref, SymbolDto symbol) async {
 //financial chart data provider
 @Riverpod(keepAlive: true)
 Future<FinanceDataResponse?> financialCharts(Ref ref, SymbolDto symbol) async {
-  var res = await ref.read(overviewRepository).financialCharts(symbol);
-  if (res.status == 200) {
-    return res;
-  } else {
-    return null;
+  print("financialCharts called======>>>>>>");
+  try {
+    var res = await ref.read(overviewRepository).financialCharts(symbol);
+    print("financialCharts response======>>>>>>" + res.toString());
+
+    if (res.status == 200) {
+      return res;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    print("financil eroroororororororor=======>>>>>>>>>" + e.toString());
   }
 }
 
