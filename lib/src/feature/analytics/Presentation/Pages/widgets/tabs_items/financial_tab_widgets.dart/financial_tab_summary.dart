@@ -59,7 +59,7 @@ class _FinancialTabSummaryState extends State<FinancialTabSummary> {
                         .metrics['Debt'] ??
                     [],
               )
-            : SizedBox(),
+            : SizedBox(height: 150),
         const SizedBox(height: 20),
 
         widget.financialLoader == true
@@ -99,7 +99,7 @@ class _FinancialTabSummaryState extends State<FinancialTabSummary> {
                         .metrics["Total StockHolder"] ??
                     [],
               )
-            : SizedBox(),
+            : SizedBox(height: 150),
         SizedBox(height: 20),
         widget.financialLoader == true
             ? CashDebtShimmer()
@@ -140,7 +140,7 @@ class _FinancialTabSummaryState extends State<FinancialTabSummary> {
               )
             : SizedBox(),
         // CashDebtShimmer(),
-        const SizedBox(height: 20),
+        const SizedBox(height: 150),
         widget.financialLoader == true
             ? CashDebtShimmer()
             : widget.financeChartsDataModel != null &&
@@ -174,7 +174,7 @@ class _FinancialTabSummaryState extends State<FinancialTabSummary> {
                         .metrics["Income"] ??
                     [],
               )
-            : SizedBox(),
+            : SizedBox(height: 150),
         //  CashDebtShimmer(),
         const SizedBox(height: 20),
 
