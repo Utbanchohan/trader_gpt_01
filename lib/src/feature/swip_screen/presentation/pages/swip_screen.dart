@@ -124,15 +124,6 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
     }
   }
 
-  // getUser() async {
-  //   dynamic userData = await ref.watch(localDataProvider).getUser();
-  //   if (userData != null) {
-  //     setState(() {
-  //       userModel = User.fromJson(userData);
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

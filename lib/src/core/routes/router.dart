@@ -38,10 +38,9 @@ final routerConfigProvider = Provider((ref) {
   return GoRouter(
     redirect: (BuildContext context, GoRouterState state) async {
       bool isPublic = AppRoutes.isPublicRoute(state);
-      bool isLogin =
-          (ref.watch(localDataProvider).accessToken ?? "").isNotEmpty;
+      bool isLogin = (ref.read(localDataProvider).accessToken ?? "").isNotEmpty;
       bool profileComplete =
-          (ref.watch(localDataProvider).getUserName ?? "").isNotEmpty;
+          (ref.read(localDataProvider).getUserName ?? "").isNotEmpty;
 
       if (isLogin && !profileComplete && !isPublic) {
         return AppRoutes.profilePage.path;

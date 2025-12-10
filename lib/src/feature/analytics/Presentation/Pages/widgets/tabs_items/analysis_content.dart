@@ -265,7 +265,11 @@ class _AnalysisContentV1State extends ConsumerState<AnalysisContentV1> {
                 },
               ),
             ),
-          AsyncLoading() => CustomCandleChartShimmer(),
+          AsyncLoading() => Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+
+            child: CustomCandleChartShimmer(),
+          ),
           AsyncError() => CustomCandleChartShimmer(),
           _ => CustomCandleChartShimmer(),
         },
@@ -284,7 +288,10 @@ class _AnalysisContentV1State extends ConsumerState<AnalysisContentV1> {
                 eodData: value.data!.eodData,
               ),
             ),
-          AsyncLoading() => TableShimmer(title: "Earnings Trend"),
+          AsyncLoading() => Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: TableShimmer(title: "Earnings Trend"),
+          ),
           AsyncError() => SizedBox(),
           _ => SizedBox(),
         },
