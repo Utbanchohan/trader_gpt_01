@@ -6,6 +6,7 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/earning_content.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/financial_tab.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/Pages/widgets/tabs_items/overview_content.dart';
+import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../shared/socket/model/stock_model.dart/stock_model.dart';
 import '../../../../chat/domain/model/chat_stock_model.dart';
@@ -189,61 +190,117 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 60,
-          child: SingleChildScrollView(
-            controller: _chipScrollController,
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              children: sections.map((section) {
-                final id = section['id'] as String;
-                final isActive = _activeSection == id;
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            InkWell(
+              onTap: () {},
+              child: Container(
+                width: 40.w,
+                height: 50.h,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(Assets.images.shapeRightSide.path),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                padding: EdgeInsets.all(12),
+                child: Image.asset(
+                  Assets.images.message.path,
+                  width: 22.w,
+                  height: 18.h,
+                ),
+              ),
+            ),
 
-                return GestureDetector(
-                  onTap: () => _scrollToSection(id),
-                  child: Container(
-                    key: _chipKeys[id],
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 8,
-                    ),
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isActive
-                          ? AppColors.bubbleColor
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(50),
-                      border: Border.all(
-                        color: isActive
-                            ? Colors.transparent
-                            : AppColors.colorB2B2B7.withOpacity(0.4),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Image.asset(section['image'], width: 14, height: 14),
-                        SizedBox(width: 8.w),
-                        Text(
-                          section['title'],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: isActive
-                                ? FontWeight.bold
-                                : FontWeight.normal,
+            SizedBox(width: 15),
+
+            Row(
+              children: [
+                Image.asset(
+                  Assets.images.analytics.path,
+                  width: 18.w,
+                  height: 18,
+                ),
+                SizedBox(width: 6),
+                MdSnsText(
+                  "ANALYTICS",
+                  color: AppColors.white,
+                  fontWeight: TextFontWeightVariant.h4,
+                  variant: TextVariant.h3,
+                ),
+              ],
+            ),
+
+            SizedBox(width: 15),
+
+            Container(width: 1.2, height: 24, color: Colors.white24),
+
+            SizedBox(width: 10),
+            Expanded(
+              child: SizedBox(
+                height: 50,
+                child: SingleChildScrollView(
+                  controller: _chipScrollController,
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Row(
+                    children: sections.map((section) {
+                      final id = section['id'] as String;
+                      final isActive = _activeSection == id;
+
+                      return GestureDetector(
+                        onTap: () => _scrollToSection(id),
+                        child: Container(
+                          key: _chipKeys[id],
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 6, // 👈 vertical padding kam
+                          ),
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isActive
+                                ? AppColors.bubbleColor
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(50),
+                            border: Border.all(
+                              color: isActive
+                                  ? Colors.transparent
+                                  : AppColors.colorB2B2B7.withOpacity(0.4),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                section['image'],
+                                width: 14,
+                                height: 14,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                section['title'],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: isActive
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    }).toList(),
                   ),
-                );
-              }).toList(),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
+
         Expanded(
           child: CustomScrollView(
             controller: _scrollController,
