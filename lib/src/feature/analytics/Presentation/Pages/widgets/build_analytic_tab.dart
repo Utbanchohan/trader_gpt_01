@@ -250,46 +250,88 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
             slivers: [
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return Column(
-                    key: ValueKey("$index"),
-                    children: sections.map((section) {
-                      final id = section['id'];
-                      Widget content;
-                      switch (id) {
-                        case 'overview':
-                          content = OverviewContentV1(
-                            chatRouting: widget.chatRouting,
-                            selectedStock: widget.selectedStock,
-                          );
-                          break;
-                        case 'company':
-                          content = CompanyContentV1(
-                            chatRouting: widget.chatRouting,
-                          );
-                          break;
-                        case 'financial':
-                          content = FinancialTabV1(
-                            symbol: widget.selectedStock.symbol,
-                          );
-                          break;
-                        case 'earnings':
-                          content = EarningContentV1(
-                            chatRouting: widget.chatRouting,
-                          );
-                          break;
-                        case 'analytics':
-                          content = AnalysisContentV1(
-                            chatRouting: widget.chatRouting,
-                          );
-                          break;
-                        default:
-                          content = SizedBox(height: 600);
-                      }
-                      return Container(key: _sectionKeys[id], child: content);
-                    }).toList(),
-                  );
+                  final section = sections[index];
+                  final id = section['id'];
+
+                  Widget content;
+
+                  switch (id) {
+                    case 'overview':
+                      content = OverviewContentV1(
+                        chatRouting: widget.chatRouting,
+                        selectedStock: widget.selectedStock,
+                      );
+                      break;
+                    case 'company':
+                      content = CompanyContentV1(
+                        chatRouting: widget.chatRouting,
+                      );
+                      break;
+                    case 'financial':
+                      content = FinancialTabV1(
+                        symbol: widget.selectedStock.symbol,
+                      );
+                      break;
+                    case 'earnings':
+                      content = EarningContentV1(
+                        chatRouting: widget.chatRouting,
+                      );
+                      break;
+                    case 'analytics':
+                      content = AnalysisContentV1(
+                        chatRouting: widget.chatRouting,
+                      );
+                      break;
+                    default:
+                      content = SizedBox(height: 600);
+                  }
+
+                  return Container(key: _sectionKeys[id], child: content);
                 }, childCount: sections.length),
               ),
+
+              // SliverList(
+              //   delegate: SliverChildBuilderDelegate((context, index) {
+              //     return Column(
+              //       key: ValueKey("$index"),
+              //       children: sections.map((section) {
+              //         final id = section['id'];
+              //         Widget content;
+              //         switch (id) {
+              //           case 'overview':
+              //             content = OverviewContentV1(
+              //               chatRouting: widget.chatRouting,
+              //               selectedStock: widget.selectedStock,
+              //             );
+              //             break;
+              //           case 'company':
+              //             content = CompanyContentV1(
+              //               chatRouting: widget.chatRouting,
+              //             );
+              //             break;
+              //           case 'financial':
+              //             content = FinancialTabV1(
+              //               symbol: widget.selectedStock.symbol,
+              //             );
+              //             break;
+              //           case 'earnings':
+              //             content = EarningContentV1(
+              //               chatRouting: widget.chatRouting,
+              //             );
+              //             break;
+              //           case 'analytics':
+              //             content = AnalysisContentV1(
+              //               chatRouting: widget.chatRouting,
+              //             );
+              //             break;
+              //           default:
+              //             content = SizedBox(height: 600);
+              //         }
+              //         return Container(key: _sectionKeys[id], child: content);
+              //       }).toList(),
+              //     );
+              //   }, childCount: sections.length),
+              // ),
             ],
           ),
         ),
