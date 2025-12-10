@@ -150,7 +150,6 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
 
               SizedBox(width: 10),
 
-              /// VERTICAL SEPARATOR LINE
               Container(width: 1.2, height: 24, color: Colors.white24),
 
               SizedBox(width: 10),
