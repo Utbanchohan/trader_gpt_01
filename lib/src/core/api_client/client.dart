@@ -1,91 +1,103 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
+
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:flutter/foundation.dart' show kDebugMode, debugPrint, Uint8List;
+import 'package:flutter/foundation.dart' show debugPrint, Uint8List, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/src/feature/aurh_provider/auth_provider.dart';
 import 'package:trader_gpt/src/shared/flavours.dart';
+
 import '../../shared/custom_message.dart';
 import '../../shared/socket/providers/stocks_price.dart';
 import '../local/repository/local_storage_repository.dart';
+
 part 'interceptors.dart';
 part 'pretty_logger.dart';
 
 /// A Dio Client Provider.
 final client = Provider.family<Dio, String>((ref, baseUrl) {
   const timeOut = Duration(seconds: 120000);
-  return Dio(
-      BaseOptions(
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        baseUrl: baseUrl,
-        connectTimeout: timeOut,
-        receiveTimeout: timeOut,
+  final dio = Dio(
+    BaseOptions(
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      baseUrl: baseUrl,
+      connectTimeout: timeOut,
+      receiveTimeout: timeOut,
+    ),
+  );
+
+  dio.interceptors.addAll([
+    MainAppInterceptor(ref, dio),
+    if (kDebugMode)
+      PrettyDioLogger(
+        requestBody: kDebugMode,
+        requestHeader: kDebugMode,
+        responseBody: kDebugMode,
       ),
-    )
-    ..interceptors.addAll([
-      AuthorizationInterceptor(ref),
-      if (kDebugMode)
-        PrettyDioLogger(
-          requestBody: kDebugMode,
-          requestHeader: kDebugMode,
-          responseBody: kDebugMode,
-        ),
-    ])
-    ..httpClientAdapter = CustomClientAdapter(ref);
+  ]);
+  dio.httpClientAdapter = CustomClientAdapter(ref);
+
+  return dio;
 });
 
 final marketDataClient = Provider.family<Dio, String>((ref, baseUrl) {
   const timeOut = Duration(seconds: 120000);
-  return Dio(
-      BaseOptions(
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        baseUrl: baseUrl,
-        connectTimeout: timeOut,
-        receiveTimeout: timeOut,
+  final dio = Dio(
+    BaseOptions(
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      baseUrl: baseUrl,
+      connectTimeout: timeOut,
+      receiveTimeout: timeOut,
+    ),
+  );
+
+  dio.interceptors.addAll([
+    MarketDataInterceptor(ref, dio),
+    if (kDebugMode)
+      PrettyDioLogger(
+        requestBody: kDebugMode,
+        requestHeader: kDebugMode,
+        responseBody: kDebugMode,
       ),
-    )
-    ..interceptors.addAll([
-      AuthorizationInterceptorMarket(ref),
-      if (kDebugMode)
-        PrettyDioLogger(
-          requestBody: kDebugMode,
-          requestHeader: kDebugMode,
-          responseBody: kDebugMode,
-        ),
-    ])
-    ..httpClientAdapter = MarketCustomClientAdapter(ref);
+  ]);
+  dio.httpClientAdapter = MarketCustomClientAdapter(ref);
+
+  return dio;
 });
 
 final marketDataClientNew = Provider.family<Dio, String>((ref, baseUrl) {
   const timeOut = Duration(seconds: 120000);
-  return Dio(
-      BaseOptions(
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        baseUrl: baseUrl,
-        connectTimeout: timeOut,
-        receiveTimeout: timeOut,
+  final dio = Dio(
+    BaseOptions(
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      baseUrl: baseUrl,
+      connectTimeout: timeOut,
+      receiveTimeout: timeOut,
+    ),
+  );
+  dio.interceptors.addAll([
+    MarketDataNewInterceptor(ref, dio),
+    if (kDebugMode)
+      PrettyDioLogger(
+        requestBody: kDebugMode,
+        requestHeader: kDebugMode,
+        responseBody: kDebugMode,
       ),
-    )
-    ..interceptors.addAll([
-      AuthorizationInterceptorMarketNew(ref),
-      if (kDebugMode)
-        PrettyDioLogger(
-          requestBody: kDebugMode,
-          requestHeader: kDebugMode,
-          responseBody: kDebugMode,
-        ),
-    ])
-    ..httpClientAdapter = MarketCustomClientAdapterNew(ref);
+  ]);
+  dio.httpClientAdapter = MarketCustomClientAdapterNew(ref);
+
+  return dio;
 });
 
 final priceStreamClientNew = Provider.family<Dio, String>((ref, baseUrl) {
@@ -157,10 +169,18 @@ class CustomClientAdapter extends IOHttpClientAdapter {
     Stream<Uint8List>? requestStream,
     Future<void>? cancelFuture,
   ) async {
-    final token = ref.read(localDataProvider).accessToken;
-    if (token != null) {
-      options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-      debugPrint('CUSTOM CLIENT ACCESS TOKEN $token');
+    // Only set token if Authorization header is not already present (e.g., from retry logic)
+    final existingAuth = options.headers[HttpHeaders.authorizationHeader];
+    if (existingAuth == null || existingAuth.toString().isEmpty) {
+      final token = ref.read(localDataProvider).accessToken;
+      if (token != null && token.isNotEmpty) {
+        options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+        debugPrint(
+          'MAIN CLIENT ACCESS TOKEN: ${token.substring(0, math.min(20, token.length))}...',
+        );
+      }
+    } else {
+      debugPrint('MAIN CLIENT: Using existing Authorization header');
     }
     return super.fetch(options, requestStream, cancelFuture);
   }
@@ -178,10 +198,18 @@ class MarketCustomClientAdapter extends IOHttpClientAdapter {
     Stream<Uint8List>? requestStream,
     Future<void>? cancelFuture,
   ) async {
-    final token = ref.read(localDataProvider).marketAccessToken;
-    if (token != null) {
-      options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-      debugPrint('CUSTOM CLIENT ACCESS TOKEN $token');
+    // Only set token if Authorization header is not already present (e.g., from retry logic)
+    final existingAuth = options.headers[HttpHeaders.authorizationHeader];
+    if (existingAuth == null || existingAuth.toString().isEmpty) {
+      final token = ref.read(localDataProvider).marketAccessToken;
+      if (token != null && token.isNotEmpty) {
+        options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+        debugPrint(
+          'MARKET CLIENT ACCESS TOKEN: ${token.substring(0, math.min(20, token.length))}...',
+        );
+      }
+    } else {
+      debugPrint('MARKET CLIENT: Using existing Authorization header');
     }
 
     return super.fetch(options, requestStream, cancelFuture);
@@ -215,7 +243,7 @@ class PriceStreamCustomClientAdapter extends IOHttpClientAdapter {
       });
 
       // ✅ Optionally attach Bearer token if available
-      if (token != null && token.isNotEmpty) {
+      if (token.isNotEmpty) {
         options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
         debugPrint('CUSTOM CLIENT ACCESS TOKEN $token');
       }
@@ -236,10 +264,18 @@ class MarketCustomClientAdapterNew extends IOHttpClientAdapter {
     Stream<Uint8List>? requestStream,
     Future<void>? cancelFuture,
   ) async {
-    final token = ref.read(localDataProvider).marketAccessTokenNew;
-    if (token != null) {
-      options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-      debugPrint('CUSTOM CLIENT ACCESS TOKEN $token');
+    // Only set token if Authorization header is not already present (e.g., from retry logic)
+    final existingAuth = options.headers[HttpHeaders.authorizationHeader];
+    if (existingAuth == null || existingAuth.toString().isEmpty) {
+      final token = ref.read(localDataProvider).marketAccessTokenNew;
+      if (token != null && token.isNotEmpty) {
+        options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+        debugPrint(
+          'MARKET NEW CLIENT ACCESS TOKEN: ${token.substring(0, math.min(20, token.length))}...',
+        );
+      }
+    } else {
+      debugPrint('MARKET NEW CLIENT: Using existing Authorization header');
     }
 
     return super.fetch(options, requestStream, cancelFuture);

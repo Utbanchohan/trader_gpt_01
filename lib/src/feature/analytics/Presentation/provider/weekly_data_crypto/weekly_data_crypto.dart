@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/model/weekly_model/weekly_model.dart';
@@ -11,12 +12,17 @@ class WeeklyDataCrypto extends _$WeeklyDataCrypto {
   Future<WeeklyModel> build() async {
     return state.value!;
   }
+}
 
-  Future<WeeklyModel> getWeeklyDataCrypto(ticker, assetType) async {
-    final res = await ref
-        .read(overviewRepositoryele)
-        .weeklyDataCrypto(ticker, assetType);
+@Riverpod(keepAlive: true)
+Future<WeeklyModel> getWeeklyDataCrypto(
+  Ref ref,
+  String ticker,
+  String assetType,
+) async {
+  final res = await ref
+      .read(overviewRepositoryele)
+      .weeklyDataCrypto(ticker, assetType);
 
-    return res;
-  }
+  return res;
 }

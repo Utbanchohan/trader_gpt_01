@@ -22,7 +22,6 @@ import 'package:trader_gpt/src/feature/s3_uploader/presentation/image_pickert.da
 import 'package:trader_gpt/src/feature/side_menu/presentation/pages/side_menu.dart';
 import 'package:trader_gpt/src/feature/sigin_up/presentation/pages/sigin_up.dart';
 import 'package:trader_gpt/src/feature/sign_in/presentation/pages/login.dart';
-import 'package:trader_gpt/src/feature/sign_in/presentation/provider/sign_in.dart';
 import 'package:trader_gpt/src/feature/splash/presentation/pages/splash.dart';
 import 'package:trader_gpt/src/feature/swip_screen/presentation/pages/swip_screen.dart';
 import 'package:trader_gpt/src/feature/update_password/presentation/update_password.dart';
@@ -39,10 +38,9 @@ final routerConfigProvider = Provider((ref) {
   return GoRouter(
     redirect: (BuildContext context, GoRouterState state) async {
       bool isPublic = AppRoutes.isPublicRoute(state);
-      bool isLogin =
-          (ref.watch(localDataProvider).accessToken ?? "").isNotEmpty;
+      bool isLogin = (ref.read(localDataProvider).accessToken ?? "").isNotEmpty;
       bool profileComplete =
-          (ref.watch(localDataProvider).getUserName ?? "").isNotEmpty;
+          (ref.read(localDataProvider).getUserName ?? "").isNotEmpty;
 
       if (isLogin && !profileComplete && !isPublic) {
         return AppRoutes.profilePage.path;

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
+import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/widget/shimmer_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/showinfopopap.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
@@ -325,7 +326,45 @@ class ShareStructureCard extends StatelessWidget {
                     );
                   },
                 )
-              : SizedBox(),
+              : ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    final bool isStriped = index % 2 == 0;
+                    final rowColor = isStriped
+                        ? AppColors.bubbleColor
+                        : Colors.transparent;
+
+                    // Right side numeric color (blue-ish) for some rows
+                    final valueIsHighlighted =
+                        index == 0 || index == 1 || index == 5;
+                    return Container(
+                      color: rowColor,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width / 2,
+                            child: shimmerBox(
+                              height: 10,
+                              width: MediaQuery.sizeOf(context).width / 2,
+                            ),
+                          ),
+
+                          shimmerBox(
+                            height: 10,
+                            width: MediaQuery.sizeOf(context).width * 0.2,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
 
           Container(
             height: 12,
@@ -348,7 +387,8 @@ class ShareStructureCard extends StatelessWidget {
 enum Headings {
   matrics('Metrics'),
   fundamental('Fundamental'),
-  shareStructure('Share Structure');
+  shareStructure('Share Structure'),
+  loading('Loading');
 
   final String value;
 
