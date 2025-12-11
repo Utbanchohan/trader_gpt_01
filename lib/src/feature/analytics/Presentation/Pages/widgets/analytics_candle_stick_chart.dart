@@ -1,14 +1,21 @@
+import 'dart:typed_data';
+import 'dart:math';
+import 'dart:ui' as ui;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
-
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../shared/extensions/number_formatter_extension.dart';
 import '../../../domain/model/analysis_data/analysis_data_model.dart';
-import 'dart:math';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CustomCandleChart extends StatefulWidget {
+  final GlobalKey screenshotKey = GlobalKey();
+
   final String name;
   final List<ChartData> data;
   final void Function(String id) onPressed;
@@ -31,11 +38,62 @@ class CustomCandleChart extends StatefulWidget {
 class _CustomCandleChartState extends State<CustomCandleChart> {
   int currentZoomLevel = 1;
 
+  Future<void> captureWidgetScreenshot() async {
+    try {
+      // Check storage permission
+      if (!(await Permission.storage.request().isGranted)) {
+        Fluttertoast.showToast(
+          msg: "Storage permission denied",
+          toastLength: Toast.LENGTH_SHORT,
+        );
+        return;
+      }
+
+      final boundary =
+          widget.screenshotKey.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
+
+      if (boundary == null) {
+        Fluttertoast.showToast(
+          msg: "Unable to capture screenshot",
+          toastLength: Toast.LENGTH_SHORT,
+        );
+        return;
+      }
+
+      final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      final ByteData? byteData = await image.toByteData(
+        format: ui.ImageByteFormat.png,
+      );
+      if (byteData == null) return;
+
+      final Uint8List pngBytes = byteData.buffer.asUint8List();
+
+      final result = await ImageGallerySaverPlus.saveImage(
+        pngBytes,
+        quality: 100,
+        name: "widget_screenshot",
+      );
+
+      Fluttertoast.showToast(
+        msg: "Screenshot saved successfully!",
+        toastLength: Toast.LENGTH_SHORT,
+      );
+
+      print("Screenshot Saved! Path: $result");
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Screenshot Error: $e",
+        toastLength: Toast.LENGTH_SHORT,
+      );
+      print("Screenshot Error: $e");
+    }
+  }
+
   double calculateInterval(double minY, double maxY, {int targetSteps = 6}) {
     final range = (maxY - minY).abs();
-    if (range == 0) return 1; // avoid divide-by-zero
+    if (range == 0) return 1;
     final rawInterval = range / targetSteps;
-    // round interval to a “nice” number (like 1, 2, 5, 10, 100, etc.)
     final magnitude = pow(10, (log(rawInterval) / ln10).floor());
     final normalized = rawInterval / magnitude;
     double niceNormalized;
@@ -52,9 +110,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
   }
 
   final List<String> labels = ['H', 'D', 'W', 'M'];
-
-  final List<String> labels1 = ['Hour', 'MIn'];
-
+  final List<String> labels1 = ['Hour', 'Min'];
   String selectedIndex1 = "Hour";
 
   @override
@@ -72,64 +128,41 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
         close: close,
       );
     }).toList();
-    // We'll map data to BarChartGroupData
+
     List<BarChartGroupData> getBarGroups() {
       return chartData.asMap().entries.map((entry) {
         final index = entry.key;
         final data = entry.value;
 
-        // Colors matching the image
-        final bullColor = AppColors.color00FF55; // Green
-        final bearColor = AppColors.color0xFFCD3438; // Red
+        final bullColor = AppColors.color00FF55;
+        final bearColor = AppColors.color0xFFCD3438;
         final barColor = data.isBullish ? bullColor : bearColor;
 
-        // 1. Calculate the 'empty' space below the body (from low to bodyMin)
-        final lowToBodyHeight = data.bodyMin - data.low;
-
-        // 2. Calculate the height of the actual body (from bodyMin to bodyMax)
-        final bodyHeight = data.bodyMax - data.bodyMin;
-
-        // 3. Calculate the 'empty' space above the body (from bodyMax to high)
-        final bodyToHighHeight = data.high - data.bodyMax;
-
-        // This is the core data point for fl_chart's BarChart
         return BarChartGroupData(
           x: index,
           barRods: [
             BarChartRodData(
-              // The entire rod spans from 'low' to 'high'
               fromY: data.low,
               toY: data.high,
-              width: currentZoomLevel * 1, // Set a fixed width for the candle
+              width: currentZoomLevel * 1,
               borderRadius: BorderRadius.zero,
-
-              // We use stacked items to draw the wicks and the body
               rodStackItems: [
-                // 1. Lower Wick (from low to bodyMin) - Transparent bar
                 BarChartRodStackItem(
                   data.low,
                   data.bodyMin,
                   Colors.transparent,
-                  // Use a thin border for the wick
                   borderSide: BorderSide(color: barColor, width: 1.0),
                 ),
-
-                // 2. Candle Body (from bodyMin to bodyMax) - The colored rectangle
                 BarChartRodStackItem(
                   data.bodyMin,
                   data.bodyMax,
                   barColor,
-                  // Use a thin border for the body
                   borderSide: BorderSide(color: barColor, width: 1.0),
                 ),
-
-                // 3. Upper Wick (from bodyMax to high) - Transparent bar
                 BarChartRodStackItem(
                   data.bodyMax,
                   data.high,
                   Colors.transparent,
-
-                  // Use a thin border for the wick
                   borderSide: BorderSide(color: barColor, width: 1.0),
                 ),
               ],
@@ -139,233 +172,205 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
       }).toList();
     }
 
-    return Container(
-      alignment: Alignment.center,
-      height: 360.h,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.colorB3B3B3),
-        color: AppColors.color091224,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Left side text
-              Visibility(
-                visible: widget.name.isNotEmpty,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MdSnsText(
-                      widget.name,
-                      color: AppColors.fieldTextColor,
-                      fontWeight: TextFontWeightVariant.h3,
-                      variant: TextVariant.h3,
-                    ),
-                    SizedBox(height: 2),
-                    widget.fromChat == null
-                        ? MdSnsText(
-                            "Description about OHLC chart",
-                            color: AppColors.fieldTextColor,
-                            fontWeight: TextFontWeightVariant.h4,
-                            variant: TextVariant.h4,
-                          )
-                        : SizedBox(),
-                  ],
-                ),
-              ),
-
-              // Right side buttons (wrap in Row)
-              Row(
-                children:
-                    //  widget.name.isNotEmpty
-                    //     ? List.generate(labels1.length, (index) {
-                    //         return GestureDetector(
-                    //           onTap: () {
-                    //             setState(() {
-                    //               selectedIndex1 = labels1[index];
-                    //             });
-                    //             widget.onPressed(labels1[index]);
-                    //           },
-                    //           child: AnimatedContainer(
-                    //             duration: const Duration(milliseconds: 200),
-                    //             margin: const EdgeInsets.symmetric(horizontal: 4),
-                    //             padding: const EdgeInsets.symmetric(
-                    //               horizontal: 8,
-                    //               vertical: 5,
-                    //             ),
-                    //             decoration: BoxDecoration(
-                    //               color: selectedIndex1 == labels1[index]
-                    //                   ? AppColors.color0E1738
-                    //                   : AppColors.colo2C3754,
-                    //               borderRadius: BorderRadius.circular(8),
-                    //             ),
-                    //             child: MdSnsText(
-                    //               labels1[index],
-                    //               color: selectedIndex1 == labels1[index]
-                    //                   ? Colors.white
-                    //                   : Colors.white70,
-                    //               variant: TextVariant.h5,
-                    //               fontWeight: TextFontWeightVariant.h2,
-                    //             ),
-                    //           ),
-                    //         );
-                    //       })
-                    //     :
-                    widget.fromChat == null
-                    ? List.generate(labels.length, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            widget.onPressed(labels[index]);
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: labels[index] == widget.selectedItem
-                                  ? AppColors.color0E1738
-                                  : AppColors.colo2C3754,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+    return RepaintBoundary(
+      key: widget.screenshotKey,
+      child: Container(
+        alignment: Alignment.center,
+        height: 360.h,
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.colorB3B3B3),
+          color: AppColors.color091224,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Top Row: Name + Screenshot Button + Right-side Labels
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Visibility(
+                  visible: widget.name.isNotEmpty,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 240,
                             child: MdSnsText(
-                              labels[index],
-                              color: widget.selectedItem == labels[index]
-                                  ? Colors.white
-                                  : Colors.white70,
-                              variant: TextVariant.h5,
-                              fontWeight: TextFontWeightVariant.h2,
+                              widget.name,
+                              color: AppColors.fieldTextColor,
+                              fontWeight: TextFontWeightVariant.h3,
+                              variant: TextVariant.h3,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                        );
-                      })
-                    : [],
-              ),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          SizedBox(
-            height: 260.h,
-            child: BarChart(
-              duration: const Duration(milliseconds: 1200),
-              curve: Curves.easeInOutCubic,
-              BarChartData(
-                // backgroundColor: Colors.transparent,
-                alignment: BarChartAlignment.spaceAround,
+                          SizedBox(width: 7),
+                          widget.fromChat != null && widget.fromChat == true
+                              ? GestureDetector(
+                                  onTap: () {
+                                    captureWidgetScreenshot();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.bubbleColor,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Icon(
+                                      Icons.arrow_circle_down,
+                                      size: 18,
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(),
+                        ],
+                      ),
 
-                // ✅ GRID LINES
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine:
-                      true, // Agar vertical lines bhi chahiye to true rakho
-                  horizontalInterval: calculateInterval(
-                    chartData.isNotEmpty
-                        ? chartData
-                              .map((e) => e.low)
-                              .reduce((a, b) => a < b ? a : b)
-                        : 0.0,
-                    chartData.isNotEmpty
-                        ? chartData
-                              .map((e) => e.high)
-                              .reduce((a, b) => a > b ? a : b)
-                        : 0.0,
-                  ),
-                  verticalInterval: 1, // optional: adjust as needed
-                  getDrawingHorizontalLine: (value) => FlLine(
-                    color:
-                        AppColors.colorB3B3B3, // 👈 ye color zyada visible hoga
-                    strokeWidth: 1.2,
-                  ),
-                  getDrawingVerticalLine: (value) => FlLine(
-                    color: AppColors.colorB3B3B3, // thoda soft vertical line
-                    strokeWidth: 0.8,
+                      SizedBox(height: 2),
+                      widget.fromChat == null
+                          ? MdSnsText(
+                              "Description about OHLC chart",
+                              color: AppColors.fieldTextColor,
+                              fontWeight: TextFontWeightVariant.h4,
+                              variant: TextVariant.h4,
+                            )
+                          : SizedBox(),
+                    ],
                   ),
                 ),
-
-                titlesData: FlTitlesData(
-                  show: true,
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  leftTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  rightTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      maxIncluded: false,
-                      minIncluded: false,
-                      showTitles: true,
-                      reservedSize: 45.w,
-                      interval: calculateInterval(
-                        chartData.isNotEmpty
-                            ? chartData
-                                  .map((e) => e.low)
-                                  .reduce((a, b) => a < b ? a : b)
-                            : 0.0,
-                        chartData.isNotEmpty
-                            ? chartData
-                                  .map((e) => e.high)
-                                  .reduce((a, b) => a > b ? a : b)
-                            : 0.0,
-                      ),
-                      getTitlesWidget: (value, meta) {
-                        return Text(
-                          "  " +
-                              Filters.systemNumberConvention(
-                                value,
-                                isPrice: true,
-                                isAbs: true,
-                                containerWidth: 30,
-                                isRound: true,
+                Row(
+                  children: widget.fromChat == null
+                      ? List.generate(labels.length, (index) {
+                          return GestureDetector(
+                            onTap: () {
+                              widget.onPressed(labels[index]);
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 5,
                               ),
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 10,
-                          ),
-                          textAlign: TextAlign.left,
-                        );
-                      },
+                              decoration: BoxDecoration(
+                                color: labels[index] == widget.selectedItem
+                                    ? AppColors.color0E1738
+                                    : AppColors.colo2C3754,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: MdSnsText(
+                                labels[index],
+                                color: widget.selectedItem == labels[index]
+                                    ? Colors.white
+                                    : Colors.white70,
+                                variant: TextVariant.h5,
+                                fontWeight: TextFontWeightVariant.h2,
+                              ),
+                            ),
+                          );
+                        })
+                      : [],
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            SizedBox(
+              height: 260.h,
+              child: BarChart(
+                duration: const Duration(milliseconds: 1200),
+                curve: Curves.easeInOutCubic,
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  gridData: FlGridData(
+                    show: true,
+                    drawVerticalLine: true,
+                    horizontalInterval: calculateInterval(
+                      chartData.isNotEmpty
+                          ? chartData.map((e) => e.low).reduce(min)
+                          : 0.0,
+                      chartData.isNotEmpty
+                          ? chartData.map((e) => e.high).reduce(max)
+                          : 0.0,
+                    ),
+                    verticalInterval: 1,
+                    getDrawingHorizontalLine: (value) =>
+                        FlLine(color: AppColors.colorB3B3B3, strokeWidth: 1.2),
+                    getDrawingVerticalLine: (value) =>
+                        FlLine(color: AppColors.colorB3B3B3, strokeWidth: 0.8),
+                  ),
+                  titlesData: FlTitlesData(
+                    show: true,
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        minIncluded: false,
+
+                        maxIncluded: false,
+                        reservedSize: 50.w, // thoda zyada space
+                        interval: calculateInterval(
+                          chartData.isNotEmpty
+                              ? chartData.map((e) => e.low).reduce(min)
+                              : 0.0,
+                          chartData.isNotEmpty
+                              ? chartData.map((e) => e.high).reduce(max)
+                              : 0.0,
+                        ),
+                        getTitlesWidget: (value, meta) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 4,
+                            ), // thoda space
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                Filters.systemNumberConvention(
+                                  value,
+                                  isPrice: true,
+                                  isAbs: true,
+                                  containerWidth: 30,
+                                  isRound: true,
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 10,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    bottomTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
-
-                  bottomTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
+                  borderData: FlBorderData(show: false),
+                  barGroups: getBarGroups(),
+                  barTouchData: BarTouchData(enabled: true),
+                  maxY: chartData.isNotEmpty
+                      ? chartData.map((e) => e.high).reduce(max)
+                      : 0.0,
+                  minY: chartData.isNotEmpty
+                      ? chartData.map((e) => e.low).reduce(min)
+                      : 0.0,
                 ),
-
-                borderData: FlBorderData(show: false),
-                barGroups: getBarGroups(),
-                barTouchData: BarTouchData(
-                  enabled: true,
-                  touchCallback: (event, response) {
-                    if (event is FlPanUpdateEvent) {
-                      print("to");
-                      // Handle dragging horizontally by adjusting visibleMinX / visibleMaxX
-                    }
-                  },
-                ),
-
-                maxY: chartData.isNotEmpty
-                    ? chartData
-                          .map((e) => e.high)
-                          .reduce((a, b) => a > b ? a : b)
-                    : 0.0,
-                minY: chartData.isNotEmpty
-                    ? chartData
-                          .map((e) => e.low)
-                          .reduce((a, b) => a < b ? a : b)
-                    : 0.0,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -377,8 +382,7 @@ class OhlcData {
   final double high;
   final double low;
   final double close;
-  final bool
-  isBullish; // Bullish (up): close > open, Bearish (down): close < open
+  final bool isBullish;
 
   OhlcData({
     required this.date,
@@ -388,12 +392,6 @@ class OhlcData {
     required this.close,
   }) : isBullish = close > open;
 
-  // Gets the top of the candle body
   double get bodyMax => isBullish ? close : open;
-
-  // Gets the bottom of the candle body
   double get bodyMin => isBullish ? open : close;
 }
-
-// ... (Your rawData mapping into chartData as done in the previous response) ...
-// The list conversion remains the same, just ensure you include the OhlcData class.

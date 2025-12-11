@@ -301,7 +301,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     );
   }
 
-  /// Build scatter chart
   Widget _buildScatterChart() {
     final categories = _getCategories();
     final data = widget.chartData.data;
@@ -396,25 +395,31 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               },
             ),
           ),
-
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 40,
-              interval: (categories.length / 4)
-                  .ceilToDouble(), // ensure no overlap
+              minIncluded: false,
+              maxIncluded: false,
+              reservedSize: 50,
+              interval: (categories.length / 4).ceilToDouble(),
               getTitlesWidget: (value, meta) {
                 final index = value.toInt();
                 if (index >= 0 && index < categories.length) {
-                  return Container(
-                    padding: EdgeInsets.only(top: 10, right: 20),
+                  print(categories[index]);
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
                     child: Center(
-                      child: Container(
-                        width: 30,
-                        child: MdSnsText(
-                          formatDateMMDDYYYY(categories[index]),
-                          variant: TextVariant.h4,
-                          color: axisColor,
+                      child: Transform.rotate(
+                        angle: -0.6,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: MdSnsText(
+                            // "23/20/2024",
+                            formatDateDDMMYY(categories[index]),
+                            variant: TextVariant.h4,
+                            color: axisColor,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     ),
@@ -713,6 +718,8 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 reservedSize: 40,
+                minIncluded: false,
+                maxIncluded: false,
                 showTitles: true,
                 interval: (categories.length / 3).floorToDouble(),
                 getTitlesWidget: (value, meta) {
@@ -720,13 +727,22 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                   if (index >= 0 && index < categories.length) {
                     return Column(
                       children: [
-                        SizedBox(height: 5),
-                        Container(
-                          margin: EdgeInsets.only(right: 15.w),
-                          child: MdSnsText(
-                            formatDateMMYYY(categories[index]),
-                            variant: TextVariant.h4,
-                            color: axisColor,
+                        Padding(
+                          padding: EdgeInsets.only(top: 20, right: 20),
+                          child: Center(
+                            child: Transform.rotate(
+                              angle: -0.6,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: MdSnsText(
+                                  "23/20/2024",
+                                  // formatDateMMYYY(categories[index]),
+                                  variant: TextVariant.h4,
+                                  color: axisColor,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ],

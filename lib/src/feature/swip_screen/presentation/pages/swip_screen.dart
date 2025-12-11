@@ -259,7 +259,7 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
               context.pushNamed(AppRoutes.myProfileScreen.name);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 20),
+              padding: EdgeInsets.only(right: 20),
               child: ClipOval(
                 child: userModel != null && userModel!.imgUrl.isNotEmpty
                     ? Image.network(
