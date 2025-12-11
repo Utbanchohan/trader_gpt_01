@@ -160,6 +160,7 @@ class TokenRefreshManager {
     ref.read(localDataProvider).setPassword(password);
     ref.read(localDataProvider).setRememberMe(rememberMe);
     ref.read(stocksManagerProvider.notifier).unWatchAllStock();
+    ref.read(authProvider.notifier).onSignOut();
   }
 }
 
