@@ -340,10 +340,8 @@ class _CryptoItemsState extends ConsumerState<CryptoItems> {
       getOverviewCandleChartCryptoProvider(
         widget.chatRouting.symbol + "_CRYPTO",
         interval.value,
-        // "2023-12-11T09:59:41.947Z",
         chartDateRange['startDateString']!,
         chartDateRange['endDateString']!,
-        // "2025-12-11T09:59:41.947063Z",
         "1",
         chartDateRange['dataPoint']!,
       ),
