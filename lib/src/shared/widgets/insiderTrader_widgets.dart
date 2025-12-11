@@ -36,6 +36,7 @@ class InsiderTraderTable extends StatelessWidget {
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
+            physics: BouncingScrollPhysics(),
             child: DataTable(
               headingRowHeight: 40.h,
               columnSpacing: 20,

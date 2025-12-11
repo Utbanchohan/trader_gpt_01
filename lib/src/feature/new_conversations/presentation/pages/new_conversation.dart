@@ -53,7 +53,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   User? userModel;
 
   getUser() async {
-    dynamic userData = await ref.watch(localDataProvider).getUser();
+    dynamic userData = await ref.read(localDataProvider).getUser();
     if (userData != null) {
       setState(() {
         userModel = User.fromJson(userData);
@@ -65,6 +65,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   void initState() {
     super.initState();
     getStocks();
+    getUser();
   }
 
   void _startPollingSearch(val) async {
@@ -224,8 +225,6 @@ class _NewConversationState extends ConsumerState<NewConversation> {
 
   @override
   Widget build(BuildContext context) {
-    getUser();
-
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       resizeToAvoidBottomInset: true,

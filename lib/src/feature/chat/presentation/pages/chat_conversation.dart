@@ -463,7 +463,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   }
 
   void _sendMessage(WidgetRef ref) async {
-    final userid = ref.watch(localDataProvider).getUserId;
+    final userid = ref.read(localDataProvider).getUserId;
     final text = message.text.trim();
 
     if (text.isEmpty || chadId == null) return;

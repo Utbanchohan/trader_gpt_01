@@ -98,6 +98,8 @@ class CustomLineChart extends StatelessWidget {
 
                     rightTitles: AxisTitles(
                       sideTitles: SideTitles(
+                        maxIncluded: false,
+                        minIncluded: false,
                         showTitles: true,
                         reservedSize: 45,
                         // interval: 1000,
@@ -125,6 +127,8 @@ class CustomLineChart extends StatelessWidget {
                     // ✅ Fixed Bottom Date Labels
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
+                        maxIncluded: false,
+                        minIncluded: false,
                         showTitles: true,
                         reservedSize: 35,
                         interval: (chartData.length / 4).floorToDouble().clamp(

@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/model/weekly_model/weekly_model.dart';
@@ -12,10 +13,10 @@ class WeeklyData extends _$WeeklyData {
   Future<WeeklyModel> build() async {
     return state.value!;
   }
+}
 
-  Future<WeeklyModel> getWeeklyData(ticker) async {
-    final res = await ref.read(overviewRepositoryele).weeklyData(ticker);
-
-    return res;
-  }
+@Riverpod(keepAlive: true)
+Future<WeeklyModel> getWeeklyData(Ref ref, String ticker) async {
+  final res = await ref.read(overviewRepositoryele).weeklyData(ticker);
+  return res;
 }
