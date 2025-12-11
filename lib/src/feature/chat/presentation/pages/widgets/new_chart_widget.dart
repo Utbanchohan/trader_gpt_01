@@ -6,6 +6,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../../shared/extensions/custom_extensions.dart';
@@ -300,7 +301,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     );
   }
 
-  /// Build scatter chart
   Widget _buildScatterChart() {
     final categories = _getCategories();
     final data = widget.chartData.data;
@@ -362,6 +362,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           drawVerticalLine: true,
           horizontalInterval: 1,
           verticalInterval: 1,
+
           getDrawingHorizontalLine: (value) =>
               FlLine(color: gridColor, strokeWidth: 1),
           getDrawingVerticalLine: (value) =>
@@ -376,7 +377,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             sideTitles: SideTitles(
               maxIncluded: false,
               showTitles: true,
-              reservedSize: 50,
+              reservedSize: 60,
               interval: safeInterval,
               getTitlesWidget: (value, meta) {
                 return MdSnsText(
@@ -397,23 +398,34 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+              minIncluded: false,
+              maxIncluded: false,
               reservedSize: 50,
-              interval: (categories.length / 4).floorToDouble(),
+              interval: (categories.length / 4).ceilToDouble(),
               getTitlesWidget: (value, meta) {
                 final index = value.toInt();
                 if (index >= 0 && index < categories.length) {
-                  return Column(
-                    children: [
-                      SizedBox(height: 5),
-                      MdSnsText(
-                        formatDateMMYYY(categories[index]),
-                        variant: TextVariant.h4,
-                        color: axisColor,
+                  print(categories[index]);
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Center(
+                      child: Transform.rotate(
+                        angle: -0.6,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: MdSnsText(
+                            // "23/20/2024",
+                            formatDateDDMMYY(categories[index]),
+                            variant: TextVariant.h4,
+                            color: axisColor,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ),
-                    ],
+                    ),
                   );
                 }
-                return MdSnsText('');
+                return const SizedBox.shrink();
               },
             ),
           ),
@@ -422,7 +434,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     );
   }
 
-  /// Build bar chart
   Widget _buildBarChart({bool stacked = false}) {
     final categories = _getCategories();
     final data = widget.chartData.data;
@@ -511,6 +522,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
         gridData: FlGridData(
           show: false,
           horizontalInterval: 1,
+
           getDrawingHorizontalLine: (value) =>
               FlLine(color: gridColor, strokeWidth: 1),
         ),
@@ -522,7 +534,9 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
-              reservedSize: 40,
+              maxIncluded: false,
+              minIncluded: false,
+              reservedSize: 60,
               showTitles: true,
               interval: calculateInterval(
                 calculateBarBounds(barGroups)['minY'] ?? 0,
@@ -571,7 +585,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     );
   }
 
-  /// Build line chart
   Widget _buildLineChart({bool isArea = false}) {
     final categories = _getCategories();
     final data = widget.chartData.data;
@@ -676,18 +689,26 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                 maxIncluded: false,
                 minIncluded: false,
                 showTitles: true,
-                reservedSize: 50,
-                interval: safeInterval,
-
+                reservedSize: 60,
+                interval: safeInterval <= 0
+                    ? 1
+                    : safeInterval, // minimum interval = 1
                 getTitlesWidget: (value, meta) {
-                  return MdSnsText(
-                    Filters.systemNumberConvention(
-                      value.toInt(),
+                  // Round value to nearest integer
+                  final intLabel = value.round();
 
-                      containerWidth: 40,
+                  // Skip labels <=0 if not needed
+                  if (intLabel <= 0) return const SizedBox.shrink();
+
+                  return MdSnsText(
+                    // "lala",
+                    Filters.systemNumberConvention(
+                      intLabel,
+                      containerWidth: 60,
                       isRound: true,
                       fromChart: true,
                     ),
+
                     variant: TextVariant.h4,
                     color: axisColor,
                   );
@@ -697,21 +718,31 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 reservedSize: 40,
+                minIncluded: false,
+                maxIncluded: false,
                 showTitles: true,
-                interval: (categories.length / 3)
-                    .floorToDouble(), // 👈 show only 10 titles
+                interval: (categories.length / 3).floorToDouble(),
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
                   if (index >= 0 && index < categories.length) {
                     return Column(
                       children: [
-                        SizedBox(height: 5),
-                        Container(
-                          margin: EdgeInsets.only(right: 15.w),
-                          child: MdSnsText(
-                            formatDateMMYYY(categories[index]),
-                            variant: TextVariant.h4,
-                            color: axisColor,
+                        Padding(
+                          padding: EdgeInsets.only(top: 20, right: 20),
+                          child: Center(
+                            child: Transform.rotate(
+                              angle: -0.6,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: MdSnsText(
+                                  "23/20/2024",
+                                  // formatDateMMYYY(categories[index]),
+                                  variant: TextVariant.h4,
+                                  color: axisColor,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -780,7 +811,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
     // );
   }
 
-  /// Get color for series index
   Color _getColorForIndex(int index) {
     final colors = [
       AppColors.secondaryColor,
@@ -832,7 +862,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                 ),
                 buttonStyleData: ButtonStyleData(
                   elevation: 0,
-                  height: 48, // 👈 give button a proper height
+                  height: 48,
                   decoration: BoxDecoration(
                     color: gridColor,
                     borderRadius: BorderRadius.circular(8),
@@ -857,7 +887,6 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
   }
 }
 
-/// Example usage widget
 class ChartExample extends StatelessWidget {
   final List<double> data;
   final List<String> xAxis;

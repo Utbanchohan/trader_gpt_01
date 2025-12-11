@@ -53,7 +53,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   User? userModel;
 
   getUser() async {
-    dynamic userData = await ref.watch(localDataProvider).getUser();
+    dynamic userData = await ref.read(localDataProvider).getUser();
     if (userData != null) {
       setState(() {
         userModel = User.fromJson(userData);
@@ -65,6 +65,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   void initState() {
     super.initState();
     getStocks();
+    getUser();
   }
 
   void _startPollingSearch(val) async {
@@ -181,7 +182,8 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           image: "",
           companyName: stock.companyName,
           price: stock.price,
-          changePercentage: stock.pctChange,
+          changePercentage:
+              double.tryParse(stock.pct_change.replaceAll('%', '')) ?? 0,
           trendChart: trend,
           stockid: stock.stockId,
         ),
@@ -220,8 +222,6 @@ class _NewConversationState extends ConsumerState<NewConversation> {
 
   @override
   Widget build(BuildContext context) {
-    getUser();
-
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       resizeToAvoidBottomInset: true,
@@ -319,7 +319,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
               ),
               SizedBox(width: 4),
               MdSnsText(
-                "Start New ",
+                "Start New Conversation",
                 color: AppColors.color9EAAC0,
                 variant: TextVariant.h1,
                 fontWeight: TextFontWeightVariant.h2,
@@ -633,7 +633,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 40,
+                    width: 49,
                     child: MdSnsText(
                       widget.symbol,
                       color: Colors.white,
@@ -688,13 +688,15 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
                 size: 20,
               ),
               MdSnsText(
-                Filters.systemNumberConvention(
-                      widget.change,
-                      isPrice: false,
-                      isAbs: false,
-                      alwaysShowTwoDecimal: true,
-                    ).replaceAll('%', '') +
-                    "%",
+                widget.change.isEmpty
+                    ? "0.00%"
+                    : Filters.systemNumberConvention(
+                            widget.change,
+                            isPrice: false,
+                            isAbs: false,
+                            alwaysShowTwoDecimal: true,
+                          ).replaceAll('%', '') +
+                          "%",
 
                 color: widget.change.toString().contains("-")
                     ? AppColors.redFF3B3B

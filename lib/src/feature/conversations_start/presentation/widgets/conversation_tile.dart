@@ -88,23 +88,28 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                     borderRadius: BorderRadius.circular(10),
                     child: widget.stock.type.toLowerCase() == "crypto"
                         ? Container(
-                            color: AppColors.redFF3B3B,
-                            child: Image(
-                              height: 41,
-                              width: 42,
-                              image: NetworkImage(
-                                getItemImage(
-                                  ImageType.crypto,
-                                  widget.stock.symbol,
+                            height: 41,
+                            width: 42,
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColor,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(0),
+                              child: FittedBox(
+                                fit: BoxFit.contain, // FULL image without crop
+                                child: Image.network(
+                                  getItemImage(
+                                    ImageType.crypto,
+                                    widget.stock.symbol,
+                                  ),
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return SvgPicture.network(
+                                      "https://cdn-images.traderverse.io/crypto_dummy.svg",
+                                      fit: BoxFit.contain,
+                                    );
+                                  },
                                 ),
                               ),
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return SvgPicture.network(
-                                  "https://cdn-images.traderverse.io/crypto_dummy.svg",
-                                  fit: BoxFit.cover,
-                                );
-                              },
                             ),
                           )
                         : SvgPicture.network(
@@ -227,12 +232,14 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                    Filters.systemNumberConvention(
-                          change,
-                          isPrice: false,
-                          isAbs: false,
-                        ).replaceAll('%', '') +
-                        "%",
+                    change.isNotEmpty
+                        ? Filters.systemNumberConvention(
+                                change,
+                                isPrice: false,
+                                isAbs: false,
+                              ).replaceAll('%', '') +
+                              "%"
+                        : "0.00%",
                     color: change.contains("-")
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,

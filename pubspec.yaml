@@ -67,6 +67,9 @@ dependencies:
   flutter_flavorizr: ^2.4.1
 
   speech_to_text: ^7.3.0
+  saver_gallery: ^4.1.0  
+  image_gallery_saver_plus: ^4.0.1
+  scrollable_positioned_list: ^0.3.8
 
 
 

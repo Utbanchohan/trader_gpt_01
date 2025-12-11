@@ -204,7 +204,11 @@ Widget buildPriceTargetBar(
 
             // 2. The green progress part
             FractionallySizedBox(
-              widthFactor: fraction == -1 ? 0 : fraction,
+              widthFactor: fraction == -1
+                  ? 0
+                  : fraction > 1
+                  ? 1
+                  : fraction,
               child: Container(
                 height: 30,
                 decoration: BoxDecoration(
