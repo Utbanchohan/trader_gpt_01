@@ -314,6 +314,9 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                     rightTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
+                        minIncluded: false,
+
+                        maxIncluded: false,
                         reservedSize: 50.w, // thoda zyada space
                         interval: calculateInterval(
                           chartData.isNotEmpty
