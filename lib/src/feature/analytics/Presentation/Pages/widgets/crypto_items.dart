@@ -53,6 +53,10 @@ import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart'
 
 import '../../../../../shared/extensions/number_formatter_extension.dart';
 
+final selectedCandleIntervalProvider = StateProvider.family<String, String>(
+  (ref, symbol) => "D",
+);
+
 class CryptoItems extends ConsumerStatefulWidget {
   final ChatRouting chatRouting;
   final Stock selectedStock;
@@ -69,7 +73,6 @@ class CryptoItems extends ConsumerStatefulWidget {
 class _CryptoItemsState extends ConsumerState<CryptoItems> {
   List<OverviewCandleChartModel>? overviewCandleChartModelCrypto;
 
-  String selectedItemCandleCrypto = "D";
   double? minX;
   double? maxX;
 
@@ -256,6 +259,9 @@ class _CryptoItemsState extends ConsumerState<CryptoItems> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedItemCandleCrypto = ref.watch(
+      selectedCandleIntervalProvider(widget.chatRouting.symbol),
+    );
     final stockManagerState = ref.watch(stocksManagerProvider);
     final liveStock = stockManagerState[widget.chatRouting.stockid];
     double change =
@@ -946,6 +952,14 @@ class _CryptoItemsState extends ConsumerState<CryptoItems> {
                       name: "OHLC/V Candlestick Chart",
                       data: buildCryptoChartSpots(value.data),
                       onPressed: (val) {
+                        ref
+                                .read(
+                                  selectedCandleIntervalProvider(
+                                    widget.chatRouting.symbol,
+                                  ).notifier,
+                                )
+                                .state =
+                            val;
                         // if (!mounted) return;
                         // setState(() {
                         //   selectedItemCandleCrypto = val;
