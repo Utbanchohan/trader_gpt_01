@@ -6,7 +6,7 @@ part of 'info_crypto.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$infoCryptoDataHash() => r'41a31fbe15b77627f6e63b47ed692f27903bec81';
+String _$infoCryptoDataHash() => r'e299d5f234df777a2b8f1d10fb0965cdbf7a391f';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -66,8 +66,7 @@ class InfoCryptoDataFamily extends Family<AsyncValue<InfoCryptoResponse>> {
 }
 
 /// See also [infoCryptoData].
-class InfoCryptoDataProvider
-    extends AutoDisposeFutureProvider<InfoCryptoResponse> {
+class InfoCryptoDataProvider extends FutureProvider<InfoCryptoResponse> {
   /// See also [infoCryptoData].
   InfoCryptoDataProvider(String ticker)
     : this._internal(
@@ -114,7 +113,7 @@ class InfoCryptoDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<InfoCryptoResponse> createElement() {
+  FutureProviderElement<InfoCryptoResponse> createElement() {
     return _InfoCryptoDataProviderElement(this);
   }
 
@@ -134,13 +133,13 @@ class InfoCryptoDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin InfoCryptoDataRef on AutoDisposeFutureProviderRef<InfoCryptoResponse> {
+mixin InfoCryptoDataRef on FutureProviderRef<InfoCryptoResponse> {
   /// The parameter `ticker` of this provider.
   String get ticker;
 }
 
 class _InfoCryptoDataProviderElement
-    extends AutoDisposeFutureProviderElement<InfoCryptoResponse>
+    extends FutureProviderElement<InfoCryptoResponse>
     with InfoCryptoDataRef {
   _InfoCryptoDataProviderElement(super.provider);
 

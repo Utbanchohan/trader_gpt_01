@@ -17,6 +17,7 @@ import 'package:trader_gpt/src/feature/analytics/Presentation/provider/about_cry
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/analytics_provider/analytics_provider.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/info_crypto/info_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/monthly_data_crypto/monthly_data_crypto.dart';
+import 'package:trader_gpt/src/feature/analytics/Presentation/provider/overview_candle_chart/overview_candle_chart.dart';
 import 'package:trader_gpt/src/feature/analytics/Presentation/provider/weekly_data_crypto/weekly_data_crypto.dart';
 import 'package:trader_gpt/src/feature/analytics/data/dto/analysis_dto/analysis_dto.dart';
 import 'package:trader_gpt/src/feature/analytics/data/dto/highlight_dto/highlight_dto_crypto.dart';
@@ -35,6 +36,7 @@ import 'package:trader_gpt/src/feature/analytics/domain/model/overview_candle_ch
 import 'package:trader_gpt/src/feature/analytics/domain/model/price_comparison_model/price_comparison_model.dart';
 import 'package:trader_gpt/src/feature/analytics/domain/model/weekly_model/weekly_model.dart';
 import 'package:trader_gpt/src/feature/chat/domain/model/chat_stock_model.dart';
+import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/widget/shimmer_widget.dart';
 import 'package:trader_gpt/src/shared/chart/lin_chart.dart';
 import 'package:trader_gpt/src/shared/chart/share_structure_widget.dart';
 import 'package:trader_gpt/src/shared/chart/weekly_seasonality.dart';
@@ -42,11 +44,13 @@ import 'package:trader_gpt/src/shared/socket/model/stock_model.dart/stock_model.
 import 'package:trader_gpt/src/shared/socket/providers/stocks_price.dart';
 import 'package:trader_gpt/src/shared/widgets/AnalysisTableShimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/CustomCandleChartShimmer%20.dart';
+import 'package:trader_gpt/src/shared/widgets/cashdebt_shimmer_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/price_card_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/price_card_widgets.dart';
+import 'package:trader_gpt/src/shared/widgets/table_shimmer.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 import '../../../../../shared/extensions/number_formatter_extension.dart';
-import '../../provider/overview_candle_chart_crypto/overview_candle_chart_crypto.dart';
 
 class CryptoItems extends ConsumerStatefulWidget {
   final ChatRouting chatRouting;
@@ -88,168 +92,29 @@ class _CryptoItemsState extends ConsumerState<CryptoItems> {
   bool chartLoader = true;
   bool overviewCandleChartModelCryptoLoader = true;
 
-  highlightTopRequest(HighlightRequest highlightRequest) {
-    try {
-      highlightsTopLoader = true;
-      var res = ref.read(highlightsTopProvider(highlightRequest));
-      switch (res) {
-        case AsyncData(:final value):
-          {
-            if (value != null) {
-              highlightsTopLoader = false;
-              highlightResponse = value;
-            } else {
-              highlightsTopLoader = false;
-            }
-          }
-        case AsyncError(:final error):
-          highlightsTopLoader = false;
-        case AsyncLoading():
-          highlightsTopLoader = false;
-      }
-    } catch (e) {}
-  }
-
-  priceComparison(PriceComparisonDto priceComparisonDto) async {
-    try {
-      priceComparisonloader = true;
-      var res = ref.watch(priceComparisonProvider(priceComparisonDto));
-      priceComparisonloader = false;
-
-      switch (res) {
-        case AsyncData(:final value):
-          {
-            if (value != null) {
-              priceComparisonloader = false;
-              priceComparisonModel = value;
-            }
-          }
-        case AsyncError(:final error):
-          priceComparisonloader = false;
-        case AsyncLoading():
-          priceComparisonloader = false;
-      }
-    } catch (e) {
-      print(e);
-      priceComparisonloader = false;
-    }
-  }
-
-  //crypto apis start
-  getWeeklyDataCrypto(symbol) async {
-    var res = ref.watch(getWeeklyDataCryptoProvider(symbol + "USD", 'crypto'));
-
-    switch (res) {
-      case AsyncData(:final value):
-        {
-          if (value != null) {
-            weeklyDataLoader = false;
-            weeklyDataCrypto = value;
-          }
-        }
-      case AsyncError(:final error):
-        weeklyDataLoader = false;
-      case AsyncLoading():
-        weeklyDataLoader = false;
-    }
-  }
-
-  infoCryptoData(symbol) async {
-    var res = ref.watch(infoCryptoDataProvider(symbol));
-    switch (res) {
-      case AsyncData(:final value):
-        {
-          if (value != null) {
-            infoCryptoLoader = false;
-            infoCryptoResponse = value;
-          }
-        }
-      case AsyncError(:final error):
-        infoCryptoLoader = false;
-      case AsyncLoading():
-        infoCryptoLoader = false;
-    }
-  }
-
-  getMonthlyDataCrypto(symbol) async {
-    var res = ref.watch(getMonthlyDataCryptoProvider(symbol + "USD", "crypto"));
-    switch (res) {
-      case AsyncData(:final value):
-        {
-          if (value != null) {
-            monthlyDataLoader = false;
-            monthlyDataCrypto = value;
-          }
-        }
-      case AsyncError(:final error):
-        monthlyDataLoader = false;
-      case AsyncLoading():
-        monthlyDataLoader = false;
-    }
-  }
-
-  getAboutCrypto(symbol) async {
-    var res = ref.watch(getAboutCryptoProvider(symbol));
-    switch (res) {
-      case AsyncData(:final value):
-        {
-          if (value != null) {
-            abooutCryptoLoader = false;
-            aboutCryptoModel = value;
-          }
-        }
-      case AsyncError(:final error):
-        abooutCryptoLoader = false;
-      case AsyncLoading():
-        abooutCryptoLoader = false;
-    }
-  }
-
-  getOverviewCandleChartCrypto(symbol, IntervalEnum interval) async {
-    // await chartService.fetchChartData(
-    //   cryptoApi: widget.chatRouting.type == "crypto" ? true : false,
-    //   internalApi: widget.chatRouting.type == "crypto" ? false : true,
-    //   selectedSymbol: widget.chatRouting.symbol,
-    //   interval: interval.value,
-    //   onSuccess: (data) async {
-    //     overviewCandleChartModelCrypto = [];
-    //     for (var item in data) {
-    //       try {
-    //         overviewCandleChartModelCrypto!.add(
-    //           OverviewCandleChartModel(
-    //             symbol: widget.chatRouting.symbol,
-    //             open: item['OPEN'],
-    //             high: item['HIGH'],
-    //             low: item['LOW'],
-    //             close: item['CLOSE'],
-    //             volume: item['VOLUME'].toInt(),
-    //             timestamp: DateTime.fromMillisecondsSinceEpoch(
-    //               item['TIMESTAMP'],
-    //             ),
-    //           ),
-    //         );
-    //       } catch (e) {}
-    //     }
-
-    //     print("✅ Chart data loaded: ${data.length} items");
-    //   },
-    //   onError: (err) {
-    //     print("❌ Error loading chart data: $err");
-    //   },
-    // );
-    final now = DateTime.now().toUtc();
-
-    // Subtract 2 years for startDate
-    var startDate;
+  Map<String, String> createChartCandleChartDto(
+    IntervalEnum interval, {
+    DateTime? referenceTime,
+  }) {
+    final now = referenceTime ?? DateTime.now().toUtc();
+    DateTime startDate;
     final endDateString = now.toIso8601String();
-    var startDateString;
-    if (!mounted) return;
-    setState(() {
-      chartLoader = true;
-    });
+    String startDateString;
+
     double intervalMs = 0;
+
     if (interval.value == "minute") {
       intervalMs = 60 * 1000;
+      startDate = DateTime.utc(
+        now.year,
+        now.month,
+        now.day,
+        now.hour - 24, // Last 24 hours for minutes
+        now.minute,
+        now.second,
+        now.millisecond,
+      );
+      startDateString = startDate.toIso8601String();
     } else if (interval.value == "hour") {
       intervalMs = 60 * 60 * 1000;
       startDate = DateTime.utc(
@@ -298,241 +163,472 @@ class _CryptoItemsState extends ConsumerState<CryptoItems> {
       );
       startDateString = startDate.toIso8601String();
       intervalMs = 30 * 24 * 60 * 60 * 1000;
+    } else {
+      // Default fallback
+      startDate = now.subtract(const Duration(days: 30));
+      startDateString = startDate.toIso8601String();
+      intervalMs = 24 * 60 * 60 * 1000;
     }
 
-    double dummyIntervals =
+    final dummyIntervals =
         (now.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch) /
         intervalMs;
+    final dataPoint = intervalMs > 0 ? (dummyIntervals + 1).floor() : 1;
 
-    var dataPoint = intervalMs > 0 ? (dummyIntervals + 1).floor() : 1;
-    try {
-      var res = ref.watch(
-        getOverviewCandleChartCryptoProvider(
-          symbol + "_CRYPTO",
-          interval.value,
-          startDateString,
-          endDateString,
-          "1",
-          dataPoint.toString(),
-        ),
-      );
-
-      switch (res) {
-        case AsyncData(:final value):
-          {
-            chartLoader = false;
-            overviewCandleChartModelCrypto = [];
-            overviewCandleChartModelCrypto!.addAll(value.data);
-          }
-
-        case AsyncError(:final error):
-          chartLoader = false;
-        case AsyncLoading():
-          chartLoader = false;
-      }
-    } catch (e) {}
+    return {
+      "dataPoint": dataPoint.toString(),
+      "endDateString": endDateString,
+      "startDateString": startDateString,
+      "interval": interval.value,
+    };
   }
 
-  marketCapRequest(MarketCapRequest symbol) async {
-    try {
-      var res = ref.read(marketCapChartProvider(symbol));
-      switch (res) {
-        case AsyncData(:final value):
-          {
-            if (value != null) {
-              marketCapLoader = false;
-              marketCapResponse = value;
-            } else {
-              marketCapLoader = false;
-            }
-          }
-        case AsyncError(:final error):
-          marketCapLoader = false;
-        case AsyncLoading():
-          marketCapLoader = false;
-      }
-    } catch (e) {}
-  }
+  // highlightTopRequest(HighlightRequest highlightRequest) {
+  //   try {
+  //     highlightsTopLoader = true;
+  //     var res = ref.watch(highlightsTopProvider(highlightRequest));
+  //     switch (res) {
+  //       case AsyncData(:final value):
+  //         {
+  //           if (value != null) {
+  //             highlightsTopLoader = false;
+  //             highlightResponse = value;
+  //           } else {
+  //             highlightsTopLoader = false;
+  //           }
+  //         }
+  //       case AsyncError(:final error):
+  //         highlightsTopLoader = false;
+  //       case AsyncLoading():
+  //         highlightsTopLoader = false;
+  //     }
+  //   } catch (e) {}
+  // }
 
-  cryptoMarkets(SymbolDto symbol) async {
-    try {
-      var res = ref.read(cryptoMarketsProvider(symbol));
-      switch (res) {
-        case AsyncData(:final value):
-          {
-            if (value != null) {
-              cryptoMarketLoader = false;
-              cryptoMarketModel = value;
-            } else {
-              cryptoMarketLoader = false;
-            }
-          }
-        case AsyncError(:final error):
-          cryptoMarketLoader = false;
-        case AsyncLoading():
-          cryptoMarketLoader = false;
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  // priceComparison(PriceComparisonDto priceComparisonDto) async {
+  //   try {
+  //     priceComparisonloader = true;
+  //     var res = ref.watch(priceComparisonProvider(priceComparisonDto));
+  //     priceComparisonloader = false;
 
-  priceRatio(PriceComparisonDto symbol) async {
-    try {
-      var res = ref.read(priceRatioProvider(symbol));
-      switch (res) {
-        case AsyncData(:final value):
-          {
-            if (value != null) {
-              priceRatioLoader = false;
-              priceRatioModel = value;
-            } else {
-              priceRatioLoader = false;
-            }
-          }
-        case AsyncError(:final error):
-          priceRatioLoader = false;
-        case AsyncLoading():
-          priceRatioLoader = false;
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  //     switch (res) {
+  //       case AsyncData(:final value):
+  //         {
+  //           if (value != null) {
+  //             priceComparisonloader = false;
+  //             priceComparisonModel = value;
+  //           }
+  //         }
+  //       case AsyncError(:final error):
+  //         priceComparisonloader = false;
+  //       case AsyncLoading():
+  //         priceComparisonloader = false;
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     priceComparisonloader = false;
+  //   }
+  // }
+
+  // //crypto apis start
+  // getWeeklyDataCrypto(symbol) async {
+  //   var res = ref.watch(getWeeklyDataCryptoProvider(symbol + "USD", 'crypto'));
+
+  //   switch (res) {
+  //     case AsyncData(:final value):
+  //       {
+  //         if (value != null) {
+  //           weeklyDataLoader = false;
+  //           weeklyDataCrypto = value;
+  //         }
+  //       }
+  //     case AsyncError(:final error):
+  //       weeklyDataLoader = false;
+  //     case AsyncLoading():
+  //       weeklyDataLoader = false;
+  //   }
+  // }
+
+  // infoCryptoData(symbol) async {
+  //   var res = ref.watch(infoCryptoDataProvider(symbol));
+  //   switch (res) {
+  //     case AsyncData(:final value):
+  //       {
+  //         if (value != null) {
+  //           infoCryptoLoader = false;
+  //           infoCryptoResponse = value;
+  //         }
+  //       }
+  //     case AsyncError(:final error):
+  //       infoCryptoLoader = false;
+  //     case AsyncLoading():
+  //       infoCryptoLoader = false;
+  //   }
+  // }
+
+  // getMonthlyDataCrypto(symbol) async {
+  //   var res = ref.watch(getMonthlyDataCryptoProvider(symbol + "USD", "crypto"));
+  //   switch (res) {
+  //     case AsyncData(:final value):
+  //       {
+  //         if (value != null) {
+  //           monthlyDataLoader = false;
+  //           monthlyDataCrypto = value;
+  //         }
+  //       }
+  //     case AsyncError(:final error):
+  //       monthlyDataLoader = false;
+  //     case AsyncLoading():
+  //       monthlyDataLoader = false;
+  //   }
+  // }
+
+  // getAboutCrypto(symbol) async {
+  //   var res = ref.watch(getAboutCryptoProvider(symbol));
+  //   switch (res) {
+  //     case AsyncData(:final value):
+  //       {
+  //         if (value != null) {
+  //           abooutCryptoLoader = false;
+  //           aboutCryptoModel = value;
+  //         }
+  //       }
+  //     case AsyncError(:final error):
+  //       abooutCryptoLoader = false;
+  //     case AsyncLoading():
+  //       abooutCryptoLoader = false;
+  //   }
+  // }
+
+  // getOverviewCandleChartCrypto(symbol, IntervalEnum interval) async {
+  //   // await chartService.fetchChartData(
+  //   //   cryptoApi: widget.chatRouting.type == "crypto" ? true : false,
+  //   //   internalApi: widget.chatRouting.type == "crypto" ? false : true,
+  //   //   selectedSymbol: widget.chatRouting.symbol,
+  //   //   interval: interval.value,
+  //   //   onSuccess: (data) async {
+  //   //     overviewCandleChartModelCrypto = [];
+  //   //     for (var item in data) {
+  //   //       try {
+  //   //         overviewCandleChartModelCrypto!.add(
+  //   //           OverviewCandleChartModel(
+  //   //             symbol: widget.chatRouting.symbol,
+  //   //             open: item['OPEN'],
+  //   //             high: item['HIGH'],
+  //   //             low: item['LOW'],
+  //   //             close: item['CLOSE'],
+  //   //             volume: item['VOLUME'].toInt(),
+  //   //             timestamp: DateTime.fromMillisecondsSinceEpoch(
+  //   //               item['TIMESTAMP'],
+  //   //             ),
+  //   //           ),
+  //   //         );
+  //   //       } catch (e) {}
+  //   //     }
+
+  //   //     print("✅ Chart data loaded: ${data.length} items");
+  //   //   },
+  //   //   onError: (err) {
+  //   //     print("❌ Error loading chart data: $err");
+  //   //   },
+  //   // );
+  //   final now = DateTime.now().toUtc();
+
+  //   // Subtract 2 years for startDate
+  //   var startDate;
+  //   final endDateString = now.toIso8601String();
+  //   var startDateString;
+  //   if (!mounted) return;
+  //   setState(() {
+  //     chartLoader = true;
+  //   });
+  //   double intervalMs = 0;
+  //   if (interval.value == "minute") {
+  //     intervalMs = 60 * 1000;
+  //   } else if (interval.value == "hour") {
+  //     intervalMs = 60 * 60 * 1000;
+  //     startDate = DateTime.utc(
+  //       now.year,
+  //       now.month - 2,
+  //       now.day,
+  //       now.hour,
+  //       now.minute,
+  //       now.second,
+  //       now.millisecond,
+  //     );
+  //     startDateString = startDate.toIso8601String();
+  //   } else if (interval.value == "daily") {
+  //     startDate = DateTime.utc(
+  //       now.year - 2,
+  //       now.month,
+  //       now.day,
+  //       now.hour,
+  //       now.minute,
+  //       now.second,
+  //       now.millisecond,
+  //     );
+  //     startDateString = startDate.toIso8601String();
+  //     intervalMs = 24 * 60 * 60 * 1000;
+  //   } else if (interval.value == "weekly") {
+  //     startDate = DateTime.utc(
+  //       now.year - 3,
+  //       now.month,
+  //       now.day,
+  //       now.hour,
+  //       now.minute,
+  //       now.second,
+  //       now.millisecond,
+  //     );
+  //     startDateString = startDate.toIso8601String();
+  //     intervalMs = 7 * 24 * 60 * 60 * 1000;
+  //   } else if (interval.value == "monthly") {
+  //     startDate = DateTime.utc(
+  //       now.year - 10,
+  //       now.month,
+  //       now.day,
+  //       now.hour,
+  //       now.minute,
+  //       now.second,
+  //       now.millisecond,
+  //     );
+  //     startDateString = startDate.toIso8601String();
+  //     intervalMs = 30 * 24 * 60 * 60 * 1000;
+  //   }
+
+  //   double dummyIntervals =
+  //       (now.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch) /
+  //       intervalMs;
+
+  //   var dataPoint = intervalMs > 0 ? (dummyIntervals + 1).floor() : 1;
+  //   try {
+  //     var res = ref.watch(
+  //       getOverviewCandleChartCryptoProvider(
+  //         symbol + "_CRYPTO",
+  //         interval.value,
+  //         startDateString,
+  //         endDateString,
+  //         "1",
+  //         dataPoint.toString(),
+  //       ),
+  //     );
+
+  //     switch (res) {
+  //       case AsyncData(:final value):
+  //         {
+  //           chartLoader = false;
+  //           overviewCandleChartModelCrypto = [];
+  //           overviewCandleChartModelCrypto!.addAll(value.data);
+  //         }
+
+  //       case AsyncError(:final error):
+  //         chartLoader = false;
+  //       case AsyncLoading():
+  //         chartLoader = false;
+  //     }
+  //   } catch (e) {}
+  // }
+
+  // marketCapRequest(MarketCapRequest symbol) async {
+  //   try {
+  //     var res = ref.read(marketCapChartProvider(symbol));
+  //     switch (res) {
+  //       case AsyncData(:final value):
+  //         {
+  //           if (value != null) {
+  //             marketCapLoader = false;
+  //             marketCapResponse = value;
+  //           } else {
+  //             marketCapLoader = false;
+  //           }
+  //         }
+  //       case AsyncError(:final error):
+  //         marketCapLoader = false;
+  //       case AsyncLoading():
+  //         marketCapLoader = false;
+  //     }
+  //   } catch (e) {}
+  // }
+
+  // cryptoMarkets(SymbolDto symbol) async {
+  //   try {
+  //     var res = ref.read(cryptoMarketsProvider(symbol));
+  //     switch (res) {
+  //       case AsyncData(:final value):
+  //         {
+  //           if (value != null) {
+  //             cryptoMarketLoader = false;
+  //             cryptoMarketModel = value;
+  //           } else {
+  //             cryptoMarketLoader = false;
+  //           }
+  //         }
+  //       case AsyncError(:final error):
+  //         cryptoMarketLoader = false;
+  //       case AsyncLoading():
+  //         cryptoMarketLoader = false;
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
+  // priceRatio(PriceComparisonDto symbol) async {
+  //   try {
+  //     var res = ref.read(priceRatioProvider(symbol));
+  //     switch (res) {
+  //       case AsyncData(:final value):
+  //         {
+  //           if (value != null) {
+  //             priceRatioLoader = false;
+  //             priceRatioModel = value;
+  //           } else {
+  //             priceRatioLoader = false;
+  //           }
+  //         }
+  //       case AsyncError(:final error):
+  //         priceRatioLoader = false;
+  //       case AsyncLoading():
+  //         priceRatioLoader = false;
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   //crypto apis end
 
-  Future<void> cryptoApis() async {
-    if (highlightResponse == null) {
-      try {
-        await highlightTopRequest(
-          HighlightRequest(
-            symbol: widget.chatRouting.symbol,
-            limit: 5,
-            sort: "desc",
-          ),
-        );
-        if (!mounted) return;
-        setState(() {});
-      } catch (e, s) {
-        debugPrint("Error in highlightTopRequest: $e\n$s");
-      }
-    }
+  // Future<void> cryptoApis() async {
+  //   if (highlightResponse == null) {
+  //     try {
+  //       await highlightTopRequest(
+  //         HighlightRequest(
+  //           symbol: widget.chatRouting.symbol,
+  //           limit: 5,
+  //           sort: "desc",
+  //         ),
+  //       );
+  //       if (!mounted) return;
+  //       setState(() {});
+  //     } catch (e, s) {
+  //       debugPrint("Error in highlightTopRequest: $e\n$s");
+  //     }
+  //   }
 
-    if (infoCryptoResponse == null) {
-      try {
-        await infoCryptoData(widget.chatRouting.symbol);
-        if (!mounted) return;
-        setState(() {});
-      } catch (e, s) {
-        debugPrint("Error in infoCryptoData: $e\n$s");
-      }
-    }
+  //   if (infoCryptoResponse == null) {
+  //     try {
+  //       await infoCryptoData(widget.chatRouting.symbol);
+  //       if (!mounted) return;
+  //       setState(() {});
+  //     } catch (e, s) {
+  //       debugPrint("Error in infoCryptoData: $e\n$s");
+  //     }
+  //   }
 
-    if (aboutCryptoModel == null) {
-      try {
-        await getAboutCrypto(widget.chatRouting.symbol);
-        if (!mounted) return;
-        setState(() {});
-      } catch (e, s) {
-        debugPrint("Error in getAboutCrypto: $e\n$s");
-      }
-    }
+  //   if (aboutCryptoModel == null) {
+  //     try {
+  //       await getAboutCrypto(widget.chatRouting.symbol);
+  //       if (!mounted) return;
+  //       setState(() {});
+  //     } catch (e, s) {
+  //       debugPrint("Error in getAboutCrypto: $e\n$s");
+  //     }
+  //   }
 
-    if (weeklyDataCrypto == null) {
-      try {
-        await getWeeklyDataCrypto(widget.chatRouting.symbol);
-        if (!mounted) return;
-        setState(() {});
-      } catch (e, s) {
-        debugPrint("Error in getWeeklyDataCrypto: $e\n$s");
-      }
-    }
+  //   if (weeklyDataCrypto == null) {
+  //     try {
+  //       await getWeeklyDataCrypto(widget.chatRouting.symbol);
+  //       if (!mounted) return;
+  //       setState(() {});
+  //     } catch (e, s) {
+  //       debugPrint("Error in getWeeklyDataCrypto: $e\n$s");
+  //     }
+  //   }
 
-    if (monthlyDataCrypto == null) {
-      try {
-        await getMonthlyDataCrypto(widget.chatRouting.symbol);
-        if (!mounted) return;
-        setState(() {});
-      } catch (e, s) {
-        debugPrint("Error in getMonthlyDataCrypto: $e\n$s");
-      }
-    }
+  //   if (monthlyDataCrypto == null) {
+  //     try {
+  //       await getMonthlyDataCrypto(widget.chatRouting.symbol);
+  //       if (!mounted) return;
+  //       setState(() {});
+  //     } catch (e, s) {
+  //       debugPrint("Error in getMonthlyDataCrypto: $e\n$s");
+  //     }
+  //   }
 
-    if (overviewCandleChartModelCrypto == null) {
-      try {
-        await getOverviewCandleChartCrypto(
-          widget.chatRouting.symbol,
-          IntervalEnum.hour,
-        );
-        if (!mounted) return;
-        setState(() {});
-      } catch (e, s) {
-        debugPrint("Error in getOverviewCandleChartCrypto: $e\n$s");
-      }
-    }
-    // local categoryImages removed (unused)
-    if (priceComparisonModel == null) {
-      try {
-        await priceComparison(
-          PriceComparisonDto(
-            daysBack: 365,
-            symbol1: widget.chatRouting.symbol,
-            symbol2: widget.chatRouting.symbol,
-          ),
-        );
-        if (!mounted) return;
-        setState(() {});
-      } catch (e, s) {
-        debugPrint("Error in priceComparison: $e\n$s");
-      }
-    }
+  //   if (overviewCandleChartModelCrypto == null) {
+  //     try {
+  //       await getOverviewCandleChartCrypto(
+  //         widget.chatRouting.symbol,
+  //         IntervalEnum.hour,
+  //       );
+  //       if (!mounted) return;
+  //       setState(() {});
+  //     } catch (e, s) {
+  //       debugPrint("Error in getOverviewCandleChartCrypto: $e\n$s");
+  //     }
+  //   }
+  //   // local categoryImages removed (unused)
+  //   if (priceComparisonModel == null) {
+  //     try {
+  //       await priceComparison(
+  //         PriceComparisonDto(
+  //           daysBack: 365,
+  //           symbol1: widget.chatRouting.symbol,
+  //           symbol2: widget.chatRouting.symbol,
+  //         ),
+  //       );
+  //       if (!mounted) return;
+  //       setState(() {});
+  //     } catch (e, s) {
+  //       debugPrint("Error in priceComparison: $e\n$s");
+  //     }
+  //   }
 
-    if (marketCapResponse == null) {
-      try {
-        await marketCapRequest(
-          MarketCapRequest(
-            interval: "1 month",
-            symbol: widget.chatRouting.symbol,
-          ),
-        );
-        if (!mounted) return;
-        setState(() {});
-      } catch (e, s) {
-        debugPrint("Error in marketCapRequest: $e\n$s");
-      }
-    }
+  //   if (marketCapResponse == null) {
+  //     try {
+  //       await marketCapRequest(
+  //         MarketCapRequest(
+  //           interval: "1 month",
+  //           symbol: widget.chatRouting.symbol,
+  //         ),
+  //       );
+  //       if (!mounted) return;
+  //       setState(() {});
+  //     } catch (e, s) {
+  //       debugPrint("Error in marketCapRequest: $e\n$s");
+  //     }
+  //   }
 
-    if (cryptoMarketModel == null) {
-      try {
-        await cryptoMarkets(SymbolDto(symbol: widget.chatRouting.symbol));
-        if (!mounted) return;
-        setState(() {});
-      } catch (e, s) {
-        debugPrint("Error in cryptoMarkets: $e\n$s");
-      }
-    }
+  //   if (cryptoMarketModel == null) {
+  //     try {
+  //       await cryptoMarkets(SymbolDto(symbol: widget.chatRouting.symbol));
+  //       if (!mounted) return;
+  //       setState(() {});
+  //     } catch (e, s) {
+  //       debugPrint("Error in cryptoMarkets: $e\n$s");
+  //     }
+  //   }
 
-    if (priceRatioModel == null) {
-      try {
-        await priceRatio(
-          PriceComparisonDto(
-            daysBack: 365,
-            symbol1: widget.chatRouting.symbol,
-            symbol2: widget.chatRouting.symbol,
-          ),
-        );
-        if (!mounted) return;
-        setState(() {});
-      } catch (e, s) {
-        debugPrint("Error in priceRatio: $e\n$s");
-      }
-    }
-  }
+  //   if (priceRatioModel == null) {
+  //     try {
+  //       await priceRatio(
+  //         PriceComparisonDto(
+  //           daysBack: 365,
+  //           symbol1: widget.chatRouting.symbol,
+  //           symbol2: widget.chatRouting.symbol,
+  //         ),
+  //       );
+  //       if (!mounted) return;
+  //       setState(() {});
+  //     } catch (e, s) {
+  //       debugPrint("Error in priceRatio: $e\n$s");
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    cryptoApis();
+    // cryptoApis();
+
     List<FlSpot> buildPriceRatioSpots(Map<String, double> data) {
       var spots;
       if (data.isNotEmpty) {
@@ -597,6 +693,90 @@ class _CryptoItemsState extends ConsumerState<CryptoItems> {
             widget.chatRouting.previousClose,
           )!
         : widget.chatRouting.changePercentage;
+
+    // final highlightRequestState = ref.watch(
+    //   highlightsTopProvider(
+    //     HighlightRequest(
+    //       symbol: widget.chatRouting.symbol,
+    //       limit: 5,
+    //       sort: "desc",
+    //     ),
+    //   ),
+    // );
+    final infoCryptoState = ref.watch(
+      infoCryptoDataProvider(widget.chatRouting.symbol),
+    );
+
+    final getAboutCryptoState = ref.watch(
+      getAboutCryptoProvider(widget.chatRouting.symbol),
+    );
+    final getWeeklyDataCryptState = ref.watch(
+      getWeeklyDataCryptoProvider(widget.chatRouting.symbol + "USD", 'crypto'),
+    );
+
+    final getMonthlyDataCryptoState = ref.watch(
+      getMonthlyDataCryptoProvider(widget.chatRouting.symbol + "USD", "crypto"),
+    );
+
+    final priceComparisonState = ref.watch(
+      priceComparisonProvider(
+        PriceComparisonDto(
+          daysBack: 365,
+          symbol1: widget.chatRouting.symbol,
+          symbol2: widget.chatRouting.symbol,
+        ),
+      ),
+    );
+
+    final marketCapChartState = ref.watch(
+      marketCapChartProvider(
+        MarketCapRequest(
+          interval: "1 month",
+          symbol: widget.chatRouting.symbol,
+        ),
+      ),
+    );
+
+    final cryptoMarketsState = ref.watch(
+      cryptoMarketsProvider(SymbolDto(symbol: widget.chatRouting.symbol)),
+    );
+
+    final priceRatioState = ref.read(
+      priceRatioProvider(
+        PriceComparisonDto(
+          daysBack: 365,
+          symbol1: widget.chatRouting.symbol,
+          symbol2: widget.chatRouting.symbol,
+        ),
+      ),
+    );
+    final interval = selectedItemCandleCrypto == 'H'
+        ? IntervalEnum.hour
+        : selectedItemCandleCrypto == 'D'
+        ? IntervalEnum.daily
+        : selectedItemCandleCrypto == 'W'
+        ? IntervalEnum.weekly
+        : selectedItemCandleCrypto == 'M'
+        ? IntervalEnum.monthly
+        : IntervalEnum.daily;
+
+    ///////////////////////////////////////////////////This Api has 504///////////////////////////////////////////////////////////////////
+    // final chartDateRange = createChartCandleChartDto(interval);
+    final getOverviewCandleChartCryptoState = ref.watch(
+      getOverviewCandleChartCryptoProvider(
+        widget.chatRouting.symbol + "_CRYPTO",
+        // interval.value,
+        "daily",
+        "2023-12-11T09:59:41.947Z",
+        // chartDateRange['startDateString']!,
+        // chartDateRange['endDateString']!,
+        "2025-12-11T09:59:41.947063Z",
+        "1",
+        // chartDateRange['dataPoint']!,
+        "732",
+      ),
+    );
+
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -734,165 +914,362 @@ class _CryptoItemsState extends ConsumerState<CryptoItems> {
               ],
             ),
             SizedBox(height: 20),
-            highlightResponse != null &&
-                    highlightResponse!.data != null &&
-                    highlightResponse!.data!.isNotEmpty &&
-                    infoCryptoResponse != null &&
-                    infoCryptoResponse!.data != null
-                ? SizedBox(
-                    height: 135.h,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      // padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      itemCount: 8,
-                      physics:
-                          const BouncingScrollPhysics(), // Smooth scrolling
-                      itemBuilder: (context, index) {
-                        return index == 0
-                            ? PriceCardWidget(
-                                firstColor: AppColors.white,
-                                secondColor: AppColors.white,
-                                firstHeading: "VOLUME",
-                                secondHeading: "CIRCULATING SUPPLY",
-                                previousPrice: compactFormatter.format(
-                                  highlightResponse!.data![0].volume ?? 0,
-                                ),
-                                afterHoursPrice: compactFormatter.format(
-                                  highlightResponse!
-                                          .data![0]
-                                          .circulatingSupply ??
-                                      0,
-                                ),
 
-                                percentage: "+1.48%",
-                              )
-                            : index == 1
-                            ? PriceCardWidget(
-                                secondColor: AppColors.white,
-                                firstColor: AppColors.white,
-                                firstHeading: "TOTAL SUPPLY",
-                                secondHeading: "MARKET CAP FDV RATIO",
-                                previousPrice: compactFormatter.format(
-                                  highlightResponse!.data![0].totalSupply ?? 0,
-                                ),
-                                afterHoursPrice: compactFormatter.format(
-                                  highlightResponse!
-                                          .data![0]
-                                          .marketCapFdvRatio ??
-                                      0,
-                                ),
-                                percentage: "+1.48%",
-                              )
-                            : index == 2
-                            ? PriceCardWidget(
-                                firstColor: AppColors.white,
-                                secondColor: AppColors.white,
+            // SingleChildScrollView(
+            //   scrollDirection: Axis.horizontal,
+            //   child: SizedBox(
+            //     height: 130,
+            //     width: MediaQuery.sizeOf(context).width,
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         switch (highlightRequestState) {
+            //           AsyncData(:final value)
+            //               when value != null && value.data!.isNotEmpty =>
+            //             SizedBox(
+            //               height: 135.h,
+            //               width: MediaQuery.sizeOf(context).width,
+            //               child: ListView.separated(
+            //                 scrollDirection: Axis.horizontal,
+            //                 // padding: EdgeInsets.symmetric(horizontal: 16.w),
+            //                 itemCount: value.data!.length > 0
+            //                     ? 1
+            //                     : value.data!.length > 1
+            //                     ? 2
+            //                     : value.data!.length > 2
+            //                     ? 3
+            //                     : value.data!.length > 3
+            //                     ? 4
+            //                     : 0,
+            //                 physics:
+            //                     NeverScrollableScrollPhysics(), // Smooth scrolling
+            //                 itemBuilder: (context, index) {
+            //                   return index == 0
+            //                       ? PriceCardWidget(
+            //                           firstColor: AppColors.white,
+            //                           secondColor: AppColors.white,
+            //                           firstHeading: "VOLUME",
+            //                           secondHeading: "CIRCULATING SUPPLY",
+            //                           previousPrice: compactFormatter.format(
+            //                             value.data![0].volume ?? 0,
+            //                           ),
+            //                           afterHoursPrice: compactFormatter.format(
+            //                             value.data![0].circulatingSupply ?? 0,
+            //                           ),
 
-                                firstHeading: "MAX SUPPLY",
-                                secondHeading: "PREVIOUS CLOSE PRICE",
-                                previousPrice:
-                                    "${highlightResponse!.data![0].maxSupply ?? "N/A"}",
-                                afterHoursPrice: highlightResponse!
-                                    .data![0]
-                                    .previousClosePrice!
-                                    .toStringAsFixed(2),
-                                percentage: "+1.48%",
-                              )
-                            : index == 3
-                            ? PriceCardWidget(
-                                firstColor: AppColors.color0098E4,
-                                secondColor: AppColors.white,
-                                firstHeading: "MARKET CAPITILIZATION",
-                                secondHeading: "DILUTED MARKET CAP",
-                                previousPrice: compactFormatter.format(
-                                  highlightResponse!
-                                          .data![0]
-                                          .marketCapitalization ??
-                                      0,
-                                ),
-                                afterHoursPrice:
-                                    "${highlightResponse!.data![0].dilutedMarketCap ?? "N/A"}",
-                                percentage: "+1.48%",
-                              )
-                            : index == 4
-                            ? PriceCardWidget(
-                                firstColor: AppColors.white,
-                                secondColor: AppColors.white,
-                                firstHeading: "HIGH (24H)",
-                                secondHeading: "LOW (24H)",
-                                previousPrice:
-                                    "${infoCryptoResponse!.data!.marketData!.high24h!.usd ?? "N/A"}",
-                                afterHoursPrice:
-                                    "${infoCryptoResponse!.data!.marketData!.low24h!.usd ?? "N/A"}",
-                                percentage: "+1.48%",
-                              )
-                            : index == 5
-                            ? PriceCardWidget(
-                                firstColor: AppColors.white,
-                                secondColor: AppColors.white,
-                                firstHeading: "HIGH",
-                                secondHeading: "LOW",
-                                previousPrice:
-                                    "${infoCryptoResponse!.data!.marketData!.ath!.usd ?? "N/A"}",
-                                afterHoursPrice:
-                                    "${infoCryptoResponse!.data!.marketData!.atl!.usd ?? "N/A"}",
-                                percentage: "+1.48%",
-                              )
-                            : index == 6
-                            ? PriceCardWidget(
-                                firstColor: AppColors.white,
-                                secondColor: AppColors.white,
-                                firstHeading: "MAX HIGH (7D)",
-                                secondHeading: "MIN LOW (7D)",
-                                previousPrice:
-                                    "${infoCryptoResponse!.data!.marketData!.maxHigh7d ?? "N/A"}",
-                                afterHoursPrice:
-                                    "${infoCryptoResponse!.data!.marketData!.minLow7d ?? "N/A"}",
-                                percentage: "+1.48%",
-                              )
-                            : index == 7
-                            ? PriceCardWidget(
-                                firstColor: AppColors.white,
-                                secondColor: AppColors.white,
-                                firstHeading: "OPEN (24H)",
-                                secondHeading: "MAX SUPPLY",
-                                previousPrice:
-                                    "${infoCryptoResponse!.data!.marketData!.open24h ?? "N/A"}",
-                                afterHoursPrice:
-                                    "${infoCryptoResponse!.data!.marketData!.maxSupply ?? "N/A"}",
-                                percentage: "+1.48%",
-                              )
-                            : SizedBox();
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(width: 20.w);
-                      },
-                    ),
-                  )
-                : SizedBox(),
+            //                           percentage: "+1.48%",
+            //                         )
+            //                       : index == 1
+            //                       ? PriceCardWidget(
+            //                           secondColor: AppColors.white,
+            //                           firstColor: AppColors.white,
+            //                           firstHeading: "TOTAL SUPPLY",
+            //                           secondHeading: "MARKET CAP FDV RATIO",
+            //                           previousPrice: compactFormatter.format(
+            //                             value.data![0].totalSupply ?? 0,
+            //                           ),
+            //                           afterHoursPrice: compactFormatter.format(
+            //                             value.data![0].marketCapFdvRatio ?? 0,
+            //                           ),
+            //                           percentage: "+1.48%",
+            //                         )
+            //                       : index == 2
+            //                       ? PriceCardWidget(
+            //                           firstColor: AppColors.white,
+            //                           secondColor: AppColors.white,
 
+            //                           firstHeading: "MAX SUPPLY",
+            //                           secondHeading: "PREVIOUS CLOSE PRICE",
+            //                           previousPrice:
+            //                               "${value.data![0].maxSupply ?? "N/A"}",
+            //                           afterHoursPrice: value
+            //                               .data![0]
+            //                               .previousClosePrice!
+            //                               .toStringAsFixed(2),
+            //                           percentage: "+1.48%",
+            //                         )
+            //                       : index == 3
+            //                       ? PriceCardWidget(
+            //                           firstColor: AppColors.color0098E4,
+            //                           secondColor: AppColors.white,
+            //                           firstHeading: "MARKET CAPITILIZATION",
+            //                           secondHeading: "DILUTED MARKET CAP",
+            //                           previousPrice: compactFormatter.format(
+            //                             value.data![0].marketCapitalization ??
+            //                                 0,
+            //                           ),
+            //                           afterHoursPrice:
+            //                               "${value.data![0].dilutedMarketCap ?? "N/A"}",
+            //                           percentage: "+1.48%",
+            //                         )
+            //                       : SizedBox();
+            //                 },
+            //                 separatorBuilder:
+            //                     (BuildContext context, int index) {
+            //                       return SizedBox(width: 20.w);
+            //                     },
+            //               ),
+            //             ),
+
+            //           AsyncLoading() => SizedBox(
+            //             height: 135.h,
+            //             child: ListView.separated(
+            //               scrollDirection: Axis.horizontal,
+            //               itemCount: 5,
+            //               physics: const BouncingScrollPhysics(),
+            //               itemBuilder: (context, index) {
+            //                 return PriceCardShimmer();
+            //               },
+            //               separatorBuilder: (BuildContext context, int index) {
+            //                 return SizedBox(width: 20.w);
+            //               },
+            //             ),
+            //           ),
+            //           AsyncError() => SizedBox(),
+            //           _ => SizedBox(),
+            //         },
+            //         switch (infoCryptoState) {
+            //           AsyncData(:final value) when value != null => SizedBox(
+            //             height: 135.h,
+            //             width: MediaQuery.sizeOf(context).width,
+            //             child: ListView.separated(
+            //               scrollDirection: Axis.horizontal,
+            //               // padding: EdgeInsets.symmetric(horizontal: 16.w),
+            //               itemCount: 4,
+            //               physics:
+            //                   NeverScrollableScrollPhysics(), // Smooth scrolling
+            //               itemBuilder: (context, index) {
+            //                 return index == 0
+            //                     ? PriceCardWidget(
+            //                         firstColor: AppColors.white,
+            //                         secondColor: AppColors.white,
+            //                         firstHeading: "HIGH (24H)",
+            //                         secondHeading: "LOW (24H)",
+            //                         previousPrice:
+            //                             "${value!.data!.marketData!.high24h!.usd ?? "N/A"}",
+            //                         afterHoursPrice:
+            //                             "${value!.data!.marketData!.low24h!.usd ?? "N/A"}",
+            //                         percentage: "+1.48%",
+            //                       )
+            //                     : index == 1
+            //                     ? PriceCardWidget(
+            //                         firstColor: AppColors.white,
+            //                         secondColor: AppColors.white,
+            //                         firstHeading: "HIGH",
+            //                         secondHeading: "LOW",
+            //                         previousPrice:
+            //                             "${value!.data!.marketData!.ath!.usd ?? "N/A"}",
+            //                         afterHoursPrice:
+            //                             "${value!.data!.marketData!.atl!.usd ?? "N/A"}",
+            //                         percentage: "+1.48%",
+            //                       )
+            //                     : index == 2
+            //                     ? PriceCardWidget(
+            //                         firstColor: AppColors.white,
+            //                         secondColor: AppColors.white,
+            //                         firstHeading: "MAX HIGH (7D)",
+            //                         secondHeading: "MIN LOW (7D)",
+            //                         previousPrice:
+            //                             "${value!.data!.marketData!.maxHigh7d ?? "N/A"}",
+            //                         afterHoursPrice:
+            //                             "${value!.data!.marketData!.minLow7d ?? "N/A"}",
+            //                         percentage: "+1.48%",
+            //                       )
+            //                     : index == 3
+            //                     ? PriceCardWidget(
+            //                         firstColor: AppColors.white,
+            //                         secondColor: AppColors.white,
+            //                         firstHeading: "OPEN (24H)",
+            //                         secondHeading: "MAX SUPPLY",
+            //                         previousPrice:
+            //                             "${value!.data!.marketData!.open24h ?? "N/A"}",
+            //                         afterHoursPrice:
+            //                             "${value!.data!.marketData!.maxSupply ?? "N/A"}",
+            //                         percentage: "+1.48%",
+            //                       )
+            //                     : SizedBox();
+            //               },
+            //               separatorBuilder: (BuildContext context, int index) {
+            //                 return SizedBox(width: 20.w);
+            //               },
+            //             ),
+            //           ),
+            //           AsyncLoading() => SizedBox(
+            //             height: 135.h,
+            //             child: ListView.separated(
+            //               scrollDirection: Axis.horizontal,
+            //               itemCount: 5,
+            //               physics: NeverScrollableScrollPhysics(),
+            //               itemBuilder: (context, index) {
+            //                 return PriceCardShimmer();
+            //               },
+            //               separatorBuilder: (BuildContext context, int index) {
+            //                 return SizedBox(width: 20.w);
+            //               },
+            //             ),
+            //           ),
+            //           AsyncError() => SizedBox(),
+            //           _ => SizedBox(),
+            //         },
+            //       ],
+            //     ),
+            //   ),
+            // ),
+
+            // highlightResponse != null &&
+            //         highlightResponse!.data != null &&
+            //         highlightResponse!.data!.isNotEmpty &&
+            //         infoCryptoResponse != null &&
+            //         infoCryptoResponse!.data != null
+            //     ? SizedBox(
+            //         height: 135.h,
+            //         child: ListView.separated(
+            //           scrollDirection: Axis.horizontal,
+            //           // padding: EdgeInsets.symmetric(horizontal: 16.w),
+            //           itemCount: 8,
+            //           physics:
+            //               const BouncingScrollPhysics(), // Smooth scrolling
+            //           itemBuilder: (context, index) {
+            //             return index == 0
+            //                 ? PriceCardWidget(
+            //                     firstColor: AppColors.white,
+            //                     secondColor: AppColors.white,
+            //                     firstHeading: "VOLUME",
+            //                     secondHeading: "CIRCULATING SUPPLY",
+            //                     previousPrice: compactFormatter.format(
+            //                       highlightResponse!.data![0].volume ?? 0,
+            //                     ),
+            //                     afterHoursPrice: compactFormatter.format(
+            //                       highlightResponse!
+            //                               .data![0]
+            //                               .circulatingSupply ??
+            //                           0,
+            //                     ),
+
+            //                     percentage: "+1.48%",
+            //                   )
+            //                 : index == 1
+            //                 ? PriceCardWidget(
+            //                     secondColor: AppColors.white,
+            //                     firstColor: AppColors.white,
+            //                     firstHeading: "TOTAL SUPPLY",
+            //                     secondHeading: "MARKET CAP FDV RATIO",
+            //                     previousPrice: compactFormatter.format(
+            //                       highlightResponse!.data![0].totalSupply ?? 0,
+            //                     ),
+            //                     afterHoursPrice: compactFormatter.format(
+            //                       highlightResponse!
+            //                               .data![0]
+            //                               .marketCapFdvRatio ??
+            //                           0,
+            //                     ),
+            //                     percentage: "+1.48%",
+            //                   )
+            //                 : index == 2
+            //                 ? PriceCardWidget(
+            //                     firstColor: AppColors.white,
+            //                     secondColor: AppColors.white,
+
+            //                     firstHeading: "MAX SUPPLY",
+            //                     secondHeading: "PREVIOUS CLOSE PRICE",
+            //                     previousPrice:
+            //                         "${highlightResponse!.data![0].maxSupply ?? "N/A"}",
+            //                     afterHoursPrice: highlightResponse!
+            //                         .data![0]
+            //                         .previousClosePrice!
+            //                         .toStringAsFixed(2),
+            //                     percentage: "+1.48%",
+            //                   )
+            //                 : index == 3
+            //                 ? PriceCardWidget(
+            //                     firstColor: AppColors.color0098E4,
+            //                     secondColor: AppColors.white,
+            //                     firstHeading: "MARKET CAPITILIZATION",
+            //                     secondHeading: "DILUTED MARKET CAP",
+            //                     previousPrice: compactFormatter.format(
+            //                       highlightResponse!
+            //                               .data![0]
+            //                               .marketCapitalization ??
+            //                           0,
+            //                     ),
+            //                     afterHoursPrice:
+            //                         "${highlightResponse!.data![0].dilutedMarketCap ?? "N/A"}",
+            //                     percentage: "+1.48%",
+            //                   )
+            //                 : index == 4
+            //                 ? PriceCardWidget(
+            //                     firstColor: AppColors.white,
+            //                     secondColor: AppColors.white,
+            //                     firstHeading: "HIGH (24H)",
+            //                     secondHeading: "LOW (24H)",
+            //                     previousPrice:
+            //                         "${infoCryptoResponse!.data!.marketData!.high24h!.usd ?? "N/A"}",
+            //                     afterHoursPrice:
+            //                         "${infoCryptoResponse!.data!.marketData!.low24h!.usd ?? "N/A"}",
+            //                     percentage: "+1.48%",
+            //                   )
+            //                 : index == 5
+            //                 ? PriceCardWidget(
+            //                     firstColor: AppColors.white,
+            //                     secondColor: AppColors.white,
+            //                     firstHeading: "HIGH",
+            //                     secondHeading: "LOW",
+            //                     previousPrice:
+            //                         "${infoCryptoResponse!.data!.marketData!.ath!.usd ?? "N/A"}",
+            //                     afterHoursPrice:
+            //                         "${infoCryptoResponse!.data!.marketData!.atl!.usd ?? "N/A"}",
+            //                     percentage: "+1.48%",
+            //                   )
+            //                 : index == 6
+            //                 ? PriceCardWidget(
+            //                     firstColor: AppColors.white,
+            //                     secondColor: AppColors.white,
+            //                     firstHeading: "MAX HIGH (7D)",
+            //                     secondHeading: "MIN LOW (7D)",
+            //                     previousPrice:
+            //                         "${infoCryptoResponse!.data!.marketData!.maxHigh7d ?? "N/A"}",
+            //                     afterHoursPrice:
+            //                         "${infoCryptoResponse!.data!.marketData!.minLow7d ?? "N/A"}",
+            //                     percentage: "+1.48%",
+            //                   )
+            //                 : index == 7
+            //                 ? PriceCardWidget(
+            //                     firstColor: AppColors.white,
+            //                     secondColor: AppColors.white,
+            //                     firstHeading: "OPEN (24H)",
+            //                     secondHeading: "MAX SUPPLY",
+            //                     previousPrice:
+            //                         "${infoCryptoResponse!.data!.marketData!.open24h ?? "N/A"}",
+            //                     afterHoursPrice:
+            //                         "${infoCryptoResponse!.data!.marketData!.maxSupply ?? "N/A"}",
+            //                     percentage: "+1.48%",
+            //                   )
+            //                 : SizedBox();
+            //           },
+            //           separatorBuilder: (BuildContext context, int index) {
+            //             return SizedBox(width: 20.w);
+            //           },
+            //         ),
+            //       )
+
+            //     : SizedBox(),
             SizedBox(height: 10),
-            SizedBox(
-              height: aboutCryptoModel != null && aboutCryptoModel!.data != null
-                  ? 6.h
-                  : 0,
-            ),
-            aboutCryptoModel != null && aboutCryptoModel!.data != null
-                ? MdSnsText(
-                    "Company Details",
+
+            switch (getAboutCryptoState) {
+              AsyncData(:final value) when value.data != null => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 6.h),
+                  MdSnsText(
+                    "Coin Details",
                     color: AppColors.white,
                     variant: TextVariant.h3,
                     fontWeight: TextFontWeightVariant.h1,
-                  )
-                : SizedBox(),
-            SizedBox(
-              height: aboutCryptoModel != null && aboutCryptoModel!.data != null
-                  ? 6.h
-                  : 0,
-            ),
-            aboutCryptoModel != null && aboutCryptoModel!.data != null
-                ? ReadMoreText(
-                    aboutCryptoModel!.data!.description!.en ?? "",
+                  ),
+
+                  SizedBox(height: 6.h),
+                  ReadMoreText(
+                    value.data!.description!.en ?? "",
                     trimLines: 2,
                     trimMode: TrimMode.Line,
                     trimCollapsedText: '\nShow More',
@@ -914,265 +1291,268 @@ class _CryptoItemsState extends ConsumerState<CryptoItems> {
                       fontWeight: FontWeight.w400,
                       color: AppColors.white,
                     ),
-                  )
-                : SizedBox(),
-
+                  ),
+                ],
+              ),
+              AsyncLoading() => Column(
+                children: [
+                  Column(
+                    children: [
+                      shimmerBox(
+                        height: 10,
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                      ),
+                      SizedBox(height: 6.h),
+                      shimmerBox(
+                        height: 10,
+                        width: MediaQuery.sizeOf(context).width / 1.1,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
             SizedBox(height: 10),
-            overviewCandleChartModelCrypto != null
-                ? CustomCandleChart(
-                    key: UniqueKey(),
-                    selectedItem: selectedItemCandleCrypto ?? "D",
+            switch (getOverviewCandleChartCryptoState) {
+              AsyncData(:final value) when value.data.isNotEmpty =>
+                CustomCandleChart(
+                  key: UniqueKey(),
+                  selectedItem: selectedItemCandleCrypto,
 
-                    name: "OHLC/V Candlestick Chart",
-                    data: buildCryptoChartSpots(
-                      overviewCandleChartModelCrypto!,
-                    ),
-                    onPressed: (val) {
-                      getOverviewCandleChartCrypto(
-                        widget.chatRouting.symbol,
-                        val == 'H'
-                            ? IntervalEnum.hour
-                            : val == 'D'
-                            ? IntervalEnum.daily
-                            : val == 'W'
-                            ? IntervalEnum.weekly
-                            : val == 'M'
-                            ? IntervalEnum.monthly
-                            : IntervalEnum.daily,
-                      );
-                      if (!mounted) return;
-                      setState(() {
-                        selectedItemCandleCrypto = val;
-                      });
-                    },
-                  )
-                : CustomCandleChartShimmer(),
+                  name: "OHLC/V Candlestick Chart",
+                  data: buildCryptoChartSpots(value.data),
+                  onPressed: (val) {
+                    // if (!mounted) return;
+                    // setState(() {
+                    //   selectedItemCandleCrypto = val;
+                    // });
+                    // final interval = selectedItemCandleCrypto == 'H'
+                    //     ? IntervalEnum.hour
+                    //     : selectedItemCandleCrypto == 'D'
+                    //     ? IntervalEnum.daily
+                    //     : selectedItemCandleCrypto == 'W'
+                    //     ? IntervalEnum.weekly
+                    //     : selectedItemCandleCrypto == 'M'
+                    //     ? IntervalEnum.monthly
+                    //     : IntervalEnum.daily;
 
-            SizedBox(height: 20.h),
-            marketCapResponse != null &&
-                    marketCapResponse!.data != null &&
-                    marketCapResponse!.data!.length > 0
-                ? CustomLineChart(
-                    lineColor: AppColors.color046297,
-                    areaColor: AppColors.color046297.withOpacity(0.4),
-                    title: "MarketCap Chart",
-                    chartData: buildMarketCapScope(marketCapResponse!.data!),
-                  )
-                : SizedBox(),
-
-            //  Container(
-            //     width: double.infinity,
-            //     padding: const EdgeInsets.all(16),
-            //     decoration: BoxDecoration(
-            //       border: Border.all(color: AppColors.colorB3B3B3),
-            //       color: AppColors.color091224,
-            //       borderRadius: BorderRadius.circular(16),
-            //     ),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         MdSnsText(
-            //           "Market Chart",
-            //           variant: TextVariant.h3,
-            //           fontWeight: TextFontWeightVariant.h3,
-
-            //           color: AppColors.fieldTextColor,
-            //         ),
-            //         Center(
-            //           child: MdSnsText(
-            //             "No Data Available",
-            //             variant: TextVariant.h3,
-            //             fontWeight: TextFontWeightVariant.h1,
-
-            //             color: AppColors.white,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            SizedBox(height: 20.h),
-            cryptoMarketModel != null && cryptoMarketModel!.data.isNotEmpty
-                ? CryptoMarketChart(
-                    title: "Crypto Markets",
-                    data: cryptoMarketModel!.data,
-                  )
-                : AnalysisTableShimmer(),
+                    // final chartDateRange = createChartCandleChartDto(interval);
+                    // getOverviewCandleChartCryptoState = ref.watch(
+                    //   getOverviewCandleChartCryptoProvider(
+                    //     widget.chatRouting.symbol + "_CRYPTO",
+                    //     interval.value,
+                    //     chartDateRange['startDateString']!,
+                    //     chartDateRange['endDateString']!,
+                    //     "1",
+                    //     chartDateRange['dataPoint']!,
+                    //   ),
+                    // );
+                  },
+                ),
+              AsyncLoading() => CustomCandleChartShimmer(),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
 
             SizedBox(height: 20.h),
-            priceComparisonModel != null &&
-                    priceComparisonModel!
-                            .data
-                            .data['${widget.chatRouting.symbol}'] !=
-                        null
-                ? PriceComparisonChart(
-                    priceComparisonModel: priceComparisonModel,
-                    symbol: widget.chatRouting.symbol,
-                    twoCharts: false,
-                  )
-                : SizedBox(),
+
+            switch (marketCapChartState) {
+              AsyncData(:final value)
+                  when value != null && value.data != null =>
+                CustomLineChart(
+                  lineColor: AppColors.color046297,
+                  areaColor: AppColors.color046297.withOpacity(0.4),
+                  title: "MarketCap Chart",
+                  chartData: buildMarketCapScope(value!.data!),
+                ),
+              AsyncLoading() => CashDebtShimmer(),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
             SizedBox(height: 20.h),
-            priceRatioModel != null &&
-                    priceRatioModel!.data.data["price_ratio"] != null &&
-                    priceRatioModel!.data.data["price_ratio"]!.isNotEmpty
-                ? Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.colorB3B3B3),
-                      color: AppColors.color091224,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        MdSnsText(
-                          "Price Ratio",
-                          variant: TextVariant.h3,
-                          fontWeight: TextFontWeightVariant.h4,
 
-                          color: AppColors.fieldTextColor,
-                        ),
-                        SizedBox(height: 20.h),
-                        SizedBox(
-                          height: 180,
-                          child: LineChart(
-                            curve: Curves.easeInOut,
-                            duration: Duration(milliseconds: 1200),
-                            LineChartData(
-                              minX: minX,
-                              maxX: maxX,
-                              minY: 0,
+            switch (cryptoMarketsState) {
+              AsyncData(:final value)
+                  when value != null && value.data.isNotEmpty =>
+                CryptoMarketChart(title: "Crypto Markets", data: value.data),
+              AsyncLoading() => TableShimmer(title: "Crypto Markets"),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
 
-                              backgroundColor: AppColors.color091224,
-                              gridData: FlGridData(
-                                show: true,
-                                getDrawingHorizontalLine: (value) => FlLine(
-                                  color: AppColors.color1B254B,
-                                  strokeWidth: 1,
-                                ),
-                                getDrawingVerticalLine: (value) => FlLine(
-                                  color: Colors.transparent,
-                                  strokeWidth: 1,
-                                ),
+            SizedBox(height: 20.h),
+
+            switch (priceComparisonState) {
+              AsyncData(:final value) when value != null =>
+                PriceComparisonChart(
+                  priceComparisonModel: value,
+                  symbol: widget.chatRouting.symbol,
+                  twoCharts: false,
+                ),
+              AsyncLoading() => CashDebtShimmer(),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+
+            SizedBox(height: 20.h),
+
+            switch (priceRatioState) {
+              AsyncData(:final value)
+                  when value != null &&
+                      value.data.data["price_ratio"] != null &&
+                      value.data.data["price_ratio"]!.isNotEmpty =>
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.colorB3B3B3),
+                    color: AppColors.color091224,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      MdSnsText(
+                        "Price Ratio",
+                        variant: TextVariant.h3,
+                        fontWeight: TextFontWeightVariant.h4,
+
+                        color: AppColors.fieldTextColor,
+                      ),
+                      SizedBox(height: 20.h),
+                      SizedBox(
+                        height: 180,
+                        child: LineChart(
+                          curve: Curves.easeInOut,
+                          duration: Duration(milliseconds: 1200),
+                          LineChartData(
+                            minX: minX,
+                            maxX: maxX,
+                            minY: 0,
+
+                            backgroundColor: AppColors.color091224,
+                            gridData: FlGridData(
+                              show: true,
+                              getDrawingHorizontalLine: (value) => FlLine(
+                                color: AppColors.color1B254B,
+                                strokeWidth: 1,
                               ),
-                              titlesData: FlTitlesData(
-                                show: true,
-                                leftTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    reservedSize: 28,
-                                    getTitlesWidget: (value, meta) => MdSnsText(
-                                      value.toInt().toString(),
-                                      color: AppColors.white,
-                                      variant: TextVariant.h5,
-                                    ),
-                                  ),
-                                ),
-                                bottomTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-
-                                    interval: _twoMonthIntervalMilliseconds(),
-                                    reservedSize: 30,
-                                    getTitlesWidget: (value, meta) {
-                                      final date =
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                            value.toInt(),
-                                          );
-                                      final formatted = DateFormat(
-                                        "MMM ''yy",
-                                      ).format(date);
-                                      return SideTitleWidget(
-                                        meta: meta,
-                                        space: 1,
-                                        child: MdSnsText(
-                                          formatted,
-                                          color: AppColors.white,
-                                          variant: TextVariant.h5,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                topTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
-                                rightTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
+                              getDrawingVerticalLine: (value) => FlLine(
+                                color: Colors.transparent,
+                                strokeWidth: 1,
                               ),
-                              borderData: FlBorderData(show: false),
-                              lineBarsData: [
-                                LineChartBarData(
-                                  spots: buildPriceRatioSpots(
-                                    priceRatioModel!.data.data["price_ratio"]!,
-                                  ),
-                                  isCurved: true,
-                                  color: AppColors.color0098E4,
-                                  barWidth: 2,
-
-                                  dotData: FlDotData(show: false),
-                                ),
-                              ],
                             ),
+                            titlesData: FlTitlesData(
+                              show: true,
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 28,
+                                  getTitlesWidget: (value, meta) => MdSnsText(
+                                    value.toInt().toString(),
+                                    color: AppColors.white,
+                                    variant: TextVariant.h5,
+                                  ),
+                                ),
+                              ),
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+
+                                  interval: _twoMonthIntervalMilliseconds(),
+                                  reservedSize: 30,
+                                  getTitlesWidget: (value, meta) {
+                                    final date =
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                          value.toInt(),
+                                        );
+                                    final formatted = DateFormat(
+                                      "MMM ''yy",
+                                    ).format(date);
+                                    return SideTitleWidget(
+                                      meta: meta,
+                                      space: 1,
+                                      child: MdSnsText(
+                                        formatted,
+                                        color: AppColors.white,
+                                        variant: TextVariant.h5,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              topTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                              rightTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                            ),
+                            borderData: FlBorderData(show: false),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: buildPriceRatioSpots(
+                                  value.data.data["price_ratio"]!,
+                                ),
+                                isCurved: true,
+                                color: AppColors.color0098E4,
+                                barWidth: 2,
+
+                                dotData: FlDotData(show: false),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  )
-                : SizedBox(),
+                      ),
+                    ],
+                  ),
+                ),
+              AsyncLoading() => CashDebtShimmer(),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
 
-            //  Container(
-            //     width: double.infinity,
-            //     padding: const EdgeInsets.all(16),
-            //     decoration: BoxDecoration(
-            //       border: Border.all(color: AppColors.colorB3B3B3),
-            //       color: AppColors.color091224,
-            //       borderRadius: BorderRadius.circular(16),
-            //     ),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         MdSnsText(
-            //           "Price Ratio",
-            //           variant: TextVariant.h3,
-            //           fontWeight: TextFontWeightVariant.h3,
+            SizedBox(height: 20.h),
 
-            //           color: AppColors.fieldTextColor,
-            //         ),
-            //         Center(
-            //           child: MdSnsText(
-            //             "No Data Available",
-            //             variant: TextVariant.h3,
-            //             fontWeight: TextFontWeightVariant.h1,
+            switch (getMonthlyDataCryptoState) {
+              AsyncData(:final value) when value != null =>
+                WeeklySeasonalityChart(
+                  data: value!,
+                  isWeekly: false,
+                  weeklyModel: WeeklyModel(),
+                ),
+              AsyncLoading() => CashDebtShimmer(),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+            SizedBox(height: 20.h),
 
-            //             color: AppColors.white,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            SizedBox(height: monthlyDataCrypto != null ? 20.h : 0),
+            switch (getWeeklyDataCryptState) {
+              AsyncData(:final value) when value.probability != null =>
+                WeeklySeasonalityChart(
+                  data: ProbabilityResponse(),
+                  isWeekly: true,
+                  weeklyModel: value,
+                ),
+              AsyncLoading() => CashDebtShimmer(),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
 
-            monthlyDataCrypto != null
-                ? WeeklySeasonalityChart(
-                    data: monthlyDataCrypto!,
-                    isWeekly: false,
-                    weeklyModel: WeeklyModel(),
-                  )
-                : SizedBox(),
-            SizedBox(height: weeklyDataCrypto != null ? 20.h : 0),
-            weeklyDataCrypto != null
-                ? WeeklySeasonalityChart(
-                    weeklyModel: weeklyDataCrypto!,
-                    isWeekly: true,
-                    data: ProbabilityResponse(),
-                  )
-                : SizedBox(),
-            SizedBox(height: highlightResponse != null ? 20.h : 0),
-            // AnalyticsWidget(data: analyticsRespinseData!.data),
-            infoCryptoResponse != null
-                ? HighlightsCard(highlightResponse: infoCryptoResponse!)
-                : SizedBox(),
+            SizedBox(height: 20.h),
+            switch (infoCryptoState) {
+              AsyncData(:final value) when value != null => HighlightsCard(
+                highlightResponse: value,
+              ),
+              AsyncLoading() => CashDebtShimmer(),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+
+            // infoCryptoResponse != null
+            //     ? HighlightsCard(highlightResponse: infoCryptoResponse!)
+            //     : SizedBox(),
           ],
         ),
       ),

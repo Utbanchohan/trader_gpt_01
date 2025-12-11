@@ -15,7 +15,7 @@ class AboutCrypto extends _$AboutCrypto {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<AboutCryptoModel> getAboutCrypto(Ref ref, String symbol) async {
   final res = await ref.read(overviewRepository).aboutCrypto(symbol);
 

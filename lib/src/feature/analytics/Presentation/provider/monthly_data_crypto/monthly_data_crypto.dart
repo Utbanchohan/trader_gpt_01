@@ -14,7 +14,7 @@ class MonthlyDataCrypto extends _$MonthlyDataCrypto {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<ProbabilityResponse> getMonthlyDataCrypto(
   Ref ref,
   String ticker,

@@ -7,7 +7,7 @@ part of 'weekly_data_crypto.dart';
 // **************************************************************************
 
 String _$getWeeklyDataCryptoHash() =>
-    r'69ee4cd294fa7df52043c7e2d413ccb5290348be';
+    r'4c6e865572cd17254045a92d7fe021957be928b3';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -67,8 +67,7 @@ class GetWeeklyDataCryptoFamily extends Family<AsyncValue<WeeklyModel>> {
 }
 
 /// See also [getWeeklyDataCrypto].
-class GetWeeklyDataCryptoProvider
-    extends AutoDisposeFutureProvider<WeeklyModel> {
+class GetWeeklyDataCryptoProvider extends FutureProvider<WeeklyModel> {
   /// See also [getWeeklyDataCrypto].
   GetWeeklyDataCryptoProvider(String ticker, String assetType)
     : this._internal(
@@ -123,7 +122,7 @@ class GetWeeklyDataCryptoProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<WeeklyModel> createElement() {
+  FutureProviderElement<WeeklyModel> createElement() {
     return _GetWeeklyDataCryptoProviderElement(this);
   }
 
@@ -146,7 +145,7 @@ class GetWeeklyDataCryptoProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin GetWeeklyDataCryptoRef on AutoDisposeFutureProviderRef<WeeklyModel> {
+mixin GetWeeklyDataCryptoRef on FutureProviderRef<WeeklyModel> {
   /// The parameter `ticker` of this provider.
   String get ticker;
 
@@ -155,7 +154,7 @@ mixin GetWeeklyDataCryptoRef on AutoDisposeFutureProviderRef<WeeklyModel> {
 }
 
 class _GetWeeklyDataCryptoProviderElement
-    extends AutoDisposeFutureProviderElement<WeeklyModel>
+    extends FutureProviderElement<WeeklyModel>
     with GetWeeklyDataCryptoRef {
   _GetWeeklyDataCryptoProviderElement(super.provider);
 

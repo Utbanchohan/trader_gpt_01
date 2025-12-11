@@ -1271,17 +1271,17 @@ class OverviewContentV1 extends ConsumerWidget {
         : IntervalEnum.daily;
 
     ///////////////////////////////////////////////////This Api has 504///////////////////////////////////////////////////////////////////
-    // final chartDateRange = _calculateChartDateRange(interval);
-    // final chartState = ref.watch(
-    //   getOverviewCandleChartProvider(
-    //     chatRouting.symbol + "_NASDAQ",
-    //     interval.value,
-    //     chartDateRange['startDate']!,
-    //     chartDateRange['endDate']!,
-    //     "1",
-    //     chartDateRange['dataPoint']!,
-    //   ),
-    // );
+    final chartDateRange = _calculateChartDateRange(interval);
+    final chartState = ref.watch(
+      getOverviewCandleChartProvider(
+        chatRouting.symbol + "_NASDAQ",
+        interval.value,
+        chartDateRange['startDate']!,
+        chartDateRange['endDate']!,
+        "1",
+        chartDateRange['dataPoint']!,
+      ),
+    );
 
     // Watch stock manager for live prices
     final stockManagerState = ref.watch(stocksManagerProvider);
@@ -1552,31 +1552,31 @@ class OverviewContentV1 extends ConsumerWidget {
 
             ///////////////////////////////////////////////////This Api has 504///////////////////////////////////////////////////////////////////
             // Candle Chart
-            // switch (chartState) {
-            //   AsyncData(:final value) when value.data.isNotEmpty =>
-            //     CustomCandleChart(
-            //       name: "OHLC/V Candlestick Chart",
-            //       data: _buildChartSpots(value.data),
-            //       selectedItem: selectedCandleOverview,
-            //       onPressed: (val) {
-            //         ref
-            //                 .read(
-            //                   selectedCandleIntervalProvider(
-            //                     chatRouting.symbol,
-            //                   ).notifier,
-            //                 )
-            //                 .state =
-            //             val;
-            //       },
-            //     ),
-            //   AsyncLoading() => SizedBox(
-            //     height: 300.h,
-            //     child: CustomCandleChartShimmer(),
-            //   ),
-            //   AsyncError() => SizedBox(),
-            //   _ => SizedBox(),
-            // },
-            // SizedBox(height: 20.h),
+            switch (chartState) {
+              AsyncData(:final value) when value.data.isNotEmpty =>
+                CustomCandleChart(
+                  name: "OHLC/V Candlestick Chart",
+                  data: _buildChartSpots(value.data),
+                  selectedItem: selectedCandleOverview,
+                  onPressed: (val) {
+                    ref
+                            .read(
+                              selectedCandleIntervalProvider(
+                                chatRouting.symbol,
+                              ).notifier,
+                            )
+                            .state =
+                        val;
+                  },
+                ),
+              AsyncLoading() => SizedBox(
+                height: 300.h,
+                child: CustomCandleChartShimmer(),
+              ),
+              AsyncError() => SizedBox(),
+              _ => SizedBox(),
+            },
+            SizedBox(height: 20.h),
 
             // Price Target Metrics
             switch (priceTargetState) {

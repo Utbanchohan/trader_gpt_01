@@ -1952,7 +1952,7 @@ class _CompanyDataProviderElement extends FutureProviderElement<CompanyModel?>
   SymbolDto get symbol => (origin as CompanyDataProvider).symbol;
 }
 
-String _$financialChartsHash() => r'19a8bbba400bab03f9e442e5d061bfa5bc4092f5';
+String _$financialChartsHash() => r'8ffdc05720ee9b7c9c3d4d8b934a45537b577b8c';
 
 /// See also [financialCharts].
 @ProviderFor(financialCharts)
@@ -2434,7 +2434,7 @@ class _EarningReportDataProviderElement
       (origin as EarningReportDataProvider).overview;
 }
 
-String _$analysisDataHash() => r'f1db876a98b87cfc39b64016f8f0fbd7b9e5effc';
+String _$analysisDataHash() => r'e96e7c59f17786d8df5f5b643bda93c091b7b826';
 
 /// See also [analysisData].
 @ProviderFor(analysisData)

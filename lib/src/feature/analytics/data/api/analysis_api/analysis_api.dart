@@ -155,7 +155,7 @@ abstract interface class AnalysisApi {
   Future<MarketCapResponse> marketCapChart(@Body() MarketCapRequest symbol);
 
   @GET(
-    "chartapi/crypto?symbol={symbol}&interval={interval}&start_date={start_date}&end_date={end_date}&sub_points={sub_points}&data_point={data_point}",
+    "chartapi/prices?symbol={symbol}&interval={interval}&start_date={start_date}&end_date={end_date}&sub_points={sub_points}&data_point={data_point}",
   )
   Future<OverviewCandleResponse> cryptoCandleChart(
     @Path('symbol') String symbol,

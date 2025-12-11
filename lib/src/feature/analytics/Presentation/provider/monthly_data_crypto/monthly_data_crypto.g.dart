@@ -7,7 +7,7 @@ part of 'monthly_data_crypto.dart';
 // **************************************************************************
 
 String _$getMonthlyDataCryptoHash() =>
-    r'd7fac5790d8fb7ae92ae3f80b25e3038a9f6de85';
+    r'b21ce4bb33592c480b852b9260e1c8b74a0bb51c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -68,8 +68,7 @@ class GetMonthlyDataCryptoFamily
 }
 
 /// See also [getMonthlyDataCrypto].
-class GetMonthlyDataCryptoProvider
-    extends AutoDisposeFutureProvider<ProbabilityResponse> {
+class GetMonthlyDataCryptoProvider extends FutureProvider<ProbabilityResponse> {
   /// See also [getMonthlyDataCrypto].
   GetMonthlyDataCryptoProvider(String ticker, String assetType)
     : this._internal(
@@ -125,7 +124,7 @@ class GetMonthlyDataCryptoProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<ProbabilityResponse> createElement() {
+  FutureProviderElement<ProbabilityResponse> createElement() {
     return _GetMonthlyDataCryptoProviderElement(this);
   }
 
@@ -148,8 +147,7 @@ class GetMonthlyDataCryptoProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin GetMonthlyDataCryptoRef
-    on AutoDisposeFutureProviderRef<ProbabilityResponse> {
+mixin GetMonthlyDataCryptoRef on FutureProviderRef<ProbabilityResponse> {
   /// The parameter `ticker` of this provider.
   String get ticker;
 
@@ -158,7 +156,7 @@ mixin GetMonthlyDataCryptoRef
 }
 
 class _GetMonthlyDataCryptoProviderElement
-    extends AutoDisposeFutureProviderElement<ProbabilityResponse>
+    extends FutureProviderElement<ProbabilityResponse>
     with GetMonthlyDataCryptoRef {
   _GetMonthlyDataCryptoProviderElement(super.provider);
 

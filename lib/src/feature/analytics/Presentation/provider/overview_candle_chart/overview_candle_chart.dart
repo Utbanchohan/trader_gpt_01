@@ -14,7 +14,7 @@ class OverviewCandleChart extends _$OverviewCandleChart {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<OverviewCandleResponse> getOverviewCandleChart(
   Ref ref,
   String symbol,
@@ -27,6 +27,30 @@ Future<OverviewCandleResponse> getOverviewCandleChart(
   final res = await ref
       .read(overviewRepositoryPriceStream)
       .overviewCandleChart(
+        symbol,
+        interval,
+        start_date,
+        end_date,
+        sub_points,
+        data_point,
+      );
+
+  return res;
+}
+
+@Riverpod(keepAlive: true)
+Future<OverviewCandleResponse> getOverviewCandleChartCrypto(
+  Ref ref,
+  String symbol,
+  String interval,
+  String start_date,
+  String end_date,
+  String sub_points,
+  String data_point,
+) async {
+  final res = await ref
+      .read(overviewRepositoryPriceStream)
+      .cryptoCandleChart(
         symbol,
         interval,
         start_date,

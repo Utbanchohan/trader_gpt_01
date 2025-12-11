@@ -14,7 +14,7 @@ class WeeklyDataCrypto extends _$WeeklyDataCrypto {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<WeeklyModel> getWeeklyDataCrypto(
   Ref ref,
   String ticker,

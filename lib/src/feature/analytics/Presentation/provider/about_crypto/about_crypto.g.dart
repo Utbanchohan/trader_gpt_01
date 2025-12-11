@@ -6,7 +6,7 @@ part of 'about_crypto.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getAboutCryptoHash() => r'7c48c43d5f304c51c1125385c26893882231e618';
+String _$getAboutCryptoHash() => r'04a910fdb815957114f1fa146beefb40fc084845';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -66,8 +66,7 @@ class GetAboutCryptoFamily extends Family<AsyncValue<AboutCryptoModel>> {
 }
 
 /// See also [getAboutCrypto].
-class GetAboutCryptoProvider
-    extends AutoDisposeFutureProvider<AboutCryptoModel> {
+class GetAboutCryptoProvider extends FutureProvider<AboutCryptoModel> {
   /// See also [getAboutCrypto].
   GetAboutCryptoProvider(String symbol)
     : this._internal(
@@ -114,7 +113,7 @@ class GetAboutCryptoProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<AboutCryptoModel> createElement() {
+  FutureProviderElement<AboutCryptoModel> createElement() {
     return _GetAboutCryptoProviderElement(this);
   }
 
@@ -134,13 +133,13 @@ class GetAboutCryptoProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin GetAboutCryptoRef on AutoDisposeFutureProviderRef<AboutCryptoModel> {
+mixin GetAboutCryptoRef on FutureProviderRef<AboutCryptoModel> {
   /// The parameter `symbol` of this provider.
   String get symbol;
 }
 
 class _GetAboutCryptoProviderElement
-    extends AutoDisposeFutureProviderElement<AboutCryptoModel>
+    extends FutureProviderElement<AboutCryptoModel>
     with GetAboutCryptoRef {
   _GetAboutCryptoProviderElement(super.provider);
 
