@@ -67,620 +67,195 @@ class CryptoItems extends ConsumerStatefulWidget {
 
 class _CryptoItemsState extends ConsumerState<CryptoItems> {
   List<OverviewCandleChartModel>? overviewCandleChartModelCrypto;
-  WeeklyModel? weeklyDataCrypto;
-  ProbabilityResponse? monthlyDataCrypto;
-  AboutCryptoModel? aboutCryptoModel;
-  HighlightResponse? highlightResponse;
-  MarketCapResponse? marketCapResponse;
-  CryptoMarketModel? cryptoMarketModel;
-  PriceComparisonModel? priceRatioModel;
-  InfoCryptoResponse? infoCryptoResponse;
-  PriceComparisonModel? priceComparisonModel;
 
   String selectedItemCandleCrypto = "D";
   double? minX;
   double? maxX;
-  bool highlightsTopLoader = true;
-  bool priceComparisonloader = true;
-  bool priceRatioLoader = true;
-  bool cryptoMarketLoader = true;
-  bool marketCapLoader = true;
-  bool infoCryptoLoader = true;
-  bool abooutCryptoLoader = true;
-  bool weeklyDataLoader = true;
-  bool monthlyDataLoader = true;
-  bool chartLoader = true;
-  bool overviewCandleChartModelCryptoLoader = true;
 
   Map<String, String> createChartCandleChartDto(
     IntervalEnum interval, {
     DateTime? referenceTime,
   }) {
-    final now = referenceTime ?? DateTime.now().toUtc();
+    final now = DateTime.now().toUtc();
+    // Use date-only to avoid creating new provider instances on every build
+    final today = DateTime.utc(now.year, now.month, now.day);
     DateTime startDate;
-    final endDateString = now.toIso8601String();
-    String startDateString;
 
-    double intervalMs = 0;
-
-    if (interval.value == "minute") {
-      intervalMs = 60 * 1000;
-      startDate = DateTime.utc(
-        now.year,
-        now.month,
-        now.day,
-        now.hour - 24, // Last 24 hours for minutes
-        now.minute,
-        now.second,
-        now.millisecond,
-      );
-      startDateString = startDate.toIso8601String();
-    } else if (interval.value == "hour") {
-      intervalMs = 60 * 60 * 1000;
-      startDate = DateTime.utc(
-        now.year,
-        now.month - 2,
-        now.day,
-        now.hour,
-        now.minute,
-        now.second,
-        now.millisecond,
-      );
-      startDateString = startDate.toIso8601String();
-    } else if (interval.value == "daily") {
-      startDate = DateTime.utc(
-        now.year - 2,
-        now.month,
-        now.day,
-        now.hour,
-        now.minute,
-        now.second,
-        now.millisecond,
-      );
-      startDateString = startDate.toIso8601String();
-      intervalMs = 24 * 60 * 60 * 1000;
-    } else if (interval.value == "weekly") {
-      startDate = DateTime.utc(
-        now.year - 3,
-        now.month,
-        now.day,
-        now.hour,
-        now.minute,
-        now.second,
-        now.millisecond,
-      );
-      startDateString = startDate.toIso8601String();
-      intervalMs = 7 * 24 * 60 * 60 * 1000;
-    } else if (interval.value == "monthly") {
-      startDate = DateTime.utc(
-        now.year - 10,
-        now.month,
-        now.day,
-        now.hour,
-        now.minute,
-        now.second,
-        now.millisecond,
-      );
-      startDateString = startDate.toIso8601String();
-      intervalMs = 30 * 24 * 60 * 60 * 1000;
-    } else {
-      // Default fallback
-      startDate = now.subtract(const Duration(days: 30));
-      startDateString = startDate.toIso8601String();
-      intervalMs = 24 * 60 * 60 * 1000;
+    switch (interval.value) {
+      case "hour":
+        startDate = DateTime.utc(today.year, today.month - 2, today.day);
+        break;
+      case "daily":
+        startDate = DateTime.utc(today.year - 2, today.month, today.day);
+        break;
+      case "weekly":
+        startDate = DateTime.utc(today.year - 3, today.month, today.day);
+        break;
+      case "monthly":
+        startDate = DateTime.utc(today.year - 10, today.month, today.day);
+        break;
+      default:
+        startDate = DateTime.utc(today.year - 2, today.month, today.day);
     }
 
-    final dummyIntervals =
-        (now.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch) /
+    double intervalMs = 0;
+    if (interval.value == "minute") {
+      intervalMs = 60 * 1000;
+    } else if (interval.value == "hour") {
+      intervalMs = 60 * 60 * 1000;
+    } else if (interval.value == "daily") {
+      intervalMs = 24 * 60 * 60 * 1000;
+    } else if (interval.value == "weekly") {
+      intervalMs = 7 * 24 * 60 * 60 * 1000;
+    } else if (interval.value == "monthly") {
+      intervalMs = 30 * 24 * 60 * 60 * 1000;
+    }
+
+    double dummyIntervals =
+        (today.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch) /
         intervalMs;
-    final dataPoint = intervalMs > 0 ? (dummyIntervals + 1).floor() : 1;
+    var dataPoint = intervalMs > 0 ? (dummyIntervals + 1).floor() : 1;
+
+    // // final now = referenceTime ?? DateTime.now().toUtc();
+    // // DateTime startDate;
+    // // final endDateString = now.toIso8601String();
+    // // String startDateString;
+
+    // // double intervalMs = 0;
+
+    // // if (interval.value == "minute") {
+    // //   intervalMs = 60 * 1000;
+    // //   startDate = DateTime.utc(
+    // //     now.year,
+    // //     now.month,
+    // //     now.day,
+    // //     now.hour - 24, // Last 24 hours for minutes
+    // //     now.minute,
+    // //     now.second,
+    // //     now.millisecond,
+    // //   );
+    // //   startDateString = startDate.toIso8601String();
+    // // } else if (interval.value == "hour") {
+    // //   intervalMs = 60 * 60 * 1000;
+    // //   startDate = DateTime.utc(
+    // //     now.year,
+    // //     now.month - 2,
+    // //     now.day,
+    // //     now.hour,
+    // //     now.minute,
+    // //     now.second,
+    // //     now.millisecond,
+    // //   );
+    // //   startDateString = startDate.toIso8601String();
+    // // } else if (interval.value == "daily") {
+    // //   startDate = DateTime.utc(
+    // //     now.year - 2,
+    // //     now.month,
+    // //     now.day,
+    // //     now.hour,
+    // //     now.minute,
+    // //     now.second,
+    // //     now.millisecond,
+    // //   );
+    // //   startDateString = startDate.toIso8601String();
+    // //   intervalMs = 24 * 60 * 60 * 1000;
+    // // } else if (interval.value == "weekly") {
+    // //   startDate = DateTime.utc(
+    // //     now.year - 3,
+    // //     now.month,
+    // //     now.day,
+    // //     now.hour,
+    // //     now.minute,
+    // //     now.second,
+    // //     now.millisecond,
+    // //   );
+    // //   startDateString = startDate.toIso8601String();
+    // //   intervalMs = 7 * 24 * 60 * 60 * 1000;
+    // // } else if (interval.value == "monthly") {
+    // //   startDate = DateTime.utc(
+    // //     now.year - 10,
+    // //     now.month,
+    // //     now.day,
+    // //     now.hour,
+    // //     now.minute,
+    // //     now.second,
+    // //     now.millisecond,
+    // //   );
+    // //   startDateString = startDate.toIso8601String();
+    // //   intervalMs = 30 * 24 * 60 * 60 * 1000;
+    // // } else {
+    //   // Default fallback
+    //   startDate = now.subtract(const Duration(days: 30));
+    //   startDateString = startDate.toIso8601String();
+    //   intervalMs = 24 * 60 * 60 * 1000;
+    // }
+
+    // final dummyIntervals =
+    //     (now.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch) /
+    //     intervalMs;
+    // final dataPoint = intervalMs > 0 ? (dummyIntervals + 1).floor() : 1;
 
     return {
       "dataPoint": dataPoint.toString(),
-      "endDateString": endDateString,
-      "startDateString": startDateString,
+      "endDateString": today.toIso8601String(),
+      "startDateString": startDate.toIso8601String(),
       "interval": interval.value,
     };
   }
 
-  // highlightTopRequest(HighlightRequest highlightRequest) {
-  //   try {
-  //     highlightsTopLoader = true;
-  //     var res = ref.watch(highlightsTopProvider(highlightRequest));
-  //     switch (res) {
-  //       case AsyncData(:final value):
-  //         {
-  //           if (value != null) {
-  //             highlightsTopLoader = false;
-  //             highlightResponse = value;
-  //           } else {
-  //             highlightsTopLoader = false;
-  //           }
-  //         }
-  //       case AsyncError(:final error):
-  //         highlightsTopLoader = false;
-  //       case AsyncLoading():
-  //         highlightsTopLoader = false;
-  //     }
-  //   } catch (e) {}
-  // }
+  List<FlSpot> buildPriceRatioSpots(Map<String, double> data) {
+    var spots;
+    if (data.isNotEmpty) {
+      spots = data.entries.map((e) {
+        return FlSpot(double.parse(e.key), e.value.toDouble());
+      }).toList()..sort((a, b) => a.x.compareTo(b.x));
+    }
 
-  // priceComparison(PriceComparisonDto priceComparisonDto) async {
-  //   try {
-  //     priceComparisonloader = true;
-  //     var res = ref.watch(priceComparisonProvider(priceComparisonDto));
-  //     priceComparisonloader = false;
+    minX = spots != null ? spots.first.x : 0;
+    maxX = spots != null ? spots.last.x : 10;
 
-  //     switch (res) {
-  //       case AsyncData(:final value):
-  //         {
-  //           if (value != null) {
-  //             priceComparisonloader = false;
-  //             priceComparisonModel = value;
-  //           }
-  //         }
-  //       case AsyncError(:final error):
-  //         priceComparisonloader = false;
-  //       case AsyncLoading():
-  //         priceComparisonloader = false;
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //     priceComparisonloader = false;
-  //   }
-  // }
+    return spots ?? [];
+  }
 
-  // //crypto apis start
-  // getWeeklyDataCrypto(symbol) async {
-  //   var res = ref.watch(getWeeklyDataCryptoProvider(symbol + "USD", 'crypto'));
+  List<ChartData> buildCryptoChartSpots(
+    List<OverviewCandleChartModel> overviewCandle,
+  ) {
+    List<ChartData> chartDataList = [];
 
-  //   switch (res) {
-  //     case AsyncData(:final value):
-  //       {
-  //         if (value != null) {
-  //           weeklyDataLoader = false;
-  //           weeklyDataCrypto = value;
-  //         }
-  //       }
-  //     case AsyncError(:final error):
-  //       weeklyDataLoader = false;
-  //     case AsyncLoading():
-  //       weeklyDataLoader = false;
-  //   }
-  // }
+    chartDataList = overviewCandle.map((item) {
+      return ChartData(
+        x: item.timestamp.toString(),
+        y: [
+          (item.open).toDouble(),
+          (item.high).toDouble(),
+          (item.low).toDouble(),
+          (item.close).toDouble(),
+        ],
+      );
+    }).toList();
 
-  // infoCryptoData(symbol) async {
-  //   var res = ref.watch(infoCryptoDataProvider(symbol));
-  //   switch (res) {
-  //     case AsyncData(:final value):
-  //       {
-  //         if (value != null) {
-  //           infoCryptoLoader = false;
-  //           infoCryptoResponse = value;
-  //         }
-  //       }
-  //     case AsyncError(:final error):
-  //       infoCryptoLoader = false;
-  //     case AsyncLoading():
-  //       infoCryptoLoader = false;
-  //   }
-  // }
+    return chartDataList;
+  }
 
-  // getMonthlyDataCrypto(symbol) async {
-  //   var res = ref.watch(getMonthlyDataCryptoProvider(symbol + "USD", "crypto"));
-  //   switch (res) {
-  //     case AsyncData(:final value):
-  //       {
-  //         if (value != null) {
-  //           monthlyDataLoader = false;
-  //           monthlyDataCrypto = value;
-  //         }
-  //       }
-  //     case AsyncError(:final error):
-  //       monthlyDataLoader = false;
-  //     case AsyncLoading():
-  //       monthlyDataLoader = false;
-  //   }
-  // }
+  double _twoMonthIntervalMilliseconds() {
+    const millisInDay = 86400000;
+    const daysInTwoMonths = 60;
+    return (millisInDay * daysInTwoMonths).toDouble();
+  }
 
-  // getAboutCrypto(symbol) async {
-  //   var res = ref.watch(getAboutCryptoProvider(symbol));
-  //   switch (res) {
-  //     case AsyncData(:final value):
-  //       {
-  //         if (value != null) {
-  //           abooutCryptoLoader = false;
-  //           aboutCryptoModel = value;
-  //         }
-  //       }
-  //     case AsyncError(:final error):
-  //       abooutCryptoLoader = false;
-  //     case AsyncLoading():
-  //       abooutCryptoLoader = false;
-  //   }
-  // }
+  List<FinancialDataPoint> buildMarketCapScope(List<MarketCapData> data) {
+    List<FinancialDataPoint> chartDataList = [];
 
-  // getOverviewCandleChartCrypto(symbol, IntervalEnum interval) async {
-  //   // await chartService.fetchChartData(
-  //   //   cryptoApi: widget.chatRouting.type == "crypto" ? true : false,
-  //   //   internalApi: widget.chatRouting.type == "crypto" ? false : true,
-  //   //   selectedSymbol: widget.chatRouting.symbol,
-  //   //   interval: interval.value,
-  //   //   onSuccess: (data) async {
-  //   //     overviewCandleChartModelCrypto = [];
-  //   //     for (var item in data) {
-  //   //       try {
-  //   //         overviewCandleChartModelCrypto!.add(
-  //   //           OverviewCandleChartModel(
-  //   //             symbol: widget.chatRouting.symbol,
-  //   //             open: item['OPEN'],
-  //   //             high: item['HIGH'],
-  //   //             low: item['LOW'],
-  //   //             close: item['CLOSE'],
-  //   //             volume: item['VOLUME'].toInt(),
-  //   //             timestamp: DateTime.fromMillisecondsSinceEpoch(
-  //   //               item['TIMESTAMP'],
-  //   //             ),
-  //   //           ),
-  //   //         );
-  //   //       } catch (e) {}
-  //   //     }
+    chartDataList = data.map((item) {
+      return FinancialDataPoint(x: item.date!, y: item.marketCap);
+    }).toList();
 
-  //   //     print("✅ Chart data loaded: ${data.length} items");
-  //   //   },
-  //   //   onError: (err) {
-  //   //     print("❌ Error loading chart data: $err");
-  //   //   },
-  //   // );
-  //   final now = DateTime.now().toUtc();
-
-  //   // Subtract 2 years for startDate
-  //   var startDate;
-  //   final endDateString = now.toIso8601String();
-  //   var startDateString;
-  //   if (!mounted) return;
-  //   setState(() {
-  //     chartLoader = true;
-  //   });
-  //   double intervalMs = 0;
-  //   if (interval.value == "minute") {
-  //     intervalMs = 60 * 1000;
-  //   } else if (interval.value == "hour") {
-  //     intervalMs = 60 * 60 * 1000;
-  //     startDate = DateTime.utc(
-  //       now.year,
-  //       now.month - 2,
-  //       now.day,
-  //       now.hour,
-  //       now.minute,
-  //       now.second,
-  //       now.millisecond,
-  //     );
-  //     startDateString = startDate.toIso8601String();
-  //   } else if (interval.value == "daily") {
-  //     startDate = DateTime.utc(
-  //       now.year - 2,
-  //       now.month,
-  //       now.day,
-  //       now.hour,
-  //       now.minute,
-  //       now.second,
-  //       now.millisecond,
-  //     );
-  //     startDateString = startDate.toIso8601String();
-  //     intervalMs = 24 * 60 * 60 * 1000;
-  //   } else if (interval.value == "weekly") {
-  //     startDate = DateTime.utc(
-  //       now.year - 3,
-  //       now.month,
-  //       now.day,
-  //       now.hour,
-  //       now.minute,
-  //       now.second,
-  //       now.millisecond,
-  //     );
-  //     startDateString = startDate.toIso8601String();
-  //     intervalMs = 7 * 24 * 60 * 60 * 1000;
-  //   } else if (interval.value == "monthly") {
-  //     startDate = DateTime.utc(
-  //       now.year - 10,
-  //       now.month,
-  //       now.day,
-  //       now.hour,
-  //       now.minute,
-  //       now.second,
-  //       now.millisecond,
-  //     );
-  //     startDateString = startDate.toIso8601String();
-  //     intervalMs = 30 * 24 * 60 * 60 * 1000;
-  //   }
-
-  //   double dummyIntervals =
-  //       (now.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch) /
-  //       intervalMs;
-
-  //   var dataPoint = intervalMs > 0 ? (dummyIntervals + 1).floor() : 1;
-  //   try {
-  //     var res = ref.watch(
-  //       getOverviewCandleChartCryptoProvider(
-  //         symbol + "_CRYPTO",
-  //         interval.value,
-  //         startDateString,
-  //         endDateString,
-  //         "1",
-  //         dataPoint.toString(),
-  //       ),
-  //     );
-
-  //     switch (res) {
-  //       case AsyncData(:final value):
-  //         {
-  //           chartLoader = false;
-  //           overviewCandleChartModelCrypto = [];
-  //           overviewCandleChartModelCrypto!.addAll(value.data);
-  //         }
-
-  //       case AsyncError(:final error):
-  //         chartLoader = false;
-  //       case AsyncLoading():
-  //         chartLoader = false;
-  //     }
-  //   } catch (e) {}
-  // }
-
-  // marketCapRequest(MarketCapRequest symbol) async {
-  //   try {
-  //     var res = ref.read(marketCapChartProvider(symbol));
-  //     switch (res) {
-  //       case AsyncData(:final value):
-  //         {
-  //           if (value != null) {
-  //             marketCapLoader = false;
-  //             marketCapResponse = value;
-  //           } else {
-  //             marketCapLoader = false;
-  //           }
-  //         }
-  //       case AsyncError(:final error):
-  //         marketCapLoader = false;
-  //       case AsyncLoading():
-  //         marketCapLoader = false;
-  //     }
-  //   } catch (e) {}
-  // }
-
-  // cryptoMarkets(SymbolDto symbol) async {
-  //   try {
-  //     var res = ref.read(cryptoMarketsProvider(symbol));
-  //     switch (res) {
-  //       case AsyncData(:final value):
-  //         {
-  //           if (value != null) {
-  //             cryptoMarketLoader = false;
-  //             cryptoMarketModel = value;
-  //           } else {
-  //             cryptoMarketLoader = false;
-  //           }
-  //         }
-  //       case AsyncError(:final error):
-  //         cryptoMarketLoader = false;
-  //       case AsyncLoading():
-  //         cryptoMarketLoader = false;
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  // priceRatio(PriceComparisonDto symbol) async {
-  //   try {
-  //     var res = ref.read(priceRatioProvider(symbol));
-  //     switch (res) {
-  //       case AsyncData(:final value):
-  //         {
-  //           if (value != null) {
-  //             priceRatioLoader = false;
-  //             priceRatioModel = value;
-  //           } else {
-  //             priceRatioLoader = false;
-  //           }
-  //         }
-  //       case AsyncError(:final error):
-  //         priceRatioLoader = false;
-  //       case AsyncLoading():
-  //         priceRatioLoader = false;
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  //crypto apis end
-
-  // Future<void> cryptoApis() async {
-  //   if (highlightResponse == null) {
-  //     try {
-  //       await highlightTopRequest(
-  //         HighlightRequest(
-  //           symbol: widget.chatRouting.symbol,
-  //           limit: 5,
-  //           sort: "desc",
-  //         ),
-  //       );
-  //       if (!mounted) return;
-  //       setState(() {});
-  //     } catch (e, s) {
-  //       debugPrint("Error in highlightTopRequest: $e\n$s");
-  //     }
-  //   }
-
-  //   if (infoCryptoResponse == null) {
-  //     try {
-  //       await infoCryptoData(widget.chatRouting.symbol);
-  //       if (!mounted) return;
-  //       setState(() {});
-  //     } catch (e, s) {
-  //       debugPrint("Error in infoCryptoData: $e\n$s");
-  //     }
-  //   }
-
-  //   if (aboutCryptoModel == null) {
-  //     try {
-  //       await getAboutCrypto(widget.chatRouting.symbol);
-  //       if (!mounted) return;
-  //       setState(() {});
-  //     } catch (e, s) {
-  //       debugPrint("Error in getAboutCrypto: $e\n$s");
-  //     }
-  //   }
-
-  //   if (weeklyDataCrypto == null) {
-  //     try {
-  //       await getWeeklyDataCrypto(widget.chatRouting.symbol);
-  //       if (!mounted) return;
-  //       setState(() {});
-  //     } catch (e, s) {
-  //       debugPrint("Error in getWeeklyDataCrypto: $e\n$s");
-  //     }
-  //   }
-
-  //   if (monthlyDataCrypto == null) {
-  //     try {
-  //       await getMonthlyDataCrypto(widget.chatRouting.symbol);
-  //       if (!mounted) return;
-  //       setState(() {});
-  //     } catch (e, s) {
-  //       debugPrint("Error in getMonthlyDataCrypto: $e\n$s");
-  //     }
-  //   }
-
-  //   if (overviewCandleChartModelCrypto == null) {
-  //     try {
-  //       await getOverviewCandleChartCrypto(
-  //         widget.chatRouting.symbol,
-  //         IntervalEnum.hour,
-  //       );
-  //       if (!mounted) return;
-  //       setState(() {});
-  //     } catch (e, s) {
-  //       debugPrint("Error in getOverviewCandleChartCrypto: $e\n$s");
-  //     }
-  //   }
-  //   // local categoryImages removed (unused)
-  //   if (priceComparisonModel == null) {
-  //     try {
-  //       await priceComparison(
-  //         PriceComparisonDto(
-  //           daysBack: 365,
-  //           symbol1: widget.chatRouting.symbol,
-  //           symbol2: widget.chatRouting.symbol,
-  //         ),
-  //       );
-  //       if (!mounted) return;
-  //       setState(() {});
-  //     } catch (e, s) {
-  //       debugPrint("Error in priceComparison: $e\n$s");
-  //     }
-  //   }
-
-  //   if (marketCapResponse == null) {
-  //     try {
-  //       await marketCapRequest(
-  //         MarketCapRequest(
-  //           interval: "1 month",
-  //           symbol: widget.chatRouting.symbol,
-  //         ),
-  //       );
-  //       if (!mounted) return;
-  //       setState(() {});
-  //     } catch (e, s) {
-  //       debugPrint("Error in marketCapRequest: $e\n$s");
-  //     }
-  //   }
-
-  //   if (cryptoMarketModel == null) {
-  //     try {
-  //       await cryptoMarkets(SymbolDto(symbol: widget.chatRouting.symbol));
-  //       if (!mounted) return;
-  //       setState(() {});
-  //     } catch (e, s) {
-  //       debugPrint("Error in cryptoMarkets: $e\n$s");
-  //     }
-  //   }
-
-  //   if (priceRatioModel == null) {
-  //     try {
-  //       await priceRatio(
-  //         PriceComparisonDto(
-  //           daysBack: 365,
-  //           symbol1: widget.chatRouting.symbol,
-  //           symbol2: widget.chatRouting.symbol,
-  //         ),
-  //       );
-  //       if (!mounted) return;
-  //       setState(() {});
-  //     } catch (e, s) {
-  //       debugPrint("Error in priceRatio: $e\n$s");
-  //     }
-  //   }
-  // }
+    return chartDataList;
+  }
 
   @override
   Widget build(BuildContext context) {
-    // cryptoApis();
-
-    List<FlSpot> buildPriceRatioSpots(Map<String, double> data) {
-      var spots;
-      if (data.isNotEmpty) {
-        spots = data.entries.map((e) {
-          return FlSpot(double.parse(e.key), e.value.toDouble());
-        }).toList()..sort((a, b) => a.x.compareTo(b.x));
-      }
-
-      minX = spots != null ? spots.first.x : 0;
-      maxX = spots != null ? spots.last.x : 10;
-
-      return spots ?? [];
-    }
-
-    List<ChartData> buildCryptoChartSpots(
-      List<OverviewCandleChartModel> overviewCandle,
-    ) {
-      List<ChartData> chartDataList = [];
-
-      chartDataList = overviewCandle.map((item) {
-        return ChartData(
-          x: item.timestamp.toString(),
-          y: [
-            (item.open).toDouble(),
-            (item.high).toDouble(),
-            (item.low).toDouble(),
-            (item.close).toDouble(),
-          ],
-        );
-      }).toList();
-
-      return chartDataList;
-    }
-
-    double _twoMonthIntervalMilliseconds() {
-      const millisInDay = 86400000;
-      const daysInTwoMonths = 60;
-      return (millisInDay * daysInTwoMonths).toDouble();
-    }
-
-    List<FinancialDataPoint> buildMarketCapScope(List<MarketCapData> data) {
-      List<FinancialDataPoint> chartDataList = [];
-
-      chartDataList = data.map((item) {
-        return FinancialDataPoint(x: item.date!, y: item.marketCap);
-      }).toList();
-
-      return chartDataList;
-    }
-
     final stockManagerState = ref.watch(stocksManagerProvider);
-
     final liveStock = stockManagerState[widget.chatRouting.stockid];
     double change =
         PriceUtils.getChangesPercentage(
@@ -760,20 +335,17 @@ class _CryptoItemsState extends ConsumerState<CryptoItems> {
         ? IntervalEnum.monthly
         : IntervalEnum.daily;
 
-    ///////////////////////////////////////////////////This Api has 504///////////////////////////////////////////////////////////////////
-    // final chartDateRange = createChartCandleChartDto(interval);
+    final chartDateRange = createChartCandleChartDto(interval);
     final getOverviewCandleChartCryptoState = ref.watch(
       getOverviewCandleChartCryptoProvider(
         widget.chatRouting.symbol + "_CRYPTO",
-        // interval.value,
-        "daily",
-        "2023-12-11T09:59:41.947Z",
-        // chartDateRange['startDateString']!,
-        // chartDateRange['endDateString']!,
-        "2025-12-11T09:59:41.947063Z",
+        interval.value,
+        // "2023-12-11T09:59:41.947Z",
+        chartDateRange['startDateString']!,
+        chartDateRange['endDateString']!,
+        // "2025-12-11T09:59:41.947063Z",
         "1",
-        // chartDateRange['dataPoint']!,
-        "732",
+        chartDateRange['dataPoint']!,
       ),
     );
 
