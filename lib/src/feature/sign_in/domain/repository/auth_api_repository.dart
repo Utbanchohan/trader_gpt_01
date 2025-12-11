@@ -17,8 +17,6 @@ import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_up_dto/sign_up.dart
 import 'package:trader_gpt/src/feature/sign_in/data/dto/update_password/update_password_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';
-import 'package:trader_gpt/src/feature/update_password/presentation/update_password.dart';
-
 import '../../../chat/domain/model/base_model/base_model.dart';
 
 class AuthApiRepository implements AuthRepository {
