@@ -8,11 +8,7 @@ import 'package:flutter/foundation.dart' show debugPrint, Uint8List, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trader_gpt/src/feature/aurh_provider/auth_provider.dart';
 import 'package:trader_gpt/src/shared/flavours.dart';
-<<<<<<< HEAD
 import '../../../flavors.dart';
-=======
-
->>>>>>> master
 import '../../shared/custom_message.dart';
 import '../../shared/socket/providers/stocks_price.dart';
 import '../local/repository/local_storage_repository.dart';
