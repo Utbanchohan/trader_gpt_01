@@ -209,24 +209,27 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
+                          SizedBox(width: 7),
+                          widget.fromChat != null && widget.fromChat == true
+                              ? GestureDetector(
+                                  onTap: () {
+                                    captureWidgetScreenshot();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.bubbleColor,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Icon(
+                                      Icons.arrow_circle_down,
+                                      size: 18,
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(),
                         ],
                       ),
-                      SizedBox(width: 7),
-                      widget.fromChat != null && widget.fromChat == true
-                          ? GestureDetector(
-                              onTap: () {
-                                captureWidgetScreenshot();
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: AppColors.bubbleColor,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Icon(Icons.arrow_circle_down, size: 18),
-                              ),
-                            )
-                          : SizedBox(),
 
                       SizedBox(height: 2),
                       widget.fromChat == null
