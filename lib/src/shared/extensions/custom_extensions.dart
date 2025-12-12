@@ -58,15 +58,22 @@ String formatDateDDMMYY(String date) {
   try {
     return DateFormat('dd/MM/yy').format(DateTime.parse(date));
   } catch (e) {
-    return date;
-  }
-}
+    final parts = date.split(',');
+    if (parts.length == 2) {
+      final mm = int.tryParse(parts[0]);
+      final yy = int.tryParse(parts[1]);
 
-String formatDateMMYYY(String date) {
-  try {
-    return DateFormat('MM, yy').format(DateTime.parse(date));
-  } catch (_) {
-    return '$date';
+      if (mm != null && yy != null) {
+        // Convert 2-digit year into full year → 2000–2099
+        final fullYear = 2000 + yy;
+
+        final dt = DateTime(fullYear, mm, 1);
+        return DateFormat('dd/MM/yy').format(dt);
+      }
+    }
+
+    // Fallback
+    return date;
   }
 }
 

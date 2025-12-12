@@ -572,7 +572,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                     children: [
                       SizedBox(height: 5),
                       MdSnsText(
-                        formatDateMMYYY(categories[index]),
+                        formatDateDDMMYY(categories[index]),
                         variant: TextVariant.h4,
                         color: axisColor,
                       ),
@@ -742,7 +742,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                                   width: 60,
                                   child: MdSnsText(
                                     // "23/20/2024",
-                                    formatDateMMYYY(categories[index]),
+                                    formatDateDDMMYY(categories[index]),
                                     variant: TextVariant.h4,
                                     color: axisColor,
                                     maxLines: 2,
