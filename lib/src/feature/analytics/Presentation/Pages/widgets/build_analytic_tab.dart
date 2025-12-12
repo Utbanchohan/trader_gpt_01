@@ -30,6 +30,10 @@ class BuildAnalyticTab extends StatefulWidget {
 
 class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
   String _activeSection = 'overview';
+
+  final ScrollController _chipScrollController = ScrollController();
+  final Map<String, GlobalKey> _chipKeys = {};
+
   final ItemScrollController itemScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
@@ -38,7 +42,6 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
     {
       'id': 'overview',
       'title': 'Overview',
-
       'image': Assets.images.categoryc1.path,
     },
     {'id': 'company', 'title': 'Company', 'image': Assets.images.c2.path},
@@ -63,29 +66,70 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
   void initState() {
     super.initState();
 
-    itemPositionsListener.itemPositions.addListener(() {
-      final positions = itemPositionsListener.itemPositions.value;
+    /// Create keys for chips
+    for (var s in sections) {
+      _chipKeys[s['id']] = GlobalKey();
+    }
 
-      int? firstIndex = positions
-          .where((pos) => pos.itemTrailingEdge > 0)
-          .map((pos) => pos.index)
-          .fold(null, (a, b) => a == null ? b : (a < b ? a : b));
+    itemPositionsListener.itemPositions.addListener(_updateActiveSection);
+  }
 
-      if (firstIndex != null && firstIndex < sections.length) {
-        final id = sections[firstIndex]['id'];
-        if (id != _activeSection) {
-          setState(() {
-            _activeSection = id;
-          });
-        }
+  void _updateActiveSection() {
+    final positions = itemPositionsListener.itemPositions.value;
+
+    int? firstIndex = positions
+        .where((pos) => pos.itemTrailingEdge > 0)
+        .map((pos) => pos.index)
+        .fold(null, (a, b) => a == null ? b : (a < b ? a : b));
+
+    if (firstIndex != null && firstIndex < sections.length) {
+      final id = sections[firstIndex]['id'];
+      if (id != _activeSection) {
+        setState(() {
+          _activeSection = id;
+        });
+
+        /// ⭐ Auto scroll chip into view
+        _scrollChipIntoView(id);
       }
-    });
+    }
+  }
+
+  /// CHIP AUTO SCROLL FUNCTION
+  void _scrollChipIntoView(String id) {
+    final key = _chipKeys[id];
+    if (key == null) return;
+
+    final context = key.currentContext;
+    if (context == null) return;
+
+    final box = context.findRenderObject() as RenderBox;
+    final position = box.localToGlobal(Offset.zero);
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final target =
+        _chipScrollController.offset +
+        position.dx -
+        (screenWidth / 2) +
+        (box.size.width / 2);
+
+    _chipScrollController.animateTo(
+      target.clamp(
+        _chipScrollController.position.minScrollExtent,
+        _chipScrollController.position.maxScrollExtent,
+      ),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   void _scrollToSection(String id, Map<String, dynamic> section) {
     setState(() {
       _activeSection = id;
     });
+
+    _scrollChipIntoView(id);
+
     final index = sections.indexOf(section);
     if (index != -1 && mounted) {
       itemScrollController.scrollTo(
@@ -97,13 +141,6 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
   }
 
   @override
-  void dispose() {
-    itemPositionsListener.itemPositions.removeListener(() {});
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -111,7 +148,6 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
           height: 60,
           child: Row(
             children: [
-              /// LEFT SIDE ICON BUTTON (FIXED)
               InkWell(
                 onTap: () {
                   widget.onShowPressed();
@@ -157,8 +193,10 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
               Container(width: 1.2, height: 28, color: Colors.white24),
 
               SizedBox(width: 10),
+
               Expanded(
                 child: SingleChildScrollView(
+                  controller: _chipScrollController,
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: sections.map((section) {
@@ -167,6 +205,7 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
                       return GestureDetector(
                         onTap: () => _scrollToSection(section['id']!, section),
                         child: Container(
+                          key: _chipKeys[section['id']], // ⭐ ADD KEY HERE
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 8,
@@ -215,6 +254,8 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
             ],
           ),
         ),
+
+        /// MAIN SCROLL CONTENT
         Expanded(
           child: ScrollablePositionedList.builder(
             itemCount: sections.length,
@@ -226,186 +267,24 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
 
               switch (id) {
                 case 'overview':
-                  return Container(
-                    // key: _sectionKeys[id],
-                    child: OverviewContentV1(
-                      chatRouting: widget.chatRouting,
-                      selectedStock: widget.selectedStock,
-                    ),
+                  return OverviewContentV1(
+                    chatRouting: widget.chatRouting,
+                    selectedStock: widget.selectedStock,
                   );
                 case 'company':
-                  return Container(
-                    // key: _sectionKeys[id],
-                    child: CompanyContentV1(chatRouting: widget.chatRouting),
-                  );
+                  return CompanyContentV1(chatRouting: widget.chatRouting);
                 case 'financial':
-                  return Container(
-                    // key: _sectionKeys[id],
-                    child: FinancialTabV1(symbol: widget.selectedStock.symbol),
-                  );
+                  return FinancialTabV1(symbol: widget.selectedStock.symbol);
                 case 'earnings':
-                  return Container(
-                    // key: _sectionKeys[id],
-                    child: EarningContentV1(chatRouting: widget.chatRouting),
-                  );
+                  return EarningContentV1(chatRouting: widget.chatRouting);
                 case 'analytics':
-                  return Container(
-                    // key: _sectionKeys[id],
-                    child: AnalysisContentV1(chatRouting: widget.chatRouting),
-                  );
+                  return AnalysisContentV1(chatRouting: widget.chatRouting);
                 default:
-                  return SizedBox(key: UniqueKey(), height: 600);
+                  return SizedBox(height: 600);
               }
             },
           ),
         ),
-
-        // SizedBox(
-        //   height: 60,
-        //   child: SingleChildScrollView(
-        //     controller: _chipScrollController,
-        //     scrollDirection: Axis.horizontal,
-        //     padding: const EdgeInsets.symmetric(horizontal: 8),
-        //     child: Row(
-        //       children: sections.map((section) {
-        //         final id = section['id'] as String;
-        //         final isActive = _activeSection == id;
-
-        //         return GestureDetector(
-        //           onTap: () => _scrollToSection(id),
-        //           child: Container(
-        //             key: _chipKeys[id],
-        //             padding: const EdgeInsets.symmetric(
-        //               horizontal: 14,
-        //               vertical: 8,
-        //             ),
-        //             margin: const EdgeInsets.symmetric(
-        //               horizontal: 6,
-        //               vertical: 4,
-        //             ),
-        //             decoration: BoxDecoration(
-        //               color: isActive
-        //                   ? AppColors.bubbleColor
-        //                   : Colors.transparent,
-        //               borderRadius: BorderRadius.circular(50),
-        //               border: Border.all(
-        //                 color: isActive
-        //                     ? Colors.transparent
-        //                     : AppColors.colorB2B2B7.withOpacity(0.4),
-        //               ),
-        //             ),
-        //             child: Row(
-        //               children: [
-        //                 Image.asset(section['image'], width: 14, height: 14),
-        //                 SizedBox(width: 8.w),
-        //                 Text(
-        //                   section['title'],
-        //                   style: TextStyle(
-        //                     color: Colors.white,
-        //                     fontWeight: isActive
-        //                         ? FontWeight.bold
-        //                         : FontWeight.normal,
-        //                   ),
-        //                 ),
-        //               ],
-        //             ),
-        //           ),
-        //         );
-        //       }).toList(),
-        //     ),
-        //   ),
-        // ),
-        // Expanded(
-        //   child: CustomScrollView(
-        //     controller: _scrollController,
-        //     slivers: [
-        //       SliverList(
-        //         delegate: SliverChildBuilderDelegate((context, index) {
-        //           final section = sections[index];
-        //           final id = section['id'];
-
-        //           Widget content;
-
-        //           switch (id) {
-        //             case 'overview':
-        //               content = OverviewContentV1(
-        //                 chatRouting: widget.chatRouting,
-        //                 selectedStock: widget.selectedStock,
-        //               );
-        //               break;
-        //             case 'company':
-        //               content = CompanyContentV1(
-        //                 chatRouting: widget.chatRouting,
-        //               );
-        //               break;
-        //             case 'financial':
-        //               content = FinancialTabV1(
-        //                 symbol: widget.selectedStock.symbol,
-        //               );
-        //               break;
-        //             case 'earnings':
-        //               content = EarningContentV1(
-        //                 chatRouting: widget.chatRouting,
-        //               );
-        //               break;
-        //             case 'analytics':
-        //               content = AnalysisContentV1(
-        //                 chatRouting: widget.chatRouting,
-        //               );
-        //               break;
-        //             default:
-        //               content = SizedBox(height: 600);
-        //           }
-
-        //           return Container(key: _sectionKeys[id], child: content);
-        //         }, childCount: sections.length),
-        //       ),
-
-        //       // SliverList(
-        //       //   delegate: SliverChildBuilderDelegate((context, index) {
-        //       //     return Column(
-        //       //       key: ValueKey("$index"),
-        //       //       children: sections.map((section) {
-        //       //         final id = section['id'];
-        //       //         Widget content;
-        //       //         switch (id) {
-        //       //           case 'overview':
-        //       //             content = OverviewContentV1(
-        //       //               chatRouting: widget.chatRouting,
-        //       //               selectedStock: widget.selectedStock,
-        //       //             );
-        //       //             break;
-        //       //           case 'company':
-        //       //             content = CompanyContentV1(
-        //       //               chatRouting: widget.chatRouting,
-        //       //             );
-        //       //             break;
-        //       //           case 'financial':
-        //       //             content = FinancialTabV1(
-        //       //               symbol: widget.selectedStock.symbol,
-        //       //             );
-        //       //             break;
-        //       //           case 'earnings':
-        //       //             content = EarningContentV1(
-        //       //               chatRouting: widget.chatRouting,
-        //       //             );
-        //       //             break;
-        //       //           case 'analytics':
-        //       //             content = AnalysisContentV1(
-        //       //               chatRouting: widget.chatRouting,
-        //       //             );
-        //       //             break;
-        //       //           default:
-        //       //             content = SizedBox(height: 600);
-        //       //         }
-        //       //         return Container(key: _sectionKeys[id], child: content);
-        //       //       }).toList(),
-        //       //     );
-        //       //   }, childCount: sections.length),
-        //       // ),
-        //     ],
-        //   ),
-        // ),
       ],
     );
   }
