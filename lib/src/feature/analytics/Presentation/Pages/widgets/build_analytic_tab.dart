@@ -15,11 +15,13 @@ import '../../../../chat/domain/model/chat_stock_model.dart';
 class BuildAnalyticTab extends StatefulWidget {
   final ChatRouting chatRouting;
   final Stock selectedStock;
+  final void Function() onShowPressed;
 
   const BuildAnalyticTab({
     super.key,
     required this.chatRouting,
     required this.selectedStock,
+    required this.onShowPressed,
   });
 
   @override
@@ -111,7 +113,9 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
             children: [
               /// LEFT SIDE ICON BUTTON (FIXED)
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  widget.onShowPressed();
+                },
                 child: Container(
                   width: 40.w,
                   height: 71.h,

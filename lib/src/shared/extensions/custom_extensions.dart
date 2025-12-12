@@ -66,7 +66,7 @@ String formatDateMMYYY(String date) {
   try {
     return DateFormat('MM, yy').format(DateTime.parse(date));
   } catch (_) {
-    return '-';
+    return '$date';
   }
 }
 

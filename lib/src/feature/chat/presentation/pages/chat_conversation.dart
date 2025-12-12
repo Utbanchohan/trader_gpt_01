@@ -102,20 +102,29 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   loadChats(String id, int page) async {
     try {
-      boolLoadMoreLoader = true;
+      setState(() {
+        boolLoadMoreLoader = true;
+      });
+
       var res = await ref.read(chatRepository).getMessages(id, page);
       if (res.isSuccess != null && res.isSuccess!) {
-        boolLoadMoreLoader = false;
+        setState(() {
+          boolLoadMoreLoader = false;
+        });
 
         for (int i = res.data!.messages!.length - 1; i >= 0; i--) {
           chats.insert(0, res.data!.messages![i]);
         }
       } else {
-        boolLoadMoreLoader = false;
+        setState(() {
+          boolLoadMoreLoader = false;
+        });
         return false;
       }
     } catch (e) {
-      boolLoadMoreLoader = false;
+      setState(() {
+        boolLoadMoreLoader = false;
+      });
     } finally {
       boolLoadMoreLoader = false;
     }

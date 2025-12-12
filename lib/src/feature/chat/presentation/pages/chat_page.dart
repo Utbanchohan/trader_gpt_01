@@ -706,7 +706,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   SizedBox(
                     child: Center(
                       child: Transform.scale(
-                        scale: 0.5, // ← Adjust size (0.5 = 50%)
+                        scale: 0.5,
                         child: CircularProgressIndicator(
                           backgroundColor: Colors.white,
                           strokeWidth: 2,
