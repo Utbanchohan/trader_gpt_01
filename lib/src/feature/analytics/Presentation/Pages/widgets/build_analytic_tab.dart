@@ -211,7 +211,7 @@ class _BuildAnalyticTabState extends State<BuildAnalyticTab> {
                             vertical: 8,
                           ),
                           margin: const EdgeInsets.symmetric(
-                            horizontal: 4,
+                            horizontal: 10,
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
