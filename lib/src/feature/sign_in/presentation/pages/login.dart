@@ -394,7 +394,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: 160,
+                      width: 170,
                       height: 55,
                       child: OutlinedButton(
                         onPressed: () {},
@@ -425,7 +425,7 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                       ),
                     ),
                     SizedBox(
-                      width: 160,
+                      width: 170,
                       height: 55,
                       child: OutlinedButton(
                         onPressed: () {},
