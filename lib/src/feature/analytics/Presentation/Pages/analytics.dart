@@ -12,8 +12,13 @@ import '../../domain/model/stock_price_model/stock_price_model.dart';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
   final ChatRouting? chatRouting;
+  final void Function() onShowPressed;
 
-  const AnalyticsScreen({super.key, this.chatRouting});
+  const AnalyticsScreen({
+    super.key,
+    this.chatRouting,
+    required this.onShowPressed,
+  });
 
   @override
   ConsumerState<AnalyticsScreen> createState() => _AnalyticsScreenState();
@@ -91,10 +96,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             ? CryptoItems(
                 chatRouting: widget.chatRouting!,
                 selectedStock: selectedStock!,
+                onShowPressed: () {
+                  widget.onShowPressed();
+                },
               )
             : BuildAnalyticTab(
                 chatRouting: widget.chatRouting!,
                 selectedStock: selectedStock!,
+                onShowPressed: () {
+                  widget.onShowPressed();
+                },
               ),
       ),
     );

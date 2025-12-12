@@ -60,10 +60,12 @@ final selectedCandleIntervalProvider = StateProvider.family<String, String>(
 class CryptoItems extends ConsumerStatefulWidget {
   final ChatRouting chatRouting;
   final Stock selectedStock;
+  final void Function() onShowPressed;
   const CryptoItems({
     super.key,
     required this.chatRouting,
     required this.selectedStock,
+    required this.onShowPressed,
   });
 
   @override
@@ -364,6 +366,7 @@ class _CryptoItemsState extends ConsumerState<CryptoItems> {
               InkWell(
                 onTap: () {
                   // _pageController.jumpToPage(1);
+                  widget.onShowPressed();
                 },
                 child: Container(
                   width: 40.w,
