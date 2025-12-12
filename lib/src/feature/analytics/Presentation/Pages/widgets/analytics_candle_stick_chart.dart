@@ -199,7 +199,7 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            width: 240,
+                            width: 200,
                             child: MdSnsText(
                               widget.name,
                               color: AppColors.fieldTextColor,
@@ -209,7 +209,9 @@ class _CustomCandleChartState extends State<CustomCandleChart> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          SizedBox(width: 7),
+                          widget.fromChat != null && widget.fromChat == true
+                              ? SizedBox(width: 7)
+                              : SizedBox(),
                           widget.fromChat != null && widget.fromChat == true
                               ? GestureDetector(
                                   onTap: () {

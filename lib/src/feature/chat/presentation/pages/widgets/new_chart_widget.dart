@@ -400,25 +400,29 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
               showTitles: true,
               minIncluded: false,
               maxIncluded: false,
-              reservedSize: 50,
+              reservedSize: 60,
               interval: (categories.length / 4).ceilToDouble(),
               getTitlesWidget: (value, meta) {
                 final index = value.toInt();
                 if (index >= 0 && index < categories.length) {
                   print(categories[index]);
                   return Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
+                    padding: EdgeInsets.only(top: 20.0),
                     child: Center(
                       child: Transform.rotate(
                         angle: -0.6,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 4.0),
-                          child: MdSnsText(
-                            // "23/20/2024",
-                            formatDateDDMMYY(categories[index]),
-                            variant: TextVariant.h4,
-                            color: axisColor,
-                            overflow: TextOverflow.ellipsis,
+                          child: Container(
+                            width: 60,
+                            child: MdSnsText(
+                              // "23/20/2024",
+                              formatDateDDMMYY(categories[index]),
+                              variant: TextVariant.h4,
+                              color: axisColor,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                       ),
@@ -717,7 +721,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
             ),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
-                reservedSize: 40,
+                reservedSize: 60,
                 minIncluded: false,
                 maxIncluded: false,
                 showTitles: true,
@@ -733,13 +737,17 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                             child: Transform.rotate(
                               angle: -0.6,
                               child: Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: MdSnsText(
-                                  "23/20/2024",
-                                  // formatDateMMYYY(categories[index]),
-                                  variant: TextVariant.h4,
-                                  color: axisColor,
-                                  overflow: TextOverflow.ellipsis,
+                                padding: EdgeInsets.only(left: 20),
+                                child: Container(
+                                  width: 60,
+                                  child: MdSnsText(
+                                    // "23/20/2024",
+                                    formatDateMMYYY(categories[index]),
+                                    variant: TextVariant.h4,
+                                    color: axisColor,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ),
                             ),

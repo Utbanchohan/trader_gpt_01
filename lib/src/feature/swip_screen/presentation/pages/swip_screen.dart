@@ -64,13 +64,19 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
 
     _pageController = PageController(initialPage: pgeIndex);
 
-    /// cache screens (NO MORE REBUILD LAG)
     _startScreen = ConversationStart();
     _chatScreen = ChatConversation(
       chatRouting: widget.chatRouting,
       initialMessage: widget.question,
     );
-    _analyticsScreen = AnalyticsScreen(chatRouting: widget.chatRouting);
+    _analyticsScreen = AnalyticsScreen(
+      chatRouting: widget.chatRouting,
+      onShowPressed: () {
+        if (_pageController.hasClients) {
+          _pageController..jumpToPage(1);
+        }
+      },
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       openSheet(isFirstTime);
