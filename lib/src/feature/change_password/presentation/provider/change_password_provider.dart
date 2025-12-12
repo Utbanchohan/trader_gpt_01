@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:trader_gpt/src/feature/change_password/presentation/pages/change_password.dart';
 import 'package:trader_gpt/src/feature/sign_in/data/dto/change_password/change_password_dto.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/model/sign_in_response_model/login_response_model.dart';
 import 'package:trader_gpt/src/feature/sign_in/domain/repository/auth_repository.dart';

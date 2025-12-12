@@ -250,6 +250,7 @@ class OverviewApiRepository implements OverviewRepository {
     return await AnalysisApi(client).monthlyDataCrypto(ticker, asset_type);
   }
 
+  @override
   Future<WeeklyModel> weeklyDataCrypto(String ticker, String asset_type) async {
     return await AnalysisApi(client).weeklyDataCrypto(ticker, asset_type);
   }

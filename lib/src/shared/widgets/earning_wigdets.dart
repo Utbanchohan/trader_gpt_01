@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trader_gpt/src/core/theme/app_colors.dart';
+import 'package:trader_gpt/src/feature/new_conversations/presentation/pages/widget/shimmer_widget.dart';
 import 'package:trader_gpt/src/shared/widgets/text_widget.dart/dm_sns_text.dart';
 
 class EarningsItem extends StatelessWidget {
@@ -35,12 +36,14 @@ class EarningsItem extends StatelessWidget {
             fontWeight: TextFontWeightVariant.h4,
             variant: TextVariant.h4,
           ),
-          MdSnsText(
-            value,
-            color: textColor, // ✅ Conditional color apply ho raha hai
-            fontWeight: TextFontWeightVariant.h1,
-            variant: TextVariant.h4,
-          ),
+          value.isNotEmpty
+              ? MdSnsText(
+                  value,
+                  color: textColor, // ✅ Conditional color apply ho raha hai
+                  fontWeight: TextFontWeightVariant.h1,
+                  variant: TextVariant.h4,
+                )
+              : shimmerBox(height: 10, width: 100),
         ],
       ),
     );

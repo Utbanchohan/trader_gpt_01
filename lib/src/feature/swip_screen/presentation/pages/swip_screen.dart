@@ -64,13 +64,19 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
 
     _pageController = PageController(initialPage: pgeIndex);
 
-    /// cache screens (NO MORE REBUILD LAG)
     _startScreen = ConversationStart();
     _chatScreen = ChatConversation(
       chatRouting: widget.chatRouting,
       initialMessage: widget.question,
     );
-    _analyticsScreen = AnalyticsScreen(chatRouting: widget.chatRouting);
+    _analyticsScreen = AnalyticsScreen(
+      chatRouting: widget.chatRouting,
+      onShowPressed: () {
+        if (_pageController.hasClients) {
+          _pageController..jumpToPage(1);
+        }
+      },
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       openSheet(isFirstTime);
@@ -124,18 +130,8 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
     }
   }
 
-  getUser() async {
-    dynamic userData = await ref.watch(localDataProvider).getUser();
-    if (userData != null) {
-      setState(() {
-        userModel = User.fromJson(userData);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    getUser();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
@@ -155,7 +151,7 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
                       ? 0.h
                       : pgeIndex == 1
                       ? 60.h
-                      : 65.h
+                      : 0.h
                 : 0.h,
           ),
           child: _pageController.hasClients
@@ -172,75 +168,75 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
                             )
                           : ChatAppBar()
                     : pgeIndex == 2
-                    ? PreferredSize(
-                        preferredSize: Size.fromHeight(75.h),
-                        child: AppBar(
-                          automaticallyImplyLeading: false,
-                          backgroundColor: AppColors.primaryColor,
-                          elevation: 0,
-                          flexibleSpace: SafeArea(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        _pageController.jumpToPage(1);
-                                      },
-                                      child: Container(
-                                        width: 40.w,
-                                        height: 71.h,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: AssetImage(
-                                              Assets.images.shapeRightSide.path,
-                                            ),
-                                          ),
-                                        ),
-                                        padding: EdgeInsets.all(15),
-                                        child: Image.asset(
-                                          Assets.images.message.path,
-                                          width: 25.w,
-                                          height: 21.h,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        margin: EdgeInsets.only(left: 20),
-                                        child: Center(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Image.asset(
-                                                Assets.images.analytics.path,
-                                                width: 20.w,
-                                                height: 20,
-                                              ),
-
-                                              SizedBox(width: 6),
-                                              MdSnsText(
-                                                "ANALYTICS",
-                                                color: AppColors.white,
-                                                fontWeight:
-                                                    TextFontWeightVariant.h4,
-                                                variant: TextVariant.h3,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
+                    ? SizedBox()
+                    // PreferredSize(
+                    //     preferredSize: Size.fromHeight(75.h),
+                    //     child: AppBar(
+                    //       automaticallyImplyLeading: false,
+                    //       backgroundColor: AppColors.primaryColor,
+                    //       elevation: 0,
+                    //       flexibleSpace: SafeArea(
+                    //         child: Column(
+                    //           children: [
+                    //             Row(
+                    //               mainAxisAlignment:
+                    //                   MainAxisAlignment.spaceBetween,
+                    //               children: [
+                    //                 InkWell(
+                    //                   onTap: () {
+                    //                     _pageController.jumpToPage(1);
+                    //                   },
+                    //                   child: Container(
+                    //                     width: 40.w,
+                    //                     height: 71.h,
+                    //                     decoration: BoxDecoration(
+                    //                       image: DecorationImage(
+                    //                         image: AssetImage(
+                    //                           Assets.images.shapeRightSide.path,
+                    //                         ),
+                    //                       ),
+                    //                     ),
+                    //                     padding: EdgeInsets.all(15),
+                    //                     child: Image.asset(
+                    //                       Assets.images.message.path,
+                    //                       width: 25.w,
+                    //                       height: 21.h,
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //                 Expanded(
+                    //                   child: Container(
+                    //                     margin: EdgeInsets.only(left: 20),
+                    //                     child: Center(
+                    //                       child: Row(
+                    //                         mainAxisAlignment:
+                    //                             MainAxisAlignment.start,
+                    //                         children: [
+                    //                           Image.asset(
+                    //                             Assets.images.analytics.path,
+                    //                             width: 20.w,
+                    //                             height: 20,
+                    //                           ),
+                    //                           SizedBox(width: 6),
+                    //                           MdSnsText(
+                    //                             "ANALYTICS",
+                    //                             color: AppColors.white,
+                    //                             fontWeight:
+                    //                                 TextFontWeightVariant.h4,
+                    //                             variant: TextVariant.h3,
+                    //                           ),
+                    //                         ],
+                    //                       ),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   )
                     : SizedBox()
               : SizedBox(),
         ),
@@ -269,7 +265,7 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
               context.pushNamed(AppRoutes.myProfileScreen.name);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 20),
+              padding: EdgeInsets.only(right: 20),
               child: ClipOval(
                 child: userModel != null && userModel!.imgUrl.isNotEmpty
                     ? Image.network(

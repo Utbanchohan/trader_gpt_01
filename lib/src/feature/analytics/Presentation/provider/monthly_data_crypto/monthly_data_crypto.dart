@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/model/monthly_model/monthly_model.dart';
@@ -11,12 +12,17 @@ class MonthlyDataCrypto extends _$MonthlyDataCrypto {
   Future<ProbabilityResponse> build() async {
     return state.value!;
   }
+}
 
-  Future<ProbabilityResponse> getMonthlyData(ticker, assetType) async {
-    final res = await ref
-        .read(overviewRepositoryele)
-        .monthlyDataCrypto(ticker, assetType);
+@Riverpod(keepAlive: true)
+Future<ProbabilityResponse> getMonthlyDataCrypto(
+  Ref ref,
+  String ticker,
+  String assetType,
+) async {
+  final res = await ref
+      .read(overviewRepositoryele)
+      .monthlyDataCrypto(ticker, assetType);
 
-    return res;
-  }
+  return res;
 }

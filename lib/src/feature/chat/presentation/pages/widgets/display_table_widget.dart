@@ -251,7 +251,7 @@ class _GPTDisplayableTableContainerState
                     .map(
                       (c) => DataColumn(
                         label: MdSnsText(
-                          c.header,
+                          "  " + c.header + "  ",
                           variant: TextVariant.h4,
                           fontWeight: TextFontWeightVariant.h2,
                           color: AppColors.white,

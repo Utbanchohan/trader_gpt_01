@@ -34,7 +34,7 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
   String? imageUrl;
   User? user;
   getUser() async {
-    dynamic userData = await ref.watch(localDataProvider).getUser();
+    dynamic userData = await ref.read(localDataProvider).getUser();
     if (userData != null) {
       setState(() {
         userModel = User.fromJson(userData);
@@ -67,13 +67,14 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
 
   @override
   void initState() {
+    getUser();
+
     // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    getUser();
     final state = ref.watch(uploadNotifierProvider);
 
     return Scaffold(
