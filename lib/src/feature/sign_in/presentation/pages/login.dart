@@ -394,14 +394,14 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: 180,
+                      width: 160,
                       height: 55,
                       child: OutlinedButton(
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(color: AppColors.color274E87),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50.r),
+                            borderRadius: BorderRadius.circular(50),
                           ),
                         ),
                         child: Row(
@@ -425,14 +425,14 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                       ),
                     ),
                     SizedBox(
-                      width: 180,
+                      width: 160,
                       height: 55,
                       child: OutlinedButton(
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(color: AppColors.color274E87),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50.r),
+                            borderRadius: BorderRadius.circular(50),
                           ),
                         ),
                         child: Row(
