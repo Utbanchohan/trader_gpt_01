@@ -485,10 +485,10 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                 // width: widget.type == "user"
                 //     ? MediaQuery.sizeOf(context).width * 0.6.w
                 //     : MediaQuery.sizeOf(context).width * 0.85.w,
-                // padding: EdgeInsets.symmetric(
-                //   vertical: 10,
-                //   horizontal: widget.type == "user" ? 10 : 2,
-                // ),
+                padding: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: widget.type == "user" ? 10 : 2,
+                ),
                 decoration: BoxDecoration(
                   color: widget.type == "user"
                       ? AppColors.bubbleColor

@@ -374,8 +374,9 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
           topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(
-            sideTitles: SideTitles(
+            sideTitles: SideTitles(              minIncluded: false,
               maxIncluded: false,
+
               showTitles: true,
               reservedSize: 60,
               interval: safeInterval,
@@ -732,7 +733,7 @@ class _GPTEchartContainerState extends State<GPTEchartContainer> {
                     return Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 20, right: 20),
+                          padding: EdgeInsets.only(top: 30, right: 20),
                           child: Center(
                             child: Transform.rotate(
                               angle: -0.6,
