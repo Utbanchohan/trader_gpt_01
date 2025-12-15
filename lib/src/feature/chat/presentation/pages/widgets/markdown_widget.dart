@@ -331,6 +331,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                               ),
                       ),
                     ),
+                   
               SizedBox(width: 6),
               Visibility(
                 visible: widget.name != "TDGPT",
@@ -342,11 +343,11 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                           : "TradersGPT : #" + widget.name,
                       variant: TextVariant.h4,
                       fontWeight: TextFontWeightVariant.h3,
-
+          
                       color: AppColors.white,
                     ),
                     SizedBox(width: 6),
-
+          
                     // Visibility(
                     //   visible: widget.isStreaming ?? false,
                     //   child: GestureDetector(
@@ -359,7 +360,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                     //         final RenderBox overlay =
                     //             Overlay.of(context).context.findRenderObject()
                     //                 as RenderBox;
-
+          
                     //         final RelativeRect position = RelativeRect.fromRect(
                     //           Rect.fromPoints(
                     //             button.localToGlobal(
@@ -374,7 +375,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                     //           Offset.zero & overlay.size,
                     //         );
                     //         setState(() {});
-
+          
                     //         // showDialog(
                     //         //   context: context,
                     //         //   builder: (context) => AlertDialog(
@@ -400,9 +401,9 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                     //         //             variant: TextVariant.h2,
                     //         //             fontWeight: TextFontWeightVariant.h4,
                     //         //           ),
-
+          
                     //         //           SizedBox(height: 5.h),
-
+          
                     //         //           Row(
                     //         //             children: [
                     //         //               Icon(
@@ -420,9 +421,9 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                     //         //               ),
                     //         //             ],
                     //         //           ),
-
+          
                     //         //           SizedBox(height: 10.h),
-
+          
                     //         //           widget.updatesAskStream.isNotEmpty &&
                     //         //                   widget
                     //         //                           .updatesAskStream[0]
@@ -481,13 +482,13 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                 : CrossAxisAlignment.end,
             children: [
               Container(
-                width: widget.type == "user"
-                    ? MediaQuery.sizeOf(context).width * 0.6.w
-                    : MediaQuery.sizeOf(context).width * 0.85.w,
-                padding: EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: widget.type == "user" ? 10 : 2,
-                ),
+                // width: widget.type == "user"
+                //     ? MediaQuery.sizeOf(context).width * 0.6.w
+                //     : MediaQuery.sizeOf(context).width * 0.85.w,
+                // padding: EdgeInsets.symmetric(
+                //   vertical: 10,
+                //   horizontal: widget.type == "user" ? 10 : 2,
+                // ),
                 decoration: BoxDecoration(
                   color: widget.type == "user"
                       ? AppColors.bubbleColor
@@ -495,196 +496,191 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 // child: Flexible(
-                child: SizedBox(
-                  width: widget.type == "user"
-                      ? MediaQuery.sizeOf(context).width * 0.6.w
-                      : MediaQuery.sizeOf(context).width * 0.85.w,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      widget.type != "user"
-                          ? displayableData != null &&
-                                    displayableData!.chartType ==
-                                        "candlestick" &&
-                                    candleChartData.isNotEmpty
-                                ? CustomCandleChart(
-                                    fromChat: true,
-                                    key: UniqueKey(),
-                                    selectedItem: "",
-
-                                    name: displayableData!.title.toString(),
-                                    data: candleChartData,
-
-                                    onPressed: (val) {
-                                      if (!mounted) return;
-                                    },
-                                  )
-                                : model != null &&
-                                      model!.xAxis.isNotEmpty &&
-                                      model!.yAxis.isNotEmpty
-                                ? SizedBox(
-                                    height:
-                                        MediaQuery.sizeOf(context).height *
-                                        0.3.h,
-                                    width:
-                                        MediaQuery.sizeOf(context).width *
-                                        0.85.w,
-                                    child: SizedBox(
-                                      height: 500,
-                                      child:
-                                          //  ChartWidget(
-                                          //   chartData: ChartDataNewWidget(
-                                          //     title: 'Sales Performance',
-                                          //     chartType: 'candlestick',
-                                          //     data: model!.yAxis,
-                                          //     xAxis: model!.xAxis,
-                                          //     legend: ['Sales'],
-                                          //   ),
-                                          // ),
-                                          ChartExample(
-                                            data: model!.yAxis,
-                                            xAxis: model!.xAxis,
-                                          ),
-                                    ),
-                                  )
-                                : dataTable.isNotEmpty && headings.isNotEmpty
-                                ? GPTDisplayableTableContainer(
-                                    tableData: TableData(
-                                      cols: headings,
-                                      data: dataTable,
-                                    ),
-                                    // headings: headings,
-                                    // //  [
-                                    // //   "Date",
-                                    // //   "Revenue Avg",
-                                    // //   "Ebita Avg",
-                                    // //   "Net Income Avg",
-                                    // //   "Eps Svg",
-                                    // // ],
-                                    // modelOfTable: modelOfTable,
-                                  )
-                                : SizedBox()
-                          : SizedBox(),
-                      SizedBox(
-                        height:
-                            (widget.type != "user" &&
-                                    model != null &&
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    widget.type != "user"
+                        ? displayableData != null &&
+                                  displayableData!.chartType ==
+                                      "candlestick" &&
+                                  candleChartData.isNotEmpty
+                              ? CustomCandleChart(
+                                  fromChat: true,
+                                  key: UniqueKey(),
+                                  selectedItem: "",
+                
+                                  name: displayableData!.title.toString(),
+                                  data: candleChartData,
+                
+                                  onPressed: (val) {
+                                    if (!mounted) return;
+                                  },
+                                )
+                              : model != null &&
                                     model!.xAxis.isNotEmpty &&
-                                    model!.yAxis.isNotEmpty) ||
-                                (dataTable.isNotEmpty)
-                            ? 10
-                            : 0,
-                      ),
-                      SizedBox(
-                        height:
-                            displayableData != null &&
-                                displayableData!.chartType == "candlestick" &&
-                                candleChartData.isNotEmpty
-                            ? 10
-                            : 0,
-                      ),
-                      Markdown(
-                        padding: EdgeInsets.all(0),
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        data: widget.message,
-                        listItemCrossAxisAlignment:
-                            MarkdownListItemCrossAxisAlignment.start,
-                        selectable: true,
-                        controller: scrollController,
-
-                        styleSheet:
-                            MarkdownStyleSheet.fromTheme(
-                              Theme.of(context),
-                            ).copyWith(
-                              tableColumnWidth: FixedColumnWidth(120.w),
-                              tableScrollbarThumbVisibility: false,
-                              tableBorder: TableBorder.all(
-                                color: Colors.white24,
-                              ),
-                              tableCellsPadding: const EdgeInsets.all(8),
-                              tableHead: GoogleFonts.plusJakartaSans(
-                                color: AppColors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-
-                              tableHeadAlign: TextAlign.center,
-                              tablePadding: EdgeInsets.all(10),
-                              tableCellsDecoration: BoxDecoration(),
-                              tableVerticalAlignment:
-                                  TableCellVerticalAlignment.middle,
-                              blockquotePadding: EdgeInsets.zero,
-                              blockquoteDecoration: const BoxDecoration(
-                                color: Colors.transparent,
-                                border: Border(),
-                              ),
-
-                              horizontalRuleDecoration: const BoxDecoration(
-                                border: Border(
-                                  top: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 0,
+                                    model!.yAxis.isNotEmpty
+                              ? SizedBox(
+                                  height:
+                                      MediaQuery.sizeOf(context).height *
+                                      0.3.h,
+                                  width:
+                                      MediaQuery.sizeOf(context).width *
+                                      0.85.w,
+                                  child: SizedBox(
+                                    height: 500,
+                                    child:
+                                        //  ChartWidget(
+                                        //   chartData: ChartDataNewWidget(
+                                        //     title: 'Sales Performance',
+                                        //     chartType: 'candlestick',
+                                        //     data: model!.yAxis,
+                                        //     xAxis: model!.xAxis,
+                                        //     legend: ['Sales'],
+                                        //   ),
+                                        // ),
+                                        ChartExample(
+                                          data: model!.yAxis,
+                                          xAxis: model!.xAxis,
+                                        ),
                                   ),
+                                )
+                              : dataTable.isNotEmpty && headings.isNotEmpty
+                              ? GPTDisplayableTableContainer(
+                                  tableData: TableData(
+                                    cols: headings,
+                                    data: dataTable,
+                                  ),
+                                  // headings: headings,
+                                  // //  [
+                                  // //   "Date",
+                                  // //   "Revenue Avg",
+                                  // //   "Ebita Avg",
+                                  // //   "Net Income Avg",
+                                  // //   "Eps Svg",
+                                  // // ],
+                                  // modelOfTable: modelOfTable,
+                                )
+                              : SizedBox()
+                        : SizedBox(),
+                    SizedBox(
+                      height:
+                          (widget.type != "user" &&
+                                  model != null &&
+                                  model!.xAxis.isNotEmpty &&
+                                  model!.yAxis.isNotEmpty) ||
+                              (dataTable.isNotEmpty)
+                          ? 10
+                          : 0,
+                    ),
+                    SizedBox(
+                      height:
+                          displayableData != null &&
+                              displayableData!.chartType == "candlestick" &&
+                              candleChartData.isNotEmpty
+                          ? 10
+                          : 0,
+                    ),
+                    Markdown(
+                      padding: EdgeInsets.all(0),
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      data: widget.message,
+                      listItemCrossAxisAlignment:
+                          MarkdownListItemCrossAxisAlignment.start,
+                      selectable: true,
+                      controller: scrollController,
+                
+                      styleSheet:
+                          MarkdownStyleSheet.fromTheme(
+                            Theme.of(context),
+                          ).copyWith(
+                            tableColumnWidth: FixedColumnWidth(120.w),
+                            tableScrollbarThumbVisibility: false,
+                            tableBorder: TableBorder.all(
+                              color: Colors.white24,
+                            ),
+                            tableCellsPadding: const EdgeInsets.all(8),
+                            tableHead: GoogleFonts.plusJakartaSans(
+                              color: AppColors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                
+                            tableHeadAlign: TextAlign.center,
+                            tablePadding: EdgeInsets.all(10),
+                            tableCellsDecoration: BoxDecoration(),
+                            tableVerticalAlignment:
+                                TableCellVerticalAlignment.middle,
+                            blockquotePadding: EdgeInsets.zero,
+                            blockquoteDecoration: const BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border(),
+                            ),
+                
+                            horizontalRuleDecoration: const BoxDecoration(
+                              border: Border(
+                                top: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 0,
                                 ),
                               ),
-
-                              pPadding: EdgeInsets.zero,
-                              p: GoogleFonts.plusJakartaSans(
-                                color: AppColors.white,
-                                height: 1.5,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              h1: GoogleFonts.plusJakartaSans(
-                                color: AppColors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              h2: GoogleFonts.plusJakartaSans(
-                                color: AppColors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              h3: GoogleFonts.plusJakartaSans(
-                                color: AppColors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              h4: GoogleFonts.plusJakartaSans(
-                                color: AppColors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              h5: GoogleFonts.plusJakartaSans(
-                                color: AppColors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              h6: GoogleFonts.plusJakartaSans(
-                                color: AppColors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              code: GoogleFonts.plusJakartaSans(
-                                color: AppColors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              tableBody: GoogleFonts.plusJakartaSans(
-                                color: AppColors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
                             ),
-                        onTapLink: (text, href, title) {
-                          if (href != null) {
-                            launchUrl(Uri.parse(href));
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+                
+                            pPadding: EdgeInsets.zero,
+                            p: GoogleFonts.plusJakartaSans(
+                              color: AppColors.white,
+                              height: 1.5,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            h1: GoogleFonts.plusJakartaSans(
+                              color: AppColors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            h2: GoogleFonts.plusJakartaSans(
+                              color: AppColors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            h3: GoogleFonts.plusJakartaSans(
+                              color: AppColors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            h4: GoogleFonts.plusJakartaSans(
+                              color: AppColors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            h5: GoogleFonts.plusJakartaSans(
+                              color: AppColors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            h6: GoogleFonts.plusJakartaSans(
+                              color: AppColors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            code: GoogleFonts.plusJakartaSans(
+                              color: AppColors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            tableBody: GoogleFonts.plusJakartaSans(
+                              color: AppColors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                      onTapLink: (text, href, title) {
+                        if (href != null) {
+                          launchUrl(Uri.parse(href));
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 10),
