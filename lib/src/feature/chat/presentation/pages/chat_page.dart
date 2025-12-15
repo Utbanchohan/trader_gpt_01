@@ -695,12 +695,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       drawer: SideMenu(),
       appBar: ChatAppBar(),
 
-      body: Column(
+      body: Column(crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: ListView(
               controller: sc,
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               children: [
                 if (boolLoadMoreLoader)
                   SizedBox(

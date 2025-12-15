@@ -259,7 +259,7 @@ class _ChatMarkdownWidgetState extends State<ChatMarkdownWidget> {
     return Visibility(
       visible: widget.message.isNotEmpty,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        // crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Row(
             mainAxisAlignment: widget.type == "user"
