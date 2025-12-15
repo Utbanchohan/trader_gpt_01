@@ -713,7 +713,7 @@ class _AnalysisApi implements AnalysisApi {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'chartapi/stocks?symbol=${symbol}&interval=${interval}&start_date=${start_date}&end_date=${end_date}&sub_points=${sub_points}&data_point=${data_point}',
+            'chartapi/prices?symbol=${symbol}&interval=${interval}&start_date=${start_date}&end_date=${end_date}&sub_points=${sub_points}&data_point=${data_point}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -855,7 +855,7 @@ class _AnalysisApi implements AnalysisApi {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            'chartapi/crypto?symbol=${symbol}&interval=${interval}&start_date=${start_date}&end_date=${end_date}&sub_points=${sub_points}&data_point=${data_point}',
+            'chartapi/prices?symbol=${symbol}&interval=${interval}&start_date=${start_date}&end_date=${end_date}&sub_points=${sub_points}&data_point=${data_point}',
             queryParameters: queryParameters,
             data: _data,
           )

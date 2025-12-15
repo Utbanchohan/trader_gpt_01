@@ -656,7 +656,6 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                               color: AppColors.white.withOpacity(0.3),
                             ),
 
-                            /// Deep Analysis
                             PopupMenuItem(
                               enabled: false,
                               padding: EdgeInsets.all(10.w),
@@ -745,10 +744,8 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      // ✅ TextField
                                       TextField(
                                         controller: widget.messageController,
-
                                         style: const TextStyle(
                                           color: AppColors.white,
                                           fontSize: 14,
@@ -756,6 +753,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                         keyboardType: TextInputType.multiline,
                                         minLines: 1,
                                         maxLines: 5,
+                                        enableInteractiveSelection: true,
                                         scrollController:
                                             widget.textScrollController,
                                         onChanged: (value) {
@@ -892,8 +890,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                             ),
                                           ),
                                           child: SizedBox(
-                                            height: 40
-                                                .h, // 👈 fixed height to keep vertical alignment perfect
+                                            height: 40.h,
                                             child: TextField(
                                               controller:
                                                   widget.limitController,
@@ -903,8 +900,8 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                                 color: AppColors.white,
                                                 fontSize: 14,
                                               ),
-                                              textAlignVertical: TextAlignVertical
-                                                  .center, // 👈 centers text vertically
+                                              textAlignVertical:
+                                                  TextAlignVertical.center,
                                               decoration: InputDecoration(
                                                 isDense: true,
                                                 filled: true,
@@ -999,7 +996,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                                         ),
                                         child: IconButton(
                                           padding: EdgeInsets.zero,
-                                          icon: const Icon(
+                                          icon: Icon(
                                             Icons.arrow_upward_rounded,
                                             color: AppColors.white,
                                             size: 15,

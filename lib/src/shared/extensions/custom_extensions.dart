@@ -54,12 +54,26 @@ String formatDateMMDDYYYY(String date) {
   }
 }
 
-String formatDateMMYYY(String date) {
+String formatDateDDMMYY(String date) {
   try {
-    return DateFormat('MM, yy').format(DateTime.parse(date));
-  } catch (_) {
-    return '-';
+    return DateFormat('dd/MM/yy').format(DateTime.parse(date));
+  } catch (e) {
+    // Check if format is "MM,YY" like "04,23"
+    final parts = date.split(',');
+    if (parts.length == 2) {
+      final mm = int.tryParse(parts[0]);
+      final yy = int.tryParse(parts[1]);
+
+      if (mm != null && yy != null) {
+        // Convert 2-digit year into full year → 2000–2099
+        final fullYear = 2000 + yy;
+
+        final dt = DateTime(fullYear, mm, 1);
+        return DateFormat('dd/MM/yy').format(dt);
+      }
+    }
   }
+  return date;
 }
 
 String formatDateMMddYY(String date) {

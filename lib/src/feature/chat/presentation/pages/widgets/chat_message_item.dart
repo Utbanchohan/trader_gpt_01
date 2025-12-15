@@ -32,25 +32,20 @@ class ChatMessagesView extends StatelessWidget {
               : chatRouting!.image
         : user!.imgUrl;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        ChatMarkdownWidget(
-          updatesAskStream: [],
-          message: chats.message,
-          name: name,
-          image: image,
-          symbolType: chatRouting?.type ?? "",
-          type: chats.type,
-          display:
-              chats.displayable != null && chats.displayable!.Display.isNotEmpty
-              ? chats.displayable!.Display
-              : [],
-          messageId: chats.chatId,
-          runId: chats.runId,
-          isStreaming: false,
-        ),
-      ],
+    return ChatMarkdownWidget(
+      updatesAskStream: [],
+      message: chats.message,
+      name: name,
+      image: image,
+      symbolType: chatRouting?.type ?? "",
+      type: chats.type,
+      display:
+          chats.displayable != null && chats.displayable!.Display.isNotEmpty
+          ? chats.displayable!.Display
+          : [],
+      messageId: chats.chatId,
+      runId: chats.runId,
+      isStreaming: false,
     );
   }
 }

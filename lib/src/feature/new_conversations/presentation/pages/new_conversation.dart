@@ -53,7 +53,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   User? userModel;
 
   getUser() async {
-    dynamic userData = await ref.watch(localDataProvider).getUser();
+    dynamic userData = await ref.read(localDataProvider).getUser();
     if (userData != null) {
       setState(() {
         userModel = User.fromJson(userData);
@@ -65,6 +65,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
   void initState() {
     super.initState();
     getStocks();
+    getUser();
   }
 
   void _startPollingSearch(val) async {
@@ -181,7 +182,8 @@ class _NewConversationState extends ConsumerState<NewConversation> {
           image: "",
           companyName: stock.companyName,
           price: stock.price,
-          changePercentage: stock.pctChange,
+          changePercentage:
+              double.tryParse(stock.pct_change.replaceAll('%', '')) ?? 0,
           trendChart: trend,
           stockid: stock.stockId,
         ),
@@ -220,8 +222,6 @@ class _NewConversationState extends ConsumerState<NewConversation> {
 
   @override
   Widget build(BuildContext context) {
-    getUser();
-
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       resizeToAvoidBottomInset: true,
@@ -426,9 +426,9 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                           : stocks.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 0.95,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: 0.89,
                       ),
                       itemBuilder: (context, index) {
                         Stock stock =
@@ -444,7 +444,7 @@ class _NewConversationState extends ConsumerState<NewConversation> {
                             symbol: stock.symbol,
                             company: stock.companyName,
                             price: stock.price,
-                            change: stock.pctChange,
+                            change: stock.pct_change,
                             image: stock.type,
                             trendchart:
                                 stock.fiveDayTrend.isNotEmpty &&
@@ -485,7 +485,7 @@ class BuildStockCard extends ConsumerStatefulWidget {
   final String symbol;
   final String company;
   double price;
-  double change;
+  String change;
   final String image;
   FiveDayTrend trendchart;
   String stockId;
@@ -545,10 +545,16 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
 
     widget.change = liveStock != null
         ? PriceUtils.getChangesPercentage(
-                liveStock.price,
-                liveStock.previousClose,
-              ) ??
-              widget.change
+                        liveStock.price,
+                        liveStock.previousClose,
+                      ) !=
+                      null &&
+                  liveStock.price != liveStock.previousClose
+              ? PriceUtils.getChangesPercentage(
+                  liveStock.price,
+                  liveStock.previousClose,
+                ).toString()
+              : widget.change
         : widget.change;
 
     return Container(
@@ -627,7 +633,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 40,
+                    width: 49,
                     child: MdSnsText(
                       widget.symbol,
                       color: Colors.white,
@@ -682,13 +688,15 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
                 size: 20,
               ),
               MdSnsText(
-                Filters.systemNumberConvention(
-                      widget.change,
-                      isPrice: false,
-                      isAbs: false,
-                      alwaysShowTwoDecimal: true,
-                    ) +
-                    "%",
+                widget.change.isEmpty
+                    ? "0.00%"
+                    : Filters.systemNumberConvention(
+                            widget.change,
+                            isPrice: false,
+                            isAbs: false,
+                            alwaysShowTwoDecimal: true,
+                          ).replaceAll('%', '') +
+                          "%",
 
                 color: widget.change.toString().contains("-")
                     ? AppColors.redFF3B3B
@@ -721,7 +729,7 @@ class _BuildStockCardState extends ConsumerState<BuildStockCard>
               fillGradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: widget.change < 0
+                colors: widget.change.toString().contains('-')
                     ? [
                         AppColors.redFF3B3B.withOpacity(0.5),
                         AppColors.redFF3B3B.withOpacity(0.2),

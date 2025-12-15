@@ -48,16 +48,19 @@ class _ConversationChatAppBarState
     final stockManagerState = ref.watch(stocksManagerProvider);
 
     final liveStock = stockManagerState[widget.chatRouting?.stockid ?? ''];
-    double change =
-        PriceUtils.getChangesPercentage(
-              liveStock != null ? liveStock.price : widget.chatRouting!.price,
-          liveStock != null ? liveStock.previousClose :    widget.chatRouting!.previousClose,
-            ) !=
-            null
+    double change = liveStock != null && liveStock.stockId.isNotEmpty
         ? PriceUtils.getChangesPercentage(
-            liveStock != null ? liveStock.price : widget.chatRouting!.price,
-           liveStock != null ?liveStock.previousClose:    widget.chatRouting!.previousClose,
-          )!
+                        liveStock.price,
+                        liveStock.previousClose,
+                      ) !=
+                      null &&
+                  liveStock.price != liveStock.previousClose
+              ? PriceUtils.getChangesPercentage(
+                      liveStock.price,
+                      liveStock.previousClose,
+                    ) ??
+                    0
+              : widget.chatRouting!.changePercentage
         : widget.chatRouting!.changePercentage;
 
     if (widget.chatRouting == null || widget.chatRouting!.companyName.isEmpty) {
@@ -198,7 +201,13 @@ class _ConversationChatAppBarState
                       size: 20,
                     ),
                     MdSnsText(
-                           " " +Filters.systemNumberConvention(change,isPrice: false,containerWidth: 50) +"%",
+                      " " +
+                          Filters.systemNumberConvention(
+                            change,
+                            isPrice: false,
+                            containerWidth: 50,
+                          ) +
+                          "%",
                       color: change < 0
                           ? AppColors.redFF3B3B
                           : AppColors.color06D54E,

@@ -60,7 +60,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   }
 
   getUser() async {
-    dynamic userData = await ref.watch(localDataProvider).getUser();
+    dynamic userData = await ref.read(localDataProvider).getUser();
     if (userData != null) {
       setState(() {
         userModel = User.fromJson(userData);
@@ -98,14 +98,13 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   void initState() {
     // getStocks();
     getChats();
+    getUser();
     // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    getUser();
-
     return Drawer(
       backgroundColor: AppColors.primaryColor,
       child: SafeArea(

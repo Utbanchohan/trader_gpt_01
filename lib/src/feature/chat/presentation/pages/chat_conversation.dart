@@ -68,6 +68,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   bool isWorkFlow = false;
   bool isWorkLimit = false;
+  final FocusNode messageFocus = FocusNode();
 
   bool isWorkSymbol = false;
   int chatPage = 1;
@@ -79,7 +80,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   void initState() {
     message.text = widget.initialMessage;
     getChatsId();
-
+    getUser();
     selectedStock = _mapChatRoutingToStock(widget.chatRouting);
     if (selectedStock!.symbol.isNotEmpty) {
       getRandomQuestions(selectedStock!.symbol);
@@ -101,20 +102,29 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   loadChats(String id, int page) async {
     try {
-      boolLoadMoreLoader = true;
+      setState(() {
+        boolLoadMoreLoader = true;
+      });
+
       var res = await ref.read(chatRepository).getMessages(id, page);
       if (res.isSuccess != null && res.isSuccess!) {
-        boolLoadMoreLoader = false;
+        setState(() {
+          boolLoadMoreLoader = false;
+        });
 
         for (int i = res.data!.messages!.length - 1; i >= 0; i--) {
           chats.insert(0, res.data!.messages![i]);
         }
       } else {
-        boolLoadMoreLoader = false;
+        setState(() {
+          boolLoadMoreLoader = false;
+        });
         return false;
       }
     } catch (e) {
-      boolLoadMoreLoader = false;
+      setState(() {
+        boolLoadMoreLoader = false;
+      });
     } finally {
       boolLoadMoreLoader = false;
     }
@@ -152,48 +162,47 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   }
 
   Future<void> _handleWorkflowSelection(int index) async {
-    setState(() => isWorkFlow = true);
-    setState(() => isWorkLimit = false);
-
     final workflow = workflows[index];
     final params = workflow.parameters ?? [];
 
     if (params.isNotEmpty && params.first.name == "symbol") {
       setState(() {
+        isWorkFlow = true;
         isWorkSymbol = true;
         isWorkLimit = false;
       });
 
-      String message = workflow.query.replaceAll(
+      String messageText = workflow.query.replaceAll(
         "{symbol}",
         selectedStock!.symbol,
       );
-      _setMessage(message);
+      _setMessage(messageText);
       _closeDialogs();
-
       selectedWorkFlow = workflow;
     } else if (params.isNotEmpty && params.first.name == "limit") {
       setState(() {
+        isWorkFlow = true;
         isWorkLimit = true;
         isWorkSymbol = false;
       });
-      String message = workflow.query.replaceAll(
+      String messageText = workflow.query.replaceAll(
         "{symbol}",
         selectedStock!.symbol,
       );
-      _setMessage(message);
+      _setMessage(messageText);
       selectedWorkFlow = workflow;
       _closeDialogs();
     } else {
       setState(() {
+        isWorkFlow = true;
         isWorkSymbol = false;
         isWorkLimit = false;
       });
-      String message = workflow.query.replaceAll(
+      String messageText = workflow.query.replaceAll(
         "{symbol}",
         selectedStock!.symbol,
       );
-      _setMessage(message);
+      _setMessage(messageText);
       selectedWorkFlow = workflow;
       _closeDialogs();
     }
@@ -255,6 +264,7 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                                 color: AppColors.color9EAAC0,
                                 variant: TextVariant.h4,
                                 fontWeight: TextFontWeightVariant.h4,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
@@ -305,10 +315,11 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     MdSnsText(
-                      "/${workflows[index].displayName}",
+                      "/" + workflows[index].displayName,
                       color: AppColors.white,
                       variant: TextVariant.h2,
                       fontWeight: TextFontWeightVariant.h4,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
                     MdSnsText(
@@ -358,8 +369,12 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (sc.hasClients) {
-        sc.jumpTo(sc.position.maxScrollExtent); // 👈 instantly jump to bottom
+      if (sc.hasClients && mounted) {
+        try {
+          sc.jumpTo(sc.position.maxScrollExtent);
+        } catch (e) {
+          debugPrint("Scroll error: $e");
+        }
       }
     });
   }
@@ -457,106 +472,115 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
   }
 
   void _sendMessage(WidgetRef ref) async {
-    String userid = ref.watch(localDataProvider).getUserId;
+    final userid = ref.read(localDataProvider).getUserId;
     final text = message.text.trim();
-    if (text.isNotEmpty) {
-      var res = await ref
-          .read(chatProviderProvider.notifier)
-          .sendMessage(
-            ChatMessageDto(chatId: chadId!, message: text, type: "user"),
-          );
-      if (res != null) {
-        body = StreamDto(
-          task: message.text,
-          symbol: selectedStock != null ? selectedStock!.symbol : "TDGPT",
-          symbolName: selectedStock != null
-              ? selectedStock!.companyName
-              : "TraderGPT",
-          report: report ?? false,
-          isWebResearch: webMode ?? false,
-          deepSearch: deepAnalysis ?? false,
-          chatId: chadId!,
-          replyId: "68c1d2c86d162417bca6fc8e",
-          workflowObject: isWorkFlow
-              ? WorkflowObject(
-                  isStock: selectedWorkFlow!.isStock ?? false,
-                  name: selectedWorkFlow!.name,
-                  displayName: selectedWorkFlow!.displayName,
-                  description: selectedWorkFlow!.description,
-                  query: selectedWorkFlow!.query,
-                  companyName: selectedStock != null
-                      ? selectedStock!.companyName
-                      : "TraderGPT",
-                  parameters:
-                      selectedWorkFlow!.parameters != null &&
-                          selectedWorkFlow!.parameters!.isNotEmpty
-                      ? [
-                          WorkflowParameter(
-                            name: selectedWorkFlow!.parameters![0].name,
-                            required:
-                                selectedWorkFlow!.parameters![0].isRequired,
-                            description:
-                                selectedWorkFlow!.parameters![0].description!,
-                            value: selectedStock != null
-                                ? selectedStock!.symbol
-                                : "TDGPT",
-                            disabled: true,
-                          ),
-                        ]
-                      : [],
-                  label: "/${selectedWorkFlow!.displayName}",
-                )
-              : null,
-          analysisRequired: false,
-          isWorkflow: isWorkFlow,
-        ).toJson();
 
-        setState(() {
-          if (oldResponse != null) {
-            chats.add(
-              ChatMessageModel(
-                id: "temp",
-                chatId: chadId!,
-                message: oldResponse!,
-                displayable: Displayable(Display: oldDisplays),
-                type: "ai",
-                userId: userid,
-                createdAt: DateTime.now(),
-                updatedAt: DateTime.now(),
-              ),
-            );
-          }
+    if (text.isEmpty || chadId == null) return;
+
+    final sendText = text;
+    message.clear();
+
+    if (mounted) FocusScope.of(context).requestFocus(messageFocus);
+    if (mounted) {
+      setState(() {
+        if (oldResponse != null) {
           chats.add(
             ChatMessageModel(
-              id: "temp",
+              id: DateTime.now().microsecondsSinceEpoch.toString(),
               chatId: chadId!,
-              message: text,
-              type: "user",
+              message: oldResponse!,
+              type: "ai",
               userId: userid,
+              displayable: Displayable(Display: oldDisplays),
               createdAt: DateTime.now(),
               updatedAt: DateTime.now(),
             ),
           );
+        }
 
-          startStream = true;
-          isWorkFlow = false;
-          isWorkSymbol = false;
-          isWorkLimit = false;
-          setState(() {});
-        });
+        chats.add(
+          ChatMessageModel(
+            id: DateTime.now().microsecondsSinceEpoch.toString(),
+            chatId: chadId!,
+            message: sendText,
+            type: "user",
+            userId: userid,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+        );
+
+        startStream = true;
+        isWorkFlow = false;
+        isWorkSymbol = false;
+        isWorkLimit = false;
+      });
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
+
+    WorkflowObject? workflowObj;
+    if (isWorkFlow && selectedWorkFlow != null) {
+      workflowObj = WorkflowObject(
+        isStock: selectedWorkFlow!.isStock ?? false,
+        name: selectedWorkFlow!.name,
+        displayName: selectedWorkFlow!.displayName,
+        description: selectedWorkFlow!.description ?? "",
+        query: selectedWorkFlow!.query ?? "",
+        companyName: selectedStock?.companyName ?? "TraderGPT",
+        parameters:
+            (selectedWorkFlow!.parameters != null &&
+                selectedWorkFlow!.parameters!.isNotEmpty)
+            ? [
+                WorkflowParameter(
+                  name: selectedWorkFlow!.parameters![0].name,
+                  required: selectedWorkFlow!.parameters![0].isRequired,
+                  description:
+                      selectedWorkFlow!.parameters![0].description ?? "",
+                  value: selectedStock?.symbol ?? "TDGPT",
+                  disabled: true,
+                ),
+              ]
+            : [],
+        label: "/${selectedWorkFlow!.displayName}",
+      );
+    }
+
+    body = StreamDto(
+      task: sendText,
+      symbol: selectedStock?.symbol ?? "TDGPT",
+      symbolName: selectedStock?.companyName ?? "TraderGPT",
+      report: report ?? false,
+      isWebResearch: webMode ?? false,
+      deepSearch: deepAnalysis ?? false,
+      chatId: chadId!,
+      replyId: "68c1d2c86d162417bca6fc8e",
+      workflowObject: workflowObj,
+      analysisRequired: false,
+      isWorkflow: isWorkFlow,
+    ).toJson();
+
+    ref
+        .read(chatProviderProvider.notifier)
+        .sendMessage(
+          ChatMessageDto(chatId: chadId!, message: sendText, type: "user"),
+        )
+        .catchError((e) => debugPrint("SendMessage Error: $e"));
+
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (mounted) {
+        messageFocus.requestFocus();
         scrollToBottom();
       }
-
-      message.clear();
-    }
+    });
   }
 
   getUser() async {
-    dynamic userData = await ref.watch(localDataProvider).getUser();
+    dynamic userData = await ref.read(localDataProvider).getUser();
     if (userData != null) {
-      // setState(() {
-      user = User.fromJson(userData);
-      // });
+      setState(() {
+        user = User.fromJson(userData);
+      });
     }
   }
 
@@ -568,7 +592,6 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
 
   @override
   Widget build(BuildContext context) {
-    getUser();
     final asyncStream = startStream
         ? ref.watch(sseProvider(body))
         : const AsyncValue.data({
@@ -577,160 +600,141 @@ class _ChatConversationState extends ConsumerState<ChatConversation> {
             "chart": [],
             "updates": "",
           });
-
-    asyncStream.whenData((data) {
-      followupQuestions = data["followUp"].isNotEmpty
-          ? (data["followUp"] as List<String>?) ?? []
-          : [];
-      if (data["updates"].isNotEmpty) {
-        for (var data in data["updates"]) {
-          updatesAskQuestions.add(AnalysisTask.fromJson(data));
-        }
-      }
-
-      if (followupQuestions.isNotEmpty) {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          if (!dialogOpen) {
-            final chartText = data["chart"] ?? [];
-            oldDisplays = chartText.map<String>((e) => e.toString()).toList();
-            oldResponse = data["buffer"];
-            showDialogue(questions, followupQuestions, message, 1);
-            changeDialogueStatus();
-          }
-        });
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          if (!dialogOpen) {
-            final chartText = data["chart"] ?? [];
-            oldDisplays = chartText.map<String>((e) => e.toString()).toList();
-            oldResponse = data["buffer"];
-          }
-        });
-      }
-    });
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
-      bottomNavigationBar: SafeArea(
-        bottom: true,
-        child: ChatBottomBar(
-          messageController: message,
-
-          limitController: limit,
-          textScrollController: _textScrollController,
-          isWorkFlow: isWorkFlow,
-          isWorkSymbol: isWorkSymbol,
-          selectedStock: selectedStock,
-          isWorkLimit: isWorkLimit,
-          webMode: webMode ?? false,
-          report: report ?? false,
-          deepAnalysis: deepAnalysis ?? false,
-          onSend: () => _sendMessage(ref),
-          onPrefixTap: () async {
-            if (widget.chatRouting == null ||
-                widget.chatRouting!.companyName.isEmpty) {
-              selectedStock = await showDialogue(questions, [], message, 0);
-            } else {
-              showDialogue(questions, [], message, 0);
-            }
-          },
-          onDeleteWorkflow: () {
-            isWorkSymbol = false;
-            isWorkFlow = false;
-            isWorkLimit = false;
-            message.clear();
-            setState(() {});
-          },
-          onSlashDetected: (ctx) => questionDialog(ctx),
-          onWebModeChanged: (val) => setState(() => webMode = val),
-          onReportChanged: (val) => setState(() => report = val),
-          onDeepAnalysisChanged: (val) => setState(() => deepAnalysis = val),
-        ),
-      ),
-
       backgroundColor: AppColors.primaryColor,
-      // appBar: ConversationChatAppBar(chatRouting: widget.chatRouting),
-      body: SingleChildScrollView(
-        controller: sc,
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            boolLoadMoreLoader
-                ? LoadingWidget(height: 20, width: 20, color: AppColors.white)
-                : SizedBox(),
-            chats.isNotEmpty
-                ? Column(
-                    children: [
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: chats.length,
-                        itemBuilder: (_, index) {
-                          return ChatMessagesView(
-                            chats: chats[index],
-                            chatRouting: widget.chatRouting,
-                            user: user,
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return SizedBox(height: 20);
-                        },
-                      ),
-                      asyncStream.when(
-                        data: (line) {
-                          final text = line["buffer"] ?? "";
-                          final chartText = line["chart"] ?? [];
-                          List<String> chartStrings = chartText
-                              .map<String>((e) => e.toString())
-                              .toList();
-                          return text.isNotEmpty
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    SizedBox(height: 20),
-
-                                    ChatMarkdownWidget(
-                                      updatesAskStream: updatesAskQuestions,
-                                      message: text.toString(),
-                                      name:
-                                          widget.chatRouting?.symbol ?? "TDGPT",
-                                      image: widget.chatRouting?.image ?? "",
-                                      type: "ai",
-                                      symbolType:
-                                          widget.chatRouting?.type ?? "",
-                                      display: chartStrings,
-                                      messageId: "",
-                                      runId: "",
-                                      isStreaming: true,
-                                    ),
-                                  ],
-                                )
-                              : SizedBox();
-                        },
-                        loading: () => Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [LoadingWidgetMarkdown()],
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              controller: sc,
+              padding: EdgeInsets.all(16),
+              children: [
+                if (boolLoadMoreLoader)
+                  SizedBox(
+                    child: Center(
+                      child: Transform.scale(
+                        scale: 0.5,
+                        child: const CircularProgressIndicator(
+                          backgroundColor: Colors.white,
+                          strokeWidth: 2,
+                          strokeCap: StrokeCap.round,
                         ),
-                        error: (err, _) => Text("Error: $err"),
                       ),
-                    ],
-                  )
-                : WelcomeWidget(
-                    showCompanyBox:
-                        widget.chatRouting != null &&
-                        widget.chatRouting!.companyName.isNotEmpty,
-                    questions: questions,
-                    onQuestionTap: (selectedQuestion) {
-                      message.text = selectedQuestion;
-                      message.selection = TextSelection.fromPosition(
-                        TextPosition(offset: message.text.length),
-                      );
-                    },
+                    ),
                   ),
-          ],
-        ),
+                SizedBox(height: 10),
+                // chats.isNotEmpty
+                //     ?
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: chats.length,
+                  itemBuilder: (context, index) {
+                    return RepaintBoundary(
+                      child: ChatMessagesView(
+                        chats: chats[index],
+                        chatRouting: widget.chatRouting,
+                        user: user,
+                      ),
+                    );
+                  },
+                  separatorBuilder: (_, __) => SizedBox(height: 20),
+                ),
+                // : WelcomeWidget(
+                //     showCompanyBox:
+                //         widget.chatRouting != null &&
+                //         widget.chatRouting!.companyName.isNotEmpty,
+                //     questions: questions,
+                //     onQuestionTap: (selectedQuestion) {
+                //       message.text = selectedQuestion;
+                //       message.selection = TextSelection.fromPosition(
+                //         TextPosition(offset: message.text.length),
+                //       );
+                //     },
+                //   ),
+                if (startStream)
+                  asyncStream.when(
+                    data: (line) {
+                      final text = line["buffer"] ?? "";
+                      final chartText = line["chart"] ?? [];
+                      final display = chartText
+                          .map<String>((e) => e.toString())
+                          .toList();
+                      oldDisplays = display;
+                      oldResponse = line["buffer"];
+                      return text.isNotEmpty
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                SizedBox(height: 10),
+                                ChatMarkdownWidget(
+                                  updatesAskStream: updatesAskQuestions,
+                                  message: text,
+                                  name: widget.chatRouting?.symbol ?? "TDGPT",
+                                  image: widget.chatRouting?.image ?? "",
+                                  symbolType: widget.chatRouting?.type ?? "",
+                                  type: "ai",
+                                  display: display,
+                                  messageId: "",
+                                  runId: "",
+                                  isStreaming: true,
+                                ),
+                              ],
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(top: 20),
+                              child: LoadingWidgetMarkdown(),
+                            );
+                    },
+                    loading: () => Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: LoadingWidgetMarkdown(),
+                    ),
+                    error: (err, _) => Text("Error: $err"),
+                  ),
+              ],
+            ),
+          ),
+
+          SafeArea(
+            bottom: true,
+            child: ChatBottomBar(
+              messageController: message,
+              limitController: limit,
+              textScrollController: _textScrollController,
+              isWorkFlow: isWorkFlow,
+              isWorkSymbol: isWorkSymbol,
+              selectedStock: selectedStock,
+              isWorkLimit: isWorkLimit,
+              webMode: webMode ?? false,
+              report: report ?? false,
+              deepAnalysis: deepAnalysis ?? false,
+              onSend: () => _sendMessage(ref),
+              onPrefixTap: () async {
+                if (widget.chatRouting == null ||
+                    widget.chatRouting!.companyName.isEmpty) {
+                  selectedStock = await showDialogue(questions, [], message, 0);
+                } else {
+                  showDialogue(questions, [], message, 0);
+                }
+              },
+              onDeleteWorkflow: () {
+                isWorkSymbol = false;
+                isWorkFlow = false;
+                isWorkLimit = false;
+                message.clear();
+                setState(() {});
+              },
+              onSlashDetected: (ctx) => questionDialog(ctx),
+              onWebModeChanged: (val) => setState(() => webMode = val),
+              onReportChanged: (val) => setState(() => report = val),
+              onDeepAnalysisChanged: (val) =>
+                  setState(() => deepAnalysis = val),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -137,7 +137,7 @@ class ShortVolumeChart extends StatelessWidget {
             ],
           ),
           SizedBox(height: 15),
-          Container(
+          SizedBox(
             height: 300,
             child: LineChart(
               duration: Duration(milliseconds: 1200),

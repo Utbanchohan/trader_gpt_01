@@ -47,19 +47,49 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
   int pgeIndex = 0;
   User? userModel;
 
+  late final ConversationStart _startScreen;
+  late final ChatConversation _chatScreen;
+  late final AnalyticsScreen _analyticsScreen;
+
   @override
   void initState() {
     super.initState();
+
     getChats();
     getStocks();
+    loadUser(); // FIX: build se nikal diya
+
     bool isFirstTime = ref.read(localDataProvider).getIsFirstTime();
-    int pageIndex = isFirstTime ? 0 : widget.initialIndex;
-    pgeIndex = pageIndex;
-    _pageController = PageController(initialPage: pageIndex);
+    pgeIndex = isFirstTime ? 0 : widget.initialIndex;
+
+    _pageController = PageController(initialPage: pgeIndex);
+
+    _startScreen = ConversationStart();
+    _chatScreen = ChatConversation(
+      chatRouting: widget.chatRouting,
+      initialMessage: widget.question,
+    );
+    _analyticsScreen = AnalyticsScreen(
+      chatRouting: widget.chatRouting,
+      onShowPressed: () {
+        if (_pageController.hasClients) {
+          _pageController..jumpToPage(1);
+        }
+      },
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       openSheet(isFirstTime);
     });
+  }
+
+  Future<void> loadUser() async {
+    final userData = await ref.read(localDataProvider).getUser();
+    if (userData != null) {
+      setState(() {
+        userModel = User.fromJson(userData);
+      });
+    }
   }
 
   getChats() async {
@@ -100,18 +130,8 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
     }
   }
 
-  getUser() async {
-    dynamic userData = await ref.watch(localDataProvider).getUser();
-    if (userData != null) {
-      setState(() {
-        userModel = User.fromJson(userData);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    getUser();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: SideMenu(),
@@ -131,7 +151,7 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
                       ? 0.h
                       : pgeIndex == 1
                       ? 60.h
-                      : 65.h
+                      : 0.h
                 : 0.h,
           ),
           child: _pageController.hasClients
@@ -148,75 +168,75 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
                             )
                           : ChatAppBar()
                     : pgeIndex == 2
-                    ? PreferredSize(
-                        preferredSize: Size.fromHeight(75.h),
-                        child: AppBar(
-                          automaticallyImplyLeading: false,
-                          backgroundColor: AppColors.primaryColor,
-                          elevation: 0,
-                          flexibleSpace: SafeArea(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        _pageController.jumpToPage(1);
-                                      },
-                                      child: Container(
-                                        width: 40.w,
-                                        height: 71.h,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: AssetImage(
-                                              Assets.images.shapeRightSide.path,
-                                            ),
-                                          ),
-                                        ),
-                                        padding: EdgeInsets.all(15),
-                                        child: Image.asset(
-                                          Assets.images.message.path,
-                                          width: 25.w,
-                                          height: 21.h,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        margin: EdgeInsets.only(left: 20),
-                                        child: Center(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Image.asset(
-                                                Assets.images.analytics.path,
-                                                width: 20.w,
-                                                height: 20,
-                                              ),
-
-                                              SizedBox(width: 6),
-                                              MdSnsText(
-                                                "ANALYTICS",
-                                                color: AppColors.white,
-                                                fontWeight:
-                                                    TextFontWeightVariant.h4,
-                                                variant: TextVariant.h3,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
+                    ? SizedBox()
+                    // PreferredSize(
+                    //     preferredSize: Size.fromHeight(75.h),
+                    //     child: AppBar(
+                    //       automaticallyImplyLeading: false,
+                    //       backgroundColor: AppColors.primaryColor,
+                    //       elevation: 0,
+                    //       flexibleSpace: SafeArea(
+                    //         child: Column(
+                    //           children: [
+                    //             Row(
+                    //               mainAxisAlignment:
+                    //                   MainAxisAlignment.spaceBetween,
+                    //               children: [
+                    //                 InkWell(
+                    //                   onTap: () {
+                    //                     _pageController.jumpToPage(1);
+                    //                   },
+                    //                   child: Container(
+                    //                     width: 40.w,
+                    //                     height: 71.h,
+                    //                     decoration: BoxDecoration(
+                    //                       image: DecorationImage(
+                    //                         image: AssetImage(
+                    //                           Assets.images.shapeRightSide.path,
+                    //                         ),
+                    //                       ),
+                    //                     ),
+                    //                     padding: EdgeInsets.all(15),
+                    //                     child: Image.asset(
+                    //                       Assets.images.message.path,
+                    //                       width: 25.w,
+                    //                       height: 21.h,
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //                 Expanded(
+                    //                   child: Container(
+                    //                     margin: EdgeInsets.only(left: 20),
+                    //                     child: Center(
+                    //                       child: Row(
+                    //                         mainAxisAlignment:
+                    //                             MainAxisAlignment.start,
+                    //                         children: [
+                    //                           Image.asset(
+                    //                             Assets.images.analytics.path,
+                    //                             width: 20.w,
+                    //                             height: 20,
+                    //                           ),
+                    //                           SizedBox(width: 6),
+                    //                           MdSnsText(
+                    //                             "ANALYTICS",
+                    //                             color: AppColors.white,
+                    //                             fontWeight:
+                    //                                 TextFontWeightVariant.h4,
+                    //                             variant: TextVariant.h3,
+                    //                           ),
+                    //                         ],
+                    //                       ),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   )
                     : SizedBox()
               : SizedBox(),
         ),
@@ -245,7 +265,7 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
               context.pushNamed(AppRoutes.myProfileScreen.name);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 20),
+              padding: EdgeInsets.only(right: 20),
               child: ClipOval(
                 child: userModel != null && userModel!.imgUrl.isNotEmpty
                     ? Image.network(
@@ -273,31 +293,53 @@ class _SwipeScreenState extends ConsumerState<SwipeScreen> {
           ),
         ],
       ),
-
       body: PageView(
         controller: _pageController,
         physics: pgeIndex == 0
-            ? NeverScrollableScrollPhysics() // swipe disable for page 0
-            : BouncingScrollPhysics(),
+            ? const NeverScrollableScrollPhysics()
+            : const BouncingScrollPhysics(),
+
         onPageChanged: (index) {
-          setState(() {
-            pgeIndex = index;
-          });
+          FocusScope.of(context).unfocus();
+          setState(() => pgeIndex = index);
         },
+
         children: [
-          ConversationStart(),
-          // convo != null && convo.isNotEmpty && stocks.isNotEmpty
-          //     ?
-          ChatConversation(
-            chatRouting: widget.chatRouting,
-            initialMessage: widget.question,
-          ),
-          // :
-          // ChatPage(chatRouting: widget.chatRouting),
-          if (convo != null && convo.isNotEmpty && stocks.isNotEmpty)
-            AnalyticsScreen(chatRouting: widget.chatRouting),
+          _startScreen,
+          _chatScreen,
+          if (convo.isNotEmpty && stocks.isNotEmpty) _analyticsScreen,
         ],
       ),
+
+      // body: PageView.builder(
+      //   controller: _pageController,
+      //   physics: pgeIndex == 0
+      //       ? const NeverScrollableScrollPhysics()
+      //       : const BouncingScrollPhysics(),
+
+      //   itemCount: (convo != null && convo.isNotEmpty && stocks.isNotEmpty)
+      //       ? 3
+      //       : 2,
+
+      //   onPageChanged: (index) {
+      //     setState(() {
+      //       pgeIndex = index;
+      //     });
+      //   },
+
+      //   itemBuilder: (context, index) {
+      //     if (index == 0) {
+      //       return ConversationStart();
+      //     } else if (index == 1) {
+      //       return ChatConversation(
+      //         chatRouting: widget.chatRouting,
+      //         initialMessage: widget.question,
+      //       );
+      //     } else {
+      //       return AnalyticsScreen(chatRouting: widget.chatRouting);
+      //     }
+      //   },
+      // ),
     );
   }
 }

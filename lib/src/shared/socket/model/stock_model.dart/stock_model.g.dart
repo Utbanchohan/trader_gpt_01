@@ -24,6 +24,7 @@ _Stock _$StockFromJson(Map<String, dynamic> json) => _Stock(
   price: (json['price'] as num?)?.toDouble() ?? 0,
   previousClose: (json['previousClose'] as num?)?.toDouble() ?? 0,
   pctChange: (json['pctChange'] as num?)?.toDouble() ?? 0,
+  pct_change: json['pct_change'] as String? ?? '',
   key: json['key'] as String? ?? '',
   fiveDayTrend:
       (json['fiveDayTrend'] as List<dynamic>?)
@@ -51,6 +52,7 @@ Map<String, dynamic> _$StockToJson(_Stock instance) => <String, dynamic>{
   'price': instance.price,
   'previousClose': instance.previousClose,
   'pctChange': instance.pctChange,
+  'pct_change': instance.pct_change,
   'key': instance.key,
   'fiveDayTrend': instance.fiveDayTrend,
   'isPositive': instance.isPositive,

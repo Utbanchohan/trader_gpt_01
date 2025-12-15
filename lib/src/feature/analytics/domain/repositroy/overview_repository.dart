@@ -5,7 +5,7 @@ import 'package:trader_gpt/src/feature/sign_in/data/dto/sign_in_dto/sign_in_dto.
 
 import '../../../../core/api_client/client.dart'
     show client, marketDataClient, marketDataClientNew, priceStreamClientNew;
-
+import '../../../../shared/flavours.dart';
 import '../../data/dto/analysis_dto/analysis_dto.dart';
 import '../../data/dto/esg_score_dto/esg_score_dto.dart';
 import '../../data/dto/financial_dto/financial_dto.dart';

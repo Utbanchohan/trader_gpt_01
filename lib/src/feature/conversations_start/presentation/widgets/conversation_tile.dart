@@ -48,103 +48,123 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
     final liveStock = stockManagerState[widget.stock.stockId];
     String change = liveStock != null && liveStock.stockId.isNotEmpty
         ? PriceUtils.getChangesPercentage(
-                    liveStock.price,
-                    liveStock.previousClose,
-                  ) !=
-                  null
+                        liveStock.price,
+                        liveStock.previousClose,
+                      ) !=
+                      null &&
+                  liveStock.price != liveStock.previousClose
               ? PriceUtils.getChangesPercentage(
                   liveStock.price,
                   liveStock.previousClose,
                 )!.toStringAsFixed(2)
-              : widget.stocks.pctChange.toStringAsFixed(2)
-        : widget.stocks.pctChange.toStringAsFixed(2);
+              : widget.stocks.pct_change
+        : widget.stocks.pct_change;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+      // margin: EdgeInsets.only(left: 20, right: 20),
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            children: [
-              Container(
-                width: 42,
-                height: 41,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  // image: DecorationImage(
-                  //   image: NetworkImage(widget.stocks.logoUrl),
-                  //   fit: BoxFit.cover,
-                  // ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: widget.stock.type.toLowerCase() == "crypto"
-                      ? Image(
-                          height: 41,
-                          width: 42,
-                          image: NetworkImage(
-                            getItemImage(ImageType.crypto, widget.stock.symbol),
-                          ),
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return SvgPicture.network(
-                              "https://cdn-images.traderverse.io/crypto_dummy.svg",
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        )
-                      : SvgPicture.network(
-                          getItemImage(ImageType.stock, widget.stock.symbol),
-                          fit: BoxFit.cover,
-                          placeholderBuilder: (context) => SizedBox(
+          Padding(
+            padding: EdgeInsets.only(right: 10.w),
+            child: Column(
+              children: [
+                Container(
+                  width: 42,
+                  height: 41,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    // image: DecorationImage(
+                    //   image: NetworkImage(widget.stocks.logoUrl),
+                    //   fit: BoxFit.cover,
+                    // ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: widget.stock.type.toLowerCase() == "crypto"
+                        ? Container(
                             height: 41,
                             width: 42,
-                            child: SvgPicture.network(
-                              "https://cdn-images.traderverse.io/stock_dummy.svg",
-                              fit: BoxFit.cover,
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColor,
                             ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(0),
+                              child: FittedBox(
+                                fit: BoxFit.contain, // FULL image without crop
+                                child: Image.network(
+                                  getItemImage(
+                                    ImageType.crypto,
+                                    widget.stock.symbol,
+                                  ),
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return SvgPicture.network(
+                                      "https://cdn-images.traderverse.io/crypto_dummy.svg",
+                                      fit: BoxFit.contain,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          )
+                        : SvgPicture.network(
+                            getItemImage(ImageType.stock, widget.stock.symbol),
+                            fit: BoxFit.cover,
+                            placeholderBuilder: (context) => SizedBox(
+                              height: 41,
+                              width: 42,
+                              child: SvgPicture.network(
+                                "https://cdn-images.traderverse.io/stock_dummy.svg",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            errorBuilder: (context, error, stackTrace) {
+                              return SvgPicture.network(
+                                "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
+                                fit: BoxFit.cover,
+                              );
+                            },
                           ),
-                          errorBuilder: (context, error, stackTrace) {
-                            return SvgPicture.network(
-                              "https://storage.googleapis.com/analytics-images-traderverse/stock/mobile_app/TGPT-Blue.svg",
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ),
+                  ),
                 ),
-              ),
 
-              // Image.network(
-              //   stocks.logoUrl,
-              //   width: 42.w,
-              //   height: 41.h,
-              //   fit: BoxFit.cover,
-              // ),
-              SizedBox(height: 10),
-              MdSnsText(
-                getAgoText(
-                  widget.stock.lastMessage != null
-                      ? DateTime.fromMillisecondsSinceEpoch(
-                          widget
-                              .stock
-                              .lastMessage!
-                              .createdAt
-                              .millisecondsSinceEpoch,
-                        )
-                      : DateTime.fromMillisecondsSinceEpoch(
-                          widget.stock.createdAt.millisecondsSinceEpoch,
-                        ),
+                // Image.network(
+                //   stocks.logoUrl,
+                //   width: 42.w,
+                //   height: 41.h,
+                //   fit: BoxFit.cover,
+                // ),
+                SizedBox(height: 8),
+                Container(
+                  width: 60.w,
+                  alignment: Alignment.center,
+                  child: MdSnsText(
+                    getAgoText(
+                      widget.stock.lastMessage != null
+                          ? DateTime.fromMillisecondsSinceEpoch(
+                              widget
+                                  .stock
+                                  .lastMessage!
+                                  .createdAt
+                                  .millisecondsSinceEpoch,
+                            )
+                          : DateTime.fromMillisecondsSinceEpoch(
+                              widget.stock.createdAt.millisecondsSinceEpoch,
+                            ),
+                    ),
+                    variant: TextVariant.h4,
+                    fontWeight: TextFontWeightVariant.h4,
+                    color: AppColors.color677FA4,
+                  ),
                 ),
-                variant: TextVariant.h4,
-                fontWeight: TextFontWeightVariant.h4,
-                color: AppColors.color677FA4,
-              ),
-            ],
+              ],
+            ),
           ),
-          SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -212,13 +232,14 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                       ? Icon(Icons.arrow_drop_down, color: AppColors.redFF3B3B)
                       : Icon(Icons.arrow_drop_up, color: AppColors.color06D54E),
                   MdSnsText(
-                    Filters.systemNumberConvention(
-                          change,
-                          isPrice: false,
-                          isAbs: false,
-                          containerWidth: 50,
-                        ) +
-                        "%",
+                    change.isNotEmpty
+                        ? Filters.systemNumberConvention(
+                                change,
+                                isPrice: false,
+                                isAbs: false,
+                              ).replaceAll('%', '') +
+                              "%"
+                        : "0.00%",
                     color: change.contains("-")
                         ? AppColors.redFF3B3B
                         : AppColors.color06D54E,
