@@ -393,66 +393,69 @@ class _LoginInState extends ConsumerState<LoginScreen> with FormStateMixin {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 170,
-                      height: 55,
-                      child: OutlinedButton(
-                        onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: AppColors.color274E87),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
+                    Expanded(
+                      child: SizedBox(
+                        height: 55,
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: AppColors.color274E87),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              Assets.images.google.path,
-                              height: 24,
-                              width: 24,
-                            ),
-                            SizedBox(width: 10),
-                            MdSnsText(
-                              "Google",
-                              variant: TextVariant.h1,
-                              fontWeight: TextFontWeightVariant.h2,
-
-                              color: AppColors.color274E87,
-                            ),
-                          ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                Assets.images.google.path,
+                                height: 24,
+                                width: 24,
+                              ),
+                              SizedBox(width: 10),
+                              MdSnsText(
+                                "Google",
+                                variant: TextVariant.h1,
+                                fontWeight: TextFontWeightVariant.h2,
+                      
+                                color: AppColors.color274E87,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 170,
-                      height: 55,
-                      child: OutlinedButton(
-                        onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: AppColors.color274E87),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
+                    SizedBox(width: 10,),
+                    Expanded(
+                      child: SizedBox(
+                        height: 55,
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: AppColors.color274E87),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              Assets.images.apple.path,
-                              height: 24,
-                              width: 24,
-                            ),
-                            SizedBox(width: 10),
-                            MdSnsText(
-                              "Apple",
-
-                              variant: TextVariant.h1,
-                              fontWeight: TextFontWeightVariant.h2,
-
-                              color: AppColors.color274E87,
-                            ),
-                          ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                Assets.images.apple.path,
+                                height: 24,
+                                width: 24,
+                              ),
+                              SizedBox(width: 10),
+                              MdSnsText(
+                                "Apple",
+                      
+                                variant: TextVariant.h1,
+                                fontWeight: TextFontWeightVariant.h2,
+                      
+                                color: AppColors.color274E87,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
